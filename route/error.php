@@ -8,14 +8,14 @@
  */
 
 /**
- * Route Exceptions
+ * Route Errors
  *
  * @package    Eden
  * @category   route
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: exception.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Route_Exception extends Eden_Error_Model {
+class Eden_Route_Error extends Eden_Error_Model {
 	/* Constants
 	-------------------------------*/
 	const CLASS_NOT_EXISTS 		= 'Invalid class call: %s->%s(). Class does not exist.';

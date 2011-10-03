@@ -27,12 +27,22 @@ class Eden_Class {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	private static $_instance = array();
+	private static $_instance = NULL;
+	private static $_instances = array();
 	
 	/* Private Properties
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
+	public static function get() {
+		$class = __CLASS__;
+		if(is_null(self::$_instance)) {
+			self::$_instance = new $class();
+		}
+		
+		return self::$_instance;
+	}
+	
 	/* Magic
 	-------------------------------*/
 	/**
@@ -120,21 +130,21 @@ class Eden_Class {
 	/* Protected Methods
 	-------------------------------*/
 	protected static function _getSingleton($class) {
-		if(!isset(self::$_instance[$class])) {
+		if(!isset(self::$_instances[$class])) {
 			$args = func_get_args();
 			array_shift($args);
 		
 			if(count($args) === 0) {
-				self::$_instance[$class] = new $class();
+				self::$_instances[$class] = new $class();
 			} else if(count($args) === 1) {
-				self::$_instance[$class] = new $class($args[0]);
+				self::$_instances[$class] = new $class($args[0]);
 			} else if(count($args) === 2) { 
-				self::$_instance[$class] = new $class($args[0], $args[1]);
+				self::$_instances[$class] = new $class($args[0], $args[1]);
 			} else {
 				//set it
 				try {
 					$reflect = new ReflectionClass($class);
-					self::$_instance[$class] = $reflect->newInstanceArgs($args);
+					self::$_instances[$class] = $reflect->newInstanceArgs($args);
 				} catch(Reflection_Exception $e) {
 					Eden_Error_Model::get(Eden_Error_Model::REFLECTION_ERROR)
 						->addParameter($class)
@@ -144,7 +154,7 @@ class Eden_Class {
 			}
 		}
 		
-		return self::$_instance[$class];
+		return self::$_instances[$class];
 	}
 	
 	protected static function _getMultiple($class) {
