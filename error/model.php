@@ -42,6 +42,7 @@ class Eden_Error_Model extends Exception {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
+	protected $_reporter	= NULL;
 	protected $_type 		= NULL;
 	protected $_level 		= NULL;
 	protected $_offset		= 1;
@@ -59,9 +60,9 @@ class Eden_Error_Model extends Exception {
 	/* Magic
 	-------------------------------*/
     public function __construct($message = NULL, $code = 0) {
-		$this->_type = self::GENERAL;
+		$this->_type = self::LOGIC;
 		$this->_level = self::ERROR;
-		
+		$this->_reporter = $this->_getReporter();
 		parent::__construct($message, $code);
 	}
 	
@@ -210,6 +211,15 @@ class Eden_Error_Model extends Exception {
 	}
 	
 	/**
+	 * REturns the class or method that caught this
+	 *
+	 * @return string
+	 */
+	public function getReporter() {
+		return $this->_reporter;
+	}
+	
+	/**
 	 * Adds parameters used in the message
 	 *
 	 * @return this
@@ -234,6 +244,16 @@ class Eden_Error_Model extends Exception {
 	
 	/* Protected Methods
 	-------------------------------*/
+	protected function _getReporter() {
+		$trace = $this->getTrace();
+		
+		if(isset($trace[0]['class'])) {
+			return $trace[0]['class'];
+		}
+		
+		return get_class($this);
+	}
+	
 	/* Private Methods
 	-------------------------------*/
 }

@@ -155,16 +155,19 @@ class Eden_Error {
 	 * @return void
 	 */
 	public function exceptionHandler(Exception $e) {
-		//by default set GENERAL ERROR
-		$type = Eden_Error_Model::GENERAL;
-		$level = Eden_Error_Model::ERROR;
-		$offset = 1;
+		//by default set LOGIC ERROR
+		$type 		= Eden_Error_Model::LOGIC;
+		$level 		= Eden_Error_Model::ERROR;
+		$offset 	= 1;
+		$reporter 	= get_class($e);
+		
 		//if the exception is an eden exception
 		if($e instanceof Eden_Error_Model) {
 			//set type and level from that
-			$type = $e->getType();
-			$level = $e->getLevel();
-			$offset = $e->getTraceOffset();
+			$type 		= $e->getType();
+			$level 		= $e->getLevel();
+			$offset 	= $e->getTraceOffset();
+			$reporter 	= $e->getReporter();
 		}
 		
 		//get trace
@@ -173,7 +176,7 @@ class Eden_Error {
 		echo $this->_getMessage(
 			$trace,		$offset,
 			$type, 		$level, 
-			get_class($e), 	$e->getFile(), 
+			$reporter, 	$e->getFile(), 
 			$e->getLine(), 	$e->getMessage());
 	}
 	
@@ -201,7 +204,7 @@ class Eden_Error {
 	-------------------------------*/
 	protected function _getMessage($trace, $offset, $type, $level, $class, $file, $line, $message) {
 		//if there is a trace template and there's at least 2 leads
-		if($this->_trace && count($trace) > ($offset + 1)) {
+		if($this->_trace && count($trace) > $offset) {
 			//for each trace
 			foreach($trace as $i => $call) {
 				//if we are at the first one
@@ -249,11 +252,11 @@ class Eden_Error {
 					$method = $call['class'].'->'.$method;
 				}
 				
-				$line = isset($call['line']) ? $call['line'] : 'N/A';
-				$file = isset($call['file']) ? $call['file'] : 'Virtual Call';
+				$tline = isset($call['line']) ? $call['line'] : 'N/A';
+				$tfile = isset($call['file']) ? $call['file'] : 'Virtual Call';
 				
 				//convert trace from array to string
-				$trace[$i] = sprintf($this->_trace, $method, $file, $line);
+				$trace[$i] = sprintf($this->_trace, $method, $tfile, $tline);
 			}
 			
 			$trace = implode("\n", $trace);

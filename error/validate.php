@@ -96,7 +96,7 @@ class Eden_Error_Validate {
 	
 	/* Protected Methods
 	-------------------------------*/
-	public function _getType($argument) {
+	protected function _getType($argument) {
 		switch(true) {
 			case is_array($argument):
 				return 'array';

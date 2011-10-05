@@ -45,24 +45,10 @@ class Eden_Class {
 	
 	/* Magic
 	-------------------------------*/
-	/**
-	 * Remove object to string conversion error
-	 *
-	 * @return string
-	 */
 	public function __toString() {
 		return get_class($this);
 	}
 	
-	/**
-	 * If the given method does not exist
-	 * this will attempt to run the method
-	 * from a different class.
-	 *
-	 * @param *string the name of the method
-	 * @param *array the arguments of the method
-	 * @return mixed
-	 */
 	public function __call($name, $args) {
 		//if the method name starts with a capital letter
 		//most likely they want a class
@@ -79,8 +65,12 @@ class Eden_Class {
 			} catch(Eden_Route_Error $e) {}
 		}
 		
-		//let the router handle this
-		return Eden_Route::get()->callMethod($this, $name, true, $args);
+		try {
+			//let the router handle this
+			return Eden_Route::get()->callMethod($this, $name, true, $args);
+		} catch(Eden_Route_Error $e) {
+			throw new Eden_Error_Model($e->getMessage());
+		}
 	}
 	
 	/* Public Methods
@@ -92,6 +82,9 @@ class Eden_Class {
 	 * @return Eden_Class
 	 */
 	public function routeThisClass($route) {
+		//argument 1 must be a string
+		Eden_Error_Validate::get()->argument(0, 'string');
+		
 		Eden_Route::get()->routeClass($route, get_class($this));
 		return $this;
 	}
@@ -105,6 +98,9 @@ class Eden_Class {
 	 * @return Eden_Class
 	 */
 	public function routeThisMethod($routeMethod, $class, $method) {
+		//argument 1-3 must be a string
+		Eden_Error_Validate::get()->argument(1, 'string')->argument(2, 'string')->argument(3, 'string');
+		
 		Eden_Route::get()->routeMethod(get_class($this), $routeMethod, $class, $method);
 		return $this;
 	}
@@ -118,11 +114,8 @@ class Eden_Class {
 	 * @return mixed
 	 */
 	public function callThisMethod($method, array $args = array()) {
-		//if table is not a string
-		if(!is_string($method)) {
-			//throw exception
-			throw new Eden_Exception(sprintf(Eden_Exception::NOT_STRING, 1));
-		}
+		//argument 1 must be a string
+		Eden_Error_Validate::get()->argument(0, 'string');
 		
 		return Eden_Route::get()->callMethod($this, $method, $args);
 	}

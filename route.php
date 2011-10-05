@@ -134,8 +134,8 @@ class Eden_Route {
 	 */
 	public function routeMethod($routeClass, $routeMethod, $class, $method = NULL) {
 		Eden_Error_Validate::get()
-			->argument(0, 'string')	//argument 1 must be a string
-			->argument(1, 'string')	//argument 2 must be a string
+			->argument(0, 'string')		//argument 1 must be a string
+			->argument(1, 'string')		//argument 2 must be a string
 			->argument(2, 'string');	//argument 3 must be a string
 		
 		//if the method is not a string
@@ -280,13 +280,18 @@ class Eden_Route {
 		//class does not exist
 		if(!class_exists($class)) {
 			//throw exception
-			throw new Eden_Route_Error(sprintf(Eden_Route_Error::CLASS_NOT_EXISTS, $class, $method));
+			Eden_Route_Error::get(Eden_Route_Error::CLASS_NOT_EXISTS)
+				->addVariable($class)
+				->addVariable($method)
+				->render();
 		}
 		
 		//method does not exist
 		if(!method_exists($class, $method)) {
-			//throw exception
-			throw new Eden_Route_Error(sprintf(Eden_Route_Error::METHOD_NOT_EXISTS, $class, $method));
+			Eden_Route_Error::get(Eden_Route_Error::METHOD_NOT_EXISTS)
+				->addVariable($class)
+				->addVariable($method)
+				->render();
 		}
 		
 		//if instance is true
@@ -300,7 +305,10 @@ class Eden_Route {
 		if(!is_object($instance)) {
 			if(!method_exists($class, $method)) {
 				//throw exception
-				throw new Eden_Route_Error(sprintf(Eden_Route_Error::STATIC_ERROR, $class, $method));
+				Eden_Route_Error::get(Eden_Route_Error::STATIC_ERROR)
+					->addVariable($class)
+					->addVariable($method)
+					->render();
 			}
 			
 			return call_user_func_array($class.'::'.$method, $args); // As of 5.2.3
@@ -310,7 +318,10 @@ class Eden_Route {
 		//if method does not exist
 		if(!method_exists($instance, $method)) {
 			//throw exception
-			throw new Eden_Route_Error(sprintf(Eden_Route_Error::METHOD_NOT_EXISTS, get_class($instance), $method));
+			Eden_Route_Error::get(Eden_Route_Error::METHOD_NOT_EXISTS)
+				->addVariable(get_class($instance))
+				->addVariable($method)
+				->render();
 		}
 		
 		return call_user_func_array(array(&$instance, $method), $args);
@@ -324,17 +335,15 @@ class Eden_Route {
 	 * @return mixed
 	 */
 	public function callFunction($func, array $args = array()) {
-		//if the func is not a string
-		if(!is_string($func)) {
-			//throw an exception
-			throw new Eden_Route_Error(sprintf(Eden_Exception::NOT_STRING, 1));
-		}
+		Eden_Error_Validate::get()->argument(0, 'string'); //argument 1 must be a string
 		
 		try {
 			//try to run the function using PHP call_user_func_array
 			return call_user_func_array($func, $args);
 		} catch(_Exception $e) {
-			throw new Eden_Route_Error(sprintf(Eden_Route_Error::FUNCTION_ERROR, $func));
+			Eden_Route_Error::get(Eden_Route_Error::FUNCTION_ERROR)
+				->addVariable($func)
+				->render();
 		}
 	}
 	

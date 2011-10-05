@@ -8,6 +8,8 @@
  */
 
 require_once dirname(__FILE__).'/class.php';
+require_once dirname(__FILE__).'/array.php';
+require_once dirname(__FILE__).'/model/error.php';
 
 /**
  *
@@ -16,14 +18,13 @@ require_once dirname(__FILE__).'/class.php';
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Model extends Eden_Class implements ArrayAccess {
+class Eden_Model extends Eden_Array {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_data = array();
 	protected $_meta = array();
 	
 	/* Private Properties
@@ -54,7 +55,11 @@ class Eden_Model extends Eden_Class implements ArrayAccess {
 			return $this->__set($key, $args[0]);
 		}
 		
-		return parent::__call($name, $args);
+		try {
+			return parent::__call($name, $args);
+		} catch(Eden_Type_Error $e) {
+			throw new Eden_Model_Error($e->getMessage());
+		}
 	}
 	
 	public function __get($name) {
@@ -75,7 +80,17 @@ class Eden_Model extends Eden_Class implements ArrayAccess {
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Sets meta data about the given property
+	 *
+	 * @param string
+	 * @param array
+	 * @return this
+	 */
 	public function setMetaData($name, array $meta = array()) {
+		//argument 1 must be a string
+		Eden_Error_Validate::get()->argument(0, 'string');
+		
 		$this->_meta[$name] = $meta;
 		
 		if(!isset($this->_data[$name])) {
@@ -85,8 +100,19 @@ class Eden_Model extends Eden_Class implements ArrayAccess {
 		return $this;
 	}
 	
-	
+	/**
+	 * Returns meta data
+	 *
+	 * @param string
+	 * @param string
+	 * @return array
+	 */
 	public function getMetaData($name = NULL, $key = NULL) {
+		//argument 1 must be a string or null
+		Eden_Error_Validate::get()->argument(0, 'string', 'null');
+		//argument 2 must be a string or null
+		Eden_Error_Validate::get()->argument(1, 'string', 'null');
+		
 		if(!is_null($name) && isset($this->_meta[$name])) {		
 			if(!is_null($key) && isset($this->_meta[$name][$key])) {
 				return $this->_meta[$name][$key];
@@ -96,52 +122,7 @@ class Eden_Model extends Eden_Class implements ArrayAccess {
 		
 		return $this->_meta;
 	}
-	
-	/**
-	 * Sets data using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @param mixed
-	 * @return void
-	 */
-	public function offsetSet($offset, $value) {
-        if (is_null($offset)) {
-            $this->_data[] = $value;
-        } else {
-            $this->_data[$offset] = $value;
-        }
-    }
-	
-	/**
-	 * isset using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-    public function offsetExists($offset) {
-        return isset($this->_data[$offset]);
-    }
-    
-	/**
-	 * unsets using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-	public function offsetUnset($offset) {
-        unset($this->_data[$offset]);
-    }
-    
-	/**
-	 * returns data using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-	public function offsetGet($offset) {
-        return isset($this->_data[$offset]) ? $this->_data[$offset] : null;
-    }
-	
+
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods
