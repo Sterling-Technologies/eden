@@ -20,7 +20,7 @@
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: exception.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Error_Model extends Exception {
+class Eden_Error_Class extends Exception {
 	/* Constants
 	-------------------------------*/
 	const REFLECTION_ERROR 		= 'Error creating Reflection Class: %s, Method: %s.';

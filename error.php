@@ -7,7 +7,7 @@
  * distributed with this package.
  */
 
-require_once dirname(__FILE__).'/error/model.php';
+require_once dirname(__FILE__).'/error/class.php';
 require_once dirname(__FILE__).'/error/validate.php';
 
 /**
@@ -156,13 +156,13 @@ class Eden_Error {
 	 */
 	public function exceptionHandler(Exception $e) {
 		//by default set LOGIC ERROR
-		$type 		= Eden_Error_Model::LOGIC;
-		$level 		= Eden_Error_Model::ERROR;
+		$type 		= Eden_Error_Class::LOGIC;
+		$level 		= Eden_Error_Class::ERROR;
 		$offset 	= 1;
 		$reporter 	= get_class($e);
 		
 		//if the exception is an eden exception
-		if($e instanceof Eden_Error_Model) {
+		if($e instanceof Eden_Error_Class) {
 			//set type and level from that
 			$type 		= $e->getType();
 			$level 		= $e->getLevel();

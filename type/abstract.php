@@ -99,7 +99,7 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 		try {
 			//call the parent
 			return parent::__call($name, $args);
-		} catch(Eden_Error_Model $e) {
+		} catch(Eden_Error_Class $e) {
 			throw new Eden_Type_Error($e->getMessage());
 		}
 	}

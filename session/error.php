@@ -8,16 +8,18 @@
  */
 
 /**
- * Type Errors
+ * Model Errors
  *
  * @package    Eden
- * @category   type
+ * @category   Model
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: exception.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Type_Error extends Eden_Error_Class {
+class Eden_Session_Error extends Eden_Error_Class {
 	/* Constants
 	-------------------------------*/
+	const NOT_STARTED = 'Session was not started yet. Try using Eden_Session->start().';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties

@@ -67,8 +67,8 @@ class Eden_Error_Validate {
 		}
 		
 		if(!$valid) {
-			if(!isset($types[$i]) || !($types[$i] instanceof Eden_Error_Model)) {
-				$e = Eden_Error_Model::get();
+			if(!isset($types[$i]) || !($types[$i] instanceof Eden_Error_Class)) {
+				$e = Eden_Error_Class::get();
 			} else {
 				$e = $types[$i];
 			}

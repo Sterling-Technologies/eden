@@ -8,6 +8,7 @@
  */
  
 require dirname(__FILE__).'/route.php';
+require dirname(__FILE__).'/noop.php';
 
 /**
  * The base class for all classes wishing to integrate with Eve.
@@ -69,7 +70,7 @@ class Eden_Class {
 			//let the router handle this
 			return Eden_Route::get()->callMethod($this, $name, true, $args);
 		} catch(Eden_Route_Error $e) {
-			throw new Eden_Error_Model($e->getMessage());
+			throw new Eden_Error_Class($e->getMessage());
 		}
 	}
 	
@@ -120,6 +121,30 @@ class Eden_Class {
 		return Eden_Route::get()->callMethod($this, $method, $args);
 	}
 	
+	/**
+	 * Invokes Noop if conditional is false
+	 *
+	 * @param bool
+	 * @return this|Eden_Noop
+	 */
+	public function test($isTrue) {
+		if($isTrue) {
+			return $this;
+		}
+		
+		return Eden_Noop::get($this);
+	}
+	
+	/**
+	 * Returns the original class
+	 *
+	 * @param bool
+	 * @return this|Eden_Noop
+	 */
+	public function end() {
+		return $this;
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	protected static function _getSingleton($class) {
@@ -139,7 +164,7 @@ class Eden_Class {
 					$reflect = new ReflectionClass($class);
 					self::$_instances[$class] = $reflect->newInstanceArgs($args);
 				} catch(Reflection_Exception $e) {
-					Eden_Error_Model::get(Eden_Error_Model::REFLECTION_ERROR)
+					Eden_Error_Class::get(Eden_Error_Class::REFLECTION_ERROR)
 						->addParameter($class)
 						->addParameter($method)
 						->render();
@@ -166,7 +191,7 @@ class Eden_Class {
 				$reflect = new ReflectionClass($class);
 				return $reflect->newInstanceArgs($args);
 			} catch(Reflection_Exception $e) {
-				Eden_Error_Model::get(Eden_Error_Model::REFLECTION_ERROR)
+				Eden_Error_Class::get(Eden_Error_Class::REFLECTION_ERROR)
 					->addParameter($class)
 					->addParameter($method)
 					->render();

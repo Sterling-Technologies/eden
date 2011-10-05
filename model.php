@@ -44,7 +44,7 @@ class Eden_Model extends Eden_Array {
 			//get rid of get_
 			$key = strtolower(substr($key, 4));
 			
-			if(isset($this->_data[$key])) {
+			if(isset($this->_meta[$key])) {
 				return $this->_data[$key];
 			}
 		} else if (strpos($name, 'set') === 0) {
