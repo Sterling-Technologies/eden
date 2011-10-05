@@ -18,6 +18,8 @@
 class Eden_Model_Error extends Eden_Error_Model {
 	/* Constants
 	-------------------------------*/
+	const SET_INVALID = 'Cannot set \'%s\' because it was never defined in this model. Try using setMetaData() first.';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties

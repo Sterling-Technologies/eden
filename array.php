@@ -75,8 +75,12 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator {
 	
 	/* Magic
 	-------------------------------*/
-	public function __construct(array $value = array()) {
-		parent::__construct($value);
+	public function __construct(array $data = array()) {
+		parent::__construct($data);
+	}
+	
+	public function __toString() {
+		return '<pre>'.print_r($this->_data, true).'</pre>';
 	}
 	
 	/* Public Methods
@@ -378,7 +382,7 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator {
 	 * @return bool
 	 */
 	public function offsetGet($offset) {
-        return isset($this->_data[$offset]) ? $this->_data[$offset] : null;
+        return isset($this->_data[$offset]) ? $this->_data[$offset] : NULL;
     }
 	
 	/* Protected Methods

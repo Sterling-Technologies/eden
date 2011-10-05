@@ -20,7 +20,7 @@
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: model.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Registry_Model extends Eden_Class implements ArrayAccess {
+class Eden_Registry_Class extends Eden_Array {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
@@ -39,14 +39,6 @@ class Eden_Registry_Model extends Eden_Class implements ArrayAccess {
 	
 	/* Magic
 	-------------------------------*/
-	public function __construct(array $data = array()) {
-		$this->_data = $data;
-	}
-	
-	public function __toString() {
-		return '<pre>'.print_r($this->_data, true).'</pre>';
-	}
-	
 	/* Public Methods
 	-------------------------------*/
 	/**
@@ -303,51 +295,6 @@ class Eden_Registry_Model extends Eden_Class implements ArrayAccess {
 		//then return false
 		return false;
 	}
-	
-	/**
-	 * Sets data using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @param mixed
-	 * @return void
-	 */
-	public function offsetSet($offset, $value) {
-        if (is_null($offset)) {
-            $this->_data[] = $value;
-        } else {
-            $this->_data[$offset] = $value;
-        }
-    }
-	
-	/**
-	 * isset using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-    public function offsetExists($offset) {
-        return isset($this->_data[$offset]);
-    }
-    
-	/**
-	 * unsets using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-	public function offsetUnset($offset) {
-        unset($this->_data[$offset]);
-    }
-    
-	/**
-	 * returns data using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-	public function offsetGet($offset) {
-        return isset($this->_data[$offset]) ? $this->_data[$offset] : null;
-    }
 	
 	/* Protected Methods
 	-------------------------------*/

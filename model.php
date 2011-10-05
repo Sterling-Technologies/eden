@@ -73,13 +73,40 @@ class Eden_Model extends Eden_Array {
 	public function __set($name, $value) {
 		if(isset($this->_meta[$name])) {
 			$this->_data[$name] = $value;
+			return $this;
+		}
+		
+		//throw an error
+		Eden_Model_Error::get(Eden_Model_Error::SET_INVALID)
+			->addVariable($name)
+			->render();
+	}
+	
+	/* Public Methods
+	-------------------------------*/
+	/**
+	 * Loads data into the model
+	 *
+	 * @param array
+	 * @return this
+	 */
+	public function load(array $data) {
+		//for each data
+		foreach($data as $name => $value) {
+			//if this is not set in the meta data
+			if(!isset($this->_meta[$name])) {
+				//throw an error
+				Eden_Model_Error::get(Eden_Model_Error::SET_INVALID)
+					->addVariable($name)
+					->render();
+			}
+			
+			$this->_data[$name] = $value;
 		}
 		
 		return $this;
 	}
 	
-	/* Public Methods
-	-------------------------------*/
 	/**
 	 * Sets meta data about the given property
 	 *
@@ -122,6 +149,44 @@ class Eden_Model extends Eden_Array {
 		
 		return $this->_meta;
 	}
+	
+	/**
+	 * Sets data using the ArrayAccess interface
+	 * We overloaded this to not allow creating new
+	 * columns.
+	 *
+	 * @param number
+	 * @param mixed
+	 * @return void
+	 */
+	public function offsetSet($offset, $value) {
+        //if this is not set in the meta data
+		if(!isset($this->_meta[$offset])) {
+			//throw an error
+			Eden_Model_Error::get(Eden_Model_Error::SET_INVALID)
+				->addVariable($offset)
+				->render();
+		}
+        
+		$this->_data[$offset] = $value;
+    }
+	
+	/**
+	 * unsets using the ArrayAccess interface
+	 * We overloaded this because an attributes 
+	 * must never be removed. Instead we set it to 
+	 * null. 
+	 *
+	 * @param number
+	 * @return void
+	 */
+	public function offsetUnset($offset) {
+		//if it is set in the meta
+		if(isset($this->_meta[$offset])) {
+			//set it to null
+			$this->_data[$offset] = NULL;
+		}
+    }
 
 	/* Protected Methods
 	-------------------------------*/

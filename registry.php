@@ -8,7 +8,8 @@
  */
 
 require_once dirname(__FILE__).'/class.php';
-require_once dirname(__FILE__).'/registry/model.php';
+require_once dirname(__FILE__).'/array.php';
+require_once dirname(__FILE__).'/registry/class.php';
 
 /**
  * This class allows the reference of a global registry. This
@@ -23,7 +24,7 @@ require_once dirname(__FILE__).'/registry/model.php';
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Registry extends Eden_Registry_Model {
+class Eden_Registry extends Eden_Registry_Class {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
