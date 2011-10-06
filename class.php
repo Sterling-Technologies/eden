@@ -28,22 +28,12 @@ class Eden_Class {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	private static $_instance = NULL;
 	private static $_instances = array();
 	
 	/* Private Properties
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
-		$class = __CLASS__;
-		if(is_null(self::$_instance)) {
-			self::$_instance = new $class();
-		}
-		
-		return self::$_instance;
-	}
-	
 	/* Magic
 	-------------------------------*/
 	public function __toString() {
@@ -100,7 +90,7 @@ class Eden_Class {
 	 */
 	public function routeThisMethod($routeMethod, $class, $method) {
 		//argument 1-3 must be a string
-		Eden_Error_Validate::get()->argument(1, 'string')->argument(2, 'string')->argument(3, 'string');
+		Eden_Error_Validate::get()->argument(0, 'string')->argument(1, 'string')->argument(2, 'string');
 		
 		Eden_Route::get()->routeMethod(get_class($this), $routeMethod, $class, $method);
 		return $this;
@@ -197,7 +187,6 @@ class Eden_Class {
 					->render();
 			}
 		}
-		
 	}
 	
 	/* Private Methods

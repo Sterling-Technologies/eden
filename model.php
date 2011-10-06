@@ -31,7 +31,7 @@ class Eden_Model extends Eden_Array {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function get(array $data = array()) {
 		return self::_getMultiple(__CLASS__);
 	}
 	
