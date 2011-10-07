@@ -8,7 +8,7 @@
  */
 
 /**
- * Cookie Errors
+ * Event Errors
  *
  * @package    Eden
  * @category   core

@@ -8,16 +8,18 @@
  */
 
 /**
- * Array Errors
+ * Path Errors
  *
  * @package    Eden
- * @category   core
+ * @category   path
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: exception.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Array_Error extends Eden_Type_Error {
+class Eden_Path_Error extends Eden_Error {
 	/* Constants
 	-------------------------------*/
+	const FULL_PATH_NOT_FOUND 	= 'The path %s or %s was not found.';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties

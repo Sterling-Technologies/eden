@@ -8,16 +8,18 @@
  */
 
 /**
- * Array Errors
+ * File Errors
  *
  * @package    Eden
- * @category   core
+ * @category   path
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: exception.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Array_Error extends Eden_Type_Error {
+class Eden_File_Error extends Eden_Path_Error {
 	/* Constants
 	-------------------------------*/
+	const PATH_IS_NOT_FILE 		= 'Path %s is not a file in the system.';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
