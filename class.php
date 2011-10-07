@@ -6,9 +6,10 @@
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
- 
+
+require dirname(__FILE__).'/error.php';
 require dirname(__FILE__).'/route.php';
-require dirname(__FILE__).'/noop.php';
+require dirname(__FILE__).'/when.php';
 
 /**
  * The base class for all classes wishing to integrate with Eve.
@@ -28,10 +29,13 @@ class Eden_Class {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	private static $_instances = array();
+	protected $_event 		= NULL;
+	protected $_observers 	= array();
 	
 	/* Private Properties
 	-------------------------------*/
+	private static $_instances 	= array();
+	
 	/* Get
 	-------------------------------*/
 	/* Magic
@@ -60,7 +64,7 @@ class Eden_Class {
 			//let the router handle this
 			return Eden_Route::get()->callMethod($this, $name, true, $args);
 		} catch(Eden_Route_Error $e) {
-			throw new Eden_Error_Class($e->getMessage());
+			throw new Eden_Error($e->getMessage());
 		}
 	}
 	
@@ -72,9 +76,9 @@ class Eden_Class {
 	 * @param *string the class route name
 	 * @return Eden_Class
 	 */
-	public function routeThisClass($route) {
+	public function routeThis($route) {
 		//argument 1 must be a string
-		Eden_Error_Validate::get()->argument(0, 'string');
+		Eden_Error::get()->argument(1, $route, 'string');
 		
 		Eden_Route::get()->routeClass($route, get_class($this));
 		return $this;
@@ -88,9 +92,12 @@ class Eden_Class {
 	 * @param *string the method name to route to
 	 * @return Eden_Class
 	 */
-	public function routeThisMethod($routeMethod, $class, $method) {
+	public function routeMethod($routeMethod, $class, $method) {
 		//argument 1-3 must be a string
-		Eden_Error_Validate::get()->argument(0, 'string')->argument(1, 'string')->argument(2, 'string');
+		Eden_Error::get()
+			->argument(1, $routeMethod, 'string')
+			->argument(2, $class, 'string')
+			->argument(3, $method, 'string');
 		
 		Eden_Route::get()->routeMethod(get_class($this), $routeMethod, $class, $method);
 		return $this;
@@ -106,7 +113,7 @@ class Eden_Class {
 	 */
 	public function callThisMethod($method, array $args = array()) {
 		//argument 1 must be a string
-		Eden_Error_Validate::get()->argument(0, 'string');
+		Eden_Error::get()->argument(1, $method,'string');
 		
 		return Eden_Route::get()->callMethod($this, $method, $args);
 	}
@@ -117,12 +124,12 @@ class Eden_Class {
 	 * @param bool
 	 * @return this|Eden_Noop
 	 */
-	public function test($isTrue) {
+	public function when($isTrue) {
 		if($isTrue) {
 			return $this;
 		}
 		
-		return Eden_Noop::get($this);
+		return Eden_When::get($this);
 	}
 	
 	/**
@@ -131,7 +138,7 @@ class Eden_Class {
 	 * @param bool
 	 * @return this|Eden_Noop
 	 */
-	public function end() {
+	public function endWhen() {
 		return $this;
 	}
 	
@@ -140,25 +147,16 @@ class Eden_Class {
 	protected static function _getSingleton($class) {
 		if(!isset(self::$_instances[$class])) {
 			$args = func_get_args();
-			array_shift($args);
-		
-			if(count($args) === 0) {
-				self::$_instances[$class] = new $class();
-			} else if(count($args) === 1) {
-				self::$_instances[$class] = new $class($args[0]);
-			} else if(count($args) === 2) { 
-				self::$_instances[$class] = new $class($args[0], $args[1]);
-			} else {
-				//set it
-				try {
-					$reflect = new ReflectionClass($class);
-					self::$_instances[$class] = $reflect->newInstanceArgs($args);
-				} catch(Reflection_Exception $e) {
-					Eden_Error_Class::get(Eden_Error_Class::REFLECTION_ERROR)
-						->addParameter($class)
-						->addParameter($method)
-						->render();
-				}
+			$class = array_shift($args);
+			
+			try {
+				self::$_instances[$class] = self::_getInstance($class, $args);
+			} catch(Reflection_Exception $e) {
+				Eden_Error::get()
+					->setMessage(Eden_Error::REFLECTION_ERROR) 
+					->addVariable($class)
+					->addVariable('new')
+					->trigger();
 			}
 		}
 		
@@ -167,28 +165,27 @@ class Eden_Class {
 	
 	protected static function _getMultiple($class) {
 		$args = func_get_args();
-		array_shift($args);
+		$class = array_shift($args);
 		
-		if(count($args) === 0) {
-			return new $class();
-		} else if(count($args) === 1) {
-			return new $class($args[0]);
-		} else if(count($args) === 2) { 
-			return new $class($args[0], $args[1]);
-		} else {
-			//set it
-			try {
-				$reflect = new ReflectionClass($class);
-				return $reflect->newInstanceArgs($args);
-			} catch(Reflection_Exception $e) {
-				Eden_Error_Class::get(Eden_Error_Class::REFLECTION_ERROR)
-					->addParameter($class)
-					->addParameter($method)
-					->render();
-			}
+		try {
+			return self::_getInstance($class, $args);
+		} catch(Reflection_Exception $e) {
+			Eden_Error::get()
+				->setMessage(Eden_Error::REFLECTION_ERROR) 
+				->addVariable($class)
+				->addVariable('new')
+				->trigger();
 		}
 	}
 	
 	/* Private Methods
 	-------------------------------*/
+	private static function _getInstance($class, $args) {
+		if(count($args) === 0 || !method_exists($class, '__construct')) {
+			return new $class;
+		}
+		
+		$reflect = new ReflectionClass($class);
+		return $reflect->newInstanceArgs($args);
+	}
 }

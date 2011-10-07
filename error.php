@@ -7,268 +7,318 @@
  * distributed with this package.
  */
 
-require_once dirname(__FILE__).'/error/class.php';
-require_once dirname(__FILE__).'/error/validate.php';
+require_once dirname(__FILE__).'/event.php';
+require_once dirname(__FILE__).'/error/event.php';
+
+/*
+ * This file is part of the Eden package.
+ * (c) 2010-2012 Christian Blanquera <cblanquera@gmail.com>
+ *
+ * Copyright and license information can be found at LICENSE.txt
+ * distributed with this package.
+ */
 
 /**
+ * The base class for any class handling exceptions. Exceptions
+ * allow an application to custom handle errors that would 
+ * normally let the system handle. This exception allows you to 
+ * specify error levels and error types. Also using this exception
+ * outputs a trace (can be turned off) that shows where the problem
+ * started to where the program stopped.
  *
  * @package    Eden
  * @category   error
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: exception.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Error {
+class Eden_Error extends Exception {
 	/* Constants
 	-------------------------------*/
+	const REFLECTION_ERROR 		= 'Error creating Reflection Class: %s, Method: %s.';
+	const INVALID_ARGUMENT 		= 'Argument %d in %s() was expecting %s, however %s was given.';
+	
 	//error type
-	const PHP		= 'PHP';	//used when argument is invalidated
+	const ARGUMENT	= 'ARGUMENT';	//used when argument is invalidated
+	const LOGIC 	= 'LOGIC'; 		//used when logic is invalidated
+	const GENERAL 	= 'GENERAL'; 	//used when anything in general is invalidated
+	const CRITICAL 	= 'CRITICAL'; 	//used when anything caused application to crash
 	
 	//error level
-	const WARNING 	= 'WARNING';
-	const ERROR 	= 'ERROR';
+	const WARNING 		= 'WARNING';
+	const ERROR 		= 'ERROR';
+	const DEBUG 		= 'DEBUG'; 			//used for temporary developer output
+	const INFORMATION 	= 'INFORMATION'; 	//used for permanent developer notes
 	
-	const UNKNOWN	= 'UNKNOWN';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected static $_instance = NULL;
+	protected $_reporter	= NULL;
+	protected $_type 		= NULL;
+	protected $_level 		= NULL;
+	protected $_offset		= 1;
+	protected $_variables 	= array();
 	
 	/* Private Properties
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function get($message = NULL, $code = 0) {
 		$class = __CLASS__;
-		if(is_null(self::$_instance)) {
-			self::$_instance = new $class();
-		}
-		
-		return self::$_instance;
+		return new $class($message, $code);
 	}
 	
 	/* Magic
 	-------------------------------*/
+    public function __construct($message = NULL, $code = 0) {
+		$this->_type = self::LOGIC;
+		$this->_level = self::ERROR;
+		$this->_reporter = $this->_getReporter();
+		parent::__construct($message, $code);
+	}
+	
 	/* Public Methods
 	-------------------------------*/
-	/** 
-	 * Called when a PHP error has occured. Must
-	 * use setErrorHandler() first.
+	/**
+	 * Sets message
 	 *
-	 * @param number error number 
-	 * @param string message
-	 * @param string file
-	 * @param string line
-	 * @return true
+	 * @param string
+	 * @return this
 	 */
-	public function errorHandler($errno, $errstr, $errfile, $errline) {
-		//depending on the error number 
-		//we can determine the error level
-    	switch ($errno) {
-			case E_NOTICE:
-			case E_USER_NOTICE:
-			case E_WARNING:
-			case E_USER_WARNING:
-				$level = self::WARNING;
-				break;
-			case E_ERROR:
-			case E_USER_ERROR:
-			default:
-				$level = self::ERROR;
-				break;
-        }
+	public function setMessage($message) {
+		$this->message = $message;
+		return $this;
+	}
+	
+	/**
+	 * Sets what index the trace should start at
+	 *
+	 * @return this
+	 */
+	public function setTraceOffset($offset) {
+		$this->_offset = $offset;
+		return $this;
+	}
+	
+	/**
+	 * Returns the trace offset; where we should start the trace
+	 *
+	 * @return this
+	 */
+	public function getTraceOffset() {
+		return $this->_offset;
+	}
+	
+	/**
+	 * Sets exception level
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setLevel($level) {
+		$this->_level = $level;
+		return $this;
+	}
+	
+	/**
+	 * Sets exception level to WARNING
+	 *
+	 * @return this
+	 */
+	public function setLevelWarning() {
+		return $this->setLevel(self::WARNING);
+	}
+	
+	/**
+	 * Sets exception level to ERROR
+	 *
+	 * @return this
+	 */
+	public function setLevelError() {
+		return $this->setLevel(self::WARNING);
+	}
+	
+	/**
+	 * Sets exception level to DEBUG
+	 *
+	 * @return this
+	 */
+	public function setLevelDebug() {
+		return $this->setLevel(self::DEBUG);
+	}
+	
+	/**
+	 * Sets exception level to INFORMATION
+	 *
+	 * @return this
+	 */
+	public function setLevelInformation() {
+		return $this->setLevel(self::INFORMATION);
+	}
+	
+	/**
+	 * Returns the exception level
+	 *
+	 * @return string
+	 */
+	public function getLevel() {
+		return $this->_level;
+	}
+	
+	/**
+	 * Sets exception type
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setType($type) {
+		$this->_type = $type;
+		return $this;
+	}
+	
+	/**
+	 * Sets exception type to ARGUMENT
+	 *
+	 * @return this
+	 */
+	public function setTypeArgument() {
+		return $this->setType(self::ARGUMENT);
+	}
+	
+	/**
+	 * Sets exception type to LOGIC
+	 *
+	 * @return this
+	 */
+	public function setTypeLogic() {
+		return $this->setType(self::CRITICAL);
+	}
+	
+	/**
+	 * Sets exception type to GENERAL
+	 *
+	 * @return this
+	 */
+	public function setTypeGeneral() {
+		return $this->setType(self::GENERAL);
+	}
+	
+	/**
+	 * Sets exception type to CRITICAL
+	 *
+	 * @return this
+	 */
+	public function setTypeCritical() {
+		return $this->setType(self::CRITICAL);
+	}
+	
+	/**
+	 * Returns the exception type
+	 *
+	 * @return string
+	 */
+	public function getType() {
+		return $this->_type;
+	}
+	
+	/**
+	 * REturns the class or method that caught this
+	 *
+	 * @return string
+	 */
+	public function getReporter() {
+		return $this->_reporter;
+	}
+	
+	/**
+	 * Adds parameters used in the message
+	 *
+	 * @return this
+	 */
+	public function addVariable($variable) {
+		$this->_variables[] = $variable;
+		return $this;
+	}
+	
+	/**
+	 * Combines parameters with message and throws it
+	 *
+	 * @return void
+	 */
+	public function trigger() {
+		if(!empty($this->_variables)) {
+			$this->message = vsprintf($this->message, $this->_variables);
+		}
 		
-		//errors are only triggered through PHP
-		$type = self::PHP;
+		throw $this;
+	}
+	
+	/**
+	 * Tests arguments for valid data types
+	 *
+	 * @param *int
+	 * @param *mixed
+	 * @param *string[,string..]
+	 * @return this
+	 */
+	public function argument($index, $argument, $types) {
+		$trace 		= debug_backtrace();
+		$trace 		= $trace[1];
+		$types 		= func_get_args();
+		$index 		= array_shift($types) - 1;
+		$argument 	= array_shift($types);
 		
-		//get the trace
-		$trace = debug_backtrace();
-		
-		//by default we do not know the class
-		$class = self::UNKNOWN;
-		
-		//if there is a trace
-		if(count($trace) > 1) {
-			//formulate the class
-			$class = $trace[1]['function'].'()';
-			if(isset($trace[1]['class'])) {
-				$class = $trace[1]['class'].'->'.$class;
+		foreach($types as $i => $type) {
+			$method = 'is_'.$type;
+			if(function_exists($method) && $method($argument)) {
+				return $this;
+			}
+			
+			if(class_exists($type) && $argument instanceof $type) {
+				return $this;
 			}
 		}
 		
-		echo $this->_getMessage(
-			$trace,		1,
-			$type, 		$level, 
-			$class, 	$errfile, 
-			$errline, 	$errstr);
-		
-		//Don't execute PHP internal error handler
-		return true;
-	}
-	
-	/** 
-	 * Registers this class' error handler to PHP
-	 *
-	 * @return this
-	 */
-	public function setErrorHandler() {
-		set_error_handler(array($this, 'errorHandler'));
-		return $this;
-	}
-	
-	/** 
-	 * Returns default handler back to PHP
-	 *
-	 * @return this
-	 */
-	public function releaseErrorHandler() {
-		restore_error_handler();
-		return $this;
-	}
-	
-	/** 
-	 * Sets template used for errors and exceptions
-	 *
-	 * @return this
-	 */
-	public function setTemplate($template) {
-		$this->_template = $template;
-		return $this;
-	}
-	
-	/** 
-	 * Sets each trace template used for errors and exceptions
-	 *
-	 * @return this
-	 */
-	public function setTrace($template) {
-		$this->_trace = $template;
-		return $this;
-	}
-	
-	/** 
-	 * Called when a PHP exception has occured. Must
-	 * use setExceptionHandler() first.
-	 *
-	 * @param Exception
-	 * @return void
-	 */
-	public function exceptionHandler(Exception $e) {
-		//by default set LOGIC ERROR
-		$type 		= Eden_Error_Class::LOGIC;
-		$level 		= Eden_Error_Class::ERROR;
-		$offset 	= 1;
-		$reporter 	= get_class($e);
-		
-		//if the exception is an eden exception
-		if($e instanceof Eden_Error_Class) {
-			//set type and level from that
-			$type 		= $e->getType();
-			$level 		= $e->getLevel();
-			$offset 	= $e->getTraceOffset();
-			$reporter 	= $e->getReporter();
+		//lets formulate the method
+		$method = $trace['function'];
+		if(isset($trace['class'])) {
+			$method = $trace['class'].'->'.$method;
 		}
 		
-		//get trace
-		$trace = $e->getTrace();
+		$type = 'unknown';
+		if(is_string($argument)) {
+			$type = "'".$argument."'";
+		} else if(is_numeric($argument)) {
+			$type = $argument;
+		} else if(is_array($argument)) {
+			$type = 'Array';
+		} else if(is_bool($argument)) {
+			$type = $argument ? 'true' : 'false';
+		} else if(is_object($argument)) {
+			$type = get_class($argument);
+		}
 		
-		echo $this->_getMessage(
-			$trace,		$offset,
-			$type, 		$level, 
-			$reporter, 	$e->getFile(), 
-			$e->getLine(), 	$e->getMessage());
-	}
-	
-	/** 
-	 * Registers this class' exception handler to PHP
-	 *
-	 * @return this
-	 */
-	public function setExceptionHandler() {
-		set_exception_handler(array($this, 'exceptionHandler'));
-		return $this;
-	}
-	
-	/** 
-	 * Returns default handler back to PHP
-	 *
-	 * @return this
-	 */
-	public function releaseExceptionHandler() {
-		restore_exception_handler();
-		return $this;
+		$this->setMessage(self::INVALID_ARGUMENT)
+			->addVariable($index + 1)
+			->addVariable($method)
+			->addVariable(implode(' or ', $types))
+			->addVariable($type)
+			->setTypeLogic()
+			->setTraceOffset(2)
+			->trigger();
 	}
 	
 	/* Protected Methods
 	-------------------------------*/
-	protected function _getMessage($trace, $offset, $type, $level, $class, $file, $line, $message) {
-		//if there is a trace template and there's at least 2 leads
-		if($this->_trace && count($trace) > $offset) {
-			//for each trace
-			foreach($trace as $i => $call) {
-				//if we are at the first one
-				if($i < $offset) {
-					//ignore it because it will be the actual 
-					//call to the error or exception
-					unset($trace[$i]);
-					continue;
-				}
-				
-				//lets formulate the arguments
-				$args = array();
-				
-				//if there are arguments
-				if(!empty($call['args'])) {
-					//for each argument
-					foreach($call['args'] as $arg) {
-						//is it a string ?
-						if(is_string($arg)) {
-							$arg = "'".$arg."'";
-						//is it an array ?
-						} else if(is_array($arg)) {
-							$arg = 'Array';
-						//is it an object ?
-						} else if(is_object($arg)) {
-							$arg = get_class($arg);
-						//is it a bool ?
-						} else if(is_bool($arg)) {
-							$arg = $arg ? 'true' : 'false';
-						//is it null ?
-						} else if(is_null($arg)) {
-							$arg = 'null';
-						}
-						
-						$args[] = $arg;
-					}
-				}
-				
-				//either way make this array to a comma separated string
-				$args = implode(', ', $args);
-				
-				//lets formulate the method
-				$method = $call['function'].'('.$args.')';
-				if(isset($call['class'])) {
-					$method = $call['class'].'->'.$method;
-				}
-				
-				$tline = isset($call['line']) ? $call['line'] : 'N/A';
-				$tfile = isset($call['file']) ? $call['file'] : 'Virtual Call';
-				
-				//convert trace from array to string
-				$trace[$i] = sprintf($this->_trace, $method, $tfile, $tline);
-			}
-			
-			$trace = implode("\n", $trace);
-		} else {
-			$trace = NULL;
+	protected function _getReporter() {
+		$trace = $this->getTrace();
+		
+		if(isset($trace[0]['class'])) {
+			return $trace[0]['class'];
 		}
 		
-		return sprintf(
-			$this->_template, 
-			$type, $level, $class,
-			$file, $line,
-			$message, $trace);
+		return get_class($this);
 	}
 	
 	/* Private Methods

@@ -8,21 +8,16 @@
  */
 
 /**
- * Route Errors
+ * Template Errors
  *
  * @package    Eden
- * @category   route
+ * @category   template
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: exception.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Route_Error extends Eden_Error {
+class Eden_Template_Error extends Eden_Error {
 	/* Constants
 	-------------------------------*/
-	const CLASS_NOT_EXISTS 		= 'Invalid class call: %s->%s(). Class does not exist.';
-	const METHOD_NOT_EXISTS 	= 'Invalid class call: %s->%s(). Method does not exist.';
-	const STATIC_ERROR 			= 'Invalid class call: %s::%s().';
-	const FUNCTION_ERROR 		= 'Invalid function run: %s().';
-	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties

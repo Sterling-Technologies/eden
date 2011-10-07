@@ -61,7 +61,7 @@ class Eden_String extends Eden_Type_Abstract {
 	-------------------------------*/
 	public static function get($data) {
 		//argument 1 must be a string
-		Eden_Error_Validate::get()->argument(0, 'string');
+		Eden_String_Error::get()->argument(1, 'string');
 		
 		return self::_getMultiple(__CLASS__, $data);
 	}
@@ -75,23 +75,6 @@ class Eden_String extends Eden_Type_Abstract {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns the string
-	 *
-	 * @param bool whether to get the modified or original version
-	 * @return string
-	 */
-	public function getValue($modified = true) {
-		if($modified instanceof Eden_Boolean) {
-			$modified = $modified->getValue();
-		}
-		
-		//argument 1 must be a bool
-		Eden_Error_Validate::get()->argument(0, 'bool');
-		
-		return $modified ? $this->_data : $this->_original;
-	}
-	
-	/**
 	 * Camelizes a string
 	 *
 	 * @param string prefix
@@ -99,7 +82,7 @@ class Eden_String extends Eden_Type_Abstract {
 	 */
 	public function camelize($prefix = '-') {
 		//argument 1 must be a string
-		Eden_Error_Validate::get()->argument(0, 'string');
+		Eden_String_Error::get()->argument(1, $prefix, 'string');
 		
 		$this->_data = str_replace($prefix, ' ', $this->_data);
 		$this->_data = str_replace(' ', '', ucwords($this->_data));
@@ -117,7 +100,7 @@ class Eden_String extends Eden_Type_Abstract {
 	 */
 	public function uncamelize($prefix = '-') {
 		//argument 1 must be a string
-		Eden_Error_Validate::get()->argument(0, 'string');
+		Eden_String_Error::get()->argument(1, $prefix, 'string');
 		
 		$this->_data = strtolower(preg_replace("/([A-Z])/", $prefix."$1", $this->_data));
 		
@@ -147,7 +130,7 @@ class Eden_String extends Eden_Type_Abstract {
 	 */
 	public function titlize($prefix = '-') {
 		//argument 1 must be a string
-		Eden_Error_Validate::get()->argument(0, 'string');
+		Eden_String_Error::get()->argument(1, $prefix, 'string');
 		
 		$this->_data = ucwords(str_replace($prefix, ' ', $this->_data));
 		

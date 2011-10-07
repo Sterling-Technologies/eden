@@ -7,7 +7,7 @@
  * distributed with this package.
  */
 
-require dirname(__FILE__).'/class.php';
+require_once dirname(__FILE__).'/class.php';
 
 /**
  * Handler for class autoloading. Many developers writing 
@@ -70,7 +70,7 @@ class Eden_Loader extends Eden_Class {
 	 * @param *string the class name
 	 * @return bool
 	 */
-	public function autoload($class) {
+	public function handler($class) {
 		if(!is_string($class)) {
 			return false;
 		}
@@ -89,25 +89,14 @@ class Eden_Loader extends Eden_Class {
 	}
 	
 	/**
-	 * Based on the path, this will return a guess
-	 * of what the class name is in this file
+	 * Logically includes a class if not included already.
 	 *
-	 * @param *string path
-	 * @return string|null class name
+	 * @param *string the class name
+	 * @return this
 	 */
-	public function guessClassName($file) {
-		$file = Eden_Path::get()->getFormatted($file);
-		
-		foreach($this->_root as $root) {
-			$path = str_replace('.php', '', str_replace($root, '', $file));
-			$class = trim(str_replace('/', ' ', $path));
-			$class = str_replace(' ', '_', ucwords($class));
-			if(class_exists($class)) {
-				return $class;
-			}
-		}
-		
-		return NULL;
+	public function load($class) {
+		$this->handler($class);
+		return $this;
 	}
 	
 	/* Protected Methods

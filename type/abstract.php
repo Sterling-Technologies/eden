@@ -99,7 +99,7 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 		try {
 			//call the parent
 			return parent::__call($name, $args);
-		} catch(Eden_Error_Class $e) {
+		} catch(Eden_Error $e) {
 			throw new Eden_Type_Error($e->getMessage());
 		}
 	}
@@ -113,12 +113,8 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 	 * @return string
 	 */
 	public function getValue($modified = true) {
-		if($modified instanceof Eden_Type_Boolean) {
-			$modified = $modified->getValue();
-		} else {
-			//argument 1 must be a bool
-			Eden_Error_Validate::get()->argument(0, 'bool');
-		}
+		//argument 1 must be a bool
+		Eden_Type_Validate::get()->argument(1, $modified, 'bool');
 		
 		return $modified ? $this->_data : $this->_original;
 	}

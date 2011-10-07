@@ -7,7 +7,6 @@
  * distributed with this package.
  */
 
-require_once dirname(__FILE__).'/class.php';
 require_once dirname(__FILE__).'/array.php';
 require_once dirname(__FILE__).'/model/error.php';
 
@@ -77,9 +76,9 @@ class Eden_Model extends Eden_Array {
 		}
 		
 		//throw an error
-		Eden_Model_Error::get(Eden_Model_Error::SET_INVALID)
-			->addVariable($name)
-			->render();
+		Eden_Model_Error::get()
+			->setMessage(Eden_Model_Error::SET_INVALID)
+			->addVariable($name)->trigger();
 	}
 	
 	/* Public Methods
@@ -96,9 +95,9 @@ class Eden_Model extends Eden_Array {
 			//if this is not set in the meta data
 			if(!isset($this->_meta[$name])) {
 				//throw an error
-				Eden_Model_Error::get(Eden_Model_Error::SET_INVALID)
-					->addVariable($name)
-					->render();
+				Eden_Model_Error::get()
+					->setMessage(Eden_Model_Error::SET_INVALID)
+					->addVariable($name)->trigger();
 			}
 			
 			$this->_data[$name] = $value;
@@ -114,15 +113,19 @@ class Eden_Model extends Eden_Array {
 	 * @param array
 	 * @return this
 	 */
-	public function setMetaData($name, array $meta = array()) {
-		//argument 1 must be a string
-		Eden_Error_Validate::get()->argument(0, 'string');
+	public function setMetaData($name, $meta = array(), $value = NULL) {
+		//argument test
+		Eden_Model_Error::get()
+			->argument(1, $name, 'string')				//argument 1 must be a string
+			->argument(2, $meta, 'string', 'array')		//argument 2 must be a string or array
+			->argument(3, $value, 'string', 'null');	//argument 3 must be a string or null
 		
-		$this->_meta[$name] = $meta;
-		
-		if(!isset($this->_data[$name])) {
-			$this->_data[$name] = NULL;
+		if(is_array($meta)) {
+			$this->_meta[$name] = $meta;
+			return $this;
 		}
+		
+		$this->_meta[$name][$meta] = $value;
 		
 		return $this;
 	}
@@ -135,10 +138,10 @@ class Eden_Model extends Eden_Array {
 	 * @return array
 	 */
 	public function getMetaData($name = NULL, $key = NULL) {
-		//argument 1 must be a string or null
-		Eden_Error_Validate::get()->argument(0, 'string', 'null');
-		//argument 2 must be a string or null
-		Eden_Error_Validate::get()->argument(1, 'string', 'null');
+		//argument test
+		Eden_Model_Error::get()
+			->argument(1, $name, 'string', 'null')	//argument 1 must be a string or null
+			->argument(2, $key, 'string', 'null');	//argument 2 must be a string or null
 		
 		if(!is_null($name) && isset($this->_meta[$name])) {		
 			if(!is_null($key) && isset($this->_meta[$name][$key])) {
@@ -163,9 +166,9 @@ class Eden_Model extends Eden_Array {
         //if this is not set in the meta data
 		if(!isset($this->_meta[$offset])) {
 			//throw an error
-			Eden_Model_Error::get(Eden_Model_Error::SET_INVALID)
-				->addVariable($offset)
-				->render();
+			Eden_Model_Error::get()
+				->setMessage(Eden_Model_Error::SET_INVALID)
+				->addVariable($offset)->trigger();
 		}
         
 		$this->_data[$offset] = $value;

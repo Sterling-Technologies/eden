@@ -10,14 +10,14 @@
 require_once dirname(__FILE__).'/class.php';
 
 /**
- *  
+ *  Trigger when something is false
  *
  * @package    Eden
  * @category   core
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Noop extends Eden_Class implements ArrayAccess, Iterator {
+class Eden_When extends Eden_Class implements ArrayAccess, Iterator {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
@@ -50,7 +50,7 @@ class Eden_Noop extends Eden_Class implements ArrayAccess, Iterator {
 	 * @param bool
 	 * @return this|Eden_Noop
 	 */
-	public function end() {
+	public function endWhen() {
 		return $this->_scope;
 	}
 	

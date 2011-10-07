@@ -1,28 +1,30 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2010-2012 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
 
+require_once dirname(__FILE__).'/class.php';
+require_once dirname(__FILE__).'/event/class.php';
+require_once dirname(__FILE__).'/event/error.php';
+
 /**
- * Route Errors
+ * Allows the ability to listen to events made known by another 
+ * piece of functionality. Events are items that transpire based 
+ * on an action. With events you can add extra functionality 
+ * right after the event has triggered.
  *
  * @package    Eden
- * @category   route
+ * @category   event
  * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: exception.php 1 2010-01-02 23:06:36Z blanquera $
+ * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Route_Error extends Eden_Error {
+class Eden_Event extends Eden_Event_Class {
 	/* Constants
 	-------------------------------*/
-	const CLASS_NOT_EXISTS 		= 'Invalid class call: %s->%s(). Class does not exist.';
-	const METHOD_NOT_EXISTS 	= 'Invalid class call: %s->%s(). Method does not exist.';
-	const STATIC_ERROR 			= 'Invalid class call: %s::%s().';
-	const FUNCTION_ERROR 		= 'Invalid function run: %s().';
-	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -31,14 +33,13 @@ class Eden_Route_Error extends Eden_Error {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($message = NULL, $code = 0) {
-		$class = __CLASS__;
-		return new $class($message, $code);
+	public static function get() {
+		return self::_getSingleton(__CLASS__);
 	}
 	
 	/* Magic
 	-------------------------------*/
-    /* Public Methods
+	/* Public Methods
 	-------------------------------*/
 	/* Protected Methods
 	-------------------------------*/

@@ -9,7 +9,7 @@
 
 require_once dirname(__FILE__).'/class.php';
 require_once dirname(__FILE__).'/type/abstract.php';
-require_once dirname(__FILE__).'/type/error.php';
+require_once dirname(__FILE__).'/array/error.php';
 require_once dirname(__FILE__).'/string.php';
 
 /**
@@ -19,7 +19,7 @@ require_once dirname(__FILE__).'/string.php';
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator {
+class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator, Serializable, Countable {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
@@ -53,7 +53,8 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator {
 	
 	protected static $_postMethods = array(
 		'array_fill', 		'array_map', 
-		'array_search', 	'compact');
+		'array_search', 	'compact',
+		'implode');
 	
 	protected static $_referenceMethods = array(
 		'array_unshift', 	'array_walk_recursive', 
@@ -80,7 +81,19 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator {
 	}
 	
 	public function __toString() {
-		return '<pre>'.print_r($this->_data, true).'</pre>';
+		return json_encode($this->_data);
+	}
+	
+	public function __get($name) {
+		if(isset($this->_data[$name])) {
+			return $this->_data[$name];
+		}
+		
+		return NULL;
+	}
+	
+	public function __set($name, $value) {
+		$this->_data[$name] = $value;
 	}
 	
 	/* Public Methods
@@ -88,28 +101,25 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator {
 	/**
 	 * Removes a row in an array and adjusts all the indexes
 	 *
-	 * @param *array the array
-	 * @param string the key to leave out
+	 * @param *string the key to leave out
 	 * @param bool is this a value or key value array?
 	 * @return this
 	 */
 	public function cut($arrayKey, $isValueArray = true) {
 		//argument 1 must be a string, argument 2 must be a boolean
-		Eden_Error_Validate::get()->argument(0, 'string')->argument(1, 'bool');
+		Eden_Array_Error::get()
+			->argument(1, $arrayKey, 'string')
+			->argument(2, $isValueArray, 'bool');
 		
 		$array = array();
 		foreach($this->_data as $key => $value) {
 			//if the key does not equal 
 			//the key to to leave out
-			if($arrayKey != $key)
-			{
+			if($arrayKey != $key) {
 				//we want to add it to the new array
-				if($isValueArray)
-				{
+				if($isValueArray) {
 					$array[] = $value;
-				}
-				else
-				{
+				} else {
 					$array[$key] = $value;
 				}	
 			}
@@ -130,7 +140,9 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator {
 	 */
 	public function paste($afterKey, $arrayValue, $arrayKey = NULL) {
 		//argument 1 must be a string, argument 3 must be a string or null
-		Eden_Error_Validate::get()->argument(0, 'string')->argument(2, 'string', 'null');
+		Eden_Array_Error::get()
+			->argument(1, $afterKey, 'string')
+			->argument(3, $arrayKey, 'string', 'null');
 		
 		$array = array();
 		foreach($this->_data as $key => $value) {
@@ -157,7 +169,8 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator {
 				}
 			}
 		}
-		$this->_data = $newArray; 
+		
+		$this->_data = $array; 
 		
 		return $this;
 	}
@@ -171,7 +184,9 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator {
 	 */
 	public function associateTable($key, $many = false) {
 		//argument 1 must be a string, argument 2 must be a boolean
-		Eden_Error_Validate::get()->argument(0, 'string')->argument(1, 'bool');
+		Eden_Array_Error::get()
+			->argument(1, $key, 'string')
+			->argument(2, $many, 'bool');
 		
 		$table = array();
 		foreach($this->_data as $i => $row) {
@@ -199,7 +214,9 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator {
 	 */
 	public function getKeyValue($key, $index = NULL) {
 		//argument 1 must be a string, argument 2 must be a string or null
-		Eden_Error_Validate::get()->argument(0, 'string')->argument(1, 'string', 'null');
+		Eden_Array_Error::get()
+			->argument(1, $key, 'string')
+			->argument(2, $index, 'string', 'null');
 		
 		$table = $this->associateTable($table, $key);
 		
@@ -212,6 +229,7 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator {
 	
 	/**
 	 * Sorts a table
+	 * TODO: array_multisort
 	 *
 	 * @param *string sort field
 	 * @param string order
@@ -220,72 +238,26 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator {
 	 * @return array
 	 */
 	public function paginate($field, $order = 'ASC', $start = 0, $range = 0) {
-		Eden_Error_Validate::get()
-			->argument(0, 'string') //argument 1 must be a string
-			->argument(1, 'string') //argument 2 must be a string
-			->argument(2, 'number') //argument 3 must be a number
-			->argument(3, 'number'); //argument 4 must be a number
+		Eden_Array_Error::get()
+			->argument(1, $field, 'string') //argument 1 must be a string
+			->argument(2, $order, 'string') //argument 2 must be a string
+			->argument(3, $start, 'int') //argument 3 must be a number
+			->argument(4, $range, 'int'); //argument 4 must be a number
 		
-		if($start < 0) {
-			$start = 0;
-		}
-		
-		if($range < 0) {
-			$range = 0;
-		}
-		
+		//do the sorting first
 		//first lets take the field column
 		//and put it in a new array
-		$keyList = array();
-		foreach($this->_data as $row) {
-			//if the table is inconsistent
-			if(!isset($row[$field])) {
-				//don't do anyhting more
-				return $this;
-			}
-			
-			$keyList[] = $row[$field];
+		$fields = array();
+		foreach($this->_data as $i =>$row) {
+			$fields[$i] = $row[$field];
 		}
 		
-		//lets now sort this column
-		//keeping the key value relation
-		//intact
-		if($order == 'DESC') {
-			arsort($keyList);
-		} else {
-			asort($keyList);
-		}
+		$order = strtoupper($order) == 'ASC' ? SORT_ASC : SORT_DESC;
 		
-		//lastly we want to create a 
-		//new array and put in each row
-		//by order of the column sort
-		//if there is a row with the same
-		//column value it doesn't really
-		//matter which one goes first
-		$table = array();
-		$startI = 0;
-		$rangeI = 0;
-		//parse key list
-		foreach( $keyList as $index => $sortField ) {
-			//if the start is less 
-			//than the increment start
-			if((int) $start <= $startI ) {
-				//if a range is defined and 
-				//the increment range is less than that
-				if((int) $range && $rangeI < (int) $range) {
-					//we will add it
-					$table[] = $this->_data[$index];
-					$rangeI ++;
-				//if range equals 0 we assume 
-				//that we need to get all of it
-				} else if($range == 0) {
-					$table[] = $this->_data[$index];
-				}
-			}
-			$startI ++;
-		}
+		array_multisort($fields, $order, SORT_STRING, $this->_data);
 		
-		$this->_data = $table;
+		//now do the pagination
+		$this->_data = array_slice($this->_data, $start, $range);
 		
 		return $this;
 	}
@@ -384,6 +356,35 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator {
 	public function offsetGet($offset) {
         return isset($this->_data[$offset]) ? $this->_data[$offset] : NULL;
     }
+	
+	/**
+	 * returns serialized data using the Serializable interface
+	 *
+	 * @return string
+	 */
+	public function serialize() {
+        return json_encode($this->_data);
+    }
+	
+	/**
+	 * sets data using the Serializable interface
+	 *
+	 * @param string
+	 * @return void
+	 */
+    public function unserialize($data) {
+        $this->_data = json_decode($data, true);
+		return $this;
+    }
+	
+	/**
+	 * returns size using the Countable interface
+	 *
+	 * @return string
+	 */
+	public function count() {
+		return count($this->_data);
+	}
 	
 	/* Protected Methods
 	-------------------------------*/

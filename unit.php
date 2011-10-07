@@ -7,6 +7,8 @@
  * distributed with this package.
  */
 
+require_once dirname(__FILE__).'/unit/error.php';
+
 /**
  *  
  *
@@ -75,11 +77,17 @@ class Eden_Unit {
 	/* Public Methods
 	-------------------------------*/
 	public function setPackage($name) {
+		//Argument 1 must be a string
+		Eden_Unit_Error::get()->argument(1, $name, 'string');
+		
 		$this->_package = $name;
 		return $this;
 	}
 	
 	public function getTotalTests($package = NULL) {
+		//Argument 1 must be a string or null
+		Eden_Unit_Error::get()->argument(1, $package, 'string', 'null');
+		
 		if(isset($this->_report[$package])) {
 			return count($this->_report[$package]);
 		}
@@ -93,6 +101,8 @@ class Eden_Unit {
 	}
 	
 	public function getPassFail($package = NULL) {
+		//Argument 1 must be a string or null
+		Eden_Unit_Error::get()->argument(1, $package, 'string', 'null');
 		$passFail = array(0, 0);
 		if(isset($this->_report[$package])) {
 			foreach($this->_report[$package] as $test) {
@@ -122,27 +132,55 @@ class Eden_Unit {
 	
 	/* Protected Methods
 	-------------------------------*/
-	protected function _assertArrayHasKey($needle, array $haystack) {
+	protected function _assertArrayHasKey($needle, $haystack) {
+		try {
+			Eden_Unit_Error::get()
+				->argument(1, $needle, 'string')		//Argument 1 must be a string
+				->argument(2, $haystack, 'array');		//Argument 2 must be an array
+		} catch(Eden_Unit_Error $e) {
+			return false;
+		}
+		
 		return array_key_exists($needle, $haystack);
 	}
 	
 	protected function _assertClassHasAttribute($needle, $haystack) {
+		try { //try to validate arguments
+			Eden_Unit_Error::get()
+				->argument(1, $needle, 'string')				//Argument 1 must be a string
+				->argument(2, $haystack, 'object', 'string');	//Argument 2 must be an object or string
+		} catch(Eden_Unit_Error $e) {
+			return false;
+		}
+		
 		return property_exists($needle, $haystack);
 	}
 	
 	protected function _assertContains($needle, $haystack) {
+		try { //try to validate arguments
+			Eden_Unit_Error::get()
+				->argument(1, $needle, 'string')
+				->argument(2, $haystack, 'array', 'string');
+		} catch(Eden_Unit_Error $e) {
+			return false;
+		}
+		
 		if(is_string($haystack)) {
 			return strstr($haystack, $needle) !== false;
 		}
 		
-		if(is_array($haystack)) {
-			return in_array($needle, $haystack);
-		}
-		
-		return false;
+		return in_array($needle, $haystack);
 	}
 	
-	protected function _assertContainsOnly($type, array $haystack) {
+	protected function _assertContainsOnly($type, $haystack) {
+		try { //try to validate arguments
+			Eden_Unit_Error::get()
+				->argument(1, $type, 'string')					//Argument 1 must be a string
+				->argument(2, $haystack, 'object', 'array');	//Argument 2 must be an object or array
+		} catch(Eden_Unit_Error $e) {
+			return false;
+		}
+		
 		$method = 'is_'.$type;
 		
 		if(function_exists($method)) {
@@ -168,12 +206,24 @@ class Eden_Unit {
 		return false;
 	}
 	
-	protected function _assertCount($number, array $haystack) {
+	protected function _assertCount($number, $haystack) {
+		try { //try to validate arguments
+			Eden_Unit_Error::get()
+				->argument(1, $number, 'int')					//Argument 1 must be a integer
+				->argument(2, $haystack, 'array', 'string');	//Argument 2 must be an array or string
+		} catch(Eden_Unit_Error $e) {
+			return false;
+		}
+		
+		if(is_string($haystack)) {
+			return strlen($haystack) == $number;
+		}
+		
 		return count($haystack) == $number;
 	}
 	
 	protected function _assertEmpty($actual) {
-		return empty($haystack);
+		return empty($actual);
 	}
 	
 	protected function _assertEquals($expected, $actual) {
@@ -185,18 +235,48 @@ class Eden_Unit {
 	}
 	
 	protected function _assertGreaterThan($number, $actual) {
+		try { //try to validate arguments
+			Eden_Unit_Error::get()
+				->argument(1, $number, 'numeric')	//Argument 1 must be a number
+				->argument(2, $actual, 'numeric');	//Argument 2 must be a number
+		} catch(Eden_Unit_Error $e) {
+			return false;
+		}
+		
 		return $number > $actual;
 	}
 	
 	protected function _assertGreaterThanOrEqual($number, $actual) {
+		try { //try to validate arguments
+			Eden_Unit_Error::get()
+				->argument(1, $number, 'numeric')	//Argument 1 must be a number
+				->argument(2, $actual, 'numeric');	//Argument 2 must be a number
+		} catch(Eden_Unit_Error $e) {
+			return false;
+		}
+		
 		return $number >= $actual;
 	}
 	
 	protected function _assertInstanceOf($expected, $actual) {
+		try { //try to validate arguments
+			Eden_Unit_Error::get()
+				->argument(1, $expected, 'string')		//Argument 1 must be a string
+				->argument(2, $actual, 'object');	//Argument 2 must be an object
+		} catch(Eden_Unit_Error $e) {
+			return false;
+		}
+		
 		return $actual instanceof $expected;
 	}
 	
 	protected function _assertInternalType($type, $actual) {
+		try { //try to validate arguments
+			Eden_Unit_Error::get()->argument(1, $type, 'string');	//Argument 1 must be a string
+		} catch(Eden_Unit_Error $e) {
+			return false;
+		}
+		
 		$method = 'is_'.$type;
 		
 		if(function_exists($method)) {
@@ -211,10 +291,26 @@ class Eden_Unit {
 	}
 	
 	protected function _assertLessThan($number, $actual) {
+		try { //try to validate arguments
+			Eden_Unit_Error::get()
+				->argument(1, $number, 'numeric')	//Argument 1 must be a number
+				->argument(2, $actual, 'numeric');	//Argument 2 must be a number
+		} catch(Eden_Unit_Error $e) {
+			return false;
+		}
+		
 		return $number < $actual;
 	}
 	
 	protected function _assertLessThanOrEqual($number, $actual) {
+		try { //try to validate arguments
+			Eden_Unit_Error::get()
+				->argument(1, $number, 'numeric')	//Argument 1 must be a number
+				->argument(2, $actual, 'numeric');	//Argument 2 must be a number
+		} catch(Eden_Unit_Error $e) {
+			return false;
+		}
+		
 		return $number <= $actual;
 	}
 	
@@ -223,6 +319,14 @@ class Eden_Unit {
 	}
 	
 	protected function _assertRegExp($pattern, $string) {
+		try { //try to validate arguments
+			Eden_Unit_Error::get()
+				->argument(1, $pattern, 'string')	//Argument 1 must be a string
+				->argument(2, $string, 'string');	//Argument 2 must be a string
+		} catch(Eden_Unit_Error $e) {
+			return false;
+		}
+		
 		return preg_match($pattern, $string);
 	}
 	
@@ -231,10 +335,26 @@ class Eden_Unit {
 	}
 	
 	protected function _assertStringEndsWith($suffix, $string) {
+		try { //try to validate arguments
+			Eden_Unit_Error::get()
+				->argument(1, $suffix, 'string')	//Argument 1 must be a string
+				->argument(2, $string, 'string');	//Argument 2 must be a string
+		} catch(Eden_Unit_Error $e) {
+			return false;
+		}
+		
 		return substr_compare($string, $suffix, -strlen($suffix), strlen($suffix)) === 0;
 	}
 	
 	protected function _assertStringStartsWith($prefix, $string) {
+		try { //try to validate arguments
+			Eden_Unit_Error::get()
+				->argument(1, $prefix, 'string')	//Argument 1 must be a string
+				->argument(2, $string, 'string');	//Argument 2 must be a string
+		} catch(Eden_Unit_Error $e) {
+			return false;
+		}
+		
 		return strpos($string, $prefix) === 0;
 	}
 	

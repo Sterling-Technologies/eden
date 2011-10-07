@@ -46,22 +46,23 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @param int expiration
 	 * @param string path to make the cookie available
 	 * @param string|null the domain
-	 * @return bool
+	 * @return this
 	 */
-	public function set($key, $data = NULL, $expires = 0, $path = '/', $domain = NULL, $secure = false, $httponly = false) {
-		//argument 1 must be a string or null
-		Eden_Error_Validate::get()
-			->argument(0, 'string')
-			->argument(1, 'string', 'number')
-			->argument(2, 'string', 'null')
-			->argument(3, 'number')
-			->argument(4, 'string')
-			->argument(5, 'string', 'null')
-			->argument(6, 'string', 'null')
-			->argument(7, 'bool')
-			->argument(8, 'bool');
+	public function set($key, $data = NULL, $expires = 0, $path = NULL, $domain = NULL, $secure = false, $httponly = false) {
+		//argment test
+		Eden_Cookie_Error::get()
+			->argument(1, $key, 'string')						//argument 1 must be a string
+			->argument(2, $data, 'string', 'numeric', 'null')	//argument 2 must be a string,numeric or null
+			->argument(3, $expires, 'int')						//argument 3 must be a integer
+			->argument(4, $path, 'string', 'null')				//argument 4 must be a string or null
+			->argument(5, $domain, 'string', 'null')			//argument 5 must be a string or null
+			->argument(6, $secure, 'bool')						//argument 6 must be a boolean
+			->argument(7, $httponly, 'bool');					//argument 7 must be a boolean
+			
+		$_COOKIE[$key] = $data;
+		setcookie($key, $data, $expires, $path, $domain, $secure, $httponly);
 		
-		return setcookie($key, $data, (int) $expires, $path, $domain, $secure, $httponly);
+		return $this;
 	}
 	
 	/**
@@ -72,30 +73,12 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @param int expiration
 	 * @param string path to make the cookie available
 	 * @param string|null the domain
-	 * @return bool
+	 * @return this
 	 */
-	public function setSecure($key, $data = NULL, $expire = 0, $path = '/', $domain = NULL) {
+	public function setSecure($key, $data = NULL, $expires = 0, $path = NULL, $domain = NULL) {
 		try {
 			return $this->set($key, $data, $expires, $path, $domain, true, false);
-		} catch(Eden_Error_Model $e) {
-			throw new Eden_Cookie_Error($e->getMessage());
-		}
-	}
-	
-	/**
-	 * Sets an unsecure cookie.
-	 *
-	 * @param *string cookie name
-	 * @param variable the data
-	 * @param int expiration
-	 * @param string path to make the cookie available
-	 * @param string|null the domain
-	 * @return bool
-	 */
-	public function setUnsecure($key, $data = NULL, $expire = 0, $path = '/', $domain = NULL) {
-		try {
-			return $this->set($key, $data, $expires, $path, $domain, false, true);
-		} catch(Eden_Error_Model $e) {
+		} catch(Eden_Cookie_Error $e) {
 			throw new Eden_Cookie_Error($e->getMessage());
 		}
 	}
@@ -107,13 +90,13 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @param int expiration
 	 * @param string path to make the cookie available
 	 * @param string|null the domain
-	 * @return Eden_Cookie
+	 * @return this
 	 */
-	public function setData(array $data, $expires = 0, $path = '/', $domain = NULL, $secure = false, $httponly = false) {
+	public function setData(array $data, $expires = 0, $path = NULL, $domain = NULL, $secure = false, $httponly = false) {
 		foreach($data as $key => $value) {
 			try {
 				$this->set($key, $value, $expires, $path, $domain, $secure, $httponly);
-			} catch(Eden_Error_Model $e) {
+			} catch(Eden_Cookie_Error $e) {
 				throw new Eden_Cookie_Error($e->getMessage());
 			}
 		}
@@ -128,31 +111,12 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @param int expiration
 	 * @param string path to make the cookie available
 	 * @param string|null the domain
-	 * @return Eden_Cookie
+	 * @return this
 	 */
-	public function setSecureData(array $data, $expires = 0, $path = '/', $domain = NULL) {
+	public function setSecureData(array $data, $expires = 0, $path = NULL, $domain = NULL) {
 		try {
 			$this->setData($data, $expires, $path, $domain, true, false);
-		} catch(Eden_Error_Model $e) {
-			throw new Eden_Cookie_Error($e->getMessage());
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets a set of unsecure cookies.
-	 *
-	 * @param *array the data in key value format
-	 * @param int expiration
-	 * @param string path to make the cookie available
-	 * @param string|null the domain
-	 * @return Eden_Cookie
-	 */
-	public function setUnsecureData(array $data, $expires = 0, $path = '/', $domain = NULL) {
-		try {
-			$this->setData($data, $expires, $path, $domain, false, true);
-		} catch(Eden_Error_Model $e) {
+		} catch(Eden_Cookie_Error $e) {
 			throw new Eden_Cookie_Error($e->getMessage());
 		}
 		
@@ -166,13 +130,17 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return mixed
 	 */
 	public function getData($key = NULL) {
-		Eden_Error_Validate::get()->argument(0, 'string', 'null');
+		Eden_Cookie_Error::get()->argument(1, $key, 'string', 'null');
 		
 		if(is_null($key)) {
 			return $_COOKIE;
 		}
 		
-		return $_COOKIE[$key];
+		if(isset($_COOKIE[$key])) {
+			return $_COOKIE[$key];
+		}
+		
+		return NULL;
 	}
 	
 	/**
@@ -182,9 +150,9 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return Eden_Cookie
 	 */
 	public function remove($name) {
-		Eden_Error_Validate::get()->argument(0, 'string');
+		Eden_Cookie_Error::get()->argument(1, $name, 'string');
 		
-		$this->setKey($name, NULL, time() - 3600);
+		$this->set($name, NULL, time() - 3600);
 		
 		if(isset($_COOKIE[$name])) {
 			unset($_COOKIE[$name]);
@@ -266,8 +234,8 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	public function offsetSet($offset, $value) {
         try {
 			$this->set($offset, $value, strtotime('+10 years'));
-		} catch(Eden_Error_Model $e) {
-			throw new Eden_Cookie_Error($e->getMessage());
+		} catch(Eden_Error $e) {
+			throw new Eden_Error($e->getMessage());
 		}
     }
 	

@@ -7,7 +7,7 @@
  * distributed with this package.
  */
  
-require_once dirname(__FILE__).'/error.php';
+require_once dirname(__FILE__).'/class.php';
 require_once dirname(__FILE__).'/route/error.php';
 
 /**
@@ -22,7 +22,7 @@ require_once dirname(__FILE__).'/route/error.php';
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: route.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Route {
+class Eden_Route extends Eden_Class {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
@@ -58,9 +58,9 @@ class Eden_Route {
 	 * @return Eden_Route
 	 */
 	public function routeClass($route, $class) {
-		Eden_Error_Validate::get()
-			->argument(0, 'string')	//argument 1 must be a string
-			->argument(1, 'string');	//argument 2 must be a string
+		Eden_Route_Error::get()
+			->argument(1, $route, 'string')		//argument 1 must be a string
+			->argument(2, $class, 'string');	//argument 2 must be a string
 		
 		$this->_classes[$route] = $class;
 		return $this;
@@ -75,7 +75,7 @@ class Eden_Route {
 	 */
 	public function getRouteClass($route, $default = NULL) {
 		//argument 1 must be a string
-		Eden_Error_Validate::get()->argument(0, 'string');
+		Eden_Route_Error::get()->argument(1, $route, 'string');
 		
 		if(isset($this->_classes[$route])) {
 			return $this->_classes[$route];
@@ -93,7 +93,7 @@ class Eden_Route {
 	 */
 	public function getClassRoute($class, $default = NULL) {
 		//argument 1 must be a string
-		Eden_Error_Validate::get()->argument(0, 'string');
+		Eden_Route_Error::get()->argument(1, $class, 'string');
 		
 		foreach($this->_classes as $i => $to) {
 			if($to == $class) {
@@ -133,10 +133,12 @@ class Eden_Route {
 	 * @return Eden_Route
 	 */
 	public function routeMethod($routeClass, $routeMethod, $class, $method = NULL) {
-		Eden_Error_Validate::get()
-			->argument(0, 'string')		//argument 1 must be a string
-			->argument(1, 'string')		//argument 2 must be a string
-			->argument(2, 'string');	//argument 3 must be a string
+		//argument test
+		Eden_Route_Error::get()
+			->argument(1, $routeClass, 'string')	//argument 1 must be a string
+			->argument(2, $routeMethod, 'string')	//argument 2 must be a string
+			->argument(3, $class, 'string')			//argument 3 must be a string
+			->argument(4, $method, 'string');		//argument 4 must be a string
 		
 		//if the method is not a string
 		if(!is_string($method)) {
@@ -160,9 +162,9 @@ class Eden_Route {
 	 * @return array|variable
 	 */
 	public function getRouteMethod($class, $method, $default = NULL) {
-		Eden_Error_Validate::get()
-			->argument(0, 'string')	//argument 1 must be a string
-			->argument(1, 'string');	//argument 2 must be a string
+		Eden_Route_Error::get()
+			->argument(1, $class, 'string')		//argument 1 must be a string
+			->argument(2, $method, 'string');	//argument 2 must be a string
 		
 		$class = $this->getRouteClass($class, $class);
 		
@@ -182,9 +184,9 @@ class Eden_Route {
 	 * @return array|variable
 	 */
 	public function getMethodRoute($class, $method, $default = NULL) {
-		Eden_Error_Validate::get()
-			->argument(0, 'string')	//argument 1 must be a string
-			->argument(1, 'string');	//argument 2 must be a string
+		Eden_Route_Error::get()
+			->argument(1, $class, 'string')		//argument 1 must be a string
+			->argument(2, $method, 'string');	//argument 2 must be a string
 		
 		$class = $this->getRouteClass($class, $class);
 		
@@ -226,10 +228,12 @@ class Eden_Route {
 	 * @return object
 	 */
 	public function getClass($class) {
+		//argument 1 must be a string
+		Eden_Route_Error::get()->argument(1, $class, 'string'); 
+		
 		$args = func_get_args();
 		$class = array_shift($args);
 		
-		Eden_Error_Validate::get()->argument(0, 'string'); //argument 1 must be a string
 		
 		return $this->getClassArray($class, $args);
 	}
@@ -242,7 +246,8 @@ class Eden_Route {
 	 * @return object
 	 */
 	public function getClassArray($class, array $args = array()) {
-		Eden_Error_Validate::get()->argument(0, 'string');	//argument 1 must be a string
+		//argument 1 must be a string
+		Eden_Route_Error::get()->argument(1, $class, 'string');	
 		
 		return $this->callMethod($class, 'get', NULL, $args);
 	}
@@ -261,9 +266,11 @@ class Eden_Route {
 	 * @return mixed
 	 */
 	public function callMethod($class, $method, $instance = NULL, array $args = array()) {
-		Eden_Error_Validate::get()->argument(0, 'string', 'object');		//argument 1 must be string or object
-		Eden_Error_Validate::get()->argument(1, 'string');					//argument 2 must be string
-		Eden_Error_Validate::get()->argument(2, 'object', 'bool', 'null');	//argument 3 must be object, bool or null
+		//argument test
+		Eden_Route_Error::get()
+			->argument(1, $class, 'string', 'object')			//argument 1 must be string or object
+			->argument(2, $method, 'string')					//argument 2 must be string
+			->argument(3, $instance, 'object', 'bool', 'null');	//argument 3 must be object, bool or null
 		
 		if(is_object($class)) {
 			$class = get_class($class);
@@ -280,18 +287,20 @@ class Eden_Route {
 		//class does not exist
 		if(!class_exists($class)) {
 			//throw exception
-			Eden_Route_Error::get(Eden_Route_Error::CLASS_NOT_EXISTS)
+			Eden_Route_Error::get()
+				->setMessage(Eden_Route_Error::CLASS_NOT_EXISTS)
 				->addVariable($class)
 				->addVariable($method)
-				->render();
+				->trigger();
 		}
 		
 		//method does not exist
 		if(!method_exists($class, $method)) {
-			Eden_Route_Error::get(Eden_Route_Error::METHOD_NOT_EXISTS)
+			Eden_Route_Error::get()
+				->setMessage(Eden_Route_Error::METHOD_NOT_EXISTS)
 				->addVariable($class)
 				->addVariable($method)
-				->render();
+				->trigger();
 		}
 		
 		//if instance is true
@@ -305,10 +314,11 @@ class Eden_Route {
 		if(!is_object($instance)) {
 			if(!method_exists($class, $method)) {
 				//throw exception
-				Eden_Route_Error::get(Eden_Route_Error::STATIC_ERROR)
+				Eden_Route_Error::get()
+					->setMessage(Eden_Route_Error::STATIC_ERROR)
 					->addVariable($class)
 					->addVariable($method)
-					->render();
+					->trigger();
 			}
 			
 			return call_user_func_array($class.'::'.$method, $args); // As of 5.2.3
@@ -318,10 +328,11 @@ class Eden_Route {
 		//if method does not exist
 		if(!method_exists($instance, $method)) {
 			//throw exception
-			Eden_Route_Error::get(Eden_Route_Error::METHOD_NOT_EXISTS)
+			Eden_Route_Error::get()
+				->setMessage(Eden_Route_Error::METHOD_NOT_EXISTS)
 				->addVariable(get_class($instance))
 				->addVariable($method)
-				->render();
+				->trigger();
 		}
 		
 		return call_user_func_array(array(&$instance, $method), $args);
@@ -335,15 +346,16 @@ class Eden_Route {
 	 * @return mixed
 	 */
 	public function callFunction($func, array $args = array()) {
-		Eden_Error_Validate::get()->argument(0, 'string'); //argument 1 must be a string
+		Eden_Error_Validate::get()->argument(0, $func, 'string'); //argument 1 must be a string
 		
 		try {
 			//try to run the function using PHP call_user_func_array
 			return call_user_func_array($func, $args);
 		} catch(_Exception $e) {
-			Eden_Route_Error::get(Eden_Route_Error::FUNCTION_ERROR)
+			Eden_Route_Error::get()
+				->setMessage(Eden_Route_Error::FUNCTION_ERROR)
 				->addVariable($func)
-				->render();
+				->trigger();
 		}
 	}
 	

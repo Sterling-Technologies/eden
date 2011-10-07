@@ -11,14 +11,14 @@
  * Model Errors
  *
  * @package    Eden
- * @category   Model
+ * @category   route
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: exception.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Model_Error extends Eden_Error_Class {
+class Eden_Model_Error extends Eden_Error {
 	/* Constants
 	-------------------------------*/
-	const SET_INVALID = 'Cannot set \'%s\' because it was never defined in this model. Try using setMetaData() first.';
+	const SET_INVALID = 'Setting %s refused. You need to set it first using setMetaData().';
 	
 	/* Public Properties
 	-------------------------------*/
