@@ -25,7 +25,7 @@ class Eden_Event_Class extends Eden_Class {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_observers 	= array();
+	protected $_observers 		= array();
 	
 	/* Private Properties
 	-------------------------------*/
@@ -51,10 +51,10 @@ class Eden_Event_Class extends Eden_Class {
      */
     public function listen($event, $instance, $method = NULL, $important = true) {
 		Eden_Event_Error::get()
-			->argument(1, $event, 'string')						//argument 1 must be string
-			->argument(2, $instance, 'object', 'string')		//argument 2 must be object or string
-			->argument(3, $method, 'null', 'string', 'bool')	//argument 3 must be string or null
-			->argument(4, $important, 'bool');					//argument 4 must be boolean
+			->argument(1, 'string')					//argument 1 must be string
+			->argument(2, 'object', 'string')		//argument 2 must be object or string
+			->argument(3, 'null', 'string', 'bool')	//argument 3 must be string or null
+			->argument(4, 'bool');					//argument 4 must be boolean
 		
 		//get the instance unique id
 		$id = is_object($instance) ? spl_object_hash($instance) : false;
@@ -158,14 +158,22 @@ class Eden_Event_Class extends Eden_Class {
 	 * @param [mixed]
      * @return this
      */
-    public function trigger($event) {
+    public function trigger($event = NULL) {
 		//argument 1 must be string
-		Eden_Event_Error::get()->argument(0, $event, 'string');
-			
+		Eden_Event_Error::get()->argument(1, 'string', 'null');
+		
+		if(is_null($event)) {
+			$trace = debug_backtrace();
+			$event = $trace[1]['function'];
+		}
+		
 		//get the arguments
 		$args = func_get_args();
 		//shift out the event
 		$event = array_shift($args);
+		
+		//as a courtesy lets shift in the object
+		array_unshift($args, $this);
 		
 		//for each observer
 		foreach($this->_observers as $observer) {

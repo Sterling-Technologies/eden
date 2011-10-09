@@ -262,12 +262,23 @@ class Eden_Error extends Exception {
 	 * @param *string[,string..]
 	 * @return this
 	 */
-	public function argument($index, $argument, $types) {
+	public function argument($index, $types) {
 		$trace 		= debug_backtrace();
 		$trace 		= $trace[1];
 		$types 		= func_get_args();
 		$index 		= array_shift($types) - 1;
-		$argument 	= array_shift($types);
+		
+		if($index < 0) {
+			$index = 0;
+		}
+		
+		//if it's not set then it's good because the default value
+		//set in the method will be it.
+		if($index >= count($trace['args'])) {
+			return $this;
+		}
+		
+		$argument 	= $trace['args'][$index];
 		
 		foreach($types as $i => $type) {
 			$method = 'is_'.$type;
@@ -297,6 +308,8 @@ class Eden_Error extends Exception {
 			$type = $argument ? 'true' : 'false';
 		} else if(is_object($argument)) {
 			$type = get_class($argument);
+		} else if(is_null($argument)) {
+			$type = 'null';
 		}
 		
 		$this->setMessage(self::INVALID_ARGUMENT)

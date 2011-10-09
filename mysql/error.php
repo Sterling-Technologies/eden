@@ -8,14 +8,14 @@
  */
 
 /**
- * String Errors
+ * MySql Errors
  *
  * @package    Eden
- * @category   core
+ * @category   sql
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: exception.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_String_Error extends Eden_Type_Error {
+class Eden_Mysql_Error extends Eden_Error {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties

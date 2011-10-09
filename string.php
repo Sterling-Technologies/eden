@@ -10,6 +10,7 @@
 require_once dirname(__FILE__).'/class.php';
 require_once dirname(__FILE__).'/type/abstract.php';
 require_once dirname(__FILE__).'/type/error.php';
+require_once dirname(__FILE__).'/string/error.php';
 require_once dirname(__FILE__).'/array.php';
 
 /**
@@ -82,7 +83,7 @@ class Eden_String extends Eden_Type_Abstract {
 	 */
 	public function camelize($prefix = '-') {
 		//argument 1 must be a string
-		Eden_String_Error::get()->argument(1, $prefix, 'string');
+		Eden_String_Error::get()->argument(1, 'string');
 		
 		$this->_data = str_replace($prefix, ' ', $this->_data);
 		$this->_data = str_replace(' ', '', ucwords($this->_data));
@@ -100,7 +101,7 @@ class Eden_String extends Eden_Type_Abstract {
 	 */
 	public function uncamelize($prefix = '-') {
 		//argument 1 must be a string
-		Eden_String_Error::get()->argument(1, $prefix, 'string');
+		Eden_String_Error::get()->argument(1, 'string');
 		
 		$this->_data = strtolower(preg_replace("/([A-Z])/", $prefix."$1", $this->_data));
 		
@@ -130,7 +131,7 @@ class Eden_String extends Eden_Type_Abstract {
 	 */
 	public function titlize($prefix = '-') {
 		//argument 1 must be a string
-		Eden_String_Error::get()->argument(1, $prefix, 'string');
+		Eden_String_Error::get()->argument(1, 'string');
 		
 		$this->_data = ucwords(str_replace($prefix, ' ', $this->_data));
 		

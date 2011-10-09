@@ -1,21 +1,21 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2010-2012 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
 
 /**
- * String Errors
+ * Generates select query string syntax
  *
  * @package    Eden
- * @category   core
+ * @category   sql
  * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: exception.php 1 2010-01-02 23:06:36Z blanquera $
+ * @version    $Id: select.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_String_Error extends Eden_Type_Error {
+abstract class Eden_Sql_Query extends Eden_Class {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
@@ -26,15 +26,24 @@ class Eden_String_Error extends Eden_Type_Error {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($message = NULL, $code = 0) {
-		$class = __CLASS__;
-		return new $class($message, $code);
-	}
 	
 	/* Magic
 	-------------------------------*/
-    /* Public Methods
+	public function __toString() {
+		return $this->getQuery();
+	}
+	
+	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Returns the string version of the query 
+	 *
+	 * @param  bool
+	 * @return string
+	 * @notes returns the query based on the registry
+	 */
+	abstract public function getQuery();
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

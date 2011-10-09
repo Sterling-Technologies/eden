@@ -80,7 +80,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return this
 	 */
 	public function setData($data, $value = NULL) {
-		$error = Eden_Session_Error::get()->argument(1, $data, 'array', 'string');
+		$error = Eden_Session_Error::get()->argument(1, 'array', 'string');
 		
 		if(!self::$_session) {
 			$error->setMessage(Eden_Session_Error::ERROR_ERROR_NOT_STARTED)->trigger();
@@ -103,7 +103,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return mixed
 	 */
 	public function getData($key = NULL) {
-		$error = Eden_Session_Error::get()->argument(1, $key, 'string', 'null');
+		$error = Eden_Session_Error::get()->argument(1, 'string', 'null');
 		
 		if(!self::$_session) {
 			$error->setMessage(Eden_Session_Error::ERROR_ERROR_NOT_STARTED)->trigger();
@@ -140,7 +140,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return int
 	 */
 	public function setId($sid) {
-		$error = Eden_Session_Error::get()->argument(1, $sid, 'numeric');
+		$error = Eden_Session_Error::get()->argument(1, 'numeric');
 		
 		if(!self::$_session) {
 			$error->setMessage(Eden_Session_Error::ERROR_ERROR_NOT_STARTED)->trigger();
@@ -156,7 +156,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return this
 	 */
 	public function remove($name) {
-		Eden_Session_Error::get()->argument(1, $name, 'string');
+		Eden_Session_Error::get()->argument(1, 'string');
 		
 		if(isset($_SESSION[$name])) {
 			unset($_SESSION[$name]);

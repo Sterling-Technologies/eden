@@ -59,8 +59,8 @@ class Eden_Route extends Eden_Class {
 	 */
 	public function routeClass($route, $class) {
 		Eden_Route_Error::get()
-			->argument(1, $route, 'string')		//argument 1 must be a string
-			->argument(2, $class, 'string');	//argument 2 must be a string
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
 		$this->_classes[$route] = $class;
 		return $this;
@@ -75,7 +75,7 @@ class Eden_Route extends Eden_Class {
 	 */
 	public function getRouteClass($route, $default = NULL) {
 		//argument 1 must be a string
-		Eden_Route_Error::get()->argument(1, $route, 'string');
+		Eden_Route_Error::get()->argument(1, 'string');
 		
 		if(isset($this->_classes[$route])) {
 			return $this->_classes[$route];
@@ -93,7 +93,7 @@ class Eden_Route extends Eden_Class {
 	 */
 	public function getClassRoute($class, $default = NULL) {
 		//argument 1 must be a string
-		Eden_Route_Error::get()->argument(1, $class, 'string');
+		Eden_Route_Error::get()->argument(1, 'string');
 		
 		foreach($this->_classes as $i => $to) {
 			if($to == $class) {
@@ -135,10 +135,10 @@ class Eden_Route extends Eden_Class {
 	public function routeMethod($routeClass, $routeMethod, $class, $method = NULL) {
 		//argument test
 		Eden_Route_Error::get()
-			->argument(1, $routeClass, 'string')	//argument 1 must be a string
-			->argument(2, $routeMethod, 'string')	//argument 2 must be a string
-			->argument(3, $class, 'string')			//argument 3 must be a string
-			->argument(4, $method, 'string');		//argument 4 must be a string
+			->argument(1, 'string')	//argument 1 must be a string
+			->argument(2, 'string')	//argument 2 must be a string
+			->argument(3, 'string')			//argument 3 must be a string
+			->argument(4, 'string');		//argument 4 must be a string
 		
 		//if the method is not a string
 		if(!is_string($method)) {
@@ -163,8 +163,8 @@ class Eden_Route extends Eden_Class {
 	 */
 	public function getRouteMethod($class, $method, $default = NULL) {
 		Eden_Route_Error::get()
-			->argument(1, $class, 'string')		//argument 1 must be a string
-			->argument(2, $method, 'string');	//argument 2 must be a string
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
 		$class = $this->getRouteClass($class, $class);
 		
@@ -185,8 +185,8 @@ class Eden_Route extends Eden_Class {
 	 */
 	public function getMethodRoute($class, $method, $default = NULL) {
 		Eden_Route_Error::get()
-			->argument(1, $class, 'string')		//argument 1 must be a string
-			->argument(2, $method, 'string');	//argument 2 must be a string
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
 		$class = $this->getRouteClass($class, $class);
 		
@@ -229,7 +229,7 @@ class Eden_Route extends Eden_Class {
 	 */
 	public function getClass($class) {
 		//argument 1 must be a string
-		Eden_Route_Error::get()->argument(1, $class, 'string'); 
+		Eden_Route_Error::get()->argument(1, 'string'); 
 		
 		$args = func_get_args();
 		$class = array_shift($args);
@@ -247,7 +247,7 @@ class Eden_Route extends Eden_Class {
 	 */
 	public function getClassArray($class, array $args = array()) {
 		//argument 1 must be a string
-		Eden_Route_Error::get()->argument(1, $class, 'string');	
+		Eden_Route_Error::get()->argument(1, 'string');	
 		
 		return $this->callMethod($class, 'get', NULL, $args);
 	}
@@ -268,9 +268,9 @@ class Eden_Route extends Eden_Class {
 	public function callMethod($class, $method, $instance = NULL, array $args = array()) {
 		//argument test
 		Eden_Route_Error::get()
-			->argument(1, $class, 'string', 'object')			//argument 1 must be string or object
-			->argument(2, $method, 'string')					//argument 2 must be string
-			->argument(3, $instance, 'object', 'bool', 'null');	//argument 3 must be object, bool or null
+			->argument(1, 'string', 'object')			//argument 1 must be string or object
+			->argument(2, 'string')					//argument 2 must be string
+			->argument(3, 'object', 'bool', 'null');	//argument 3 must be object, bool or null
 		
 		if(is_object($class)) {
 			$class = get_class($class);
@@ -346,7 +346,7 @@ class Eden_Route extends Eden_Class {
 	 * @return mixed
 	 */
 	public function callFunction($func, array $args = array()) {
-		Eden_Error_Validate::get()->argument(0, $func, 'string'); //argument 1 must be a string
+		Eden_Error_Validate::get()->argument(0, 'string'); //argument 1 must be a string
 		
 		try {
 			//try to run the function using PHP call_user_func_array

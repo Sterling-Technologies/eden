@@ -9,6 +9,7 @@
 
 require_once dirname(__FILE__).'/class.php';
 require_once dirname(__FILE__).'/type/abstract.php';
+require_once dirname(__FILE__).'/type/error.php';
 require_once dirname(__FILE__).'/array/error.php';
 require_once dirname(__FILE__).'/string.php';
 
@@ -108,8 +109,8 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator, Se
 	public function cut($arrayKey, $isValueArray = true) {
 		//argument 1 must be a string, argument 2 must be a boolean
 		Eden_Array_Error::get()
-			->argument(1, $arrayKey, 'string')
-			->argument(2, $isValueArray, 'bool');
+			->argument(1, 'string')
+			->argument(2, 'bool');
 		
 		$array = array();
 		foreach($this->_data as $key => $value) {
@@ -141,8 +142,8 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator, Se
 	public function paste($afterKey, $arrayValue, $arrayKey = NULL) {
 		//argument 1 must be a string, argument 3 must be a string or null
 		Eden_Array_Error::get()
-			->argument(1, $afterKey, 'string')
-			->argument(3, $arrayKey, 'string', 'null');
+			->argument(1, 'string')
+			->argument(3, 'string', 'null');
 		
 		$array = array();
 		foreach($this->_data as $key => $value) {
@@ -185,8 +186,8 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator, Se
 	public function associateTable($key, $many = false) {
 		//argument 1 must be a string, argument 2 must be a boolean
 		Eden_Array_Error::get()
-			->argument(1, $key, 'string')
-			->argument(2, $many, 'bool');
+			->argument(1, 'string')
+			->argument(2, 'bool');
 		
 		$table = array();
 		foreach($this->_data as $i => $row) {
@@ -215,8 +216,8 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator, Se
 	public function getKeyValue($key, $index = NULL) {
 		//argument 1 must be a string, argument 2 must be a string or null
 		Eden_Array_Error::get()
-			->argument(1, $key, 'string')
-			->argument(2, $index, 'string', 'null');
+			->argument(1, 'string')
+			->argument(2, 'string', 'null');
 		
 		$table = $this->associateTable($table, $key);
 		
@@ -239,10 +240,10 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator, Se
 	 */
 	public function paginate($field, $order = 'ASC', $start = 0, $range = 0) {
 		Eden_Array_Error::get()
-			->argument(1, $field, 'string') //argument 1 must be a string
-			->argument(2, $order, 'string') //argument 2 must be a string
-			->argument(3, $start, 'int') //argument 3 must be a number
-			->argument(4, $range, 'int'); //argument 4 must be a number
+			->argument(1, 'string') //argument 1 must be a string
+			->argument(2, 'string') //argument 2 must be a string
+			->argument(3, 'int') //argument 3 must be a number
+			->argument(4, 'int'); //argument 4 must be a number
 		
 		//do the sorting first
 		//first lets take the field column

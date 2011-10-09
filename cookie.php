@@ -51,13 +51,13 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	public function set($key, $data = NULL, $expires = 0, $path = NULL, $domain = NULL, $secure = false, $httponly = false) {
 		//argment test
 		Eden_Cookie_Error::get()
-			->argument(1, $key, 'string')						//argument 1 must be a string
-			->argument(2, $data, 'string', 'numeric', 'null')	//argument 2 must be a string,numeric or null
-			->argument(3, $expires, 'int')						//argument 3 must be a integer
-			->argument(4, $path, 'string', 'null')				//argument 4 must be a string or null
-			->argument(5, $domain, 'string', 'null')			//argument 5 must be a string or null
-			->argument(6, $secure, 'bool')						//argument 6 must be a boolean
-			->argument(7, $httponly, 'bool');					//argument 7 must be a boolean
+			->argument(1, 'string')						//argument 1 must be a string
+			->argument(2, 'string', 'numeric', 'null')	//argument 2 must be a string,numeric or null
+			->argument(3, 'int')						//argument 3 must be a integer
+			->argument(4, 'string', 'null')				//argument 4 must be a string or null
+			->argument(5, 'string', 'null')			//argument 5 must be a string or null
+			->argument(6, 'bool')						//argument 6 must be a boolean
+			->argument(7, 'bool');					//argument 7 must be a boolean
 			
 		$_COOKIE[$key] = $data;
 		setcookie($key, $data, $expires, $path, $domain, $secure, $httponly);
@@ -130,7 +130,7 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return mixed
 	 */
 	public function getData($key = NULL) {
-		Eden_Cookie_Error::get()->argument(1, $key, 'string', 'null');
+		Eden_Cookie_Error::get()->argument(1, 'string', 'null');
 		
 		if(is_null($key)) {
 			return $_COOKIE;
@@ -150,7 +150,7 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return Eden_Cookie
 	 */
 	public function remove($name) {
-		Eden_Cookie_Error::get()->argument(1, $name, 'string');
+		Eden_Cookie_Error::get()->argument(1, 'string');
 		
 		$this->set($name, NULL, time() - 3600);
 		

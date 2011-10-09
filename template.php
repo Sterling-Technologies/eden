@@ -47,7 +47,7 @@ class Eden_Template extends Eden_Class {
 	 * @return this
 	 */
 	public function setData($data, $value = NULL) {
-		Eden_Template_Error::get()->argument(0, $data, 'array', 'string');
+		Eden_Template_Error::get()->argument(0, 'array', 'string');
 		
 		if(is_array($data)) {
 			$this->_data = $data;
@@ -66,7 +66,7 @@ class Eden_Template extends Eden_Class {
 	 * @return string
 	 */
 	public function parseString($string) {
-		Eden_Template_Error::get()->argument(0, $string, 'string');
+		Eden_Template_Error::get()->argument(0, 'string');
 		foreach($this->_data as $key => $value) {
 			$string = str_replace($key, $value, $string);
 		}
@@ -98,7 +98,7 @@ class Eden_Template extends Eden_Class {
 	 * @return string
 	 */
 	public function parseEngine($template) {
-		Eden_Template_Error::get()->argument(0, $template, 'string');
+		Eden_Template_Error::get()->argument(0, 'string');
 		
 		$lines = explode("\n", $template);
 		$count = count($lines);

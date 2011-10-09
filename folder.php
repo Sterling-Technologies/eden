@@ -103,8 +103,8 @@ class Eden_Folder extends Eden_Path {
 	public function getFiles($regex = NULL, $recursive = false) {
 		//argument test
 		$error = Eden_Folder_Error::get()
-			->argument(1, $regex, 'string', 'null')	//argument 1 must be a string
-			->argument(2, $recursive, 'bool');		//argument 2 must be a boolean
+			->argument(1, 'string', 'null')	//argument 1 must be a string
+			->argument(2, 'bool');		//argument 2 must be a boolean
 		
 		$this->absolute();
 		
@@ -141,8 +141,8 @@ class Eden_Folder extends Eden_Path {
 	public function getFolders($regex = NULL, $recursive = false) {
 		//argument test
 		Eden_Folder_Error::get()
-			->argument(1, $regex, 'string', 'null')	//argument 1 must be a string
-			->argument(2, $recursive, 'bool');		//argument 2 must be a boolean
+			->argument(1, 'string', 'null')	//argument 1 must be a string
+			->argument(2, 'bool');		//argument 2 must be a boolean
 			
 		$this->absolute();
 		
@@ -179,7 +179,7 @@ class Eden_Folder extends Eden_Path {
 	 * @return bool
 	 */
 	public function removeFolders($regex = NULL) {
-		Eden_Folder_Error::get()->argument(1, $regex, 'string', 'null');	//argument 1 must be a string
+		Eden_Folder_Error::get()->argument(1, 'string', 'null');	//argument 1 must be a string
 		
 		$this->absolute();
 		
@@ -205,7 +205,7 @@ class Eden_Folder extends Eden_Path {
 	 * @return bool
 	 */
 	public function removeFiles($regex = NULL) {
-		Eden_Folder_Error::get()->argument(1, $regex, 'string', 'null');	//argument 1 must be a string
+		Eden_Folder_Error::get()->argument(1, 'string', 'null');	//argument 1 must be a string
 		
 		//get the files
 		$files = $this->getFiles($regex);

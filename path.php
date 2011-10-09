@@ -38,7 +38,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 	-------------------------------*/
 	public function __construct($path) {
 		//argument 1 must be a string
-		Eden_Path_Error::get()->argument(1, $path, 'string');
+		Eden_Path_Error::get()->argument(1, 'string');
 		$this->_path = $this->_format($path);
 	}
 	
@@ -58,7 +58,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 	 */
 	public function absolute($root = NULL) {
 		//argument 1 must be a string or null
-		Eden_Path_Error::get()->argument(1, $root, 'string', 'null');
+		Eden_Path_Error::get()->argument(1, 'string', 'null');
 		
 		//if path is a directory or file
 		if(is_dir($this->_path) || is_file($this->_path)) {
@@ -83,8 +83,8 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 		//if we are here then it means that no path was found so we should throw an exception
 		Eden_Path_Error::get()
 			->setMessage(Eden_Path_Error::FULL_PATH_NOT_FOUND)
-			->setVariable($path)
-			->setVariable($absolute)
+			->addVariable($this->_path)
+			->addVariable($absolute)
 			->trigger();
 	}
 	
@@ -96,7 +96,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 	 */
 	public function append($path) {
 		//argument 1 must be a string
-		$error = Eden_Path_Error::get()->argument(1, $path, 'string');
+		$error = Eden_Path_Error::get()->argument(1, 'string');
 		
 		//each argument will be a path
 		$paths = func_get_args();
@@ -106,7 +106,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 			//check for type errors
 			$error->argument($i + 1, $path, 'string');
 			//add to path
-			$this-_path .= $this->_format($path);
+			$this->_path .= $this->_format($path);
 		}
 		
 		return $this;
@@ -120,7 +120,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 	 */
 	public function prepend($path) {
 		//argument 1 must be a string
-		$error = Eden_Path_Error::get()->argument(1, $path, 'string');
+		$error = Eden_Path_Error::get()->argument(1, 'string');
 		
 		//each argument will be a path
 		$paths = func_get_args();
@@ -130,7 +130,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 			//check for type errors
 			$error->argument($i + 1, $path, 'string');
 			//add to path
-			$this-_path = $this->_format($path).$this-_path;
+			$this->_path = $this->_format($path).$this-_path;
 		}
 		
 		return $this;
@@ -144,7 +144,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 	 */
 	public function replace($path) {
 		//argument 1 must be a string
-		Eden_Path_Error::get()->argument(1, $path, 'string');
+		Eden_Path_Error::get()->argument(1, 'string');
 		
 		//get the path array
 		$pathArray = $this->getArray();
@@ -220,28 +220,28 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 	
 	/* Protected Methods
 	-------------------------------*/
-	protected function _format() {
+	protected function _format($path) {
 		//replace back slash with forward
-		$path = str_replace('\\', '/', $this->path);
+		$path = str_replace('\\', '/', $path);
 		
 		//replace double forward slash with 1 forward slash
-		$path = str_replace('//', '/', $this->path);
+		$path = str_replace('//', '/', $path);
 		
 		//if there is a last forward slash
-		if(substr($this->path, -1, 1) == '/') {
+		if(substr($path, -1, 1) == '/') {
 			//remove it
-			$this->path = substr($path, 0, -1);
+			$path = substr($path, 0, -1);
 		}
 		
 		//if the path does not start with a foward slash
 		//and the path does not have a colon
 		//(this is a test for windows)
-		if(substr($this->path, 0, 1) != '/' && !preg_match("/^[A-Za-z]+\:/", $this->path)) {
+		if(substr($path, 0, 1) != '/' && !preg_match("/^[A-Za-z]+\:/", $path)) {
 			//it's safe to add a slash
-			$this->path = '/'.$this->path;
+			$path = '/'.$path;
 		}
 		
-		return $this;
+		return $path;
 	}
 	
 	/* Private Methods

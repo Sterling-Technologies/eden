@@ -78,7 +78,7 @@ class Eden_Class {
 	 */
 	public function routeThis($route) {
 		//argument 1 must be a string
-		Eden_Error::get()->argument(1, $route, 'string');
+		Eden_Error::get()->argument(1, 'string');
 		
 		Eden_Route::get()->routeClass($route, get_class($this));
 		return $this;
@@ -95,9 +95,9 @@ class Eden_Class {
 	public function routeMethod($routeMethod, $class, $method) {
 		//argument 1-3 must be a string
 		Eden_Error::get()
-			->argument(1, $routeMethod, 'string')
-			->argument(2, $class, 'string')
-			->argument(3, $method, 'string');
+			->argument(1, 'string')
+			->argument(2, 'string')
+			->argument(3, 'string');
 		
 		Eden_Route::get()->routeMethod(get_class($this), $routeMethod, $class, $method);
 		return $this;
@@ -113,7 +113,7 @@ class Eden_Class {
 	 */
 	public function callThisMethod($method, array $args = array()) {
 		//argument 1 must be a string
-		Eden_Error::get()->argument(1, $method,'string');
+		Eden_Error::get()->argument(1,'string');
 		
 		return Eden_Route::get()->callMethod($this, $method, $args);
 	}

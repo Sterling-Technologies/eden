@@ -114,7 +114,7 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 	 */
 	public function getValue($modified = true) {
 		//argument 1 must be a bool
-		Eden_Type_Validate::get()->argument(1, $modified, 'bool');
+		Eden_Type_Validate::get()->argument(1, 'bool');
 		
 		return $modified ? $this->_data : $this->_original;
 	}

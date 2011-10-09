@@ -116,9 +116,9 @@ class Eden_Model extends Eden_Array {
 	public function setMetaData($name, $meta = array(), $value = NULL) {
 		//argument test
 		Eden_Model_Error::get()
-			->argument(1, $name, 'string')				//argument 1 must be a string
-			->argument(2, $meta, 'string', 'array')		//argument 2 must be a string or array
-			->argument(3, $value, 'string', 'null');	//argument 3 must be a string or null
+			->argument(1, 'string')				//argument 1 must be a string
+			->argument(2, 'string', 'array')		//argument 2 must be a string or array
+			->argument(3, 'string', 'null');	//argument 3 must be a string or null
 		
 		if(is_array($meta)) {
 			$this->_meta[$name] = $meta;
@@ -140,8 +140,8 @@ class Eden_Model extends Eden_Array {
 	public function getMetaData($name = NULL, $key = NULL) {
 		//argument test
 		Eden_Model_Error::get()
-			->argument(1, $name, 'string', 'null')	//argument 1 must be a string or null
-			->argument(2, $key, 'string', 'null');	//argument 2 must be a string or null
+			->argument(1, 'string', 'null')	//argument 1 must be a string or null
+			->argument(2, 'string', 'null');	//argument 2 must be a string or null
 		
 		if(!is_null($name) && isset($this->_meta[$name])) {		
 			if(!is_null($key) && isset($this->_meta[$name][$key])) {
