@@ -7,6 +7,9 @@
  * distributed with this package.
  */
 
+require_once dirname(__FILE__).'/path.php';
+require_once dirname(__FILE__).'/folder/error.php';
+
 /**
  * This is an abstract definition of common
  * folder manipulation listing and information 
@@ -28,6 +31,10 @@ class Eden_Folder extends Eden_Path {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
+	public static function get($path) {
+		return self::_getMultiple(__CLASS__, $path);
+	}
+	
 	/* Magic
 	-------------------------------*/	
 	/* Public Methods
@@ -221,6 +228,16 @@ class Eden_Folder extends Eden_Path {
 		}
 		
 		return $this;
+	}
+	
+	/**
+	 * Checks to see if this 
+	 * path is a real folder
+	 *
+	 * @return bool
+	 */
+	public function isFolder() {
+		return is_dir($this->_path);
 	}
 	
 	/* Protected Methods

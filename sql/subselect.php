@@ -16,7 +16,7 @@
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: subselect.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Mysql_Subselect extends Eden_Class {
+class Eden_Sql_Subselect extends Eden_Sql_Select {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
@@ -29,21 +29,13 @@ class Eden_Mysql_Subselect extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get(Eden_Sql_Select $parentQuery, $select = '*') {
+	public static function get($select = '*') {
 		$class = __CLASS__;
-		return new $class($parentQuery, $select);
+		return new $class($select);
 	}
 	
 	/* Magic
 	-------------------------------*/
-	public function __construct(Eden_Sql_Select $parentQuery, $select = '*') {
-		//Argument 2 must be a string
-		Eden_Mysql_Error::get()->argument(2, 'string');
-		
-		$this->setParentQuery($parentQuery);
-		$this->_select = is_array($select) ? implode(', ', $select) : $select;
-	}
-	
 	/* Public Methods
 	-------------------------------*/
 	/**

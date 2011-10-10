@@ -182,7 +182,15 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
             $this->append($value);
         } else if($offset == 'prepend') {
             $this->prepend($value);
-        }
+        } else if($offset == 'replace') {
+            $this->replace($value);
+        } else {
+			$pathArray = $this->getArray();
+			if ($offset > 0 && $offset < count($pathArray)) {
+				$pathArray[$offset] = $value;
+				$this->_path = implode('/', $pathArray);
+			}
+		}
     }
 	
 	/**

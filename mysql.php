@@ -157,7 +157,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 		//Argument 2 must be a string
 		Eden_Mysql_Error::get()->argument(2, 'string');
 		
-		return Eden_Mysql_Subselect::get($parentQuery, $select);
+		return Eden_Sql_Subselect::get($select)->setParentQuery($parentQuery);
 	}
 	
 	/**
