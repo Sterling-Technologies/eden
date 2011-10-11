@@ -162,6 +162,24 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 	}
 	
 	/**
+	 * Remove the last path
+	 *
+	 * @return this
+	 */
+	public function pop(){
+		//get the path array
+		$pathArray = $this->getArray();
+		
+		//remove the last
+		array_pop($pathArray);
+		
+		//set path
+		$this->_path = implode('/', $pathArray);
+		
+		return $this;
+	}
+	
+	/**
 	 * Returns the path array
 	 * 
 	 * @return array
@@ -183,10 +201,10 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
         } else if($offset == 'prepend') {
             $this->prepend($value);
         } else if($offset == 'replace') {
-            $this->replace($value);
-        } else {
+			$this->replace($value);
+		} else {
 			$pathArray = $this->getArray();
-			if ($offset > 0 && $offset < count($pathArray)) {
+			if($offset > 0 && $offset < count($pathArray)) {
 				$pathArray[$offset] = $value;
 				$this->_path = implode('/', $pathArray);
 			}

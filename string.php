@@ -28,15 +28,15 @@ class Eden_String extends Eden_Type_Abstract {
 	/* Protected Properties
 	-------------------------------*/
 	protected static $_preMethods = array(
-		'addslashes',				'addcslahses',
+		'addslashes',				'addcslashes',
 		'bin2hex',					'chunk_split',
 		'convert_uudecode',			'convert_uuencode',
 		'crypt',					'html_entity_decode',
 		'htmlentities',				'htmlspecialchars_decode',
-		'htmlspecialchars',			'lcfirst',
+		'htmlspecialchars',			
 		'ltrim',					'md5',
-		'nl2br',					'quoted_printable_decode',
-		'quoted_printable_encode',	'quotemeta',
+		'nl2br',					
+		'quotemeta',
 		'rtrim',					'sha1',
 		'sprintf',					'str_pad',
 		'str_repeat',				'str_rot13',
@@ -88,7 +88,7 @@ class Eden_String extends Eden_Type_Abstract {
 		$this->_data = str_replace($prefix, ' ', $this->_data);
 		$this->_data = str_replace(' ', '', ucwords($this->_data));
 		
-		$this->_data = strtolower(substr($name, 0, 1)).substr($name, 1);
+		$this->_data = strtolower(substr($this->_data, 0, 1)).substr($this->_data, 1);
 		
 		return $this;
 	}

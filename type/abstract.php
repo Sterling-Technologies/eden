@@ -43,9 +43,9 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 		if($method) {
 			//add the string as first arg
 			array_unshift($args, $this->_data);
+			
 		} else {
 			$method = $this->_getPostMethod($name);
-			
 			//if this is a post method
 			if($method) {
 				//add string at the end of the arguments
@@ -72,6 +72,7 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 				if($this instanceof Eden_String) {
 					//set value
 					$this->_data = $result;
+					
 					return $this;	
 				}
 				

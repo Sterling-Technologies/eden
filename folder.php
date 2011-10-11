@@ -86,7 +86,7 @@ class Eden_Folder extends Eden_Path {
 	 */
 	public function truncate() {
 		$this->removeFolders();
-		$this->removeFiles();
+		//$this->removeFiles();
 		
 		return $this;
 	}
@@ -98,7 +98,8 @@ class Eden_Folder extends Eden_Path {
 	 * @return string the name
 	 */
 	public function getName() {
-		return array_pop($this->getArray());
+		$pathArray = $this->getArray();
+		return array_pop($pathArray);
 	}
 	
 	/**
@@ -232,12 +233,30 @@ class Eden_Folder extends Eden_Path {
 	
 	/**
 	 * Checks to see if this 
-	 * path is a real folder
+	 * path is a real file
 	 *
 	 * @return bool
 	 */
-	public function isFolder() {
+	public function isFolder($path = NULL) {
+		Eden_Folder_Error::get()->argument(1, 'string', 'null');	//argument 1 must be a string
+		
+		//if path is string
+		if(is_string($path)) {
+			//return path appended
+			return is_dir($this->_path.'/'.$path);
+		}
+		
 		return is_dir($this->_path);
+	}
+	
+	/**
+	 * Checks to see if this 
+	 * path is a real file
+	 *
+	 * @return bool
+	 */
+	public function isFile() {
+		return file_exists($this->_path);
 	}
 	
 	/* Protected Methods
