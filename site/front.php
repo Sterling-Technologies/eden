@@ -7,7 +7,7 @@
  * distributed with this package.
  */
  
-require_once dirname(__FILE__).'/eden.php';
+require_once dirname(__FILE__).'/../library/eden.php';
 
 /**
  * The starting point of every application call. If you are only

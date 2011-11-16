@@ -23,11 +23,11 @@ print front()
 
 /* Set Class Routing
 -------------------------------*/
-->setClasses('front/config/classes.php')
+->setClasses('../front/config/classes.php')
 
 /* Set Method Routing
 -------------------------------*/
-->setMethods('front/config/methods.php')
+->setMethods('../front/config/methods.php')
 
 /* Set Paths
 -------------------------------*/

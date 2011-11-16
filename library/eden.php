@@ -58,11 +58,13 @@ class Eden extends Eden_Event {
 	}
 	
 	public function __construct() {
-		//require autoload
-		require dirname(__FILE__).'/eden/loader.php';
+		if(!class_exists('Eden_Loader')) {
+			//require autoload
+			require_once dirname(__FILE__).'/eden/loader.php';
 		
-		//set autoload class as the autoload handler
-		spl_autoload_register(array(Eden_Loader::get(), 'handler'));
+			//set autoload class as the autoload handler
+			spl_autoload_register(array(Eden_Loader::get(), 'handler'));
+		}
 	}
 	
 	/* Public Methods
