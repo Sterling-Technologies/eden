@@ -15,7 +15,7 @@
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Eventbrite_Event_Discount extends Eden_Eventbrite_Base {
+class Eden_Eventbrite_Discount extends Eden_Eventbrite_Base {
 	/* Constants
 	-------------------------------*/
 	const URL_NEW = 'https://www.eventbrite.com/json/discount_new';

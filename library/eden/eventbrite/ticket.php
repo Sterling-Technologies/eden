@@ -39,157 +39,174 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
-	public function add($event, $name,  $price, $quantity, $description = NULL, $donation = false, $start = NULL, $end = NULL, $fee = false, $min = NULL, $max = NULL) {
-		//argument test
-		Eden_Eventbrite_Error::get()
-			->argument(1, 'numeric')							//Argument 1 must be numeric
-			->argument(2, 'string')								//Argument 2 must be a string
-			->argument(3, 'float')								//Argument 3 must a float
-			->argument(4, 'int')								//Argument 4 must be an integer
-			->argument(5, 'string', 'null')						//Argument 5 must be a string or null
-			->argument(6, 'bool')	 		  				    //Argument 6 must be an integer
-			->argument(7, 'string', 'int', 'null')				//Argument 7 must be a string, integer or null
-			->argument(8, 'string', 'int', 'null')				//Argument 8 must be a string, integer or null
-			->argument(9, 'bool')								//Argument 9 must be an integer
-			->argument(10, 'int')								//Argument 10 must be an integer
-			->argument(11, 'int', 'null')						//Argument 11 must be an integer or null
-			->argument(12, 'int', 'null');						//Argument 12 must be an integer or null
-			
-		$query = array (		
-			'event_id'      => $event,
-			'name'		    => $name,
-			'price'			=> $price,
-			'quantity'		=> $quantity);
-
-		if($donation){
-			$query['is_donation'] = 1;	
-		}
-		//if description is not empty
-		if(!is_null($description)){
-			//add it to our query
-			$query['description'] = $description;
-		}
-		//if start is not empty
-		if(!is_null($start)){
-			//if start is a string
-			if(is_string($start)) {
-				//then convert it to unixcode
-				$start = strtotime($start);
-			}
+	public function setEvent($id) {
+		//Argument 1 must be numeric
+		Eden_Eventbrite_Error::get()->argument(1, 'numeric');
+		$this->_query['event_id'] = $id;
 		
-			$start = date('Y-m-d H:i:s', $start);
-			//add it to our query
-			$query['start_sales'] = $start;
-		}
-		//if end is not empty
-		if(!is_null($end)){
-			//if end is a string
-			if(is_string($end)){
-				//then convert it to unixcode
-				$end = strtotime($end);	
-			}
-		
-			$end = date('Y-m-d H:i:s', $end);
-			//add it to our query
-			$query['end_sales'] = $end;
-		}
-		
-		if($fee){
-			$query['include_fee'] = 1;	
-		}
-		//if min is not empty and min is not greater than 0
-		if(!is_null($min) && $min > 0){
-			//add it to our query
-			$query['min'] =  $min;	
-		}
-		//if maqx is not empty and max is not greater than equal to min
-		if(!is_null($max) && $max > 0 && $max >= $min){
-			//add it to our query
-			$query['max'] = $max;	
-		}
-		return $this->_getJsonResponse(self::URL_NEW, $query);
-			
+		return $this;
 	}
 	
-	public function update($event, $name,  $price, $quantity, $description = NULL, $donation = false, $start = NULL, $end = NULL, $fee = false, $min = NULL, $max = NULL, $hide = NULL) {
-		//argument test		
-		Eden_Eventbrite_Error::get()
-			->argument(1, 'numeric')							//Argument 1 must be numeric
-			->argument(2, 'string')								//Argument 2 must be a string
-			->argument(3, 'float')								//Argument 3 must a float
-			->argument(4, 'int')								//Argument 4 must be an integer
-			->argument(5, 'string', 'null')						//Argument 5 must be a string or null
-			->argument(6, 'bool')	 		  				    //Argument 6 must be an integer
-			->argument(7, 'string', 'int', 'null')				//Argument 7 must be a string, integer or null
-			->argument(8, 'string', 'int', 'null')				//Argument 8 must be a string, integer or null
-			->argument(9, 'bool')								//Argument 9 must be an integer
-			->argument(10, 'int')								//Argument 10 must be an integer
-			->argument(11, 'int', 'null')						//Argument 11 must be an integer or null
-			->argument(12, 'int', 'null')						//Argument 12 must be an integer or null
-			->argument(13, 'bool', 'null');						//Argument 13 must be a boolean or null
-			
-		$query = array (		
-			'event_id'      => $event,
-			'name'		    => $name,
-			'price'			=> $price,
-			'quantity'		=> $quantity);
-
-		if($donation){
-			$query['is_donation'] = 1;	
-		}
-		//if description is not empty
-		if(!is_null($description)){
-			//add it to our query
-			$query['description'] = $description;
-		}
-		//if start is not empty
-		if(!is_null($start)){
-			//if start is a string
-			if(is_string($start)) {
-				//then convert it to unixcode
-				$start = strtotime($start);
-			}
-			
-			$start = date('Y-m-d H:i:s', $start);
-			//add it to our query
-			$query['start_sales'] = $start;
-		}
-		//if start is not empty
-		if(!is_null($end)) {
-			//if start is a string
-			if(is_string($end)){
-				//then convert it to unixcode
-				$end = strtotime($end);	
-			}
+	public function setName($name) {
+		//Argument 1 must be numeric
+		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		$this->_query['name'] = $name;
 		
-			$end = date('Y-m-d H:i:s', $end);
-			//add it to our query
-			$query['end_sales'] = $end;
+		return $this;
+	}
+	
+	public function setPrice($price) {
+		//Argument 1 must be float
+		Eden_Eventbrite_Error::get()->argument(1, 'float');
+		$this->_query['price'] = $price;
+		
+		return $this;
+	}
+	
+	public function setQuantity($quantity) {
+		//Argument 1 must be an integer
+		Eden_Eventbrite_Error::get()->argument(1, 'int');
+		$this->_query['quantity'] = $quantity;
+		
+		return $this;
+	}
+	
+	public function setDonation() {
+		$this->_query['is_donation'] = 1;
+		
+		return $this;
+	}
+	
+	public function setDescription($description) {
+		//Argument 1 must be a string
+		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		$this->_query['description'] = $description;
+		
+		return $this;
+	}
+	
+	public function setStart($start) {
+		//Argument 1 must be an integer or string
+		Eden_Eventbrite_Error::get()->argument(1, 'int', 'string');
+		//if start is a string
+		if(is_string($start)) {
+			//then convert it to unixcode
+			$start = strtotime($start);
+		}
+	
+		$start = date('Y-m-d H:i:s', $start);
+		//add it to our query
+		$query['start_sales'] = $start;
+		
+		return $this;
+	}
+	
+	public function setEnd($end) {
+		//Argument 1 must be an integer or string
+		Eden_Eventbrite_Error::get()->argument(1, 'int', 'string');
+		//if start is a string
+		if(is_string($start)) {
+			//then convert it to unixcode
+			$end = strtotime($end);
+		}
+	
+		$end = date('Y-m-d H:i:s', $end);
+		//add it to our query
+		$query['end_sales'] = $end;
+		
+		return $this;
+	}
+	
+	public function setFee() {
+		$this->_query['include_fee'] = 1;
+		
+		return $this;
+	}
+	
+	public function setMin($quantity) {
+		//Argument 1 must be an integer
+		Eden_Eventbrite_Error::get()->argument(1, 'int');
+		if($min < 0) {
+			$min = 0;
+		}
+		$this->_query['min'] = $min;
+		
+		return $this;
+	}
+	
+	public function setMax($max) {
+		//Argument 1 must be an integer
+		Eden_Eventbrite_Error::get()->argument(1, 'int');
+		if($max < 1) {
+			$max = 1;
 		}
 		
-		if($fee) {
-			$query['include_fee'] = 1;	
-		}
-		//if min is not empty and min is not greater than 0 
-		if(!is_null($min) && $min > 0 ){
-			//add it to our query
-			$query['min'] =  $min;	
-		}
-		//if maqx is not empty and max is not greater than equal to min
-		if(!is_null($max) && $max > 0 && $max >= $min ){
-			//add it to our query
-			$query['max'] = $max;	
-		}
+		$this->_query['max'] = $max;
+		
+		return $this;
+	}
+	
+	public function setHide($hide) {
+		//Argument 1 must be a boolean
+		Eden_Eventbrite_Error::get()->argument(1, 'bool');
+		
 		//if the string hide is show
 		if($hide) { 
 			//hide is equal to yes
-			$query['hide'] = 'y';
+			$this->_query['hide'] = 'y';
 		} else if($hide ===  false) {
 			//hide is equal to no
-			$query['hide'] = 'n';
+			$this->_query['hide'] = 'n';
 		}
+		
+		return $this;
+	}
 	
-		return $this->_getJsonResponse(self::URL_UPDATE, $query);
+	public function add() {
+		if(!isset($this->_query['event_id'])) {
+			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::EVENT_NOT_SET)->trigger();
+		}
+		
+		if(!isset($this->_query['name'])) {
+			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::NAME_NOT_SET)->trigger();
+		}
+		
+		
+		if(!isset($this->_query['price'])) {
+			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::PRICE_NOT_SET)->trigger();
+		}
+		
+		if(!isset($this->_query['quantity'])) {
+			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::QUANTITY_NOT_SET)->trigger();
+		}
+		
+		$query = $this->_query;
+		if(isset($query['hide'])) {
+			unset($query['hide']);
+		}
+		
+		return $this->_getJsonResponse(self::URL_NEW, $query);
+	}
+	
+	public function update() {
+		if(!isset($this->_query['event_id'])) {
+			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::EVENT_NOT_SET)->trigger();
+		}
+		
+		if(!isset($this->_query['name'])) {
+			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::NAME_NOT_SET)->trigger();
+		}
+		
+		
+		if(!isset($this->_query['price'])) {
+			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::PRICE_NOT_SET)->trigger();
+		}
+		
+		if(!isset($this->_query['quantity'])) {
+			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::QUANTITY_NOT_SET)->trigger();
+		}
+		
+		return $this->_getJsonResponse(self::URL_UPDATE, $this->_query);
 	}
 	
 	/* Protected Methods

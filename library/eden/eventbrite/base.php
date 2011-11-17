@@ -38,7 +38,7 @@ class Eden_Eventbrite_Base extends Eden_Class {
 	-------------------------------*/
 	public function __construct($user, $api) {
 		//argument test
-		Eden_Google_Error::get()
+		Eden_Eventbrite_Error::get()
 			->argument(1, 'string','array')	//Argument 1 must be a string or array
 			->argument(2, 'string');		//Argument 2 must be a string
 			
@@ -67,12 +67,12 @@ class Eden_Eventbrite_Base extends Eden_Class {
 	-------------------------------*/
 	protected function _getJsonResponse($url, array $query = array()) {
 		$response = $this->_getResponse($url, $query);
-		return json_decode($reponse, true);
+		return json_decode($response, true);
 	}
 	
 	protected function _getXmlResponse($url, array $query = array()) {
 		$response = $this->_getResponse($url, $query);
-		return simplexml_load_string($reponse);
+		return simplexml_load_string($response);
 	}
 	
 	protected function _getResponse($url, array $query = array()) {

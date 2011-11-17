@@ -51,7 +51,7 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 		//argument test
 		Eden_Eventbrite_Error::get()
 			->argument(1, 'int', 'null')				//Argument 1 must be a integer or null
-			->argument(2, 'string', 'null')				//Argument 2 must be a string or null		
+			->argument(2, 'string', 'null');			//Argument 2 must be a string or null		
 		
 		$query = array();
 		//if it is not empty
