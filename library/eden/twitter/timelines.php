@@ -64,15 +64,15 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 public function getTimeline($count = NULL, $since = NULL, $max = NULL, $page = NULL, $trim = false, $include = false, $entities = false, $replies = false, $detail =false) {
 		//Argument Test
 		Eden_Twitter_Error::get()
-			->argument(1, 'int')						//Argument 1 must be an integer
-			->argument(2, 'int')						//Argument 2 must be an integer
-			->argument(3, 'int')						//Argument 3 must be an integer
-			->argument(4, 'int')						//Argument 4 must be an integer
-			->argument(5, 'bool')						//Argument 5 must be an boolean
+			->argument(1, 'int', 'null')				//Argument 1 must be an integer
+			->argument(2, 'int', 'null')				//Argument 2 must be an integer
+			->argument(3, 'int', 'null')				//Argument 3 must be an integer
+			->argument(4, 'int', 'null')				//Argument 4 must be an integer
+			->argument(5, 'bool')						//Argument 5 must be a boolean
 			->argument(6, 'bool')						//Argument 6 must be a boolean
-			->argument(7, 'bool')						//Argument 7 must be an boolean
-			->argument(8, 'bool')						//Argument 8 must be an boolean
-			->argument(9, 'bool');						//Argument 9 must be an boolean
+			->argument(7, 'bool')						//Argument 7 must be a boolean
+			->argument(8, 'bool')						//Argument 8 must be a boolean
+			->argument(9, 'bool');						//Argument 9 must be a boolean
 			
 		$query = array();
 		//if it is not empty and its less than equal to 100 
@@ -80,15 +80,15 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 			//lets put it in query
 			$query['count'] = $count;
 		}
-		//if it is not empty a
+		//if it is not empty 
 		if(!is_null($since)) {
 			//lets put it in query
 			$query['since_id'] = $since;
 		}
 		//if it is not empty and max is not less than count
-		if(!is_null(max) && $max <= $count) {
+		if(!is_null($max) && $$max <= $count) {
 			//lets put it in query
-			$query['max_id'] = $max;
+			$query['$max_id'] = $$max;
 		}
 		//if it is not empty  
 		if(!is_null($page)) {
@@ -134,14 +134,14 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 public function getMention($count = NULL, $since = NULL, $max = NULL, $page = NULL, $trim = false, $include = false, $entities = false, $detail =false) {
 		//Argument Test
 		Eden_Twitter_Error::get()
-			->argument(1, 'int')						//Argument 1 must be an integer
-			->argument(2, 'int')						//Argument 2 must be an integer
-			->argument(3, 'int')						//Argument 3 must be an integer
-			->argument(4, 'int')						//Argument 4 must be an integer
+			->argument(1, 'int', 'null')				//Argument 1 must be an integer
+			->argument(2, 'int', 'null')				//Argument 2 must be an integer
+			->argument(3, 'int', 'null')				//Argument 3 must be an integer
+			->argument(4, 'int', 'null')				//Argument 4 must be an integer
 			->argument(5, 'bool')						//Argument 5 must be an boolean
 			->argument(6, 'bool')						//Argument 6 must be a boolean
-			->argument(7, 'bool')						//Argument 7 must be an boolean
-			->argument(8, 'bool');						//Argument 8 must be an boolean
+			->argument(7, 'bool')						//Argument 7 must be a boolean
+			->argument(8, 'bool');						//Argument 8 must be a boolean
 			
 		$query = array();
 		
@@ -155,10 +155,10 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 			//lets put it in query
 			$query['since_id'] = $since;
 		}
-		//if it is not empty and max is not less than count
-		if(!is_null(max) && $max <= $count) {
+		//if it is not empty and $max is not less than count
+		if(!is_null($max) && $$max <= $count) {
 			//lets put it in query
-			$query['max_id'] = $max;
+			$query['$max_id'] = $$max;
 		}
 		//if it is not empty and 
 		if(!is_null($page)) {
@@ -195,8 +195,8 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 public function getPublic($trim = false, $entities = false) {
 		//Argument Test
 		Eden_Twitter_Error::get()
-			->argument(1, 'bool')						//Argument 1 must be an boolean
-			->argument(2, 'bool');						//Argument 2 must be an boolean
+			->argument(1, 'bool')						//Argument 1 must be a boolean
+			->argument(2, 'bool');						//Argument 2 must be a boolean
 			
 		$query = array();
 		//if trim
@@ -215,7 +215,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 *
 	 * @param count is integer
 	 * @param since is integer
-	 * @param max is integer
+	 * @param $max is integer
 	 * @param page is integer
 	 * @param trim is boolean
 	 * @param entities is boolean
@@ -224,12 +224,12 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 public function getBy($count = NULL, $since = NULL, $max = NULL, $page = NULL, $trim = false, $entities = false) {
 		//Argument Test
 		Eden_Twitter_Error::get()
-			->argument(1, 'int')						//Argument 1 must be an integer
-			->argument(2, 'int')						//Argument 2 must be an integer
-			->argument(3, 'int')						//Argument 3 must be an integer
-			->argument(4, 'int')						//Argument 4 must be an integer
+			->argument(1, 'int', 'null')				//Argument 1 must be an integer
+			->argument(2, 'int', 'null')				//Argument 2 must be an integer
+			->argument(3, 'int', 'null')				//Argument 3 must be an integer
+			->argument(4, 'int', 'null')				//Argument 4 must be an integer
 			->argument(5, 'bool')						//Argument 5 must be an boolean
-			->argument(6, 'bool');						//Argument 6 must be a boolean
+			->argument(6, 'bool');						//Argument 6 must be an boolean
 			
 		$query = array();
 		
@@ -243,10 +243,10 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 			//lets put it in query
 			$query['since_id'] = $since;
 		}
-		//if it is not empty and max is not less than count
-		if(!is_null(max) && $max <= $count) {
+		//if it is not empty and $max is not less than count
+		if(!is_null($max) && $$max <= $count) {
 			//lets put it in query
-			$query['max_id'] = $max;
+			$query['$max_id'] = $$max;
 		}
 		//if it is not empty and 
 		if(!is_null($page)) {
@@ -269,7 +269,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 *
 	 * @param count is integer
 	 * @param since is integer
-	 * @param max is integer
+	 * @param $max is integer
 	 * @param page is integer
 	 * @param trim is boolean
 	 * @param entities is boolean
@@ -278,11 +278,11 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 public function getTo($count = NULL, $since = NULL, $max = NULL, $page = NULL, $trim = false, $entities = false) {
 		//Argument Test
 		Eden_Twitter_Error::get()
-			->argument(1, 'int')						//Argument 1 must be an integer
-			->argument(2, 'int')						//Argument 2 must be an integer
-			->argument(3, 'int')						//Argument 3 must be an integer
-			->argument(4, 'int')						//Argument 4 must be an integer
-			->argument(5, 'bool')						//Argument 5 must be an boolean
+			->argument(1, 'int', 'null')				//Argument 1 must be an integer
+			->argument(2, 'int', 'null')				//Argument 2 must be an integer
+			->argument(3, 'int', 'null')				//Argument 3 must be an integer
+			->argument(4, 'int', 'null')				//Argument 4 must be an integer
+			->argument(5, 'bool')						//Argument 5 must be a boolean
 			->argument(6, 'bool');						//Argument 6 must be a boolean
 			
 		$query = array();
@@ -297,10 +297,10 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 			//lets put it in query
 			$query['since_id'] = $since;
 		}
-		//if it is not empty and max is not less than count
-		if(!is_null(max) && $max <= $count) {
+		//if it is not empty and $max is not less than count
+		if(!is_null($max) && $$max <= $count) {
 			//lets put it in query
-			$query['max_id'] = $max;
+			$query['$max_id'] = $$max;
 		}
 		//if it is not empty and 
 		if(!is_null($page)) {
@@ -323,7 +323,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 *
 	 * @param count is integer
 	 * @param since is integer
-	 * @param max is integer
+	 * @param $max is integer
 	 * @param page is integer
 	 * @param trim is boolean
 	 * @param entities is boolean
@@ -332,11 +332,11 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 public function getOf($count = NULL, $since = NULL, $max = NULL, $page = NULL, $trim = false, $entities = false) {
 		//Argument Test
 		Eden_Twitter_Error::get()
-			->argument(1, 'int')						//Argument 1 must be an integer
-			->argument(2, 'int')						//Argument 2 must be an integer
-			->argument(3, 'int')						//Argument 3 must be an integer
-			->argument(4, 'int')						//Argument 4 must be an integer
-			->argument(5, 'bool')						//Argument 5 must be an boolean
+			->argument(1, 'int', 'null')				//Argument 1 must be an integer
+			->argument(2, 'int', 'null')				//Argument 2 must be an integer
+			->argument(3, 'int', 'null')				//Argument 3 must be an integer
+			->argument(4, 'int', 'null')				//Argument 4 must be an integer
+			->argument(5, 'bool')						//Argument 5 must be a boolean
 			->argument(6, 'bool');						//Argument 6 must be a boolean
 			
 		$query = array();
@@ -346,15 +346,15 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 			//lets put it in query
 			$query['count'] = $count;
 		}
-		//if it is not empty and 
+		//if it is not empty 
 		if(!is_null($since)) {
 			//lets put it in query
 			$query['since_id'] = $since;
 		}
-		//if it is not empty and max is not less than count
-		if(!is_null(max) && $max <= $count) {
+		//if it is not empty and $max is not less than count
+		if(!is_null($max) && $$max <= $count) {
 			//lets put it in query
-			$query['max_id'] = $max;
+			$query['$max_id'] = $$max;
 		}
 		//if it is not empty and 
 		if(!is_null($page)) {
@@ -382,7 +382,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 * @param name is a string
 	 * @param since is integer
 	 * @param count is integer
-	 * @param max is integer
+	 * @param $max is integer
 	 * @param page is integer
 	 * @param trim is boolean
 	 * @param include is boolean
@@ -391,31 +391,33 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 * @param detail is boolean
 	 * @return $this
 	 */
-	 public function getUser($id = NULL, $name = NULL, $since = NULL, $count = NULL,$max = NULL, $page = NULL, $trim = false, $include = false, $entities = false, $replies = false, $detail =false) {
+	 public function getList($id = NULL, $since = NULL, $count = NULL, $max = NULL, $page = NULL, $trim = false, $include = false, $entities = false, $replies = false, $detail =false) {
 		//Argument Test
 		Eden_Twitter_Error::get()
-			->argument(1, 'int')						//Argument 1 must be an integer
-			->argument(2, 'string')						//Argument 2 must be an string
-			->argument(3, 'int')						//Argument 3 must be an integer
-			->argument(4, 'int')						//Argument 4 must be an integer
-			->argument(5, 'int')						//Argument 5 must be an boolean
-			->argument(6, 'int')						//Argument 6 must be a boolean
-			->argument(7, 'bool')						//Argument 7 must be an boolean
-			->argument(8, 'bool')						//Argument 8 must be an boolean
-			->argument(9, 'bool')						//Argument 9 must be an boolean
-			->argument(10, 'bool')						//Argument 10 must be an boolean
-			->argument(11, 'bool');						//Argument 11 must be an boolean
+			->argument(1, 'int','string', 'null')		//Argument 1 must be an integer
+			->argument(2, 'int', 'null')				//Argument 2 must be an integer
+			->argument(3, 'int', 'null')				//Argument 3 must be an integer
+			->argument(4, 'int', 'null')				//Argument 4 must be a boolean
+			->argument(5, 'int', 'null')				//Argument 5 must be a boolean
+			->argument(6, 'bool')						//Argument 6 must be a boolean
+			->argument(7, 'bool')						//Argument 7 must be a boolean
+			->argument(8, 'bool')						//Argument 8 must be a boolean
+			->argument(9, 'bool')						//Argument 9 must be a boolean
+			->argument(10, 'bool');						//Argument 10 must be a boolean
 			
 		$query = array();
 		//If it is not empty
 		if(!is_null($id)) {
-			//Lets put it in query
-			$query['user_id'] = $id;
-		}
-		//IF it is not empty
-		if(!is_null($name)) {
-			//Lets put it in query
-			$query['screen_name'] = $name;
+			
+			if(is_int($id)) {
+				//Lets put it in query
+				$query['user_id'] = $id;
+			}
+			
+			if(is_string($id)) {
+				//Lets put it in query
+				$query['screen_name'] = $id;
+			}	
 		}
 		//if it is not empty 
 		if(!is_null($since)) {
@@ -427,10 +429,10 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 			$query['count'] = $count;
 		}
 		}
-		//if it is not empty and max is not less than count
-		if(!is_null(max) && $max <= $count) {
+		//if it is not empty and $max is not less than count
+		if(!is_null($max) && $$max <= $count) {
 			//lets put it in query
-			$query['max_id'] = $max;
+			$query['$max_id'] = $$max;
 		}
 		//if it is not empty and 
 		if(!is_null($page)) {
@@ -468,7 +470,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 * @param id is a integer or string
 	 * @param since is integer
 	 * @param count is integer
-	 * @param max is integer
+	 * @param $max is integer
 	 * @param page is integer
 	 * @param trim is boolean
 	 * @param include is boolean
@@ -477,20 +479,20 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 * @param detail is boolean
 	 * @return $this
 	 */
-	 public function getToUser($name = NULL, $id = NULL, $since = NULL, $count = NULL,$max = NULL, $page = NULL, $trim = false, $entities = false) {
+	 public function getToUser($name = NULL, $id = NULL, $since = NULL, $count = NULL, $max = NULL, $page = NULL, $trim = false, $entities = false) {
 		//Argument Test
 		Eden_Twitter_Error::get()
-			->argument(1, 'string')						//Argument 1 must be an string
-			->argument(2, 'string', 'int')				//Argument 2 must be an string or integer
-			->argument(3, 'int')						//Argument 3 must be an integer
-			->argument(4, 'int')						//Argument 4 must be an integer
-			->argument(5, 'int')						//Argument 5 must be an boolean
-			->argument(6, 'int')						//Argument 6 must be a boolean
-			->argument(7, 'bool')						//Argument 7 must be an boolean
-			->argument(8, 'bool')						//Argument 8 must be an boolean
-			->argument(9, 'bool')						//Argument 9 must be an boolean
-			->argument(10, 'bool')						//Argument 10 must be an boolean
-			->argument(11, 'bool');						//Argument 11 must be an boolean
+			->argument(1, 'string', 'null')				//Argument 1 must be a string
+			->argument(2, 'string', 'int', 'null')		//Argument 2 must be a string or integer
+			->argument(3, 'int', 'null')				//Argument 3 must be an integer
+			->argument(4, 'int', 'null')				//Argument 4 must be an integer
+			->argument(5, 'int', 'null')				//Argument 5 must be a boolean
+			->argument(6, 'int', 'null')				//Argument 6 must be a boolean
+			->argument(7, 'bool')						//Argument 7 must be a boolean
+			->argument(8, 'bool')						//Argument 8 must be a boolean
+			->argument(9, 'bool')						//Argument 9 must be a boolean
+			->argument(10, 'bool')						//Argument 10 must be a boolean
+			->argument(11, 'bool');						//Argument 11 must be a boolean
 			
 		$query = array();
 		//If it is not empty
@@ -507,15 +509,16 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 		if(!is_null($since)) {
 			//lets put it in query
 			$query['since_id'] = $since;
-				//if it is not empty and 
+		}
+		//if it is not empty and 
 		if(!is_null($count) && $count <= 200) {
 			//lets put it in query
 			$query['count'] = $count;
 		}
-		//if it is not empty and max is not less than count
-		if(!is_null(max) && $max <= $count) {
+		//if it is not empty and $max is not less than count
+		if(!is_null($max) && $$max <= $count) {
 			//lets put it in query
-			$query['max_id'] = $max;
+			$query['$max_id'] = $$max;
 		}
 		//if it is not empty and 
 		if(!is_null($page)) {
@@ -541,7 +544,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 * @param id is a integer or string
 	 * @param since is integer
 	 * @param count is integer
-	 * @param max is integer
+	 * @param $max is integer
 	 * @param page is integer
 	 * @param trim is boolean
 	 * @param include is boolean
@@ -550,20 +553,17 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 * @param detail is boolean
 	 * @return $this
 	 */
-	 public function getByUser($name = NULL, $id = NULL, $since = NULL, $count = NULL,$max = NULL, $page = NULL, $trim = false, $entities = false) {
+	 public function getByUser($name = NULL, $id = NULL, $since = NULL, $count = NULL, $max = NULL, $page = NULL, $trim = false, $entities = false) {
 		//Argument Test
 		Eden_Twitter_Error::get()
-			->argument(1, 'string')						//Argument 1 must be an string
-			->argument(2, 'string', 'int')				//Argument 2 must be an string or integer
-			->argument(3, 'int')						//Argument 3 must be an integer
-			->argument(4, 'int')						//Argument 4 must be an integer
-			->argument(5, 'int')						//Argument 5 must be an boolean
-			->argument(6, 'int')						//Argument 6 must be a boolean
-			->argument(7, 'bool')						//Argument 7 must be an boolean
-			->argument(8, 'bool')						//Argument 8 must be an boolean
-			->argument(9, 'bool')						//Argument 9 must be an boolean
-			->argument(10, 'bool')						//Argument 10 must be an boolean
-			->argument(11, 'bool');						//Argument 11 must be an boolean
+			->argument(1, 'string', 'null')				//Argument 1 must be a string
+			->argument(2, 'string', 'int', 'null')		//Argument 2 must be a string or integer
+			->argument(3, 'int', 'null')				//Argument 3 must be a integer
+			->argument(4, 'int', 'null')				//Argument 4 must be a integer
+			->argument(5, 'int', 'null')				//Argument 5 must be a boolean
+			->argument(6, 'int', 'null')				//Argument 6 must be a boolean
+			->argument(7, 'bool')						//Argument 7 must be a boolean
+			->argument(8, 'bool');						//Argument 8 must be a boolean
 			
 		$query = array();
 		//If it is not empty
@@ -580,15 +580,16 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 		if(!is_null($since)) {
 			//lets put it in query
 			$query['since_id'] = $since;
-				//if it is not empty and 
+		}
+		//if it is not empty and 
 		if(!is_null($count) && $count <= 200) {
 			//lets put it in query
 			$query['count'] = $count;
 		}
-		//if it is not empty and max is not less than count
-		if(!is_null(max) && $max <= $count) {
+		//if it is not empty and $max is not less than count
+		if(!is_null($max) && $$max <= $count) {
 			//lets put it in query
-			$query['max_id'] = $max;
+			$query['$max_id'] = $$max;
 		}
 		//if it is not empty and 
 		if(!is_null($page)) {

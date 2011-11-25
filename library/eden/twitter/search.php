@@ -42,25 +42,34 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	/**
 	 * Returns tweets that match a specified query
 	 *
-	 * @param id is integer.
-	 * @param count is integer.
+	 * @param q is integer or string.
+	 * @param callback is string.
+	 * @param geocode is float.
+	 * @param lang is string.
+	 * @param locale is string.
 	 * @param page is integer
+	 * @param result is string.
+	 * @param rpp is string.
+	 * @param show is boolean
+	 * @param until is string
+	 * @param since is string
+	 * @param entities is boolean
 	 * @return $this
 	 */
 	 public function search($q, $callback = NULL, $geocode = NULL, $lang = NULL, $locale = NULL, $page = NULL, $result = NULL, $rpp = NULL, $show = false, $until = NULL, $since = NULL, $entities = NULL) {
 		//Argument Test
 		Eden_Twitter_Error::get()
-			->argument(1, 'string')				//Argument 1 must be a string
-			->argument(2, 'string')				//Argument 2 must be a string
-			->argument(3, 'float')				//Argument 3 must be a flaot
-			->argument(4, 'string')				//Argument 4 must be a string
-			->argument(5, 'string')				//Argument 5 must be a string
-			->argument(6, 'int')				//Argument 6 must be an integer
-			->argument(7, 'string')				//Argument 7 must be as string
-			->argument(8, 'string')				//Argument 8 must be as integer
+			->argument(1, 'string','int')		//Argument 1 must be a string or int
+			->argument(2, 'string', 'null')		//Argument 2 must be a string
+			->argument(3, 'float', 'null')		//Argument 3 must be a flaot
+			->argument(4, 'string', 'null')		//Argument 4 must be a string
+			->argument(5, 'string', 'null')		//Argument 5 must be a string
+			->argument(6, 'int', 'null')		//Argument 6 must be an integer
+			->argument(7, 'string', 'null')		//Argument 7 must be a string
+			->argument(8, 'string', 'null')		//Argument 8 must be an integer
 			->argument(9, 'boolean')			//Argument 9 must be a boolean
-			->argument(10, 'string')			//Argument 10 must be a string
-			->argument(11, 'string')			//Argument 11 must be a string
+			->argument(10, 'string', 'null')	//Argument 10 must be a string
+			->argument(11, 'string', 'null')	//Argument 11 must be a string
 			->argument(12, 'boolean');			//Argument 12 must be a boolean
 			
 		$query = array('q' => $q);
@@ -113,7 +122,6 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 				//and add to query
 				$query['result_type'] = $result;		
 			}
-		
 		}
 		//if rpp is not empty and less than equal to 100
 		if(!is_null($rpp) && $rpp <= 100) {

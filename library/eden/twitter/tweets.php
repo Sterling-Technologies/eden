@@ -19,11 +19,11 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	/* Constants
 	-------------------------------*/
 	const URL_WHO_RETWEETED				= 'https://api.twitter.com/1/statuses/%s/retweeted_by.json';
-	const URL_GET_WHO_RETWEETED_IDS 	= 'https://api.twitter.com/1/statuses/%s/retweeted_by/ids.json';
+	const URL_GET_WHO_RETWEETED_IDS 	= 'https://api.twitter.com/1/statuses/%d/retweeted_by/ids.json';
 	const URL_GET_RETWEETS 				= 'https://api.twitter.com/1/statuses/retweets/%s.json';
 	const URL_GET_LIST 					= 'https://api.twitter.com/1/statuses/show.json';
 	const URL_REMOVE 					= 'http://api.twitter.com/1/statuses/destroy/%s.json';
-	const URL_RETWEET 					= 'http://api.twitter.com/1/statuses/retweet/%s.json';
+	const URL_RETWEET 					= 'http://api.twitter.com/1/statuses/retweet/%d.json';
 	const URL_UPDATE 					= 'https://api.twitter.com/1/statuses/update.json';
 	const URL_UPDATE_MEDIA 				= 'https://upload.twitter.com/1/statuses/update_with_media.json';
 
@@ -37,9 +37,10 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
-		return self::_getMultiple(__CLASS__, $user, $api);
+	public static function get($key, $secret) {
+		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
+	
 	/* Magic
 	-------------------------------*/
 	/* Public Methods
@@ -53,14 +54,14 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 * @param page is integer
 	 * @return $this
 	 */
-	 public function getWhoRetweeted($id, $count = NULL, $page, = NULL) {
+	 public function getWhoRetweeted($id, $count = NULL, $page = NULL) {
 		//Argument Test
 		Eden_Twitter_Error::get()
 			->argument(1, 'int')						//Argument 1 must be an integer
 			->argument(2, 'int')						//Argument 2 must be an integer
 			->argument(3, 'int');						//Argument 3 must be an integer
 
-		$query = array('id' => $id);
+		$query = array();
 		//if it is not empty and not up to a maximum of 100
 		if(!is_null($count) && $count <= 100) {
 			//lets put it in query
@@ -71,8 +72,8 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 			//lets put it in query
 			$query['page'] = $count;
 		}
-	
-		return $this->_getResponse(self::URL_WHO_RETWEETED, $query);
+		$url = sprintf(self::URL_WHO_RETWEETED, $id);
+		return $this->_post($url, $query);
 	 }
 	 /**
 	 * Show user ids of up to 100 users who retweeted the status.   
@@ -83,7 +84,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 * @param stringify is boolean
 	 * @return $this
 	 */
-	 public function getWhoRetweetedIds($id, $count = NULL, $page = NULL, stringify = false) {
+	 public function getWhoRetweetedIds($id, $count = NULL, $page = NULL, $stringify = false) {
 		//Argument Test
 		Eden_Twitter_Error::get()
 			->argument(1, 'int')						//Argument 1 must be an integer
@@ -91,7 +92,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 			->argument(3, 'int')						//Argument 3 must be an integer
 			->argument(4, 'bool');						//Argument 4 must be a boolean
 
-		$query = array('id' => $id);
+		$query = array();
 		//if it is not empty and not up to a maximum of 100
 		if(!is_null($count) && $count <= 100) {
 			//lets put it in query
@@ -107,8 +108,9 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 
 			$query['stringify_ids'] = 1;
 		}
-	
-		return $this->_getResponse(self::URL_GET_WHO_RETWEETED_IDS, $query);
+		
+		$url = sprintf(self::URL_GET_WHO_RETWEETED_IDS, $id);
+		return $this->_post($url, $query);
 	 }
 	 /**
 	 * Returns up to 100 of the first retweets of a given tweet.   
@@ -129,7 +131,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 			
 		$query = array('id' => $id);
 		//if count is not empty and less than equal to 100
-		if(!is_null($coutn) && $count <= 100) {
+		if(!is_null($count) && $count <= 100) {
 			//Lets put it in query
 			$query['count'] = $count;
 		}
@@ -141,8 +143,8 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 		if($entities) {
 			$query['include_entities'] = 1;
 		}
-
-		return $this->_getResponse(self::URL_GET_RETWEETS, $query);
+		$url = sprintf(self::URL_GET_RETWEETS, $id);
+		return $this->_post($url, $query);
 	 }
 	 /**
 	 * Returns a single status, specified by the id parameter below.    
@@ -153,7 +155,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 * @param entities is boolean
 	 * @return $this
 	 */
-	 public function getList($id, $trim = false, $entities = false) {
+	 public function getDetail($id, $trim = false, $entities = false) {
 		//Argument Test
 		Eden_Twitter_Error::get()
 			->argument(1, 'int')						//Argument 1 must be an integer
@@ -189,7 +191,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 			->argument(2, 'bool')						//Argument 2 must be an boolean
 			->argument(3, 'bool');						//Argument 3 must be an boolean
 			
-		$query = array('id' => $id);
+		$query = array();
 		//if entities
 		if($entities) {
 			$query['include_entities'] = 1;
@@ -199,7 +201,8 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 			$query['trim_user'] = 1;
 		}
 
-		return $this->_getResponse(self::URL_REMOVE, $query);
+		$url = sprintf(self::URL_REMOVE, $id);
+		return $this->_post($url,$query);
 	 }
 	 /**
 	 * Retweets a tweet. Returns the original tweet 
@@ -217,7 +220,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 			->argument(2, 'bool')						//Argument 2 must be an boolean
 			->argument(3, 'bool');						//Argument 3 must be an boolean
 			
-		$query = array('id' => $id);
+		$query = array();
 		//if entities
 		if($entities) {
 			$query['include_entities'] = 1;
@@ -226,8 +229,8 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 		if($trim) {
 			$query['trim_user'] = 1;
 		}
-
-		return $this->_getResponse(self::URL_RETWEET, $query);
+		$url = sprintf(self::URL_RETWEET, $id);
+		return $this->_post($url, $query);
 	 }
 	 /**
 	 * Updates the authenticating user's status, 
@@ -276,7 +279,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 		//if reply is not empty
 		if(!is_null($place)) {
 			//lets put it in query
-			$query['place_id '] = $place
+			$query['place_id '] = $place;
 		}
 		//if entities
 		if($display) {
@@ -295,7 +298,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 			$query['wrap_links'] = 1;
 		}
 
-		return $this->_getResponse(self::URL_UPDATE, $query);
+		return $this->_post(self::URL_UPDATE, $query);
 	 }
 	 /**
 	 * Updates the authenticating user's status, 
@@ -334,6 +337,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 		if(!is_null($id)) {
 			//lets put it in query
 			$query['in_reply_to_status_id'] = $id;
+		}
 		//if reply is not empty
 		if(!is_null($lat) && $lat >= -90.0 && $lat <= +90.0) {
 			//lets put it in query

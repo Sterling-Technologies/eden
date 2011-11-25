@@ -20,9 +20,9 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	-------------------------------*/
 	const URL_DIRECT_MESSAGE	= 'https://api.twitter.com/1/direct_messages.json';
 	const URL_SENT_MESSAGE		= 'https://api.twitter.com/1/direct_messages/sent.json';
-	const URL_REMOVE_MESSAGE	= 'https://api.twitter.com/1/direct_messages/destroy/1270516771.json';
-	const URL_NEW_MESSAGE		= 'httsp://api.twitter.com/1/direct_messages/new.format ';
-	const URL_SHOW_MESSAGE		= 'https://api.twitter.com/1/direct_messages/show/:id.format ';
+	const URL_REMOVE_MESSAGE	= 'https://api.twitter.com/1/direct_messages/destroy/%d.json';
+	const URL_NEW_MESSAGE		= 'https://api.twitter.com/1/direct_messages/new.json';
+	const URL_SHOW_MESSAGE		= 'https://api.twitter.com/1/direct_messages/show/%d.json';
 
 	/* Public Properties
 	-------------------------------*/
@@ -53,13 +53,13 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	 * @param skip is boolean
 	 * @return $this
 	 */
-	 public function directMessage($since = NULL, $max = NULL $count = NULL,, $page = NULL, $entities = false, $skip = false) {
+	 public function getList($since = NULL, $max = NULL, $count = NULL, $page = NULL, $entities = false, $skip = false) {
 		//Argument Test
 		Eden_Twitter_Error::get()
-			->argument(1, 'int')						//Argument 1 must be an integer
-			->argument(2, 'int')						//Argument 2 must be an integer
-			->argument(3, 'int')						//Argument 3 must be an integer
-			->argument(4, 'int')						//Argument 4 must be an integer
+			->argument(1, 'int', 'null')				//Argument 1 must be an integer
+			->argument(2, 'int', 'null')				//Argument 2 must be an integer
+			->argument(3, 'int', 'null')				//Argument 3 must be an integer
+			->argument(4, 'int', 'null')				//Argument 4 must be an integer
 			->argument(5, 'bool')						//Argument 5 must be an boolean
 			->argument(6, 'bool');						//Argument 6 must be a boolean
 			
@@ -71,7 +71,7 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 			$query['since_id'] = $since;
 		}
 		//if it is not empty and max is not less than count
-		if(!is_null(max) && $max <= $count) {
+		if(!is_null($max) && $max <= $count) {
 			//lets put it in query
 			$query['max_id'] = $max;
 		}
@@ -106,13 +106,13 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	 * @param entities is boolean
 	 * @return $this
 	 */
-	 public function sentMessage($since = NULL, $max = NULL $count = NULL,, $page = NULL, $entities = false) {
+	 public function getSent($since = NULL, $max = NULL, $count = NULL, $page = NULL, $entities = false) {
 		//Argument Test
 		Eden_Twitter_Error::get()
-			->argument(1, 'int')						//Argument 1 must be an integer
-			->argument(2, 'int')						//Argument 2 must be an integer
-			->argument(3, 'int')						//Argument 3 must be an integer
-			->argument(4, 'int')						//Argument 4 must be an integer
+			->argument(1, 'int', 'null')				//Argument 1 must be an integer
+			->argument(2, 'int', 'null')				//Argument 2 must be an integer
+			->argument(3, 'int', 'null')				//Argument 3 must be an integer
+			->argument(4, 'int', 'null')				//Argument 4 must be an integer
 			->argument(5, 'bool');						//Argument 5 must be an boolean
 
 		$query = array();
@@ -123,7 +123,7 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 			$query['since_id'] = $since;
 		}
 		//if it is not empty and max is not less than count
-		if(!is_null(max) && $max <= $count) {
+		if(!is_null($max) && $max <= $count) {
 			//lets put it in query
 			$query['max_id'] = $max;
 		}
@@ -149,27 +149,23 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	 * ID parameter. The authenticating user must be the 
 	 * recipient of the specified direct message.
 	 *
-	 * @param since is integer
-	 * @param max is integer
-	 * @param count is integer
-	 * @param page is integer
+	 * @param id is integer
 	 * @param entities is boolean
 	 * @return $this
 	 */
-	 public function removeMessage($id, $entities = false) {
+	 public function remove($id, $entities = false) {
 		//Argument Test
 		Eden_Twitter_Error::get()
 			->argument(1, 'int')						//Argument 1 must be an integer
-			->argument(2, 'bool');						//Argument 2 must be an boolean
-
-		$query = array('id' => $id);
+			->argument(2, 'bool');						//Argument 2 must be a boolean
 		
+		$query = array();
 		//if entities
 		if($entities) {
 			$query['include_entities'] = 1;
 		}
-
-		return $this->_getResponse(self::URL_REMOVE_MESSAGE, $query);
+		$url = sprintf(self::URL_REMOVE_MESSAGE, $id);
+		return $this->_post($url,$query);
 	 }
 	 /**
 	 * Sends a new direct message to the specified 
@@ -177,35 +173,31 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	 *
 	 * @param text is string
 	 * @param user is integer
-	 * @param name is string
 	 * @param wrap is boolean
 	 * @return $this
 	 */
-	 public function newMessage($text, $user = NULL, $name = NULL,  $wrap = false) {
+	 public function add($text, $user = NULL,  $wrap = false) {
 		//Argument Test
 		Eden_Twitter_Error::get()
-			->argument(1, 'string')					//Argument 1 must be an string
-			->argument(2, 'int')					//Argument 2 must be an integer
-			->argument(2, 'string')					//Argument 2 must be an string
-			->argument(2, 'bool');					//Argument 2 must be an boolean
+			->argument(1, 'string')					//Argument 1 must be a string
+			->argument(2, 'int','string','null')	//Argument 2 must be an integer or string 
+			->argument(3, 'bool');					//Argument 2 must be a boolean
 
 		$query = array('text' => $text);
 		//if it is not empty  
 		if(!is_null($user)) {
-			//lets put it in query
-			$query['user_id'] = $user;
-		}
-		//if it is not empty  
-		if(!is_null($name)) {
-			//lets put it in query
-			$query['screen_name'] = $name;
+			//if it is integer
+			if(is_int($user)) {
+				$query['user_id'] = $user;
+			} else {
+				$query['screen_name'] = $user;
+			}
 		}
 		//if wrap
 		if($wrap) {
 			$query['wrap_links'] = 1;
 		}
-
-		return $this->_getResponse(self::URL_NEW_MESSAGE, $query);
+		return $this->_post(self::URL_NEW_MESSAGE, $query);
 	 }
 	 /**
 	 * Returns a single direct message, 
@@ -214,16 +206,13 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	 * @param id is integer
 	 * @return $this
 	 */
-	 public function showMessage($id) {
+	 public function getDetail($id) {
 		//Argument Test
 		Eden_Twitter_Error::get()
-			->argument(1, 'id')					//Argument 1 must be an integer
-			
-		$query = array('id' => $id);
-
-		return $this->_getResponse(self::URL_SHOW_MESSAGE, $query);
+			->argument(1, 'int');				//Argument 1 must be an integer
+		$url = sprintf(self::URL_SHOW_MESSAGE,$id);
+		return $this->_getResponse($url);
 	 }
-	
 	
 	/* Protected Methods
 	-------------------------------*/
