@@ -52,7 +52,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$url = self::GRAPH_URL.$id.$connection;
 		
 		if($auth) {
-			if(!$this->_token) {echo 'no auth';
+			if(!$this->_token) {
 				throw new Eden_Facebook_Error(sprintf(Eden_Facebook_Error::REQUIRES_AUTH, $url));
 			}
 			
@@ -66,7 +66,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$object = $this->_call($url);
 		$object = json_decode($object, true);
 		
-		if (isset($object['error'])) {print_r($object);
+		if (isset($object['error'])) {
 			throw new Eden_Facebook_Error(sprintf(
 				Eden_Facebook_Error::GRAPH_FAILED, 
 				$url, $object['error']['type'], 
