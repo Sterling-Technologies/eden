@@ -15,13 +15,16 @@
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Twitter_Base extends Eden_Oauth_Base {
+class Eden_Tumblr_Base extends Eden_Oauth_Base {
 	/* Constants
 	-------------------------------*/
-	const REQUEST_URL 	= 'http://api.twitter.com/oauth/request_token';
-	const AUTHORIZE_URL = 'http://api.twitter.com/oauth/authorize';
-	const ACCESS_URL	= 'https://api.twitter.com/oauth/access_token';
-	const SECRET_KEY 	= 'twitter_token_secret';
+	const REQUEST_URL 		= 'http://www.tumblr.com/oauth/request_token'; 
+	const AUTHORIZE_URL		= 'http://www.tumblr.com/oauth/authorize';
+	const ACCESS_URL		= 'http://www.tumblr.com/oauth/access_token';
+	const SECRET_KEY 		= 'akHvmf5Fsoo7U9ztx3triIx2mczWfze3SEgIgaiGBYTlkqD0kN';
+	const VERSION_HEADER 	= 'GData-Version';
+	const GDATA_VERSION 	= 2;
+	
 	
 	/* Public Properties
 	-------------------------------*/
@@ -84,17 +87,19 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 	 * @param string
 	 * @return string
 	 */
-	public function getAccessToken($token, $secret) {
+	public function getAccessToken($token, $secret, $verifier) {
 		//argument test
 		Eden_Google_Error::get()
 			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string');	//Argument 2 must be a string
-			
+			->argument(2, 'string')		//Argument 2 must be a string
+			->argument(3, 'string');	//Argument 3 must be a string
+		
 		return Eden_Oauth::get()
 			->getConsumer(self::ACCESS_URL, $this->_key, $this->_secret)
 			->useAuthorization()
 			->setMethodToPost()
 			->setToken($token, $secret)
+			->setVerifier($verifier)
 			->setSignatureToHmacSha1()
 			->getQueryResponse();
 	}
@@ -127,6 +132,7 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 	protected function _getResponse($url, array $query = array()) {
 		$rest = Eden_Oauth::get()
 			->getConsumer($url, $this->_key, $this->_secret)
+			->setHeaders(self::VERSION_HEADER, self::GDATA_VERSION)
 			->setToken($this->_accessToken, $this->_accessSecret)
 			->setSignatureToHmacSha1();
 		
@@ -137,17 +143,61 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 		return $response;
 	}
 	
+	/**
+	 * Returns the token from the server
+	 *
+	 * @param array
+	 * @return array
+	 */
 	protected function _post($url, $query = array()) {
+		$headers = array();
+		$headers[] = Eden_Oauth_Consumer::POST_HEADER;
+		
 		$rest = Eden_Oauth::get()
 			->getConsumer($url, $this->_key, $this->_secret)
 			->setToken($this->_accessToken, $this->_accessSecret)
-			->setMethodToPost()
-			->useAuthorization()
 			->setSignatureToHmacSha1();
 		
-		$response = $rest->getJsonResponse($query);
-			
-		$this->_meta = $rest->getMeta();
+		//get the authorization parameters as an array
+		$signature 		= $rest->getSignature();
+		$authorization 	= $rest->getAuthorization($signature, false);
+		$authorization 	= $this->_buildQuery($authorization);
+		
+		if(is_array($query)) {
+			$query 	= $this->_buildQuery($query);
+		}
+		
+		//determine the conector
+		$connector = NULL;
+		
+		//if there is no question mark
+		if(strpos($url, '?') === false) {
+			$connector = '?';
+		//if the redirect doesn't end with a question mark
+		} else if(substr($url, -1) != '?') {
+			$connector = '&';
+		}
+		
+		//now add the authorization to the url
+		$url .= $connector.$authorization;
+		
+		//set curl
+		$curl = Eden_Curl::get()
+			->verifyHost(false)
+			->verifyPeer(false)
+			->setUrl($url)
+			->setPost(true)
+			->setPostFields($query)
+			->setHeaders($headers);
+		
+		//get the response
+		$response = $curl->getResponse();
+		
+		$this->_meta 					= $curl->getMeta();
+		$this->_meta['url'] 			= $url;
+		$this->_meta['authorization'] 	= $authorization;
+		$this->_meta['headers'] 		= $headers;
+		$this->_meta['query'] 			= $query;
 		
 		return $response;
 	}
