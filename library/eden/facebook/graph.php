@@ -52,8 +52,8 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$url = self::GRAPH_URL.$id.$connection;
 		
 		if($auth) {
-			if(!$this->_token) {
-				throw new Eden_Facebook_Exception(sprintf(Eden_Facebook_Exception::REQUIRES_AUTH, $url));
+			if(!$this->_token) {echo 'no auth';
+				throw new Eden_Facebook_Error(sprintf(Eden_Facebook_Error::REQUIRES_AUTH, $url));
 			}
 			
 			$query['access_token'] = $this->_token;
@@ -66,9 +66,9 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$object = $this->_call($url);
 		$object = json_decode($object, true);
 		
-		if (isset($object['error'])) {
-			throw new Eden_Facebook_Exception(sprintf(
-				Eden_Facebook_Exception::GRAPH_FAILED, 
+		if (isset($object['error'])) {print_r($object);
+			throw new Eden_Facebook_Error(sprintf(
+				Eden_Facebook_Error::GRAPH_FAILED, 
 				$url, $object['error']['type'], 
 				$object['error']['message']));
 		}
@@ -111,7 +111,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	}
 	
 	public function getWall($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
-		return $this->_getList($id, 'wall', $start, $range, $since, $until, $dateFormat);
+		return $this->_getList($id, 'feed', $start, $range, $since, $until, $dateFormat);
 	}
 	
 	public function getLikes($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
@@ -195,7 +195,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$video = NULL, $caption = NULL, $linkName = NULL, $linkDescription = NULL) {
 		
 		if(!$this->_token) {
-			throw new Eden_Facebook_Exception(sprintf(Eden_Facebook_Exception::REQUIRES_AUTH, $url));
+			throw new Eden_Facebook_Error(sprintf(Eden_Facebook_Error::REQUIRES_AUTH, $url));
 		}
 		
 		$post = array('message' => $message);
@@ -238,7 +238,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 
 	public function addComment($id, $message) {
 		if(!$this->_token) {
-			throw new Eden_Facebook_Exception(sprintf(Eden_Facebook_Exception::REQUIRES_AUTH, $url));
+			throw new Eden_Facebook_Error(sprintf(Eden_Facebook_Error::REQUIRES_AUTH, $url));
 		}
 		
 		$post = array('message' => $message);
@@ -257,7 +257,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	
 	public function like($id) {
 		if(!$this->_token) {
-			throw new Eden_Facebook_Exception(sprintf(Eden_Facebook_Exception::REQUIRES_AUTH, $url));
+			throw new Eden_Facebook_Error(sprintf(Eden_Facebook_Error::REQUIRES_AUTH, $url));
 		}
 		
 		$url = self::GRAPH_URL.$id.'/likes';
@@ -275,7 +275,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	
 	public function addNote($id, $subject, $message) {
 		if(!$this->_token) {
-			throw new Eden_Facebook_Exception(sprintf(Eden_Facebook_Exception::REQUIRES_AUTH, $url));
+			throw new Eden_Facebook_Error(sprintf(Eden_Facebook_Error::REQUIRES_AUTH, $url));
 		}
 		
 		$post = array('subject' => $subject, 'message' => $message);
@@ -294,7 +294,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	
 	public function addEvent($name, $start, $end) {
 		if(!$this->_token) {
-			throw new Eden_Facebook_Exception(sprintf(Eden_Facebook_Exception::REQUIRES_AUTH, $url));
+			throw new Eden_Facebook_Error(sprintf(Eden_Facebook_Error::REQUIRES_AUTH, $url));
 		}
 		
 		$post = array('name'=>$name,'start_time'=>$start,'end_time'=>$end);
@@ -313,7 +313,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	
 	public function attendEvent($id) {
 		if(!$this->_token) {
-			throw new Eden_Facebook_Exception(sprintf(Eden_Facebook_Exception::REQUIRES_AUTH, $url));
+			throw new Eden_Facebook_Error(sprintf(Eden_Facebook_Error::REQUIRES_AUTH, $url));
 		}
 		
 		$url = self::GRAPH_URL.$id.'/attending';
@@ -331,7 +331,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	
 	public function maybeEvent($id) {
 		if(!$this->_token) {
-			throw new Eden_Facebook_Exception(sprintf(Eden_Facebook_Exception::REQUIRES_AUTH, $url));
+			throw new Eden_Facebook_Error(sprintf(Eden_Facebook_Error::REQUIRES_AUTH, $url));
 		}
 		
 		$url = self::GRAPH_URL.$id.'/maybe';
@@ -349,7 +349,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	
 	public function declineEvent($id) {
 		if(!$this->_token) {
-			throw new Eden_Facebook_Exception(sprintf(Eden_Facebook_Exception::REQUIRES_AUTH, $url));
+			throw new Eden_Facebook_Error(sprintf(Eden_Facebook_Error::REQUIRES_AUTH, $url));
 		}
 		
 		$url = self::GRAPH_URL.$id.'/declined';
@@ -367,7 +367,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	
 	public function addLink($id, $url, $message = NULL, $name = NULL, $description = NULL, $picture = NULL, $caption = NULL) {
 		if(!$this->_token) {
-			throw new Eden_Facebook_Exception(sprintf(Eden_Facebook_Exception::REQUIRES_AUTH, $url));
+			throw new Eden_Facebook_Error(sprintf(Eden_Facebook_Error::REQUIRES_AUTH, $url));
 		}
 		
 		$post = array('url' => $url);
@@ -406,7 +406,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	
 	public function addAlbum($id, $name, $message) {
 		if(!$this->_token) {
-			throw new Eden_Facebook_Exception(sprintf(Eden_Facebook_Exception::REQUIRES_AUTH, $url));
+			throw new Eden_Facebook_Error(sprintf(Eden_Facebook_Error::REQUIRES_AUTH, $url));
 		}
 		
 		$post = array('name'=>$name,'message'=>$message);
@@ -427,7 +427,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	
 	public function addCheckin($id, $message, $coordinates, $place, $tags) {
 		if(!$this->_token) {
-			throw new Eden_Facebook_Exception(sprintf(Eden_Facebook_Exception::REQUIRES_AUTH, $url));
+			throw new Eden_Facebook_Error(sprintf(Eden_Facebook_Error::REQUIRES_AUTH, $url));
 		}
 		
 		$post = array('message' => $message);
@@ -464,7 +464,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	-------------------------------*/
 	protected function _call($url, array $post = array()) {
 		//Argument 1 must be a string
-		Eden_Curl_Error::get()->argument(1, 'string');
+		Eden_Facebook_Error::get()->argument(1, 'string');
 		
 		return Eden_Curl::get()
 			->setUrl($url)
