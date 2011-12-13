@@ -15,13 +15,13 @@
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_GetSatisfaction_Base extends Eden_Oauth_Base {
+class Eden_Getsatisfaction_Base extends Eden_Oauth_Base {
 	/* Constants
 	-------------------------------*/
-	const REQUEST_URL 	= ''; 
-	const AUTHORIZE_URL = '';
+	const REQUEST_URL 	= 'http://api.getsatisfaction.com/api/request_token'; 
+	const AUTHORIZE_URL = 'http://api.getsatisfaction.com/api/authorize';
 	
-	const SECRET_KEY 	= '';
+	const SECRET_KEY 	= 'getsatisfaction_token_secret';
 	
 	/* Public Properties
 	-------------------------------*/
@@ -38,7 +38,7 @@ class Eden_GetSatisfaction_Base extends Eden_Oauth_Base {
 	-------------------------------*/
 	public function __construct($key, $secret) {
 		//argument test
-		Eden_Twitter_Error::get()
+		Eden_Getsatisfaction_Error::get()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string
 			
