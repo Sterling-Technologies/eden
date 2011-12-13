@@ -18,8 +18,8 @@
 class Eden_Getsatisfaction_Base extends Eden_Oauth_Base {
 	/* Constants
 	-------------------------------*/
-	const REQUEST_URL 	= 'http://api.getsatisfaction.com/api/request_token'; 
-	const AUTHORIZE_URL = 'http://api.getsatisfaction.com/api/authorize';
+	const REQUEST_URL 	= 'http://getsatisfaction.com/api/request_token'; 
+	const AUTHORIZE_URL = 'http://getsatisfaction.com/api/authorize';
 	
 	const SECRET_KEY 	= 'getsatisfaction_token_secret';
 	
@@ -56,7 +56,7 @@ class Eden_Getsatisfaction_Base extends Eden_Oauth_Base {
 	 */
 	public function getLoginUrl($redirect) {
 		//Argument 1 must be a string
-		Eden_Google_Error::get()->argument(1, 'string');
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string');
 		
 		//get the token
 		$token = Eden_Oauth::get()
