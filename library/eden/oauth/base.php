@@ -41,7 +41,7 @@ class Eden_Oauth_Base extends Eden_Class {
 	-------------------------------*/
 	/* Protected Methods
 	-------------------------------*/
-	protected function _buildQuery($params, $separator = '&', $noQuotes = true) {
+	protected function _buildQuery($params, $noQuotes = true, $subList = false) {
 		if(empty($params)) {
 			return '';
 		}
@@ -57,34 +57,28 @@ class Eden_Oauth_Base extends Eden_Class {
 		uksort($params, 'strcmp');
 	
 		// Turn params array into an array of "key=value" strings
-		$query = array();
 		foreach ($params as $key => $value) {
 			if (is_array($value)) {
 				// If two or more parameters share the same name,
 				// they are sorted by their value. OAuth Spec: 9.1.1 (1)
 				natsort($value);
-				foreach ($value as $item) {
-					if(!$noQuotes) {
-						$item = '"'.$item.'"';
-					}
-					
-					array_push($query, $key . '=' . $item);
-				}
+				$params[$key] = $this->_buildQuery($value, $noQuotes, true);
 			} else {
 				
 				if(!$noQuotes) {
 					$value = '"'.$value.'"';
 				}
 
-				// For each parameter, the name is separated from the corresponding
-				// value by an '=' character (ASCII code 61). OAuth Spec: 9.1.1 (2)
-				array_push($query, $key . '=' . $value);
+				$params[$key] = $value;
 			}
 		}
-	
-		// Each name-value pair is separated by an '&' character, ASCII code 38.
-		// OAuth Spec: 9.1.1 (2)
-		return implode($separator, $query);
+		
+		if($subList) {
+			return $params;
+		}
+		
+		return urldecode(http_build_query($params));
+		
 	}
 	
 	protected function _parseString($string) {

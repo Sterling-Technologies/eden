@@ -8,249 +8,131 @@
  */
 
 /**
- *  
+ * Get Satisfaction Company Methods
  *
  * @package    Eden
  * @category   Get Satisfaction
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_GetSatisfaction_Company extends Eden_GetSatisfaction_Base {
+class Eden_GetSatisfaction_Company extends Eden_Getsatisfaction_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_GET_LIST		= 'http://api.getsatisfaction.com/companies.json';
-	const URL_GET_USER		= 'http://api.getsatisfaction.com/people/%s/companies.json';
-	const URL_GET_PRODUCT	= 'http://api.getsatisfaction.com/products/%s/companies.json';
-	const URL_GET_COMPANY	= 'http://api.getsatisfaction.com/companies/%s/last_activity_at.json';
-	const URL_SEARCH		= 'http://api.getsatisfaction.com?query=%s.json';
-	
+	const URL_LIST		= 'http://api.getsatisfaction.com/companies.json';
+	const URL_PEOPLE	= 'http://api.getsatisfaction.com/people/%s/companies.json';
+	const URL_PRODUCT	= 'http://api.getsatisfaction.com/products/%s/companies.json';
+	const URL_ACTIVITY	= 'http://api.getsatisfaction.com/companies/%s/last_activity_at.json';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_query = array();
-	
-	protected $_validShow = array('public','not_hidden','private','not_hidden');
-	
-	protected $_validSort = array(
-								  'created' => 'recently_created',
-								  'active'	=> 'recently_active',
-								  'alpha'	=> 'alpha');
+	protected $_query 	= array();
+	protected $_url 	= self::URL_LIST;
 	
 	/* Private Properties
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
-		return self::_getMultiple(__CLASS__, $user, $api);
+	public static function get($key, $secret) {
+		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
 	
 	/* Magic
 	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Get all the public Get Satisfaction communities   
-	 *
-	 * @param show is string
-	 * @param sort is string
-	 * @return this
-	 */
-	public function getList($show = NULL, $sort = NULL) {
-		//Argument testing
-		Eden_Tumblr_Error::get()
-			->argument(1, 'string' ,'null')		//Argument 1 must be a string or null
-			->argument(2, 'string' ,'null');	//Argument 2 must be a string or null
+	public function setActivity($company) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
 		
-		$query = array();
+		$this->_url = sprintf(self::URL_ACTIVITY, $company);
+		return $this;
+	}
+	
+	public function setUser($user) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
 		
-		//if the show is a short version of a valid show
-		if(isset($this->_validShow[$show])) {
-			//make show the long version
-			$filter = $this->_validShow[$show];
-			//lets set show to show
-			$query['show'] = $show;
+		$this->_url = sprintf(self::URL_PEOPLE, $user);
+		return $this;
+	}
+	
+	public function setProduct($product) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		
+		$this->_url = sprintf(self::URL_PRODUCT, $product);
+		return $this;
+	}
+	
+	public function setKeyword($keyword) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string');
+		
+		$this->_query['query'] = $keyword;
+		
+		return $this;
+	}
+	
+	public function showPublic() {
+		$this->_query['show'] = 'public';
+		return $this;
+	}
+	
+	public function showVisible() {
+		$this->_query['show'] = 'not_hidden';
+		return $this;
+	}
+	
+	public function showPrivate() {
+		$this->_query['show'] = 'private';
+		return $this;
+	}
+	
+	public function sortByCreated() {
+		$this->_query['sort'] = 'recently_created';
+		return $this;
+	}
+	
+	public function sortByActive() {
+		$this->_query['sort'] = 'recently_active';
+		return $this;
+	}
 
-		}
-		
-		//if the show is a short version of a valid show
-		if(isset($this->_validSort[$sort])) {
-			//make filter the long version
-			$filter = $this->_validSort[$sort];
-			//lets set sort to sort
-			$query['sort'] = $sort;
-
-		}
-		
-		return $this->_getResponse(self::URL_GET_LIST, $query);
+	public function sortByAlphabet() {
+		$this->_query['sort'] = 'alpha';
+		return $this;
 	}
 	
-	/**
-	 * Get all the public Get Satisfaction 
-	 * communities created by the specified user 
-	 *
-	 * @param name is string
-	 * @param id is integer
-	 * @param show is string
-	 * @param sort is string
-	 * @return this
-	 */
-	public function getUser($name = NULL, $id = NULL, $show = NULL, $sort = NULL) {
-		//Argument testing
-		Eden_Tumblr_Error::get()
-			->argument(1, 'string' ,'null')		//Argument 1 must be a string or null
-			->argument(2, 'integer' ,'null')	//Argument 2 must be a integer or null
-			->argument(3, 'string' ,'null')		//Argument 3 must be a string or null
-			->argument(4, 'string' ,'null');	//Argument 2 must be a string or null
+	public function setPage($page = 0) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'int');
 		
-		$query = array();
-		
-		//if name is not empty
-		if(!is_null($name)) {
-			//lets set user name to user
-			$query['user_name'] = $name;
-		}
-		//if id is not empty
-		if(!is_null($id)) {
-			//lets set user id to id
-			$query['user_id'] = $id;
+		if($page < 0) {
+			$page = 0;
 		}
 		
-		//if the show is a short version of a valid show
-		if(isset($this->_validShow[$show])) {
-			//make show the long version
-			$filter = $this->_validShow[$show];
-			//lets set show to show
-			$query['show'] = $show;
-		}
+		$this->_query['page'] = $page;
 		
-		//if the show is a short version of a valid show
-		if(isset($this->_validSort[$sort])) {
-			//make filter the long version
-			$filter = $this->_validSort[$sort];
-			//lets set sort to sort
-			$query['sort'] = $sort;
-		}
-		
-		return $this->_getResponse(self::URL_GET_USER, $query);
+		return $this;
 	}
 	
-	/**
-	 * Get all the public Get Satisfaction communities  
-	 * related to the specified product 
-	 *
-	 * @param name is string
-	 * @param id is integer
-	 * @param show is string
-	 * @param sort is string
-	 * @return this
-	 */
-	public function getUser($name = NULL, $id = NULL, $show = NULL, $sort = NULL) {
-		//Argument testing
-		Eden_Tumblr_Error::get()
-			->argument(1, 'string' ,'null')		//Argument 1 must be a string or null
-			->argument(2, 'integer' ,'null')	//Argument 2 must be a integer or null
-			->argument(3, 'string' ,'null')		//Argument 3 must be a string or null
-			->argument(4, 'string' ,'null');	//Argument 2 must be a string or null
+	public function setLimit($limit = 10) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'int');
 		
-		$query = array();
-		
-		//if name is not empty
-		if(!is_null($name)) {
-			//lets set user name to user
-			$query['user_name'] = $name;
-		}
-		//if id is not empty
-		if(!is_null($id)) {
-			//lets set user id to id
-			$query['user_id'] = $id;
+		if($limit < 0) {
+			$limit = 10;
 		}
 		
-		//if the show is a short version of a valid show
-		if(isset($this->_validShow[$show])) {
-			//make show the long version
-			$filter = $this->_validShow[$show];
-			//lets set show to show
-			$query['show'] = $show;
-		}
+		$this->_query['limit'] = $limit;
 		
-		//if the show is a short version of a valid show
-		if(isset($this->_validSort[$sort])) {
-			//make filter the long version
-			$filter = $this->_validSort[$sort];
-			//lets set sort to sort
-			$query['sort'] = $sort;
-		}
-		
-		return $this->_getResponse(self::URL_GET_PRODUCT, $query);
+		return $this;
 	}
 	
-	/**
-	 * Get the date and time of the last activity 
-	 * in the specified community  
-	 *
-	 * @param name is string
-	 * @param id is integer
-	 * @param show is string
-	 * @param sort is string
-	 * @return this
-	 */
-	public function getUser($name = NULL, $id = NULL, $show = NULL, $sort = NULL) {
-		//Argument testing
-		Eden_Tumblr_Error::get()
-			->argument(1, 'string' ,'null')		//Argument 1 must be a string or null
-			->argument(2, 'integer' ,'null')	//Argument 2 must be a integer or null
-			->argument(3, 'string' ,'null')		//Argument 3 must be a string or null
-			->argument(4, 'string' ,'null');	//Argument 2 must be a string or null
-		
-		$query = array();
-		
-		//if name is not empty
-		if(!is_null($name)) {
-			//lets set user name to user
-			$query['user_name'] = $name;
-		}
-		//if id is not empty
-		if(!is_null($id)) {
-			//lets set user id to id
-			$query['user_id'] = $id;
+	public function getList() {
+		if(isset($this->_query['status']) && is_array($this->_query['status'])) {
+			$this->_query['status'] = implode(',', $this->_query['status']);
 		}
 		
-		//if the show is a short version of a valid show
-		if(isset($this->_validShow[$show])) {
-			//make show the long version
-			$filter = $this->_validShow[$show];
-			//lets set show to show
-			$query['show'] = $show;
-		}
-		
-		//if the show is a short version of a valid show
-		if(isset($this->_validSort[$sort])) {
-			//make filter the long version
-			$filter = $this->_validSort[$sort];
-			//lets set sort to sort
-			$query['sort'] = $sort;
-		}
-		
-		return $this->_getResponse(self::URL_GET_COMPANY, $query);
+		return $this->_getResponse($this->_url, $this->_query);
 	}
 	
-	/**
-	 * Search for a particular string 
-	 *
-	 * @param search is string
-	 * @return this
-	 */
-	public function search($search) {
-		//Argument testing
-		Eden_Tumblr_Error::get()
-			->argument(1, 'string');		//Argument 1 must be a string
-		
-		$query = array('search' => $search);
-		
-		return $this->_getResponse(self::URL_SEARCH, $query);
-	}
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

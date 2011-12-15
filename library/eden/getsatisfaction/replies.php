@@ -8,160 +8,135 @@
  */
 
 /**
- *  
+ * Get Satisfaction Reply Methods
  *
  * @package    Eden
  * @category   Get Satisfaction
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_GetSatisfaction_Replies extends Eden_GetSatisfaction_Base {
+class Eden_Getsatisfaction_Replies extends Eden_Getsatisfaction_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_GET_LIST		= 'http://api.getsatisfaction.com/replies.json';
-	const URL_GET_TOPICS	= 'http://api.getsatisfaction.com/topics/%s/replies.json';
-	const URL_GET_USERS		= 'http://api.getsatisfaction.com/people/%s/replies.json';
-	
+	const URL_LIST		= 'http://api.getsatisfaction.com/replies.json';
+	const URL_TOPIC		= 'http://api.getsatisfaction.com/topics/%s/replies.json';
+	const URL_PEOPLE	= 'http://api.getsatisfaction.com/people/%s/replies.json';
+	const URL_REPLY		= 'http://api.getsatisfaction.com/topics/%s/replies';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_query = array();
-	
-	protected $_validFilters = array(
-		'best'		=> 'best',
-		'star'		=> 'star_promoted',
-		'company'	=> 'company_promoted',
-		'flat'		=> 'flat_promotion');
+	protected $_query 	= array();
+	protected $_url 	= self::URL_LIST;
 	
 	/* Private Properties
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
-		return self::_getMultiple(__CLASS__, $user, $api);
+	public static function get($key, $secret) {
+		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
 	
 	/* Magic
 	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Get all replies to all topics in all public Get Satisfaction communities  
-	 *
-	 * @return this
-	 */
-	public function getList($filter = NULL) {
-		//Argument 1 must be a string or null
-		Eden_Tumblr_Error::get()->argument(1, 'string' ,'null');		
+	public function setUser($user) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
 		
-		$query = array();
-		
-		//if the filter is a short version of a valid filter
-		if(isset($this->_validFilters[$filter])) {
-			//make filter the long version
-			$filter = $this->_validFilters[$filter];
-		}
-		
-		//if filter is valid
-		if(in_array($filter, $this->_validFilters)) {
-			//if filter is flat promotion
-			if($filter == 'flat_promotion') {
-				//lets set type to filter
-				$query['type'] = $filter;
-			//it is not a flat promotion
-			} else {
-				//lets set filter to filter
-				$query['filter'] = $filter;
-			}
-		}
-		
-		return $this->_getResponse(self::URL_GET_LIST, $query);
+		$this->_url = sprintf(self::URL_PEOPLE, $user);
+		return $this;
 	}
 	
-	/**
-	 * Get all replies from the specified topic  
-	 *
-	 * @param id is integer
-	 * @param slug is a string
-	 * @return this
-	 */
-	 public function getTopics($id = NULL, $slug = NULL, $filter = NULL) {
-		//argument testing
-		Eden_Tumblr_Error::get()
-			->argument(1, 'integer' ,'null')	//Argument 2 must be a integer or null
-			->argument(2, 'string' ,'null')		//Argument 1 must be a string or null
-			->argument(3, 'string' ,'null');	//Argument 3 must be a string or null
-			
-		$query = array();
-		//if the id is not empty
-		if(!is_null($id)) {
-			//lets set topic id to id
-			$query['topic_id'] = $id;
-		}
+	public function setTopic($topic) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
 		
-		//if the slug is not empty
-		if(!is_null($slug)) {
-			//lets  set slug to slug
-			$query['slug'] = $slug;
-		}
-		
-		//if the filter is a short version of a valid filter
-		if(isset($this->_validFilters[$filter])) {
-			//make filter the long version
-			$filter = $this->_validFilters[$filter];
-		}
-		
-		//if filter is valid
-		if(in_array($filter, $this->_validFilters)) {
-			//if filter is flat promotion
-			if($filter == 'flat_promotion') {
-				//lets set type to filter
-				$query['type'] = $filter;
-			//it is not a flat promotion
-			} else {
-				//lets set filter to filter
-				$query['filter'] = $filter;
-			}
-		}
-		
-		return $this->_getResponse(self::URL_GET_TOPICS, $query);
+		$this->_url = sprintf(self::URL_TOPIC, $topic);
+		return $this;
 	}
 	
-	/**
-	 * Get all replies that a particular user has posted  
-	 *
-	 * @param id is integer
-	 * @return this
-	 */
-	public function getUserReplies($id, $filter = NULL) {
-		//argument testing
-		Eden_Tumblr_Error::get()
-			->argument(1, 'integer')			//Argument 1 must be a integer
-			->argument(2, 'string' ,'null');	//Argument 2 must be a string or null
+	public function filterBest() {
+		$this->_query['filter'] = 'best';
 		
-		$query = array('user_id' => $id);
-		//if the filter is a short version of a valid filter
-		if(isset($this->_validFilters[$filter])) {
-			//make filter the long version
-			$filter = $this->_validFilters[$filter];
+		return $this;
+	}
+	
+	public function filterStarPromoted() {
+		$this->_query['filter'] = 'star_promoted';
+		
+		return $this;
+	}
+	
+	public function filterCompanyPromoted() {
+		$this->_query['filter'] = 'company_promoted';
+		
+		return $this;
+	}
+	
+	public function filterFlatPromoted() {
+		$this->_query['filter'] = 'flat_promoted';
+		
+		return $this;
+	}
+	
+	public function setPage($page = 0) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'int');
+		
+		if($page < 0) {
+			$page = 0;
 		}
 		
-		//if filter is valid
-		if(in_array($filter, $this->_validFilters)) {
-			//if filter is flat promotion
-			if($filter == 'flat_promotion') {
-				//lets set type to filter
-				$query['type'] = $filter;
-			//it is not a flat promotion
-			} else {
-				//lets set filter to filter
-				$query['filter'] = $filter;
-			}
+		$this->_query['page'] = $page;
+		
+		return $this;
+	}
+	
+	public function setLimit($limit = 10) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'int');
+		
+		if($limit < 0) {
+			$limit = 10;
 		}
 		
-		return $this->_getResponse(self::URL_GET_USERS, $query);
+		$this->_query['limit'] = $limit;
+		
+		return $this;
+	}
+	
+	public function getList() {
+		if(isset($this->_query['status']) && is_array($this->_query['status'])) {
+			$this->_query['status'] = implode(',', $this->_query['status']);
+		}
+		
+		return $this->_getResponse($this->_url, $this->_query);
+	}
+	
+	public function reply($topic, $content, $face = NULL, $feeling = NULL, $intensity = NULL) {
+		Eden_Getsatisfaction_Error::get()
+			->argument(1, 'string', 'numeric')
+			->argument(2, 'string')
+			->argument(3, 'string', 'null')
+			->argument(4, 'string', 'null')
+			->argument(5, 'int', 'null');
+		
+		$url = sprintf(self::URL_REPLY, $topic);
+		
+		$query = array('content' => $content);
+		
+		if($face && in_array($face, $this->_validFaces)) {
+			$query['emotitag']['face'] = $face;
+		}
+		
+		if($feeling) {
+			$query['emotitag']['feeling'] = $feeling;
+		}
+		
+		if($intensity && $intensity > -1 && $intensity < 4) {
+			$query['emotitag']['intensity'] = $intensity;
+		}
+		
+		return $this->_post($url, array('reply' => $query));
 	}
 	
 	/* Protected Methods

@@ -20,15 +20,17 @@ class Eden_Getsatisfaction_Base extends Eden_Oauth_Base {
 	-------------------------------*/
 	const REQUEST_URL 	= 'http://getsatisfaction.com/api/request_token'; 
 	const AUTHORIZE_URL = 'http://getsatisfaction.com/api/authorize';
-	
+	const ACCESS_URL 	= 'http://getsatisfaction.com/api/access_token';
 	const SECRET_KEY 	= 'getsatisfaction_token_secret';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_key 	= NULL;
-	protected $_secret 	= NULL;
+	protected $_key 			= NULL;
+	protected $_secret 			= NULL;
+	protected $_accessToken 	= NULL;
+	protected $_accessSecret 	= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -115,13 +117,20 @@ class Eden_Getsatisfaction_Base extends Eden_Oauth_Base {
 			->getQueryResponse();
 	}
 	
+	/**
+	 * Sets the access token, usually for
+	 * when we get it from the authenticator
+	 *
+	 * @param string
+	 * @param string
+	 * @return this
+	 */
 	public function setAccessToken($token, $secret) {
 		$this->_accessToken 	= $token;
 		$this->_accessSecret 	= $secret;
 		
 		return $this;
 	}
-	
 	
 	/**
 	 * Returns the meta of the last call
@@ -140,7 +149,6 @@ class Eden_Getsatisfaction_Base extends Eden_Oauth_Base {
 	
 	/* Protected Methods
 	-------------------------------*/
-	
 	protected function _getResponse($url, array $query = array()) {
 		$rest = Eden_Oauth::get()
 			->getConsumer($url, $this->_key, $this->_secret)
@@ -155,61 +163,21 @@ class Eden_Getsatisfaction_Base extends Eden_Oauth_Base {
 		return $response;
 	}
 	
-	/**
-	 * Returns the token from the server
-	 *
-	 * @param array
-	 * @return array
-	 */
-	protected function _post($url, $query = array()) {
-		$headers = array();
-		$headers[] = Eden_Oauth_Consumer::POST_HEADER;
-		
+	protected function _post($url, $query = array(), $jsonEncode = false) {
 		$rest = Eden_Oauth::get()
 			->getConsumer($url, $this->_key, $this->_secret)
 			->setToken($this->_accessToken, $this->_accessSecret)
+			->setMethodToPost()
+			->useAuthorization()
 			->setSignatureToHmacSha1();
 		
-		//get the authorization parameters as an array
-		$signature 		= $rest->getSignature();
-		$authorization 	= $rest->getAuthorization($signature, false);
-		$authorization 	= $this->_buildQuery($authorization);
-		
-		if(is_array($query)) {
-			$query 	= $this->_buildQuery($query);
+		if($jsonEncode) {
+			$rest->jsonEncodeQuery();
 		}
 		
-		//determine the conector
-		$connector = NULL;
-		
-		//if there is no question mark
-		if(strpos($url, '?') === false) {
-			$connector = '?';
-		//if the redirect doesn't end with a question mark
-		} else if(substr($url, -1) != '?') {
-			$connector = '&';
-		}
-		
-		//now add the authorization to the url
-		$url .= $connector.$authorization;
-		
-		//set curl
-		$curl = Eden_Curl::get()
-			->verifyHost(false)
-			->verifyPeer(false)
-			->setUrl($url)
-			->setPost(true)
-			->setPostFields($query)
-			->setHeaders($headers);
-		
-		//get the response
-		$response = $curl->getResponse();
-		
-		$this->_meta 					= $curl->getMeta();
-		$this->_meta['url'] 			= $url;
-		$this->_meta['authorization'] 	= $authorization;
-		$this->_meta['headers'] 		= $headers;
-		$this->_meta['query'] 			= $query;
+		$response = $rest->getJsonResponse($query);
+			
+		$this->_meta = $rest->getMeta();
 		
 		return $response;
 	}

@@ -8,7 +8,7 @@
  */
 
 /**
- *  
+ * Get Satisfaction Topic Methods  
  *
  * @package    Eden
  * @category   Get Satisfaction
@@ -18,337 +18,262 @@
 class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_GET_LIST				= 'http://api.getsatisfaction.com/topics/%s';
-	const URL_GET_ALL_TOPICS		= 'http://api.getsatisfaction.com/topics.json';
-	const URL_GET_PARTICULAR		= 'http://api.getsatisfaction.com/companies/%s/topics.json';
-	const URL_GET_SPECIFIC			= 'http://api.getsatisfaction.com/products/%s/topics.json';
-	const URL_GET_TOPICS_TAG		= 'http://api.getsatisfaction.com/companies/%s/tags/%s/topics.json';
-	const URL_GET_USER_TOPICS		= 'http://api.getsatisfaction.com/people/%s/topics.json';
-	const URL_GET_USER_FOLLOWING	= 'http://api.getsatisfaction.com/people/%s/followed/topics.json';
-	const URL_GET_PRODUCT_TOPICS	= 'http://api.getsatisfaction.com/products/%s/topics.json';
-	
-	const URL_SEARCH				= 'http://api.getsatisfaction.com?query=%s';
-	
-	const URL_LAST_ACTIVITY			= 'http://api.getsatisfaction.com?active_since=%s';
-	const URL_USER_ID				= 'http://api.getsatisfaction.com?user=%s';
-	const URL_COMPANY_ID			= 'http://api.getsatisfaction.com?company=%s';
-	const URL_PRODUCT_NAME			= 'http://api.getsatisfaction.com?product=%s';
-	const URL_TAG					= 'http://api.getsatisfaction.com?tag=%s';
-	const URL_STATUS				= 'http://api.getsatisfaction.com?status=%s';
-	const URL_UDC					= 'http://api.getsatisfaction.com?user_defined_code=%s';
-
+	const URL_LIST				= 'http://api.getsatisfaction.com/topics.json';
+	const URL_COMPANY			= 'http://api.getsatisfaction.com/companies/%s/topics.json';
+	const URL_COMPANY_PRODUCT	= 'http://api.getsatisfaction.com/companies/%s/products/%s/topics.json';
+	const URL_COMPANY_TAG		= 'http://api.getsatisfaction.com/companies/%s/tags/%s/topics.json';
+	const URL_PEOPLE			= 'http://api.getsatisfaction.com/people/%s/topics.json';
+	const URL_PEOPLE_FOLLOWED	= 'http://api.getsatisfaction.com/people/%s/followed/topics.json';
+	const URL_PRODUCT			= 'http://api.getsatisfaction.com/products/%s/topics.json';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_query = array();
-	
-	protected $_validSort = array(
-		'created'	=> 'recently_created',
-		'active'	=> 'recently_active',
-		'replies'	=> 'most_replies',
-		'toos'		=> 'most_me_toos',
-		'priority'	=> 'priority',
-		'answered'	=> 'answered');
-	
-	protected $_validStyle = array('question','problem','praise','idea','update');
+	protected $_query 	= array();
+	protected $_url 	= self::URL_LIST;
 	
 	/* Private Properties
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
-		return self::_getMultiple(__CLASS__, $user, $api);
+	public static function get($key, $secret) {
+		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
+	
 	/* Magic
 	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Get a specific topic 
-	 *
-	 * @param topic is a string
-	 * @param slug is a string
-	 * @param id is a integer
-	 * @return this
-	 */
-	public function getList($topic = NULL, $slug = NULL, $id = NULL) {
-		//Argument Test
-		Eden_Tumblr_Error::get()
-			->argument(1, 'string' ,'null')				//Argument 1 must be a string or null
-			->argument(2, 'string' ,'null')				//Argument 2 must be a string or null
-			->argument(3, 'integer' ,'null');			//Argument 3 must be a integer or null
-			
-		$query = array();
-		//if it is not empty
-		if(!is_null($topic)) {
-			//lets put it in query
-			$query['topic'] = $topic;
-		}
-		//if it is not empty
-		if(!is_null($slug)) {
-			//lets put it in query
-			$query['slug'] = $slug;
-		}
-		//if it is not empty
-		if(!is_null($id)) {
-			//lets put it in query
-			$query['id'] = $id;
-		}
+	public function setCompany($company) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
 		
-		return $this->_getResponse(self::URL_GET_LIST, $query);
-	}
-	/**
-	 * Get all topics in all public 
-	 * Get Satisfaction communities 
-	 *
-	 * @return this
-	 */
-	public function getAll() {
-		
-		return $this->_getResponse(self::URL_GET_ALL_TOPICS);
-	}
-	/**
-	 * Get all topics related to a specific 
-	 * product in a particular community 
-	 *
-	 * @param id is a integer
-	 * @param name is a string
-	 * @return this
-	 */
-	public function getParticular($id = NULL, $name = NULL) {
-		//Argument Test
-		Eden_Tumblr_Error::get()
-			->argument(1, 'integer', 'null')			//Argument 1 must be a integer or null
-			->argument(2, 'string', 'null');			//Argument 2 must be a string or null
-			
-		$query = array();
-		//if it is not empty
-		if(!is_null($id)) {
-			//lets put it in query
-			$query['company_id'] = $id;
-		}
-		//if it is not empty
-		if(!is_null($name)) {
-			//lets put it in query
-			$query['company_name'] = $name;
-		}
-		
-		return $this->_getResponse(self::URL_GET_PARTICULAR, $query);
-	}
-	/**
-	 * Get all topics related to a specific 
-	 * product in a particular community  
-	 * 
-	 * @param id is a integer
-	 * @param product is a string
-	 * @param name is a string
-	 * @return this
-	 */
-	public function getSpecific($id, $product, $name = NULL) {
-		//Argument Test
-		Eden_Tumblr_Error::get()
-			->argument(1, 'integer')			//Argument 1 must be a integer
-			->argument(2, 'string')				//Argument 2 must be a string
-			->argument(3, 'string');			//Argument 3 must be a string
-			
-		$query = array('company_id' => $id, 'product_name' => $product);
-		//if it is not empty
-		if(!is_null($name)) {
-			//lets put it in query
-			$query['company_name'] = $name;
-		}
-		
-		return $this->_getResponse(self::URL_GET_SPECIFIC, $query);
-	}
-	/**
-	 * Get all topics tagged with a specific 
-	 * tag within a particular community 
-	 * 
-	 * @param id is a integer
-	 * @param product is a string
-	 * @param name is a string
-	 * @return this
-	 */
-	public function getTopicsTag($id, $tag, $name = NULL) {
-		//Argument Test
-		Eden_Tumblr_Error::get()
-			->argument(1, 'integer')			//Argument 1 must be a integer
-			->argument(2, 'string')				//Argument 2 must be a string
-			->argument(3, 'string');			//Argument 3 must be a string
-			
-		$query = array('company_id' => $id, 'product_name' => $product);
-		//if it is not empty
-		if(!is_null($name)) {
-			//lets put it in query
-			$query['company_name'] = $name;
-		}
-		
-		return $this->_getResponse(self::URL_GET_TOPICS_TAG, $query);
-	}
-	/**
-	 * Get all topics that a particular user has posted  
-	 * (*there is a question about how these numbers are calculated)
-	 * 
-	 * @param id is a integer
-	 * @return this
-	 */
-	public function getUserTopics($id) {
-		//Argument Test
-		Eden_Tumblr_Error::get()
-			->argument(1, 'integer');			//Argument 1 must be a integer
-			
-		$query = array('id' => $id);
-		
-		return $this->_getResponse(self::URL_GET_USER_TOPICS, $query);
-	}
-	/**
-	 * Get all topics that a particular user is following
-	 * 
-	 * @param id is a integer
-	 * @return this
-	 */
-	public function getUserFollowing($id) {
-		//Argument Test
-		Eden_Tumblr_Error::get()
-			->argument(1, 'integer');			//Argument 1 must be a integer
-			
-		$query = array('id' => $id);
-		
-		return $this->_getResponse(self::URL_GET_TOPICS_TAG, $query);
-	}
-	/**
-	 * Get all topics identified with a specific product
-	 * 
-	 * @param name is a string
-	 * @return this
-	 */
-	public function getProductTopics($name) {
-		//Argument Test
-		Eden_Tumblr_Error::get()
-			->argument(1, 'string');			//Argument 1 must be a string
-			
-		$query = array('product_name' => $name);
-		
-		return $this->_getResponse(self::URL_GET_PRODUCT_TOPICS, $query);
-	}
-	 /**
-	 * Search for a particular string
-	 * 
-	 * @param searh is a string
-	 * @return this
-	 */
-	public function search($search) {
-		//Argument Test
-		Eden_Tumblr_Error::get()
-			->argument(1, 'string');			//Argument 1 must be a string
-			
-		$query = array('searh' => $searh);
-		
-		return $this->_getResponse(self::URL_SEARCH, $query);
-	}
-	/**
-	 * Sort 
-	 * 
-	 * @return this
-	 */
-	public function sort($sort = NULL) {
-		//Argument Test
-		Eden_Tumblr_Error::get()
-			->argument(1, 'string');			//Argument 1 must be a string
-			
-		$query = array();
-		//if the sort is a short version of a valid sort
-		if(isset($this->_validSort[$sort])) {
-			//make sort the long version
-			$sort = $this->_validSort[$sort];
-			//lets set sort to sort
-			$query['sort'] = $sort;
-		}
-		
-		return $this->_getResponse(self::URL_TOPICS_CREATED);
-	}
-	//////////////////////////////////////////////////////
-	public function sortStyle($style) {
-		//Argumement
-		Eden_Tumblr_Error::get()
-			->argument(1, 'string');
-			
-		$query = array();
-		//if the style is a short version of a valid style
-		if(isset($this->_validStyle[$style])) {
-			//make style the long style
-			$sort = $this->_validStyle[$style];
-			//lets set style to style
-			$query['style'] = $style;
-		}
+		$this->_url = sprintf(self::URL_COMPANY, $company);
+		return $this;
 	}
 	
-	/**
-	 * Filter by the time of the last activity in 
-	 * the community. Time is set in seconds since epoch. 
-	 * 
-	 * @return this
-	 */
-	 public function filterLastActivity() {
+	public function setCompanyProduct($company, $product) {
+		Eden_Getsatisfaction_Error::get()
+			->argument(1, 'string', 'numeric')
+			->argument(2, 'string', 'numeric');
+		
+		$this->_url = sprintf(self::URL_COMPANY_PRODUCT, $company, $product);
+		return $this;
+	}
 	
-		return $this->_getResponse(self::URL_LAST_ACTIVITY);
-	 }
-	/**
-	 * Filter by user ID 
-	 * 
-	 * @return this
-	 */
-	 public function filterUser() {
+	public function setCompanyTag($company, $tag) {
+		Eden_Getsatisfaction_Error::get()
+			->argument(1, 'string', 'numeric')
+			->argument(2, 'string', 'numeric');
+			
+		$this->_url = sprintf(self::URL_COMPANY_TAG, $company, $tag);
+		return $this;
+	}
 	
-		return $this->_getResponse(self::URL_USER_ID);
-	 }
-	/**
-	 * Filter by company ID  
-	 * 
-	 * @return this
-	 */
-	 public function filterCompany() {
+	public function setProduct($product) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		
+		$this->_url = sprintf(self::URL_PRODUCT, $product);
+		return $this;
+	}
 	
-		return $this->_getResponse(self::URL_COMPANY_ID);
-	 }
-	/**
-	 * Filter by product name   
-	 * 
-	 * @return this
-	 */
-	 public function filterProduct() {
+	public function setUser($user) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		
+		$this->_url = sprintf(self::URL_PEOPLE, $user);
+		return $this;
+	}
 	
-		return $this->_getResponse(self::URL_PRODUCT_NAME);
-	 }
-	/**
-	 * Filter by tag   
-	 * 
-	 * @return this
-	 */
-	 public function filterTag() {
+	public function setFollowed($user) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		
+		$this->_url = sprintf(self::URL_PEOPLE_FOLLOWED, $user);
+		return $this;
+	}
 	
-		return $this->_getResponse(self::URL_TAG);
-	 }
-	/**
-	 * Filter by status   
-	 * 
-	 * @return this
-	 */
-	 public function filterStatus() {
+	public function sortByCreated() {
+		$this->_query['sort'] = 'recently_created';
+		return $this;
+	}
 	
-		return $this->_getResponse(self::URL_STATUS);
-	 }
-	 /**
-	 * Filter by User Defined Code   
-	 * 
-	 * @return this
-	 */
-	 public function filterUdc() {
+	public function sortByActive() {
+		$this->_query['sort'] = 'recently_active';
+		return $this;
+	}
 	
-		return $this->_getResponse(self::URL_UDC);
-	 }
+	public function sortByReplies() {
+		$this->_query['sort'] = 'most_replies';
+		return $this;
+	}
+	
+	public function sortByVotes() {
+		$this->_query['sort'] = 'most_me_toos';
+		return $this;
+	}
+	
+	public function sortByPriority() {
+		$this->_query['sort'] = 'priority';
+		return $this;
+	}
+	
+	public function sortByUnanswered() {
+		$this->_query['sort'] = 'answered';
+		return $this;
+	}
+	
+	public function showQuestions() {
+		$this->_query['style'] = 'question';
+		return $this;
+	}
+	
+	public function showProblems() {
+		$this->_query['style'] = 'question';
+		return $this;
+	}
+	
+	public function showPraise() {
+		$this->_query['style'] = 'praise';
+		return $this;
+	}
+	
+	public function showIdeas() {
+		$this->_query['style'] = 'idea';
+		return $this;
+	}
+	
+	public function showUpdates() {
+		$this->_query['style'] = 'update';
+		return $this;
+	}
+	
+	public function filterSince($since) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'int');
+		
+		if(is_string($since)) {
+			$since = strtotime($since);
+		}
+		
+		$this->_query['active_since'] = $since;
+		
+		return $this;
+	}
+	
+	public function filterUser($user) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'int');
+		
+		$this->_query['user'] = $user;
+		
+		return $this;
+	}
+	
+	public function filterCompany($company) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'int');
+		
+		$this->_query['company'] = $company;
+		
+		return $this;
+	}
+	
+	public function filterProduct($product) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'int', 'array');
+		
+		if(is_array($product)) {
+			$product = implode(',', $product);
+		}
+		
+		$this->_query['product'] = $product;
+		
+		return $this;
+	}
+	
+	public function filterTag($tag) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string');
+		
+		$this->_query['tag'] = $tag;
+		
+		return $this;
+	}
+	
+	public function filterDefined($defined) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'int');
+		
+		$this->_query['user_defined_code'] = $defined;
+		
+		return $this;
+	}
+	
+	public function addStatusNone() {
+		if(!isset($this->_filter['status']) || !in_array('none', $this->_filter['status'])) {
+			$this->_filter['status'][] = 'none';
+		}
+		
+		return $this;
+	}
+	
+	public function addStatusPending() {
+		if(!isset($this->_filter['status']) || !in_array('pending', $this->_filter['status'])) {
+			$this->_filter['status'][] = 'pending';
+		}
+		
+		return $this;
+	}
+	
+	public function addStatusActive() {
+		if(!isset($this->_filter['status']) || !in_array('active', $this->_filter['status'])) {
+			$this->_filter['status'][] = 'active';
+		}
+		
+		return $this;
+	}
+	
+	public function addStatusComplete() {
+		if(!isset($this->_filter['status']) || !in_array('complete', $this->_filter['status'])) {
+			$this->_filter['status'][] = 'complete';
+		}
+		
+		return $this;
+	}
+	
+	public function addStatusRejected() {
+		if(!isset($this->_filter['status']) || !in_array('rejected', $this->_filter['status'])) {
+			$this->_filter['status'][] = 'rejected';
+		}
+		
+		return $this;
+	}
+	
+	public function setPage($page = 0) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'int');
+		
+		if($page < 0) {
+			$page = 0;
+		}
+		
+		$this->_query['page'] = $page;
+		
+		return $this;
+	}
+	
+	public function setLimit($limit = 10) {
+		Eden_Getsatisfaction_Error::get()->argument(1, 'int');
+		
+		if($limit < 0) {
+			$limit = 10;
+		}
+		
+		$this->_query['limit'] = $limit;
+		
+		return $this;
+	}
+	
+	public function getList() {
+		if(isset($this->_query['status']) && is_array($this->_query['status'])) {
+			$this->_query['status'] = implode(',', $this->_query['status']);
+		}
+		
+		return $this->_getResponse($this->_url, $this->_query);
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

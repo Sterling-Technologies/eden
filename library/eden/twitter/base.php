@@ -146,7 +146,7 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 			->setSignatureToHmacSha1();
 		
 		$response = $rest->getJsonResponse($query);
-			
+		
 		$this->_meta = $rest->getMeta();
 		
 		return $response;

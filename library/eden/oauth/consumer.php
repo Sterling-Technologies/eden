@@ -40,6 +40,8 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	protected $_signature	= NULL;
 	protected $_meta		= array();
 	protected $_headers		= array();
+	 
+	protected $_json		= false;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -113,6 +115,16 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	 */
 	public function setMethodToPost() {
 		$this->_method = self::POST;
+		return $this;
+	}
+	
+	/**
+	 * When sent, sends the parameters as post fields
+	 *
+	 * @return this
+	 */
+	public function jsonEncodeQuery() {
+		$this->_json = true;
 		return $this;
 	}
 	
@@ -337,11 +349,16 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	 * @return array
 	 */
 	public function getResponse(array $query = array()) {
-		$headers = $this->_headers;
+		$headers 	= $this->_headers;
+		$json 		= NULL;
+		
+		if($this->_json) {
+			$json 	= json_encode($query);
+			$query 	= array();
+		}
 		
 		//get the authorization parameters as an array
 		$signature 		= $this->getSignature($query);
-		
 		$authorization 	= $this->getAuthorization($signature, false);
 		
 		//if we should use the authrization
@@ -363,13 +380,16 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 		if($this->_method == self::POST) {
 			$headers[] = self::POST_HEADER;
 			
+			if(!is_null($json)) {
+				$query = $json;
+			}
+			
 			//get the response
 			$response = $curl->setUrl($url)
 				->setPost(true)
 				->setPostFields($query)
 				->setHeaders($headers)
 				->getResponse();
-				
 		} else {
 			if(trim($query)) {
 				//determine the conector
