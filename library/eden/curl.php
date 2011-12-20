@@ -41,7 +41,6 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 		'AutoReferer' 		=> CURLOPT_AUTOREFERER,
 		'BinaryTransfer' 	=> CURLOPT_BINARYTRANSFER,
 		'CookieSession' 	=> CURLOPT_COOKIESESSION,
-		'CertInfo' 			=> CURLOPT_CERTINFO,
 		'CrlF' 				=> CURLOPT_CRLF,
 		'DnsUseGlobalCache' => CURLOPT_DNS_USE_GLOBAL_CACHE,
 		'FailOnError' 		=> CURLOPT_FAILONERROR,
@@ -85,11 +84,9 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 		'MaxConnects' 		=> CURLOPT_MAXCONNECTS,
 		'MaxRedirs' 		=> CURLOPT_MAXREDIRS,
 		'Port' 				=> CURLOPT_PORT,
-		'Protocols' 		=> CURLOPT_PROTOCOLS,
 		'ProxyAuth' 		=> CURLOPT_PROXYAUTH,
 		'ProxyPort' 		=> CURLOPT_PROXYPORT,
 		'ProxyType' 		=> CURLOPT_PROXYTYPE,
-		'RedirProtocols' 	=> CURLOPT_REDIR_PROTOCOLS,
 		'ResumeFrom' 		=> CURLOPT_RESUME_FROM,
 		'SslVerifyHost' 	=> CURLOPT_SSL_VERIFYHOST,
 		'SslVersion' 		=> CURLOPT_SSLVERSION,
@@ -143,7 +140,6 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 		
 	protected static $_setCallbackKeys = array(
 		'HeaderFunction' 	=> CURLOPT_HEADERFUNCTION,
-		'ProgressFunction' 	=> CURLOPT_PROGRESSFUNCTION,
 		'ReadFunction' 		=> CURLOPT_READFUNCTION,
 		'WriteFunction' 	=> CURLOPT_WRITEFUNCTION);
 
