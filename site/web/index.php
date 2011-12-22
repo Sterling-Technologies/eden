@@ -88,6 +88,3 @@ print front()
 /* Get the Response
 -------------------------------*/
 ->getResponse();
- echo eden()
-	->Eden_Getsatisfaction_Oauth("vbk4bs1klldy", "snw77ih836aoqoiylu2jgc286zy586as")
-	->getLoginUrl('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);

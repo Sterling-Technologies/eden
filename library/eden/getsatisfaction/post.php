@@ -23,7 +23,6 @@ class Eden_Getsatisfaction_Post extends Eden_Getsatisfaction_Base {
 	/* Protected Properties
 	-------------------------------*/
 	protected $_query 	= array();
-	protected $_url 	= self::URL_LIST;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -141,7 +140,7 @@ class Eden_Getsatisfaction_Post extends Eden_Getsatisfaction_Base {
 	public function add($company) {
 		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
 		
-		$url = sprintf(Eden_GetSatisfaction_Topic::URL_COMPANY, $company);
+		$url = sprintf(Eden_Getsatisfaction_Topic::URL_COMPANY, $company);
 		
 		return $this->_post($url, array('topic' => $this->_query), true);
 	}
