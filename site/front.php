@@ -53,7 +53,9 @@ class Front extends Eden {
 	/* Magic
 	-------------------------------*/
 	public function __construct() {
-		parent::__construct();
+		$this->_root = dirname(__FILE__);
+		
+		$this->setLoader();
 		
 		//require registry
 		$this->_registry = Eden_Loader::get()
@@ -85,14 +87,14 @@ class Front extends Eden {
 			->when($default === true)
 			->setErrorHandler()
 			->setExceptionHandler()
-			->listen('error', $this, 'outputError')
-			->listen('exception', $this, 'outputError')
+			->listen('error', $this, 'error')
+			->listen('exception', $this, 'error')
 			->endWhen()
 			->when($default === false)
 			->releaseErrorHandler()
 			->releaseExceptionHandler()
-			->unlisten('error', $this, 'outputError')
-			->unlisten('exception', $this, 'outputError')
+			->unlisten('error', $this, 'error')
+			->unlisten('exception', $this, 'error')
 			->endWhen();
 		
 		return $this;
@@ -105,17 +107,14 @@ class Front extends Eden {
 	 * @return this
 	 */
 	public function setPaths(array $paths = array()) {
-		//this is the default paths
-		$root = dirname(__FILE__);
-		
 		$default = array(
-			'root' 			=> $root,
-			'model'			=> $root.'/model',
-			'web'			=> $root.'/web', 
-			'assets'		=> $root.'/web/assets',
-			'cache'			=> $root.'/front/cache',
-			'config'		=> $root.'/front/config',
-			'template'		=> $root.'/front/template');
+			'root' 			=> $this->_root,
+			'model'			=> $this->_root.'/model',
+			'web'			=> $this->_root.'/web', 
+			'assets'		=> $this->_root.'/web/assets',
+			'cache'			=> $this->_root.'/front/cache',
+			'config'		=> $this->_root.'/front/config',
+			'template'		=> $this->_root.'/front/template');
 		
 		//foreach default path
 		foreach($default as $key => $path) {
@@ -347,7 +346,7 @@ class Front extends Eden {
 				break;
 		}
 		
-		$this->setData('database', $key, $database);
+		$this->_registry->setData('database', $key, $database);
 		
 		if($default) {
 			$this->_database = $database;
@@ -400,7 +399,7 @@ class Front extends Eden {
 	 * @param string|array handlers
 	 * @return Eden_Application
 	 */
-	public function startFilters($filters) {
+	public function setFilters($filters) {
 		Front_Error::get()->argument(1, 'string', 'array');
 		
 		if(is_string($filters)) {
@@ -428,25 +427,16 @@ class Front extends Eden {
 	 * @return this
 	 */
 	public function setCache($root) {
-		// Start the Global Cache
-		Eden_Cache::get($root);
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets the PHP timezone
-	 * 
-	 * @return this
-	 */
-	public function setTimezone($zone) {
-		//if zone is not string
-		if(!is_string($zone)) {
-			//throw exception
-			throw new Eden_Site_Exception(sprintf(Eden_Exception::NOT_STRING, 1));
+		//we need Eden_Path to fix the path formatting
+		if(!class_exists('Eden_Path')) {
+			Eden_Loader::get()->load('Eden_Path');
 		}
 		
-		date_default_timezone_set($zone);
+		//format the path
+		$root = (string) Eden_Path::get($root);
+		
+		// Start the Global Cache
+		Eden_Cache::get($root);
 		
 		return $this;
 	}
@@ -476,7 +466,7 @@ class Front extends Eden {
 	 *
 	 * @return void
 	 */
-	public function outputError($event, $trace, $offset, $type, $level, $class, $file, $line, $message) {
+	public function error($event, $trace, $offset, $type, $level, $class, $file, $line, $message) {
 		//if there is a trace template and there's at least 2 leads
 		if(count($trace) > $offset) {
 			//for each trace

@@ -36,6 +36,8 @@ class Eden extends Eden_Event {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
+	protected $_root = NULL;
+	
 	/* Private Properties
 	-------------------------------*/
 	/* Get
@@ -46,6 +48,10 @@ class Eden extends Eden_Event {
 	
 	/* Magic
 	-------------------------------*/
+	public function __construct() {
+		$this->_root = dirname(__FILE__);
+	}
+	
 	public function __call($name, $args) {
 		//first try to call the parent call
 		try {
@@ -57,7 +63,42 @@ class Eden extends Eden_Event {
 		}
 	}
 	
-	public function __construct() {
+	/* Public Methods
+	-------------------------------*/
+	/**
+	 * Sets the root path
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setRoot($root) {
+		Eden_Error::get()->argument(1, 'string');
+		
+		if(!class_exists('Eden_Path')) {
+			Eden_Loader::get()->load('Eden_Path');
+		}
+		
+		$this->_root = (string) Eden_Path::get($root);
+		
+		return $this;
+	}
+	
+	/**
+	 * Returns the root path
+	 *
+	 * @return string
+	 */
+	public function getRoot() {
+		return $this->_root;
+	}
+	
+	/**
+	 * Sets up Autoloading
+	 *
+	 * @param string|array path
+	 * @return this
+	 */
+	public function setLoader() { 
 		if(!class_exists('Eden_Loader')) {
 			//require autoload
 			require_once dirname(__FILE__).'/eden/loader.php';
@@ -65,21 +106,50 @@ class Eden extends Eden_Event {
 			//set autoload class as the autoload handler
 			spl_autoload_register(array(Eden_Loader::get(), 'handler'));
 		}
-	}
-	
-	/* Public Methods
-	-------------------------------*/
-	/**
-	 * Adds a root path to search in when a class does not exist.
-	 * Being as specific as possible will reduce the time it takes
-	 * to find the class.
-	 *
-	 * @param string|array path
-	 * @return Eden_Framework
-	 */
-	public function addRoot($path) { 
-		Eden_Error::get()->argument(1, 'string');
-		Eden_Loader::get()->addRoot($path);
+		
+		//get paths
+		$paths = func_get_args();
+		
+		//if no paths
+		if(empty($paths)) {
+			//do nothing more
+			return $this;
+		}
+		
+		//we need Eden_Path to fix the path formatting
+		if(!class_exists('Eden_Path')) {
+			Eden_Loader::get()->load('Eden_Path');
+		}
+		
+		//no dupes
+		$paths = array_unique($paths);
+		
+		//for each path 
+		foreach($paths as $i => $path) {
+			if(!is_string($path) && !is_null($path)) {
+				continue;
+			}
+			
+			if($path) {
+				//format the path
+				$path = (string) Eden_Path::get($path);
+			} else {
+				$path = $this->_root;
+			}
+			
+			//if path is not a real path
+			if(!is_dir($path)) {
+				//append the root
+				$path = $this->_root.$path;	
+			}
+			
+			//if the path is still a real path
+			if(is_dir($path)) {
+				//add the root
+				Eden_Loader::get()->addRoot($path);
+			}
+		}
+		
 		return $this;
 	}
 	
@@ -112,6 +182,7 @@ class Eden extends Eden_Event {
 	 */
 	public function setMethods($routes) {
 		Eden_Error::get()->argument(1, 'string', 'array');
+		$route = Eden_Route::get();
 		
 		if(is_string($routes)) {
 			$routes = include($routes);
@@ -134,7 +205,7 @@ class Eden extends Eden_Event {
 				}
 				
 				//route the method
-				$this->routeMethod($method, $routePath[0], $routePath[1]);
+				$route->routeMethod($method, $routePath[0], $routePath[1]);
 			}
 		}
 		
@@ -149,6 +220,19 @@ class Eden extends Eden_Event {
 	public function startSession() {
 		//get the session class
 		Eden_Session::get()->start();
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets the PHP timezone
+	 * 
+	 * @return this
+	 */
+	public function setTimezone($zone) {
+		Eden_Error::get()->argument(1, 'string');
+		
+		date_default_timezone_set($zone);
 		
 		return $this;
 	}

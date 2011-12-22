@@ -11,80 +11,38 @@ require dirname(__FILE__).'/../front.php';
 /* Get Application
 -------------------------------*/
 print front()
-
 /* Set Debug
 -------------------------------*/
 ->setDebug(E_ALL, true)
 
 /* Set Autoload
 -------------------------------*/
-->addRoot(dirname(__FILE__).'/..')
-->addRoot(dirname(__FILE__).'/../model')
-
-/* Set Class Routing
--------------------------------*/
-->setClasses('../front/config/classes.php')
-
-/* Set Method Routing
--------------------------------*/
-->setMethods('../front/config/methods.php')
+->setLoader(NULL, '/model')
 
 /* Set Paths
 -------------------------------*/
 ->setPaths()
 
-/* Start Filters
--------------------------------*/
-->startFilters(array('Front_Handler'))
-
-/* Trigger Init Event
--------------------------------*/
-->trigger('init')
-
-/* Set Timezone
--------------------------------*/
-->setTimezone('America/Los_Angeles')
-
 /* Set Database
 -------------------------------*/
-//->addDatabase(include('front/config/database.php'))
-
-/* Set Cache
--------------------------------*/
-//->setCache('front/cache')
-
-/* Set Page Routes
--------------------------------*/
-->setPages('pages.php')
-
-/* Trigger Init Event
--------------------------------*/
-->trigger('config')
-
-/* Start Session
--------------------------------*/
-->startSession()
-
-/* Trigger Session Event
--------------------------------*/
-->trigger('session')
+->addDatabase(array(
+  'key' 	=> 'test',
+  'type' 	=> 'mysql',
+  'default' => true,
+  'host' 	=> '127.0.0.1',
+  'name' 	=> 'expresso_prod',
+  'user' 	=> 'root',
+  'pass' 	=> ''))
 
 /* Set Request
 -------------------------------*/
 ->setRequest()
 
-/* Trigger Request Event
--------------------------------*/
-->trigger('request')
-
 /* Set Response
 -------------------------------*/
 ->setResponse('Front_Page_Index')
 
-/* Trigger Response Event
--------------------------------*/
-->trigger('response')
-
 /* Get the Response
 -------------------------------*/
 ->getResponse();
+echo Eden_MySql_Model::get(front()->getDatabase(), 'store')->load(1)->getStoreName();

@@ -102,6 +102,10 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @return PDO connection resource
 	 */
 	public function getConnection() {
+		if(!$this->_connection) {
+			$this->connect();
+		}
+		
 		return $this->_connection;
 	}
 	
@@ -406,6 +410,8 @@ class Eden_Mysql extends Eden_Sql_Database {
 			}
 		}
 		
+		$query->where($filters);
+		
 		//run the query
 		$this->query($query, $this->getBinds());	
 		
@@ -428,7 +434,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 		Eden_Mysql_Error::get()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
-			->argument(3, 'string', 'number');	//Argument 3 must be a string or number
+			->argument(3, 'string', 'numeric');	//Argument 3 must be a string or number
 		
 		//first check to see if the row exists
 		$row = $this->getRow($table, $name, $value);
@@ -450,15 +456,11 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @param array filter
 	 * @return var
 	 */
-	public function deleteRows($table, $filter = NULL) {
+	public function deleteRows($table, $filters = NULL) {
 		//Argument 1 must be a string
 		Eden_Mysql_Error::get()->argument(1, 'string');
 		
 		$query = $this->delete($table);
-		
-		foreach($setting as $key => $value) {
-			$query->set($key, $this->bind($value));
-		}
 		
 		if(is_array($filters)) {
 			foreach($filters as $i => $filter) {
@@ -468,6 +470,8 @@ class Eden_Mysql extends Eden_Sql_Database {
 				$filters[$i] = vsprintf($format, $filter);
 			}
 		}
+		
+		$query->where($filters);
 		
 		//run the query
 		$this->query($query, $this->getBinds());	
@@ -498,7 +502,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @param the name of the table
 	 * @return attay|false
 	 */
-	public function getColumns($table, $filter = NULL) {
+	public function getColumns($table, $filters = NULL) {
 		//Argument 1 must be a string
 		Eden_Mysql_Error::get()->argument(1, 'string');
 		
@@ -513,7 +517,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 			}
 		}
 		
-		$query->showColumns($table, $filter);
+		$query->showColumns($table, $filters);
 		return $this->query($query, $this->getBinds());
 	}
 	
@@ -654,12 +658,12 @@ class Eden_Mysql extends Eden_Sql_Database {
 		if(!$stmt->execute()) {
 			$error = $stmt->errorInfo();
 			
-			foreach($bound as $key => $value) {
+			foreach($binds as $key => $value) {
 				$query = str_replace($key, "'$value'", $query);
 			}
 			
 			Eden_Mysql_Error::get()
-				->setMessage(Eden_Mysql_Exception::QUERY_ERROR)
+				->setMessage(Eden_Mysql_Error::QUERY_ERROR)
 				->addVariable($query)
 				->addVariable($error[2])
 				->trigger();
@@ -699,7 +703,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 			return $value;
 		}
 		
-		$name = ':bind'.count($this->_bind).'bind';
+		$name = ':bind'.count($this->_binds).'bind';
 		$this->_binds[$name] = $value;
 		return $name;
 	}
@@ -720,3 +724,4 @@ class Eden_Mysql extends Eden_Sql_Database {
 	/* Private Methods
 	-------------------------------*/
 }
+
