@@ -149,6 +149,8 @@ class Eden_Class {
 			$args = func_get_args();
 			$class = array_shift($args);
 			
+			$class = Eden_Route::get()->getRouteClass($class, $class);
+			
 			try {
 				self::$_instances[$class] = self::_getInstance($class, $args);
 			} catch(Reflection_Exception $e) {
@@ -166,6 +168,8 @@ class Eden_Class {
 	protected static function _getMultiple($class) {
 		$args = func_get_args();
 		$class = array_shift($args);
+		
+		$class = Eden_Route::get()->getRouteClass($class, $class);
 		
 		try {
 			return self::_getInstance($class, $args);
