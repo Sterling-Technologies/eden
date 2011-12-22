@@ -18,6 +18,8 @@
 class Eden_Mysql_Error extends Eden_Error {
 	/* Constants
 	-------------------------------*/
+	const QUERY_ERROR = '%s Query: %s';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties

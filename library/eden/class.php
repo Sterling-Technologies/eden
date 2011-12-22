@@ -51,6 +51,7 @@ class Eden_Class {
 			//lets first consider that they may just
 			//want to load a class so lets try
 			try {
+				
 				//return the class
 				return Eden_Route::get()->getClassArray($name, $args);
 			//only if there's a route exception do we want to catch it

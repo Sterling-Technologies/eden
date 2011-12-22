@@ -87,6 +87,11 @@ class Eden_Mysql_Model extends Eden_Mysql_Model_Abstract {
 		return $this;
 	}
 	
+	/**
+	 * Inserts or updates model to database
+	 *
+	 * @return this
+	 */
 	public function save() {
 		if(isset($this->_data[$this->_primary])) {
 			$this->_database->updateRows($this->_table, 
@@ -99,30 +104,8 @@ class Eden_Mysql_Model extends Eden_Mysql_Model_Abstract {
 		return $this;
 	}
 	
-	public function remove() {
-		$this->_database->deleteRows($this->_table, $this->_primary.'='.$this->_data[$this->_primary]);
-		$this->_data = array();
-		return $this;
-	}
-	
 	/* Protected Methods
 	-------------------------------*/
-	protected function _setMetaData() {
-		$columns = $this->_database->getColumns($this->_table);
-		
-		foreach($columns as $column) {
-			$this->_meta[$column['Field']] = array(
-				'type' 		=> $column['Type'],
-				'key' 		=> $column['Key'],
-				'default' 	=> $column['Default'],
-				'empty' 	=> $column['Null'] == 'YES');
-			
-			if($column['Key'] == 'PRI') {
-				$this->_primary = $column['Field'];
-			}
-		}
-	}
-	
 	/* Private Methods
 	-------------------------------*/
 }

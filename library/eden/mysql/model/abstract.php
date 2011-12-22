@@ -24,6 +24,7 @@ abstract class Eden_Mysql_Model_Abstract extends Eden_Class implements ArrayAcce
 	protected $_primary = NULL;
 	protected $_meta 	= array();
 	protected $_data	= array();
+	protected $_join	= array();
 	
 	protected $_database 	= NULL;
 	protected $_table 		= NULL;
@@ -41,6 +42,7 @@ abstract class Eden_Mysql_Model_Abstract extends Eden_Class implements ArrayAcce
 			//get rid of get_
 			$key = strtolower(substr($key, 4));
 			
+			//if it's a data key
 			if(isset($this->_meta[$key])) {
 				return $this->_data[$key];
 			}
@@ -88,6 +90,10 @@ abstract class Eden_Mysql_Model_Abstract extends Eden_Class implements ArrayAcce
 	/* Public Methods
 	-------------------------------*/
 	abstract public function save();
+	
+	public function getTable() {
+		return $this->_table;
+	}
 	
 	/**
 	 * Returns meta data
@@ -224,6 +230,22 @@ abstract class Eden_Mysql_Model_Abstract extends Eden_Class implements ArrayAcce
 	
 	/* Protected Methods
 	-------------------------------*/
+	protected function _setMetaData() {
+		$columns = $this->_database->getColumns($this->_table);
+		
+		foreach($columns as $column) {
+			$this->_meta[$column['Field']] = array(
+				'type' 		=> $column['Type'],
+				'key' 		=> $column['Key'],
+				'default' 	=> $column['Default'],
+				'empty' 	=> $column['Null'] == 'YES');
+			
+			if($column['Key'] == 'PRI') {
+				$this->_primary = $column['Field'];
+			}
+		}
+	}
+	
 	/* Private Methods
 	-------------------------------*/
 }
