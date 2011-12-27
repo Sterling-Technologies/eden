@@ -262,7 +262,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 		
 		$results = $this->query($query, $this->getBinds());
 		
-		if($index == 'first' && count($result) > 0) {
+		if($index == 'first' && count($results) > 0) {
 			return $results[0];
 		}
 		
@@ -338,14 +338,18 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @param array setting
 	 * @return int
 	 */
-	public function insertRow($table, array $setting) {
+	public function insertRow($table, array $setting, $bind = true) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::get()->argument(1, 'string')->argument(3, 'array', 'bool');
 		
 		$query = $this->insert($table);
 		
 		foreach($setting as $key => $value) {
-			$query->set($key, $this->bind($value));
+			if((is_bool($bind) && $bind) || (is_array($bind) && in_array($key, $bind))) {
+				$value = $this->bind($value);
+			}
+			
+			$query->set($key, $value);
 		}
 		
 		//run the query
@@ -363,15 +367,19 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @param array settings
 	 * @return void
 	 */
-	public function insertRows($table, array $settings) {
+	public function insertRows($table, array $settings, $bind = true) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::get()->argument(1, 'string')->argument(3, 'array', 'bool');
 		
 		$query = $this->insert($table);
 		
 		foreach($settings as $index => $setting) {
 			foreach($setting as $key => $value) {
-				$query->set($key, $this->bind($value), $index);
+				if((is_bool($bind) && $bind) || (is_array($bind) && in_array($key, $bind))) {
+					$value = $this->bind($value);
+				}
+
+				$query->set($key, $value, $index);
 			}
 		}
 		
@@ -391,14 +399,18 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @param array filter
 	 * @return var
 	 */
-	public function updateRows($table, array $setting, $filters = NULL) {
+	public function updateRows($table, array $setting, $filters = NULL, $bind = true) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::get()->argument(1, 'string')->argument(4, 'array', 'bool');
 		
 		$query = $this->update($table);
 		
 		foreach($setting as $key => $value) {
-			$query->set($key, $this->bind($value));
+			if((is_bool($bind) && $bind) || (is_array($bind) && in_array($key, $bind))) {
+				$value = $this->bind($value);
+			}
+			
+			$query->set($key, $value);
 		}
 		
 		if(is_array($filters)) {
@@ -691,7 +703,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function bind($value) {
 		//Argument 1 must be an array, string or number
-		Eden_Mysql_Error::get()->argument(1, 'array', 'string', 'numeric');
+		Eden_Mysql_Error::get()->argument(1, 'array', 'string', 'numeric', 'null');
 		
 		if(is_array($value)) {
 			foreach($value as $i => $item) {

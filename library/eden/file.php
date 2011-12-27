@@ -91,7 +91,7 @@ class Eden_File extends Eden_Path {
 	public function getData() {
 		$this->absolute();
 		
-		return include($path);
+		return include($this->_path);
 	}
 	
 	/**
@@ -104,15 +104,15 @@ class Eden_File extends Eden_Path {
 		$this->absolute();
 		
 		//if the pat is not a real file
-		if(!is_file($path)) {
+		if(!is_file($this->_path)) {
 			//throw an exception
 			Eden_File_Error::get()
 				->setMessage(Eden_File_Error::PATH_IS_NOT_FILE)
-				->addVariable($path)
+				->addVariable($this->_path)
 				->trigger();
 		}
 		
-		return file_get_contents($path);
+		return file_get_contents($this->_path);
 	}
 	
 	/**

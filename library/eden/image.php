@@ -24,7 +24,7 @@
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: abstract.php 1 2010-01-02 23:06:36Z blanquera $
  */
-abstract class Eden_Image_Abstract extends Eden_Class {
+class Eden_Image extends Eden_Class {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
@@ -482,7 +482,7 @@ abstract class Eden_Image_Abstract extends Eden_Class {
 			->argument(1, 'numeric')	//Argument 1 must be a number
 			->argument(2, 'numeric')	//Argument 2 must be a number
 			->argument(3, 'numeric')	//Argument 3 must be a number
-			->argument(4, 'numeric')	//Argument 4 must be a number
+			->argument(4, 'numeric');	//Argument 4 must be a number
 		
 		//apply filter
 		imagefilter($this->_resource, IMG_FILTER_COLORIZE, $red, $blue, $green, $alpha);
@@ -566,6 +566,13 @@ abstract class Eden_Image_Abstract extends Eden_Class {
 		return $this;
 	}
 	
+	public function setTransparency() {
+		imagealphablending( $this->_resource, false );
+		imagesavealpha( $this->_resource, true );
+		
+		return $this;
+	}
+	
 	/**
 	 * Returns the size of the image
 	 *
@@ -573,6 +580,15 @@ abstract class Eden_Image_Abstract extends Eden_Class {
 	 */
 	public function getDimensions() {
 		return array(imagesx($this->_resource), imagesy($this->_resource));
+	}
+	
+	/**
+	 * Returns the resource for custom editing
+	 *
+	 * @return [RESOURCE]
+	 */
+	public function getResource() {
+		return $this->_resource;
 	}
 	
 	/**
@@ -680,7 +696,7 @@ abstract class Eden_Image_Abstract extends Eden_Class {
 			//throw error
 			Eden_Image_Error::get()
 				->setMessage(Eden_Image_Error::NOT_VALID_IMAGE_FILE) 
-				->addVariable($this->_path);
+				->addVariable($path);
 		}
 		
 		return $resource;

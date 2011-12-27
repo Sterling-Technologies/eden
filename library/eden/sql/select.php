@@ -236,7 +236,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 		 Eden_Sql_Error::get()->argument(1, 'string', 'array');	
 			
 		if(is_string($group)) {
-			$this->_group = array($group); 
+			$group = array($group); 
 		}
 		
 		$this->_group = $group; 
@@ -280,7 +280,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 		$query = sprintf(
 			'SELECT %s FROM %s %s %s %s %s %s;',
 			$this->_select, $this->_from, $joins,
-			$where, $sort, $limit, $group);
+			$where, $sort, $group, $limit);
 		
 		return str_replace('  ', ' ', $query);
 	}

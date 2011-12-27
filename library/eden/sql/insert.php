@@ -70,7 +70,7 @@ class Eden_Sql_Insert extends Eden_Sql_Query {
 		//argument test
 		Eden_Sql_Error::get()
 			->argument(1, 'string')				//Argument 1 must be a string
-			->argument(2, 'string', 'number');	//Argument 2 must be a string or number
+			->argument(2, 'string', 'numeric');	//Argument 2 must be a string or number
 		
 		if(!in_array($key, $this->_setKey)) {
 			$this->_setKey[] = $key;

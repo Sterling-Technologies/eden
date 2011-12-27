@@ -91,6 +91,27 @@ abstract class Eden_Mysql_Model_Abstract extends Eden_Class implements ArrayAcce
 	-------------------------------*/
 	abstract public function save();
 	
+	/**
+	 * Returns an array version of the model
+	 *
+	 * @return array
+	 */
+	public function getData() {
+		$data = $this->_data;
+		foreach($this->_meta as $name => $data) {
+			if(!isset($data[$name])) {
+				$data[$name] = NULL;
+			}
+		}
+		
+		return $data;
+	}
+	
+	/**
+	 * Returns the table name
+	 *
+	 * @return string
+	 */
 	public function getTable() {
 		return $this->_table;
 	}
@@ -138,7 +159,7 @@ abstract class Eden_Mysql_Model_Abstract extends Eden_Class implements ArrayAcce
 				->trigger();
 		}
         
-		$this->_data[$offset] = $value;
+		$this->__set($offset, $value);
     }
 	
 	/**
@@ -154,7 +175,7 @@ abstract class Eden_Mysql_Model_Abstract extends Eden_Class implements ArrayAcce
 		//if it is set in the meta
 		if(isset($this->_meta[$offset])) {
 			//set it to null
-			$this->_data[$offset] = NULL;
+			$this->__set($offset, NULL);
 		}
     }
 	
