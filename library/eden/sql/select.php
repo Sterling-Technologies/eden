@@ -125,7 +125,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 			->argument(2, 'string') 	//Argument 2 must be a string
 			->argument(3, 'bool'); 		//Argument 3 must be a boolean
 		
-		return $this->joined('INNER', $table, $where, $using);
+		return $this->join('INNER', $table, $where, $using);
 	}
 	
 	/**
@@ -144,7 +144,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 			->argument(2, 'string') 	//Argument 2 must be a string
 			->argument(3, 'bool'); 		//Argument 3 must be a boolean
 		
-		return $this->joined('OUTER', $table, $where, $using);
+		return $this->join('OUTER', $table, $where, $using);
 	}
 	
 	/**
@@ -163,7 +163,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 			->argument(2, 'string') 	//Argument 2 must be a string
 			->argument(3, 'bool'); 		//Argument 3 must be a boolean
 		
-		return $this->joined('LEFT', $table, $where, $using);
+		return $this->join('LEFT', $table, $where, $using);
 	}
 	
 	/**
@@ -182,7 +182,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 			->argument(2, 'string') 	//Argument 2 must be a string
 			->argument(3, 'bool'); 		//Argument 3 must be a boolean
 		
-		return $this->joined('RIGHT', $table, $where, $using);
+		return $this->join('RIGHT', $table, $where, $using);
 	}
 	
 	/**
