@@ -29,6 +29,8 @@ abstract class Eden_Mysql_Model_Abstract extends Eden_Class implements ArrayAcce
 	protected $_database 	= NULL;
 	protected $_table 		= NULL;
 	
+	protected static $_cache = array();
+	
 	/* Private Properties
 	-------------------------------*/
 	/* Get
@@ -252,6 +254,12 @@ abstract class Eden_Mysql_Model_Abstract extends Eden_Class implements ArrayAcce
 	/* Protected Methods
 	-------------------------------*/
 	protected function _setMetaData() {
+		if(isset(self::$_cache[$this->_table])) {
+			$this->_meta = self::$_cache[$this->_table]['meta'];
+			$this->_primary = self::$_cache[$this->_table]['primary'];
+			return $this;
+		}
+		
 		$columns = $this->_database->getColumns($this->_table);
 		
 		foreach($columns as $column) {
@@ -265,6 +273,10 @@ abstract class Eden_Mysql_Model_Abstract extends Eden_Class implements ArrayAcce
 				$this->_primary = $column['Field'];
 			}
 		}
+		
+		self::$_cache[$this->_table]['meta'] = $this->_meta;
+		self::$_cache[$this->_table]['primary'] = $this->_primary;
+		return $this;
 	}
 	
 	/* Private Methods

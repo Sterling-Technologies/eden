@@ -280,7 +280,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 		$query = sprintf(
 			'SELECT %s FROM %s %s %s %s %s %s;',
 			$this->_select, $this->_from, $joins,
-			$where, $sort, $group, $limit);
+			$where, $group, $sort, $limit);
 		
 		return str_replace('  ', ' ', $query);
 	}

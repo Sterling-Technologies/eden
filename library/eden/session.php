@@ -54,12 +54,10 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return bool
 	 */
 	public function start() {
-		if (isset($_COOKIE['PHPSESSID'])) {
-            self::$_session = $_COOKIE['PHPSESSID'];
-			return $this;
-        }
+		if(!session_id()) {
+			self::$_session = session_start();
+		}
 		
-		self::$_session = session_start();
 		return $this;
 	}
 	
