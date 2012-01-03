@@ -17,14 +17,6 @@ require_once dirname(__FILE__).'/class.php';
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
  */
-/**
- * cURL wrapper
- *
- * @package    Eden
- * @category   curl
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
- */
 class Eden_Curl extends Eden_Class implements ArrayAccess {
 	/* Constants
 	-------------------------------*/
