@@ -100,7 +100,7 @@ abstract class Eden_Mysql_Model_Abstract extends Eden_Class implements ArrayAcce
 	 */
 	public function getData() {
 		$data = $this->_data;
-		foreach($this->_meta as $name => $data) {
+		foreach($this->_meta as $name => $meta) {
 			if(!isset($data[$name])) {
 				$data[$name] = NULL;
 			}
