@@ -75,7 +75,10 @@ class Eden_Loader extends Eden_Class {
 			return false;
 		}
 		
-		$path = '/'.strtolower(str_replace('_', '/', $class));
+		$path = str_replace(array('_', '\\'), '/', $class);
+		$path = '/'.strtolower($path);
+		$path = str_replace('//', '/', $path);
+		
 		foreach($this->_root as $root) {
 			$file = $root.$path.'.php';
 			

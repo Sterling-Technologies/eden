@@ -152,15 +152,7 @@ class Eden_Class {
 			
 			$class = Eden_Route::get()->getRouteClass($class, $class);
 			
-			try {
-				self::$_instances[$class] = self::_getInstance($class, $args);
-			} catch(Reflection_Exception $e) {
-				Eden_Error::get()
-					->setMessage(Eden_Error::REFLECTION_ERROR) 
-					->addVariable($class)
-					->addVariable('new')
-					->trigger();
-			}
+			self::$_instances[$class] = self::_getInstance($class, $args);
 		}
 		
 		return self::$_instances[$class];
@@ -172,15 +164,7 @@ class Eden_Class {
 		
 		$class = Eden_Route::get()->getRouteClass($class, $class);
 		
-		try {
-			return self::_getInstance($class, $args);
-		} catch(Reflection_Exception $e) {
-			Eden_Error::get()
-				->setMessage(Eden_Error::REFLECTION_ERROR) 
-				->addVariable($class)
-				->addVariable('new')
-				->trigger();
-		}
+		return self::_getInstance($class, $args);
 	}
 	
 	/* Private Methods
@@ -191,6 +175,15 @@ class Eden_Class {
 		}
 		
 		$reflect = new ReflectionClass($class);
-		return $reflect->newInstanceArgs($args);
+		
+		try {
+			return $reflect->newInstanceArgs($args);
+		} catch(Reflection_Exception $e) {
+			Eden_Error::get()
+				->setMessage(Eden_Error::REFLECTION_ERROR) 
+				->addVariable($class)
+				->addVariable('new')
+				->trigger();
+		}
 	}
 }
