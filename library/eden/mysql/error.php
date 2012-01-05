@@ -30,7 +30,8 @@ class Eden_Mysql_Error extends Eden_Error {
 	/* Get
 	-------------------------------*/
 	public static function get($message = NULL, $code = 0) {
-		return self::_getMultiple(__CLASS__, $message, $code);
+		$class = __CLASS__;
+		return new $class($message, $code);
 	}
 	
 	/* Magic
