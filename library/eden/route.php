@@ -248,7 +248,13 @@ class Eden_Route extends Eden_Class {
 		//argument 1 must be a string
 		Eden_Route_Error::get()->argument(1, 'string');	
 		
-		return $this->callMethod($class, 'get', NULL, $args);
+		$route = $this->getRouteClass($class, $class);
+		if(method_exists($route, 'get')) {
+			return $this->callMethod($class, 'get', NULL, $args);
+		}
+		
+		$reflect = new ReflectionClass($route);
+		return $reflect->newInstanceArgs($args);
 	}
 	
 	/**
