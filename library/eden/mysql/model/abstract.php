@@ -94,6 +94,23 @@ abstract class Eden_Mysql_Model_Abstract extends Eden_Class implements ArrayAcce
 	abstract public function save();
 	
 	/**
+	 * Get the primary key name or value
+	 *
+	 * @param bool
+	 * @return string|number
+	 */
+	public function getPrimary($value = false) {
+		//argument 1 must be a string or null
+		Eden_Mysql_Error::get()->argument(1, 'bool');
+			
+		if($value) {
+			return $this[$this->_primary];
+		}
+		
+		return $this->_primary;
+	}
+	
+	/**
 	 * Returns an array version of the model
 	 *
 	 * @return array
