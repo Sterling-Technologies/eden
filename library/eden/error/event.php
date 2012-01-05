@@ -29,19 +29,12 @@ class Eden_Error_Event extends Eden_Event {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected static $_instance = NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
 	public static function get() {
-		$class = __CLASS__;
-		if(is_null(self::$_instance)) {
-			self::$_instance = new $class();
-		}
-		
-		return self::$_instance;
+		return self::_getSingleton(__CLASS__);
 	}
 	
 	/* Magic

@@ -55,8 +55,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	/* Get
 	-------------------------------*/
 	public static function get($host = NULL, $name = NULL, $user = NULL, $pass = NULL) {
-		$class = __CLASS__;
-		return new $class($host, $name, $user, $pass);
+		return self::_getMultiple(__CLASS__, $host, $name, $user, $pass);
 	}
 	
 	/* Magic

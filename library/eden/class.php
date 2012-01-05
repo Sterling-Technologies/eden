@@ -146,11 +146,11 @@ class Eden_Class {
 	/* Protected Methods
 	-------------------------------*/
 	protected static function _getSingleton($class) {
+		$class = Eden_Route::get()->getRouteClass($class, $class);
+		
 		if(!isset(self::$_instances[$class])) {
 			$args = func_get_args();
-			$class = array_shift($args);
-			
-			$class = Eden_Route::get()->getRouteClass($class, $class);
+			array_shift($args);
 			
 			self::$_instances[$class] = self::_getInstance($class, $args);
 		}

@@ -30,8 +30,7 @@ class Eden_Mysql_Subselect extends Eden_Class {
 	/* Get
 	-------------------------------*/
 	public static function get(Eden_Sql_Select $parentQuery, $select = '*') {
-		$class = __CLASS__;
-		return new $class($parentQuery, $select);
+		return self::_getMultiple(__CLASS__, $parentQuery, $select);
 	}
 	
 	/* Magic

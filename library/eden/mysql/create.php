@@ -34,8 +34,7 @@ class Eden_Mysql_Create extends Eden_Sql_Query {
 	/* Get
 	-------------------------------*/
 	public static function get($name = NULL) {
-		$class = __CLASS__;
-		return new $class($name);
+		return self::_getMultiple(__CLASS__, $name);
 	}
 	
 	/* Magic

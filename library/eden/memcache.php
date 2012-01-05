@@ -39,8 +39,7 @@ class Eden_Memcache extends Eden_Class {
 	/* Get
 	-------------------------------*/
 	public static function get($host = 'localhost', $port = 11211, $timeout = 1) {
-		$class = __CLASS__;
-		return new $class($host, $port, $timeout);
+		return self::_getMultiple(__CLASS__, $host, $port, $timeout);
 	}
 	
 	/* Magic

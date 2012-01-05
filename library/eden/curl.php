@@ -141,8 +141,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	/* Get
 	-------------------------------*/
 	public static function get() {
-		$class = __CLASS__;
-		return new $class();
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic
