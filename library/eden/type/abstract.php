@@ -55,7 +55,13 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 				//if this is a reference method	
 				if($method) {
 					//call the method
-					$name($this->_data);
+					$data = &$this->_data;
+					//This doesn't work for reference methods as 
+					//described in ticket 44139 of PHP Bugs
+					//array_unshift($args, $this->_data);
+					//the work around is as follows
+					call_user_func_array($method, array_merge(array(&$this->_data), $args));
+					
 					return $this;
 				}
 			}

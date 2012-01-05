@@ -413,11 +413,11 @@ class Eden_Array extends Eden_Type_Abstract implements ArrayAccess, Iterator, Se
 	}
 	
 	protected function _getReferenceMethod($name) {
-		if(in_array($name, self::$_postMethods)) {
+		if(in_array($name, self::$_referenceMethods)) {
 			return $name;
 		}
 		
-		if(in_array('array_'.$name, self::$_postMethods)) {
+		if(in_array('array_'.$name, self::$_referenceMethods)) {
 			return 'array_'.$name;
 		}
 		
