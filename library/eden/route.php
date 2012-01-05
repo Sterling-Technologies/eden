@@ -249,11 +249,19 @@ class Eden_Route extends Eden_Class {
 		Eden_Route_Error::get()->argument(1, 'string');	
 		
 		$route = $this->getRouteClass($class, $class);
+		$reflect = new ReflectionClass($route);
+		
 		if(method_exists($route, 'get')) {
-			return $this->callMethod($class, 'get', NULL, $args);
+			$declared = $reflect
+				->getMethod('get')
+				->getDeclaringClass()
+				->getName();
+			
+			if($declared == $route) {	
+				return $this->callMethod($class, 'get', NULL, $args);
+			}
 		}
 		
-		$reflect = new ReflectionClass($route);
 		return $reflect->newInstanceArgs($args);
 	}
 	
@@ -351,7 +359,7 @@ class Eden_Route extends Eden_Class {
 	 * @return mixed
 	 */
 	public function callFunction($func, array $args = array()) {
-		Eden_Error_Validate::get()->argument(0, 'string'); //argument 1 must be a string
+		Eden_Route_Error::get()->argument(0, 'string'); //argument 1 must be a string
 		
 		try {
 			//try to run the function using PHP call_user_func_array
