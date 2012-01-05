@@ -209,12 +209,9 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	 * @param bool
 	 * @return this
 	 */
-	public function verifyHost($value) {
-		$error = Eden_Curl_Error::get()->argument(1, 'int');
-		if($value != 1 && $value != 2) {
-			$error->setMessage(Eden_Curl_Error::NOT_ONE_OR_TWO)->trigger();
-		}
-		$this->options[CURLOPT_SSL_VERIFYHOST] = $on;
+	public function verifyHost($on = true) {
+		Eden_Curl_Error::get()->argument(1, 'bool');
+		$this->options[CURLOPT_SSL_VERIFYHOST] = $on ? 1 : 2;
 		return $this;
 	}
 	
@@ -500,8 +497,6 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 class Eden_Curl_Error extends Eden_Error {
 	/* Constants
 	-------------------------------*/
-	const NOT_ONE_OR_TWO = 'Value passed into setVerifyHost or verifyHost must be 1 or 2';
-	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
