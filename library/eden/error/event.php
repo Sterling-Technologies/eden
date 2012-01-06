@@ -87,9 +87,9 @@ class Eden_Error_Event extends Eden_Event {
 		}
 		
 		$this->trigger(
-			'error',	$trace,		1,		
-			$type, 		$level, 	$class, 		
-			$errfile, 	$errline, 	$errstr);
+			'error',	$type, 		$level, 	
+			$class, 	$errfile, 	$errline, 	
+			$errstr, 	$trace,		1);
 		
 		//Don't execute PHP internal error handler
 		return true;
@@ -129,22 +129,29 @@ class Eden_Error_Event extends Eden_Event {
 		$offset 	= 1;
 		$reporter 	= get_class($e);
 		
+		$trace 		= $e->getTrace();
+		$message 	= $e->getMessage();
+		
 		//if the exception is an eden exception
 		if($e instanceof Eden_Error) {
 			//set type and level from that
+			$trace		= $e->getRawTrace();
+
 			$type 		= $e->getType();
 			$level 		= $e->getLevel();
 			$offset 	= $e->getTraceOffset();
 			$reporter 	= $e->getReporter();
+			$variables 	= $e->getVariables(); 
+			
+			if(!empty($variables)) {
+				$message = vsprintf($message, $variables);
+			}
 		}
 		
-		//get trace
-		$trace = $e->getTrace();
-		
 		$this->trigger(
-			'exception',	$trace,			$offset,		
-			$type, 			$level, 		$reporter, 		
-			$e->getFile(), 	$e->getLine(), 	$e->getMessage());
+			'exception',	$type, 			$level, 	
+			$reporter, 		$e->getFile(), 	$e->getLine(), 	
+			$message, 		$trace,			$offset);
 	}
 	
 	/** 

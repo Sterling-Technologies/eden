@@ -98,7 +98,9 @@ class Eden_Loader extends Eden_Class {
 	 * @return this
 	 */
 	public function load($class) {
-		$this->handler($class);
+		if(!class_exists($class)) {
+			$this->handler($class);
+		}
 		return $this;
 	}
 	

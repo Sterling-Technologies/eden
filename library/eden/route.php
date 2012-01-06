@@ -61,6 +61,11 @@ class Eden_Route extends Eden_Class {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 		
+		if(isset($this->_classes[$class])) {
+			$this->_classes[$route] = $this->_classes[$class];
+			return $this;
+		}
+		
 		$this->_classes[$route] = $class;
 		return $this;
 	}

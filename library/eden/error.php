@@ -56,6 +56,7 @@ class Eden_Error extends Exception {
 	protected $_level 		= NULL;
 	protected $_offset		= 1;
 	protected $_variables 	= array();
+	protected $_trace		= array();
 	
 	/* Private Properties
 	-------------------------------*/
@@ -71,7 +72,7 @@ class Eden_Error extends Exception {
     public function __construct($message = NULL, $code = 0) {
 		$this->_type = self::LOGIC;
 		$this->_level = self::ERROR;
-		$this->_reporter = $this->_getReporter();
+		
 		parent::__construct($message, $code);
 	}
 	
@@ -239,13 +240,42 @@ class Eden_Error extends Exception {
 	}
 	
 	/**
+	 * Returns variables
+	 *
+	 * @return array
+	 */
+	public function getVariables() {
+		return $this->_variables;
+	}
+	
+	/**
+	 * Returns raw trace
+	 *
+	 * @return array
+	 */
+	public function getRawTrace() {
+		return $this->_trace;
+	}
+	
+	/**
 	 * Combines parameters with message and throws it
 	 *
 	 * @return void
 	 */
 	public function trigger() {
-		if(!empty($this->_variables)) {
-			$this->message = vsprintf($this->message, $this->_variables);
+		$this->_trace = debug_backtrace();
+		
+		$this->_reporter = get_class($this);
+		if(isset($this->_trace[$this->_offset]['class'])) {
+			$this->_reporter = $this->_trace[$this->_offset]['class'];
+		}
+		
+		if(isset($this->_trace[$this->_offset]['file'])) {
+			$this->file = $this->_trace[$this->_offset]['file'];
+		}
+		
+		if(isset($this->_trace[$this->_offset]['line'])) {
+			$this->line = $this->_trace[$this->_offset]['line'];
 		}
 		
 		throw $this;
@@ -286,6 +316,20 @@ class Eden_Error extends Exception {
 			if(class_exists($type) && $argument instanceof $type) {
 				return $this;
 			}
+			
+			if($type == 'number' && is_numeric($argument)) {
+				return $this;
+			}
+			
+			if($type == 'int' && is_numeric($argument) 
+			&& strpos((string) $argument, '.') === false) {
+				return $this;
+			}
+			
+			if($type == 'float' && is_numeric($argument) 
+			&& strpos((string) $argument, '.') !== false) {
+				return $this;
+			}
 		}
 		
 		//lets formulate the method
@@ -315,88 +359,12 @@ class Eden_Error extends Exception {
 			->addVariable(implode(' or ', $types))
 			->addVariable($type)
 			->setTypeLogic()
-			->setTraceOffset(2)
-			->trigger();
-	}
-	
-	/**
-	 * Tests virtual arguments for valid data types
-	 *
-	 * @param *int
-	 * @param *mixed
-	 * @param *string[,string..]
-	 * @return this
-	 */
-	public function vargument($method, $args, $index, $types) {
-		$trace 		= debug_backtrace();
-		$trace 		= $trace[1];
-		$types 		= func_get_args();
-		$method		= array_shift($types);
-		$args		= array_shift($types);
-		$index 		= array_shift($types) - 1;
-		
-		if($index < 0) {
-			$index = 0;
-		}
-		
-		//if it's not set then it's good because the default value
-		//set in the method will be it.
-		if($index >= count($args)) {
-			return $this;
-		}
-		
-		$argument	= $args[$index];
-		
-		foreach($types as $i => $type) {
-			$method = 'is_'.$type;
-			if(function_exists($method) && $method($argument)) {
-				return $this;
-			}
-			
-			if(class_exists($type) && $argument instanceof $type) {
-				return $this;
-			}
-		}
-		
-		$method = $trace['class'].'->'.$method;
-		
-		$type = 'unknown';
-		if(is_string($argument)) {
-			$type = "'".$argument."'";
-		} else if(is_numeric($argument)) {
-			$type = $argument;
-		} else if(is_array($argument)) {
-			$type = 'Array';
-		} else if(is_bool($argument)) {
-			$type = $argument ? 'true' : 'false';
-		} else if(is_object($argument)) {
-			$type = get_class($argument);
-		} else if(is_null($argument)) {
-			$type = 'null';
-		}
-		
-		$this->setMessage(self::INVALID_ARGUMENT)
-			->addVariable($index + 1)
-			->addVariable($method)
-			->addVariable(implode(' or ', $types))
-			->addVariable($type)
-			->setTypeLogic()
-			->setTraceOffset(2)
+			->setTraceOffset(1)
 			->trigger();
 	}
 	
 	/* Protected Methods
 	-------------------------------*/
-	protected function _getReporter() {
-		$trace = $this->getTrace();
-		
-		if(isset($trace[0]['class'])) {
-			return $trace[0]['class'];
-		}
-		
-		return get_class($this);
-	}
-	
 	/* Private Methods
 	-------------------------------*/
 }
