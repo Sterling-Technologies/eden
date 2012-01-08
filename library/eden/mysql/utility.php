@@ -45,11 +45,7 @@ class Eden_Mysql_Utility extends Eden_Sql_Query
 	 * @return this
 	 */
 	public function showTables($like = NULL) {
-		//if like is not null a string
-		if(!is_null($like) && !is_string($like)) {
-			//throw error
-			throw new Eden_Database_Utility_Exception(sprintf(Eden_Exception::NOT_STRING_NULL, 1));
-		}
+		Eden_Mysql_Error::get()->argument(1, 'string', 'null');
 		
 		$like = $like ? ' LIKE '.$like : NULL;
 		$this->_query = 'SHOW TABLES'.$like;
@@ -68,6 +64,20 @@ class Eden_Mysql_Utility extends Eden_Sql_Query
 		
 		$where = $where ? ' WHERE '.$where : NULL;
 		$this->_query = 'SHOW FULL COLUMNS FROM `' . $table .'`' . $where;
+		return $this;
+	}
+	
+	/**
+	 * Query for truncating a table
+	 *
+	 * @param string the name of the table
+	 * @return this
+	 */
+	public function truncate($table) {
+		//Argument 1 must be a string
+		Eden_Mysql_Error::get()->argument(1, 'string');
+		
+		$this->_query = 'TRUNCATE `' . $table .'`';
 		return $this;
 	}
 	

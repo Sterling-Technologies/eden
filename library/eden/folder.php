@@ -48,7 +48,7 @@ class Eden_Folder extends Eden_Path {
 		//if chmod is not and integer or not between 0 and 777
 		if(!is_int($chmod) || $chmod < 0 || $chmod > 777) {
 			//throw an error
-			throw new Eden_Folder_Error(Eden_Folder_Exception::CHMOD_IS_INVALID);
+			Eden_Folder_Error::get(Eden_Folder_Exception::CHMOD_IS_INVALID)->trigger();
 		}
 		
 		//if it's not a directory

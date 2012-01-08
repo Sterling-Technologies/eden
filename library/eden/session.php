@@ -40,7 +40,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	-------------------------------*/
 	public function __toString() {
 		if(!self::$_session) {
-			throw new Eden_Session_Error(Eden_Session_Error::ERROR_NOT_STARTED);
+			return '[]';
 		}
 		
 		return json_encode($_SESSION);
@@ -127,7 +127,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
 	public function getId() {
 		if(!self::$_session) {
-			throw new Eden_Session_Error(Eden_Session_Error::ERROR_NOT_STARTED);
+			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
 		return session_id();
@@ -172,7 +172,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
 	public function clear() {
 		if(!self::$_session) {
-			throw new Eden_Session_Error(Eden_Session_Error::ERROR_NOT_STARTED);
+			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
 		$_SESSION = array();
@@ -188,7 +188,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
 	public function rewind() {
 		if(!self::$_session) {
-			throw new Eden_Session_Error(Eden_Session_Error::ERROR_NOT_STARTED);
+			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         reset($_SESSION);
@@ -202,7 +202,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
     public function current() {
 		if(!self::$_session) {
-			throw new Eden_Session_Error(Eden_Session_Error::ERROR_NOT_STARTED);
+			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         return current($_SESSION);
@@ -216,7 +216,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
     public function key() {
 		if(!self::$_session) {
-			throw new Eden_Session_Error(Eden_Session_Error::ERROR_NOT_STARTED);
+			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         return key($_SESSION);
@@ -230,7 +230,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
     public function next() {
 		if(!self::$_session) {
-			throw new Eden_Session_Error(Eden_Session_Error::ERROR_NOT_STARTED);
+			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         next($_SESSION);
@@ -244,7 +244,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
     public function valid() {
 		if(!self::$_session) {
-			throw new Eden_Session_Error(Eden_Session_Error::ERROR_NOT_STARTED);
+			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         return isset($_SESSION[$this->key()]);
@@ -259,7 +259,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
 	public function offsetSet($offset, $value) {
 		if(!self::$_session) {
-			throw new Eden_Session_Error(Eden_Session_Error::ERROR_NOT_STARTED);
+			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         if (is_null($offset)) {
@@ -277,7 +277,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
     public function offsetExists($offset) {
 		if(!self::$_session) {
-			throw new Eden_Session_Error(Eden_Session_Error::ERROR_NOT_STARTED);
+			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         return isset($_SESSION[$offset]);
@@ -291,7 +291,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
 	public function offsetUnset($offset) {
 		if(!self::$_session) {
-			throw new Eden_Session_Error(Eden_Session_Error::ERROR_NOT_STARTED);
+			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         unset($_SESSION[$offset]);
@@ -305,7 +305,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
 	public function offsetGet($offset) {
 		if(!self::$_session) {
-			throw new Eden_Session_Error(Eden_Session_Error::ERROR_NOT_STARTED);
+			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         return isset($_SESSION[$offset]) ? $_SESSION[$offset] : NULL;
@@ -323,7 +323,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 class Eden_Session_Error extends Eden_Error {
 	/* Constants
 	-------------------------------*/
-	const ERROR_ERROR_NOT_STARTED = 'Session is not started. Try using Eden_Session->start() first.';
+	const ERROR_NOT_STARTED = 'Session is not started. Try using Eden_Session->start() first.';
 	
 	/* Public Properties
 	-------------------------------*/

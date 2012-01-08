@@ -10,6 +10,7 @@
 require_once dirname(__FILE__).'/error.php';
 require_once dirname(__FILE__).'/route.php';
 require_once dirname(__FILE__).'/when.php';
+require_once dirname(__FILE__).'/map.php';
 
 /**
  * The base class for all classes wishing to integrate with Eve.
@@ -51,7 +52,6 @@ class Eden_Class {
 			//lets first consider that they may just
 			//want to load a class so lets try
 			try {
-				
 				//return the class
 				return Eden_Route::get()->getClassArray($name, $args);
 			//only if there's a route exception do we want to catch it
@@ -65,7 +65,7 @@ class Eden_Class {
 			//let the router handle this
 			return Eden_Route::get()->callMethod($this, $name, true, $args);
 		} catch(Eden_Route_Error $e) {
-			throw new Eden_Error($e->getMessage());
+			Eden_Error::get($e->getMessage())->trigger();
 		}
 	}
 	
@@ -120,17 +120,27 @@ class Eden_Class {
 	}
 	
 	/**
-	 * Invokes Noop if conditional is false
+	 * Invokes When if conditional is false
 	 *
 	 * @param bool
 	 * @return this|Eden_Noop
 	 */
-	public function when($isTrue) {
+	public function when($isTrue, $lines) {
 		if($isTrue) {
 			return $this;
 		}
 		
-		return Eden_When::get($this);
+		return Eden_When::get($this, $lines);
+	}
+	
+	/**
+	 * Invokes Chain map
+	 *
+	 * @param bool
+	 * @return this|Eden_Noop
+	 */
+	public function map(array &$list, $lines = 0) {
+		return Eden_Map::get($this, $list, $lines);
 	}
 	
 	/**

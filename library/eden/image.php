@@ -643,7 +643,7 @@ class Eden_Image extends Eden_Class {
 		//if the GD Library is not installed
 		if(!function_exists('gd_info')) {
 			//throw error
-			throw new Eden_Image_Error(Eden_Image_Error::GD_NOT_INSTALLED);
+			Eden_Image_Error::get(Eden_Image_Error::GD_NOT_INSTALLED)->trigger();
 		}
 		
 		# imagecreatefromgd — Create a new image from GD file or URL

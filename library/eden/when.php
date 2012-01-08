@@ -24,21 +24,31 @@ class Eden_When extends Eden_Class implements ArrayAccess, Iterator {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
+	protected $_scope 		= NULL;
+	protected $_increment 	= 1;
+	protected $_lines 		= 0;
+	
 	/* Private Properties
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($scope) {
-		return self::_getSingleton(__CLASS__, $scope);
+	public static function get($scope, $lines = 0) {
+		return self::_getMultiple(__CLASS__, $scope, $lines);
 	}
 	
 	/* Magic
 	-------------------------------*/
-	public function __construct($scope) {
+	public function __construct($scope, $lines = 0) {
 		$this->_scope = $scope;
+		$this->_lines = $lines;
 	}
 	
 	public function __call($name, $args) {
+		if($this->_lines > 0 && $this->_increment == $this->_lines) {
+			return $this->endWhen();
+		}
+		
+		$this->_increment++;
 		return $this;
 	}
 	

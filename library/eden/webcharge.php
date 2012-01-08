@@ -86,12 +86,6 @@ class Eden_Webcharge_Model extends Eden_Class
 	/* Magic
 	-------------------------------*/
 	public function __construct($user = NULL, $password = NULL, array $options = array()) {
-		//test for no cURL
-		if(!function_exists('curl_init')) {
-			//throw exception
-			throw new Eden_Service_Exception(Eden_Service_Exception::NO_CURL);
-		}
-		
 		$this->setUser($user)->setPassword($password);
 			
 		$this->_proxy 	= isset($options['proxy']) ? $options['proxy'] : NULL;
@@ -205,9 +199,9 @@ class Eden_Webcharge_Model extends Eden_Class
 		}
 		
 		//test for valid creditcard name
-		if(!$this->_transaction['ccname'])) {
+		if(!$this->_transaction['ccname']) {
 			//throw exception
-			throw new Eden_Webcharge_Error(Eden_Webcharge_Error::INVALID_CREDIT_CARD_NAME);
+			Eden_Webcharge_Error::get(Eden_Webcharge_Error::INVALID_CREDIT_CARD_NAME)->trigger();
 		}
 		
 		// Create the connection through the cURL extension

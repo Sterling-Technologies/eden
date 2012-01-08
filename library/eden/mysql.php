@@ -20,6 +20,9 @@ require_once dirname(__FILE__).'/mysql/alter.php';
 require_once dirname(__FILE__).'/mysql/create.php';
 require_once dirname(__FILE__).'/mysql/subselect.php';
 require_once dirname(__FILE__).'/mysql/utility.php';
+require_once dirname(__FILE__).'/mysql/collection.php';
+require_once dirname(__FILE__).'/mysql/model.php';
+require_once dirname(__FILE__).'/mysql/search.php';
 
 /**
  * Abstractly defines a layout of available methods to
@@ -36,6 +39,9 @@ require_once dirname(__FILE__).'/mysql/utility.php';
 class Eden_Mysql extends Eden_Sql_Database {
 	/* Constants
 	-------------------------------*/
+	const FIRST = 'first';
+	const LAST	= 'last';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -113,8 +119,24 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * 
 	 * @return array the queries
 	 */
-	public function getQueries() {
-		return $this->_queries;
+	public function getQueries($index = NULL) {
+		if(is_null($index)) {
+			return $this->_queries;
+		}
+		
+		if($index == self::FIRST) {
+			$index = 0;
+		}
+		
+		if($index == self::LAST) {
+			$index = count($this->_queries) - 1;
+		}
+		
+		if(isset($this->_queries[$index])) {
+			return $this->_queries[$index];
+		}
+		
+		return NULL;
 	}
 	
 	/**
@@ -126,6 +148,32 @@ class Eden_Mysql extends Eden_Sql_Database {
 		return $this->getConnection()->lastInsertId();
 	}
 	
+	/**
+	 * Returns search
+	 *
+	 * @return Eden_Mysql_Search
+	 */
+	public function search() {
+		return Eden_Mysql_Search::get($this);
+	}
+	
+	/**
+	 * Returns model
+	 *
+	 * @return Eden_Mysql_Model
+	 */
+	public function model(array $data = array()) {
+		return Eden_Mysql_Model::get($data)->setDatabase($this);
+	}
+	
+	/**
+	 * Returns collection
+	 *
+	 * @return Eden_Mysql_Collection
+	 */
+	public function collection(array $data = array()) {
+		return Eden_Mysql_Collection::get($data)->setDatabase($this);
+	}
 	
 	/**
 	 * Returns the alter query builder
@@ -261,23 +309,87 @@ class Eden_Mysql extends Eden_Sql_Database {
 		
 		$results = $this->query($query, $this->getBinds());
 		
-		if($index == 'first' && count($results) > 0) {
-			return $results[0];
-		}
-		
-		else if($index == 'last' && count($results) > 0) {
-			return array_pop($results);
-		}
-		
-		else if(is_numeric($index)) {
-			if(isset($results[$index])) {
-				return $results[$index];
+		if(!is_null($index)) { 
+			if(empty($results)) {
+				$results = NULL;
+			} else {
+				if($index == self::FIRST) {
+					$index = 0;
+				} 
+				
+				if($index == self::LAST) {
+					$index = count($results)-1;
+				}
+				
+				if(isset($results[$index])) {
+					$results = $results[$index];
+				} else {
+					$results = NULL;
+				}	
 			}
 		}
 		
 		$this->trigger($table, $joins, $filters, $sort, $start, $range, $index, $results);
 		
 		return $results;
+	}
+	
+	/**
+	 * Returns a model given the column name and the value
+	 *
+	 * @param string table
+	 * @param string name
+	 * @param string value
+	 * @return array|NULL
+	 */
+	public function getModel($table, $name, $value) {
+		//argument test
+		Eden_Mysql_Error::get()
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string')				//Argument 2 must be a string
+			->argument(3, 'string', 'numeric');	//Argument 3 must be a string or number
+
+		$result = $this->getRow($table, $name, $value);
+		
+		if(is_null($result)) {
+			return NULL;
+		}
+		
+		return Eden_Mysql_Model::get($result)->setDatabase($this)->setTable($table);
+	}
+	
+	/**
+	 * Returns a collection given the query parameters
+	 *
+	 * @param string table
+	 * @param array joins
+	 * @param array filter
+	 * @param array sort
+	 * @param int start
+	 * @param int range
+	 * @return array
+	 */
+	public function getCollection($table, array $joins = array(), $filters = NULL, 
+		array $sort = array(), $start = 0, $range = 0, $index = NULL) {
+		//argument test
+		Eden_Mysql_Error::get()
+			->argument(1, 'string')						//Argument 1 must be a string
+			->argument(3, 'string', 'array', 'null')	//Argument 3 must be a string number or null
+			->argument(5, 'numeric')					//Argument 5 must be a number
+			->argument(6, 'numeric')					//Argument 6 must be a number
+			->argument(7, 'numeric', 'null');			//Argument 7 must be a number or null
+		
+		$results = $this->getRows($table, $joins, $filters, $sort, $start, $range, $index);
+		
+		if(is_null($results)) {
+			return NULL;
+		}
+		
+		if(!is_null($index)) {
+			return Eden_Mysql_Model::get($results);
+		}
+		
+		return Eden_Mysql_Collection::get($results)->setDatabase($this)->setTable($table);
 	}
 	
 	/**
@@ -344,6 +456,11 @@ class Eden_Mysql extends Eden_Sql_Database {
 		$query = $this->insert($table);
 		
 		foreach($setting as $key => $value) {
+			if(is_null($value) || is_bool($value)) {
+				$query->set($key, $value);
+				continue;
+			}
+			
 			if((is_bool($bind) && $bind) || (is_array($bind) && in_array($key, $bind))) {
 				$value = $this->bind($value);
 			}
@@ -374,6 +491,11 @@ class Eden_Mysql extends Eden_Sql_Database {
 		
 		foreach($settings as $index => $setting) {
 			foreach($setting as $key => $value) {
+				if(is_null($value) || is_bool($value)) {
+					$query->set($key, $value);
+					continue;
+				}
+				
 				if((is_bool($bind) && $bind) || (is_array($bind) && in_array($key, $bind))) {
 					$value = $this->bind($value);
 				}
@@ -405,6 +527,11 @@ class Eden_Mysql extends Eden_Sql_Database {
 		$query = $this->update($table);
 		
 		foreach($setting as $key => $value) {
+			if(is_null($value) || is_bool($value)) {
+				$query->set($key, $value);
+				continue;
+			}
+			
 			if((is_bool($bind) && $bind) || (is_array($bind) && in_array($key, $bind))) {
 				$value = $this->bind($value);
 			}
@@ -682,10 +809,10 @@ class Eden_Mysql extends Eden_Sql_Database {
 		
 		$results = $stmt->fetchAll( PDO::FETCH_ASSOC );
 		
-		$this->queries[] = array(
-			'query' => $query,
-			'binds' => $binds,
-			'results' => $results);
+		$this->_queries[] = array(
+			'query' 	=> $query,
+			'binds' 	=> $binds,
+			'results' 	=> $results);
 		
 		$this->_binds = array();
 		

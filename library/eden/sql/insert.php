@@ -70,10 +70,16 @@ class Eden_Sql_Insert extends Eden_Sql_Query {
 		//argument test
 		Eden_Sql_Error::get()
 			->argument(1, 'string')				//Argument 1 must be a string
-			->argument(2, 'string', 'numeric');	//Argument 2 must be a string or number
+			->argument(2, 'scalar', 'null');	//Argument 2 must be scalar or null
 		
 		if(!in_array($key, $this->_setKey)) {
 			$this->_setKey[] = $key;
+		}
+		
+		if(is_null($value)) {
+			$value = 'NULL';
+		} else if(is_bool($value)) {
+			$value = $value ? 1 : 0;
 		}
 		
 		$this->_setVal[$index][] = $value;

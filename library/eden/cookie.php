@@ -75,11 +75,7 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return this
 	 */
 	public function setSecure($key, $data = NULL, $expires = 0, $path = NULL, $domain = NULL) {
-		try {
-			return $this->set($key, $data, $expires, $path, $domain, true, false);
-		} catch(Eden_Cookie_Error $e) {
-			throw new Eden_Cookie_Error($e->getMessage());
-		}
+		return $this->set($key, $data, $expires, $path, $domain, true, false);
 	}
 	
 	/**
@@ -93,11 +89,7 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 */
 	public function setData(array $data, $expires = 0, $path = NULL, $domain = NULL, $secure = false, $httponly = false) {
 		foreach($data as $key => $value) {
-			try {
-				$this->set($key, $value, $expires, $path, $domain, $secure, $httponly);
-			} catch(Eden_Cookie_Error $e) {
-				throw new Eden_Cookie_Error($e->getMessage());
-			}
+			$this->set($key, $value, $expires, $path, $domain, $secure, $httponly);
 		}
 		
 		return $this;
@@ -113,12 +105,7 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return this
 	 */
 	public function setSecureData(array $data, $expires = 0, $path = NULL, $domain = NULL) {
-		try {
-			$this->setData($data, $expires, $path, $domain, true, false);
-		} catch(Eden_Cookie_Error $e) {
-			throw new Eden_Cookie_Error($e->getMessage());
-		}
-		
+		$this->setData($data, $expires, $path, $domain, true, false);
 		return $this;
 	}
 	
@@ -231,11 +218,7 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return void
 	 */
 	public function offsetSet($offset, $value) {
-        try {
-			$this->set($offset, $value, strtotime('+10 years'));
-		} catch(Eden_Error $e) {
-			throw new Eden_Error($e->getMessage());
-		}
+       $this->set($offset, $value, strtotime('+10 years'));
     }
 	
 	/**

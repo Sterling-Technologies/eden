@@ -141,11 +141,6 @@ class Eden_Error_Event extends Eden_Event {
 			$level 		= $e->getLevel();
 			$offset 	= $e->getTraceOffset();
 			$reporter 	= $e->getReporter();
-			$variables 	= $e->getVariables(); 
-			
-			if(!empty($variables)) {
-				$message = vsprintf($message, $variables);
-			}
 		}
 		
 		$this->trigger(

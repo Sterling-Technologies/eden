@@ -37,6 +37,7 @@ class Eden extends Eden_Event {
 	/* Protected Properties
 	-------------------------------*/
 	protected $_root = NULL;
+	protected static $_active = NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -49,6 +50,10 @@ class Eden extends Eden_Event {
 	/* Magic
 	-------------------------------*/
 	public function __construct() {
+		if(!self::$_active) {
+			self::$_active = $this;
+		}
+		
 		$this->_root = dirname(__FILE__);
 	}
 	
@@ -90,6 +95,15 @@ class Eden extends Eden_Event {
 	 */
 	public function getRoot() {
 		return $this->_root;
+	}
+	
+	/**
+	 * Get Active Application
+	 *
+	 * @return Eden
+	 */
+	public function getActiveApp() {
+		return self::$_active;
 	}
 	
 	/**
@@ -159,9 +173,33 @@ class Eden extends Eden_Event {
 	 * @param string|array routes
 	 * @return Eden_Framework
 	 */
-	public function setClasses($routes) {
-		Eden_Error::get()->argument(1, 'string', 'array');
+	public function routeClasses($routes) {
+		Eden_Error::get()->argument(1, 'string', 'array', 'bool');
 		$route = Eden_Route::get();
+		
+		if($routes === true) {
+			$route->routeClass('Cache', 	'Eden_Cache')
+				->routeClass('String', 		'Eden_Type_String')
+				->routeClass('Array', 		'Eden_Type_Array')
+				->routeClass('Registry', 	'Eden_Registry')
+				->routeClass('Model', 		'Eden_Model')
+				->routeClass('Collection', 	'Eden_Collection')
+				->routeClass('Cookie', 		'Eden_Cookie')
+				->routeClass('Session', 	'Eden_Session')
+				->routeClass('Template', 	'Eden_Template')
+				->routeClass('Curl', 		'Eden_Curl')
+				->routeClass('Event', 		'Eden_Event')
+				->routeClass('Path', 		'Eden_Path')
+				->routeClass('File', 		'Eden_File')
+				->routeClass('Folder', 		'Eden_Folder')
+				->routeClass('Image', 		'Eden_Image')
+				->routeClass('Mysql', 		'Eden_Mysql')
+				->routeClass('Array', 		'Eden_Type_Array')
+				->routeClass('String', 		'Eden_Type_String')
+				->routeClass('Validation', 	'Eden_Validation');
+			
+			return $this;
+		}
 		
 		if(is_string($routes)) {
 			$routes = include($routes);
@@ -180,7 +218,7 @@ class Eden extends Eden_Event {
 	 * @param string|array routes
 	 * @return Eden_Framework
 	 */
-	public function setMethods($routes) {
+	public function routeMethods($routes) {
 		Eden_Error::get()->argument(1, 'string', 'array');
 		$route = Eden_Route::get();
 		

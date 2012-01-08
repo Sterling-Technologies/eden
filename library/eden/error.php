@@ -278,6 +278,11 @@ class Eden_Error extends Exception {
 			$this->line = $this->_trace[$this->_offset]['line'];
 		}
 		
+		if(!empty($this->_variables)) {
+			$this->message = vsprintf($this->message, $this->_variables);
+			$this->_variables = array();
+		}
+		
 		throw $this;
 	}
 	
@@ -337,6 +342,86 @@ class Eden_Error extends Exception {
 		if(isset($trace['class'])) {
 			$method = $trace['class'].'->'.$method;
 		}
+		
+		$type = 'unknown';
+		if(is_string($argument)) {
+			$type = "'".$argument."'";
+		} else if(is_numeric($argument)) {
+			$type = $argument;
+		} else if(is_array($argument)) {
+			$type = 'Array';
+		} else if(is_bool($argument)) {
+			$type = $argument ? 'true' : 'false';
+		} else if(is_object($argument)) {
+			$type = get_class($argument);
+		} else if(is_null($argument)) {
+			$type = 'null';
+		}
+		
+		$this->setMessage(self::INVALID_ARGUMENT)
+			->addVariable($index + 1)
+			->addVariable($method)
+			->addVariable(implode(' or ', $types))
+			->addVariable($type)
+			->setTypeLogic()
+			->setTraceOffset(1)
+			->trigger();
+	}
+	
+	/**
+	 * Tests virtual arguments for valid data types
+	 *
+	 * @param *int
+	 * @param *mixed
+	 * @param *string[,string..]
+	 * @return this
+	 */
+	public function vargument($method, $args, $index, $types) {
+		$trace   = debug_backtrace();
+		$trace   = $trace[1];
+		$types   = func_get_args();
+		$method  = array_shift($types);
+		$args  = array_shift($types);
+		$index   = array_shift($types) - 1;
+		
+		if($index < 0) {
+			$index = 0;
+		}
+		
+		//if it's not set then it's good because the default value
+		//set in the method will be it.
+		if($index >= count($args)) {
+			return $this;
+		}
+		
+		$argument = $args[$index];
+
+		foreach($types as $i => $type) {
+			$method = 'is_'.$type;
+			if(function_exists($method) && $method($argument)) {
+				return $this;
+			}
+			
+			if(class_exists($type) && $argument instanceof $type) {
+				return $this;
+			}
+			
+			if($type == 'number' && is_numeric($argument)) {
+				return $this;
+			}
+			
+			if($type == 'int' && is_numeric($argument) 
+			&& strpos((string) $argument, '.') === false) {
+				return $this;
+			}
+			
+			if($type == 'float' && is_numeric($argument) 
+			&& strpos((string) $argument, '.') !== false) {
+				return $this;
+			}
+		}
+		
+		$method = $trace['class'].'->'.$method;
 		
 		$type = 'unknown';
 		if(is_string($argument)) {

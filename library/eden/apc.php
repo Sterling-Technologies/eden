@@ -45,7 +45,7 @@ class Eden_Apc extends Eden_Class {
 		//if apc_cache_info is not a function
 		if(!function_exists('apc_cache_info')) {
 			//throw exception
-			throw new Eden_Apc_Error(Eden_Apc_Error::NOT_INSTALLED);
+			Eden_Apc_Error::get(Eden_Apc_Error::NOT_INSTALLED)->trigger();
 		}
 	}
 	

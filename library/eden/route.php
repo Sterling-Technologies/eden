@@ -139,10 +139,10 @@ class Eden_Route extends Eden_Class {
 	public function routeMethod($routeClass, $routeMethod, $class, $method = NULL) {
 		//argument test
 		Eden_Route_Error::get()
-			->argument(1, 'string')	//argument 1 must be a string
-			->argument(2, 'string')	//argument 2 must be a string
-			->argument(3, 'string')			//argument 3 must be a string
-			->argument(4, 'string');		//argument 4 must be a string
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string')		//argument 3 must be a string
+			->argument(4, 'string');	//argument 4 must be a string
 		
 		//if the method is not a string
 		if(!is_string($method)) {
@@ -291,6 +291,7 @@ class Eden_Route extends Eden_Class {
 			->argument(3, 'object', 'bool', 'null');	//argument 3 must be object, bool or null
 		
 		if(is_object($class)) {
+			$instance = $class;
 			$class = get_class($class);
 		}
 		
@@ -312,8 +313,8 @@ class Eden_Route extends Eden_Class {
 				->trigger();
 		}
 		
-		//method does not exist
 		if(!method_exists($class, $method)) {
+			//throw exception
 			Eden_Route_Error::get()
 				->setMessage(Eden_Route_Error::METHOD_NOT_EXISTS)
 				->addVariable($class)
@@ -340,17 +341,6 @@ class Eden_Route extends Eden_Class {
 			}
 			
 			return call_user_func_array($class.'::'.$method, $args); // As of 5.2.3
-		} 
-		
-		//instance is an object
-		//if method does not exist
-		if(!method_exists($instance, $method)) {
-			//throw exception
-			Eden_Route_Error::get()
-				->setMessage(Eden_Route_Error::METHOD_NOT_EXISTS)
-				->addVariable(get_class($instance))
-				->addVariable($method)
-				->trigger();
 		}
 		
 		return call_user_func_array(array(&$instance, $method), $args);

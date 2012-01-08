@@ -18,8 +18,10 @@
 class Eden_Mysql_Error extends Eden_Error {
 	/* Constants
 	-------------------------------*/
-	const QUERY_ERROR = '%s Query: %s';
-	const SET_INVALID = 'No column %s exists in table %s.';
+	const QUERY_ERROR 		= '%s Query: %s';
+	const SET_INVALID 		= 'No column %s exists in table %s.';
+	const TABLE_NOT_SET 	= 'No default table set or was passed.';
+	const DATABASE_NOT_SET 	= 'No default database set or was passed.';
 	
 	/* Public Properties
 	-------------------------------*/

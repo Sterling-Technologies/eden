@@ -7,7 +7,7 @@
  * distributed with this package.
  */
 
-require_once dirname(__FILE__).'/array.php';
+require_once dirname(__FILE__).'/type.php';
 
 /**
  * This class allows the reference of a global registry. This
@@ -22,20 +22,26 @@ require_once dirname(__FILE__).'/array.php';
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Registry extends Eden_Array {
+class Eden_Registry extends Eden_Type_Array {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_data = array(); //data registry
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get(array $data = array()) {
+	public static function get() {
+		$data = self::_getStart(func_get_args());
+		
+		foreach($data as $key => $value) {
+			if(is_array($value)) {
+				$data[$key] = self::get($value);
+			}
+		} 
+		
 		return self::_getMultiple(__CLASS__, $data);
 	}
 	
@@ -46,256 +52,152 @@ class Eden_Registry extends Eden_Array {
 	/**
 	 * Gets a value given the path in the registry.
 	 * 
-	 * @return variable
+	 * @return mixed
 	 */
-	public function getData() {
-		//get the arguments
+	public function getData($modified = true) {
 		$args = func_get_args();
-		//what object are we looking into?
-		//if the first argument is not an object
-		//use global registry
-		$data = $this->_data;
-		if(isset($args[0]) && (is_array($args[0]) || is_object($args[0]))) {
-			$data = array_shift($args);
+		
+		if(count($args) == 0) {
+			return $this;
 		}
 		
-		//set the remaining length
-		$length = count($args);
+		$key = array_shift($args);
 		
-		if($length > 0) {
-			$result = NULL;
-			
-			//foreach argument
-			foreach($args as $key => $value) {
-				if(!is_string($value) && !is_numeric($value)) {
-					return $value;
-				}
-				
-				//this is the last item
-				if(($key+1) == $length) {
-					//assign it to result
-					//exit loop
-					try {
-						$result = NULL;
-						if(is_array($data) && isset($data[$value])) {
-							$result = $data[$value];
-						} else if(is_object($data) && isset($data->{$value})) {
-							$result = $data->{$value};
-						}
-					} catch(Exception $e) {
-						$result = NULL;
-					}
-					break;
-				}
-				
-				//the name does not exist
-				if(is_array($data) && !isset($data[$value])) {
-					//assign result to null
-					//exit loop
-					$result = NULL;
-					break;
-				} else if(is_object($data) && !isset($data->{$value})) {
-					//assign result to null
-					//exit loop
-					$result = NULL;
-					break;
-				}
-				
-				//walk the object
-				$data = is_array($data) ? $data[$value] : $data->{$value};
+		if($key === false) {
+			if(count($args) == 0) {
+				return $this->getArray();
 			}
-			return $result;
+			
+			$modified = $key;
+			$key = array_shift($args);
+			array_unshift($args, $modified);
 		}
 		
-		//if no arguments
-		//return the whole object
-		return $data;
+		if(!isset($this->_data[$key])) {
+			return NULL;
+		}
+		
+		if(count($args) == 0) {
+			return $this->_data[$key];
+		}
+		
+		if($this->_data[$key] instanceof Eden_Registry) {
+			return call_user_func_array(array($this->_data[$key], __FUNCTION__), $args);
+		}
+		
+		return NULL;
 	}
 	
 	/**
 	 * Creates the name space given the space
 	 * and sets the value to that name space
 	 *
-	 * @return Eden_RegistryModel
-	 **/
+	 * @return Eden_Registry
+	 */
 	public function setData() {
-		//get the arguments
 		$args = func_get_args();
-		//what object are we looking into?
-		//if the first argument is not an object
-		//use Eve's registry
-		$data = &$this->_data;
-		if(is_array($args[0]) || is_object($args[0])) {
-			$data = &array_shift($args);
+		
+		if(count($args) < 2) {
+			return $this;
 		}
 		
-		//set the remaining length
-		$length = count($args);
+		$key = array_shift($args);
 		
-		if($length > 0) {		
-			$last 	= NULL;
-			$index 	= NULL;
+		if(count($args) == 1) {
+			if(is_array($args[0])) {
+				$args[0] = self::get($args[0]);
+			}
 			
-			//foreach argument
-			foreach($args as $key => $value) {
-				
-				//this is the last item
-				if(($key+1) == $length) {
-					//set it to the value
-					//exit loop
-					if(is_array($last)) {
-						$last[$index] = $value;
-					} else if(is_object($last)) {
-						$last->{$index} = $value;
-					}
-					 
-					break;
-				}
-				
-				if(!is_string($value) && !is_numeric($value)) {
-					//set it to the value
-					//exit loop
-					if(is_array($last)) {
-						$last[$index] = $value;
-					} else if(is_object($last)) {
-						$last->{$index} = $value;
-					}
-				}
-				
-				//the name does not exist
-				if(is_array($data) && !isset($data[$value])) {
-					//create the namespace
-					$data[$value] = array();
-				} else if(is_object($data) && !isset($data->{$value})) {
-					//create the namespace
-					$data->{$value} = new stdClass();
-				}
-				
-				//walk the object
-				$last = &$data;
-				$index = $value;
-				if(is_array($data)) {
-					$data = &$data[$value];
-				} else {
-					$data = &$data->{$value};
-				}
-			}
+			$this->_data[$key] = $args[0];
+			
+			return $this;
 		}
+		
+		if(!isset($this->_data[$key]) || !($this->_data[$key] instanceof Eden_Registry)) {
+			$this->_data[$key] = self::get();
+		}
+		
+		call_user_func_array(array($this->_data[$key], __FUNCTION__), $args);
 		
 		return $this;
 	}
 	
 	/**
-	 * Unset a name space
-	 * 
-	 * @return Eden_RegistryModel
-	 **/
-	public function unsetData() {
-		//get the arguments
-		$args = func_get_args();
-		
-		//what object are we looking into?
-		//if the first argument is not an object
-		//use Eve's registry
-		$data = &$this->_data;
-		if(is_array($args[0]) || is_object($args[0])) {
-			$data = &array_shift($args);
-		}
-		
-		//set the remaining length
-		$length = count($args);
-		
-		if($length > 0) {
-			//foreach argument
-			foreach($args as $key => $value) {
-				if(!is_string($value) && !is_numeric($value)) {
-					//delete it
-					//exit loop
-					if(is_array($data))
-					{
-						unset($data[$value]);
-					} else if(is_object($data)) {
-						unset($data->{$value});
-					}
-					
-					return $this;
-				}
-				
-				//this is the last item
-				if(($key+1) == $length) {
-					//delete it
-					//exit loop
-					if(is_array($data))
-					{
-						unset($data[$value]);
-					} else if(is_object($data)) {
-						unset($data->{$value});
-					}
-					
-					return $this;
-				}
-				
-				//walk the object
-				if(is_array($data)) {
-					$data = &$data[$value];
-				} else {
-					$data = &$data->{$value};
-				}
-			}
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Checks to see if a name is taken
+	 * Checks to see if a key is set
 	 *
 	 * @return bool
-	 **/
-	public function issetData() {
-		//get the arguments
+	 */
+	public function isKey() {
 		$args = func_get_args();
-		//what object are we looking into?
-		//if the first argument is not an object
-		//use Eve's registry
-		$data = $this->_data;
-		if(is_array($args[0]) || is_object($args[0])) {
-			$data = array_shift($args);
+		
+		if(count($args) == 0) {
+			return $this;
 		}
 		
-		//set the remaining length
-		$length = count($args);
+		$key = array_shift($args);
 		
-		if($length > 0) {
-			//foreach argument
-			foreach($args as $key => $value) {
-				if(!is_string($value) && !is_numeric($value)) {
-					return false;
-				}
-				
-				//walk the object
-				if(is_array($data))
-				{
-					if(isset($data[$value])) {
-						$data = $data[$value];
-					} else {
-						return false;
-					}
-				} else {
-					if(isset($data->{$value})) {
-						$data = $data->{$value};
-					} else {
-						return false;
-					}
-				}
-			}
-			
+		if(!isset($this->_data[$key])) {
+			return false;
+		}
+		
+		if(count($args) == 0) {
 			return true;
 		}
 		
-		//if no arguments 
-		//then return false
+		if($this->_data[$key] instanceof Eden_Registry) {
+			return call_user_func_array(array($this->_data[$key], __FUNCTION__), $args);
+		}
+		
 		return false;
+	}
+	
+	/**
+	 * Removes a key and everything associated with it
+	 * 
+	 * @return Eden_Registry
+	 */
+	public function removeKey() {
+		$args = func_get_args();
+		
+		if(count($args) == 0) {
+			return $this;
+		}
+		
+		$key = array_shift($args);
+		
+		if(!isset($this->_data[$key])) {
+			return $this;
+		}
+		
+		if(count($args) == 0) {
+			unset($this->_data[$key]);
+			return $this;
+		}
+		
+		if($this->_data[$key] instanceof Eden_Registry) {
+			return call_user_func_array(array($this->_data[$key], __FUNCTION__), $args);
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Returns the raw array recursively
+	 *
+	 * @return array
+	 */
+	public function getArray($modified = true) {
+		$array = array();
+		foreach($this->_data as $key => $data) {
+			if($data instanceof Eden_Registry) {
+				$array[$key] = $data->getArray($modified);
+				continue;
+			}
+			
+			$array[$key] = $data;
+		}
+		
+		return $array;
 	}
 	
 	/* Protected Methods

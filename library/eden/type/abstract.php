@@ -17,14 +17,16 @@
 abstract class Eden_Type_Abstract extends Eden_Class {
 	/* Constants
 	-------------------------------*/
+	const PRE		= 'pre';
+	const POST 		= 'post';
+	const REFERENCE = 'reference';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_methods = array();
-	
-	protected $_data = NULL;
-	protected $_original = NULL;
+	protected $_data 		= NULL;
+	protected $_original 	= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -37,101 +39,96 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 	}
 	
 	public function __call($name, $args) {
-		$method = $this->_getPreMethod($name);
+		$type = $this->_getMethodType($name);
 		
-		//if this is a pre method
-		if($method) {
-			//add the string as first arg
-			array_unshift($args, $this->_data);
-		} else {
-			$method = $this->_getPostMethod($name);
-			
-			//if this is a post method
-			if($method) {
-				//add string at the end of the arguments
+		//if no type
+		if(!$type) {
+			//we don't process anything else
+			try {
+				//call the parent
+				return parent::__call($name, $args);
+			} catch(Eden_Error $e) {
+				Eden_Type_Error::get($e->getMessage())->trigger();
+			}
+		}
+		
+		//case different types
+		switch($type) {
+			case self::PRE:
+				//if pre, we add it first into the args
+				array_unshift($args, $this->_data);
+				break;
+			case self::POST:
+				//if post, we add it last into the args
 				array_push($args, $this->_data);
-			} else {
-				$method = $this->_getReferenceMethod($name);
-				//if this is a reference method	
-				if($method) {
-					//call the method
-					$data = &$this->_data;
-					//This doesn't work for reference methods as 
-					//described in ticket 44139 of PHP Bugs
-					//array_unshift($args, $this->_data);
-					//the work around is as follows
-					call_user_func_array($method, array_merge(array(&$this->_data), $args));
-					
-					return $this;
-				}
-			}
+				break;
+			case self::REFERENCE:
+				//if reference, we add it first 
+				//into the args and call it
+				call_user_func_array($name, array_merge(array(&$this->_data), $args));
+				return $this;
 		}
 		
-		//if this is a method
-		if($method) {
-			//call the method
-			$result = call_user_func_array($method, $args);
-			
-			//if the result is a string
-			if(is_string($result)) {
-				//if this class is a string type
-				if($this instanceof Eden_String) {
-					//set value
-					$this->_data = $result;
-					return $this;	
-				}
-				
-				//return string class
-				return Eden_String::get($result);
-			} 
-			
-			//if the result is an array
-			if(is_array($result)) {
-				//if this class is a array type
-				if($this instanceof Eden_Array) {
-					//set value
-					$this->_data = $result;
-					return $this;
-				}
-				
-				//return array class
-				return Eden_Array::get($result);
+		//call the method
+		$result = call_user_func_array($name, $args);
+		
+		//if the result is a string
+		if(is_string($result)) {
+			//if this class is a string type
+			if($this instanceof Eden_Type_String) {
+				//set value
+				$this->_data = $result;
+				return $this;	
 			}
 			
-			return $result;
+			//return string class
+			return Eden_Type_String::get($result);
+		} 
+		
+		//if the result is an array
+		if(is_array($result)) {
+			//if this class is a array type
+			if($this instanceof Eden_Type_Array) {
+				//set value
+				$this->_data = $result;
+				return $this;
+			}
+			
+			//return array class
+			return Eden_Type_Array::get($result);
 		}
 		
-		//we don't process anything else
-		try {
-			//call the parent
-			return parent::__call($name, $args);
-		} catch(Eden_Error $e) {
-			throw new Eden_Type_Error($e->getMessage());
-		}
+		return $result;
 	}
 	
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns the string
+	 * Reverts changes back to the original
+	 *
+	 * @return this
+	 */
+	public function revert() {
+		$this->_data = $this->_original;
+		return $this;
+	}
+	
+	/**
+	 * Returns the value
 	 *
 	 * @param bool whether to get the modified or original version
 	 * @return string
 	 */
-	public function getValue($modified = true) {
+	public function getData($modified = true) {
 		//argument 1 must be a bool
-		Eden_Type_Validate::get()->argument(1, 'bool');
+		Eden_Type_Error::get()->argument(1, 'bool');
 		
 		return $modified ? $this->_data : $this->_original;
 	}
 	
 	/* Protected Methods
 	-------------------------------*/
-	abstract protected function _getPreMethod($name);
-	
-	abstract protected function _getPostMethod($name);
-	
-	abstract protected function _getReferenceMethod($name);
+	abstract protected function _getMethodType(&$name);
 	
 	/* Private Methods
 	-------------------------------*/

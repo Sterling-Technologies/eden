@@ -8,81 +8,101 @@
  */
 
 /**
+ * Mysql Model
  *
  * @package    Eden
- * @category   registry
+ * @category   mysql
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Mysql_Model extends Eden_Mysql_Model_Abstract {
+class Eden_Mysql_Model extends Eden_Model {
 	/* Constants
 	-------------------------------*/
+	const COLUMNS 	= 'columns';
+	const PRIMARY 	= 'primary';
+	const DATETIME 	= 'Y-m-d h:i:s';
+	const DATE	 	= 'Y-m-d';
+	const TIME	 	= 'h:i:s';
+	const TIMESTAMP	= 'U';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_primary = NULL;
-	protected $_meta 	= array();
-	protected $_data	= array();
-	
-	protected $_database 	= NULL;
 	protected $_table 		= NULL;
+	protected $_database 	= NULL;
+	
+	protected static $_meta = array();
 	
 	/* Private Properties
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get(Eden_Mysql $database, $table) {
-		return self::_getMultiple(__CLASS__, $database, $table);
+	public static function get() {
+		$data = self::_getStart(func_get_args());
+		return self::_getMultiple(__CLASS__, $data);
 	}
 	
 	/* Magic
 	-------------------------------*/
-	public function __construct($database, $table) {
-		$this->_database 	= $database;
-		$this->_table 		= $table;
-		
-		//set meta data
-		$this->_setMetaData();
-	}
-	
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Loads data into the model
+	 * Sets the default database
 	 *
-	 * @param array
+	 * @param Eden_Mysql
+	 */
+	public function setDatabase(Eden_Mysql $database) {
+		$this->_database  = $database;
+		return $this;
+	}
+	
+	/**
+	 * Sets the default database
+	 *
+	 * @param string
+	 */
+	public function setTable($table) {
+		//Argument 1 must be a string
+		Eden_Mysql_Error::get()->argument(1, 'string');
+		
+		$this->_table  = $table;
+		return $this;
+	}
+	
+	/**
+	 * Useful method for formating a time column.
+	 * 
+	 * @param string
+	 * @param string
 	 * @return this
 	 */
-	public function load($data, $column = NULL) {
+	public function formatTime($column, $format = self::DATETIME) {
+		//Argument Test
 		Eden_Mysql_Error::get()
-			->argument(1, 'numeric', 'array', 'string')
-			->argument(2, 'string', 'null');
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string');	//Argument 1 must be a string
 		
-		if(is_scalar($data)) {
-			if(!is_string($column)) {
-				$column = $this->_primary;
-			}
-			
-			$this->_data = $this->_database->getRow($this->_table, $column, $data);
-			
+		//if the column isn't set
+		if(!isset($this->_data[$column])) {
+			//do nothing more
 			return $this;
 		}
 		
-		//for each data
-		foreach($data as $name => $value) {
-			//if this is not set in the meta data
-			if(!isset($this->_meta[$name])) {
-				//throw an error
-				Eden_Mysql_Error::get()
-					->setMessage(Eden_Mysql_Error::SET_INVALID)
-					->addVariable($name)
-					->addVariable($this->_table)
-					->trigger();
-			}
-			
-			$this->_data[$name] = $value;
+		//if this is column is a string
+		if(is_string($this->_data[$column])) {
+			//make into time
+			$this->_data[$column] = strtotime($this->_data[$column]);
 		}
+		
+		//if this column is not an integer
+		if(!is_int($this->_data[$column])) {
+			//do nothing more
+			return $this;
+		}
+		
+		//set it
+		$this->_data[$column] = date($format, $this->_data[$column]);
 		
 		return $this;
 	}
@@ -90,22 +110,206 @@ class Eden_Mysql_Model extends Eden_Mysql_Model_Abstract {
 	/**
 	 * Inserts or updates model to database
 	 *
+	 * @param string
+	 * @param Eden_Mysql
 	 * @return this
 	 */
-	public function save() {
-		if(isset($this->_data[$this->_primary])) {
-			$this->_database->updateRows($this->_table, 
-			$this->_data, $this->_primary.'='.$this->_data[$this->_primary]);
-		} else {
-			$this->_database->insertRow($this->_table, $this->_data);
-			$this->_data[$this->_primary] = $this->_database->getLastInsertedId();
+	public function save($table = NULL, Eden_Mysql $database = NULL) {
+		//Argument 1 must be a string
+		$error = Eden_Mysql_Error::get()->argument(1, 'string', 'null');
+		
+		//if no table
+		if(is_null($table)) {
+			//if no default table either
+			if(!$this->_table) {
+				//throw error
+				$error->setMessage(Eden_Mysql_Error::TABLE_NOT_SET)->trigger();
+			}
+			
+			$table = $this->_table;
 		}
+		
+		//if no database
+		if(is_null($database)) {
+			//and no default database
+			if(!$this->_database) {
+				$error->setMessage(Eden_Mysql_Error::DATABASE_NOT_SET)->trigger();
+			}
+			
+			$database = $this->_database;
+		}
+		
+		//get the meta data, the valid column values and whether is primary is set
+		$meta 			= $this->_getMeta($table, $database);
+		$data 			= $this->_getValidColumns(array_keys($meta[self::COLUMNS]));
+		$primarySet 	= $this->_isPrimarySet($meta[self::PRIMARY]);	
+		
+		//update original data
+		$this->_original = $this->_data;
+		
+		//if no primary meta or primary values are not set
+		if(empty($meta[self::PRIMARY]) || !$primarySet) {
+			//we insert it
+			$database->insertRow($table, $data);
+			
+			//only if we have 1 primary key
+			if(count($meta[self::PRIMARY]) == 1) {
+				//set the primary key
+				$this->_data[$meta[self::PRIMARY][0]] = $database->getLastInsertedId();	
+			}
+			
+			return $this;
+		}
+		
+		//from here it means that this table has primary 
+		//columns and all primary values are set
+		
+		$filter = array();
+		//for each primary key
+		foreach($meta[self::PRIMARY] as $column) {
+			//add the condition to the filter
+			$filter[] = array($column.'=%s', $data[$column]);
+		}
+		
+		//we update it
+		$database->updateRows($table, $data, $filter);
+		
+		return $this;
+	}
+	
+	/**
+	 * Removes model from database
+	 *
+	 * @param string
+	 * @param Eden_Mysql
+	 * @return this
+	 */
+	public function remove($table = NULL, Eden_Mysql $database = NULL) {
+		//Argument 1 must be a string
+		$error = Eden_Mysql_Error::get()->argument(1, 'string', 'null');
+		
+		//if no table
+		if(is_null($table)) {
+			//if no default table either
+			if(!$this->_table) {
+				//throw error
+				$error->setMessage(Eden_Mysql_Error::TABLE_NOT_SET)->trigger();
+			}
+			
+			$table = $this->_table;
+		}
+		
+		//if no database
+		if(is_null($database)) {
+			//and no default database
+			if(!$this->_database) {
+				$error->setMessage(Eden_Mysql_Error::DATABASE_NOT_SET)->trigger();
+			}
+			
+			$database = $this->_database;
+		}
+		
+		//get the meta data and valid columns
+		$meta = $this->_getMeta($table, $database);
+		$data = $this->_getValidColumns(array_keys($meta[self::COLUMNS]));
+		
+		$filter = array();
+		//for each primary key
+		foreach($meta[self::PRIMARY] as $column) {
+			//if the primary is not set
+			if(!isset($data[$column])) {
+				//we can't do a remove
+				//do nothing more
+				return $this;
+			}
+			
+			//add the condition to the filter
+			$filter[] = array($column.'=%s', $data[$column]);
+		}
+		
+		//we delete it
+		$database->deleteRows($table, $filter);
 		
 		return $this;
 	}
 	
 	/* Protected Methods
 	-------------------------------*/
+	protected function _isPrimarySet(array $primary) {
+		foreach($primary as $column) {
+			if(is_null($this[$column])) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	protected function _getValidColumns($columns) {
+		$valid = array();
+		foreach($columns as $column) {
+			if(!isset($this->_data[$column])) {
+				continue;
+			}
+			
+			$valid[$column] = $this->_data[$column];
+		} 
+		
+		return $valid;
+	}
+	
+	protected function _getMeta($table, $database) {
+		$uid = spl_object_hash($database);
+		if(isset(self::$_meta[$uid][$table])) {
+			return self::$_meta[$uid][$table];
+		}
+		
+		$columns = $database->getColumns($table);
+		
+		$meta = array();
+		foreach($columns as $i => $column) {
+			$meta[self::COLUMNS][$column['Field']] = array(
+				'type' 		=> $column['Type'],
+				'key' 		=> $column['Key'],
+				'default' 	=> $column['Default'],
+				'empty' 	=> $column['Null'] == 'YES');
+			
+			if($column['Key'] == 'PRI') {
+				$meta[self::PRIMARY][] = $column['Field'];
+			}
+		}
+		
+		self::$_meta[$uid][$table] = $meta;
+		
+		return $meta;
+	}
+	
+	protected function _isLoaded($table = NULL, $database = NULL) {
+		//if no table
+		if(is_null($table)) {
+			//if no default table either
+			if(!$this->_table) {
+				return false;
+			}
+			
+			$table = $this->_table;
+		}
+		
+		//if no database
+		if(is_null($database)) {
+			//and no default database
+			if(!$this->_database) {
+				return false;
+			}
+			
+			$database = $this->_database;
+		}
+		
+		$meta = $this->_getMeta($table, $database);
+		
+		return $this->_isPrimarySet($meta[self::PRIMARY]);
+	}
+	
 	/* Private Methods
 	-------------------------------*/
 }
