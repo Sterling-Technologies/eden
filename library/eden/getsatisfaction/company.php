@@ -34,7 +34,7 @@ class Eden_GetSatisfaction_Company extends Eden_Getsatisfaction_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($key, $secret) {
+	public static function i($key, $secret) {
 		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
 	
@@ -43,28 +43,28 @@ class Eden_GetSatisfaction_Company extends Eden_Getsatisfaction_Base {
 	/* Public Methods
 	-------------------------------*/
 	public function setActivity($company) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
 		
 		$this->_url = sprintf(self::URL_ACTIVITY, $company);
 		return $this;
 	}
 	
 	public function setUser($user) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
 		
 		$this->_url = sprintf(self::URL_PEOPLE, $user);
 		return $this;
 	}
 	
 	public function setProduct($product) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
 		
 		$this->_url = sprintf(self::URL_PRODUCT, $product);
 		return $this;
 	}
 	
 	public function setKeyword($keyword) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string');
 		
 		$this->_query['query'] = $keyword;
 		
@@ -102,7 +102,7 @@ class Eden_GetSatisfaction_Company extends Eden_Getsatisfaction_Base {
 	}
 	
 	public function setPage($page = 0) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'int');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
 		if($page < 0) {
 			$page = 0;
@@ -114,7 +114,7 @@ class Eden_GetSatisfaction_Company extends Eden_Getsatisfaction_Base {
 	}
 	
 	public function setLimit($limit = 10) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'int');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
 		if($limit < 0) {
 			$limit = 10;

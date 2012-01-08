@@ -29,7 +29,7 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	
@@ -49,7 +49,7 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 */
 	public function set($key, $data = NULL, $expires = 0, $path = NULL, $domain = NULL, $secure = false, $httponly = false) {
 		//argment test
-		Eden_Cookie_Error::get()
+		Eden_Cookie_Error::i()
 			->argument(1, 'string')						//argument 1 must be a string
 			->argument(2, 'string', 'numeric', 'null')	//argument 2 must be a string,numeric or null
 			->argument(3, 'int')						//argument 3 must be a integer
@@ -87,7 +87,7 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @param string|null the domain
 	 * @return this
 	 */
-	public function setData(array $data, $expires = 0, $path = NULL, $domain = NULL, $secure = false, $httponly = false) {
+	public function set(array $data, $expires = 0, $path = NULL, $domain = NULL, $secure = false, $httponly = false) {
 		foreach($data as $key => $value) {
 			$this->set($key, $value, $expires, $path, $domain, $secure, $httponly);
 		}
@@ -105,7 +105,7 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return this
 	 */
 	public function setSecureData(array $data, $expires = 0, $path = NULL, $domain = NULL) {
-		$this->setData($data, $expires, $path, $domain, true, false);
+		$this->set($data, $expires, $path, $domain, true, false);
 		return $this;
 	}
 	
@@ -115,8 +115,8 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @param string|null
 	 * @return mixed
 	 */
-	public function getData($key = NULL) {
-		Eden_Cookie_Error::get()->argument(1, 'string', 'null');
+	public function get($key = NULL) {
+		Eden_Cookie_Error::i()->argument(1, 'string', 'null');
 		
 		if(is_null($key)) {
 			return $_COOKIE;
@@ -136,7 +136,7 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return Eden_Cookie
 	 */
 	public function remove($name) {
-		Eden_Cookie_Error::get()->argument(1, 'string');
+		Eden_Cookie_Error::i()->argument(1, 'string');
 		
 		$this->set($name, NULL, time() - 3600);
 		
@@ -271,7 +271,7 @@ class Eden_Cookie_Error extends Eden_Error {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($message = NULL, $code = 0) {
+	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}

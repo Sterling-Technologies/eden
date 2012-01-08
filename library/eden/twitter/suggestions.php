@@ -32,7 +32,7 @@ class Eden_Twitter_Suggestions extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($key, $secret) {
+	public static function i($key, $secret) {
 		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
 	
@@ -48,7 +48,7 @@ class Eden_Twitter_Suggestions extends Eden_Twitter_Base {
 	 */
 	 public function getSuggestion($lang = NULL) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string', 'null');			//Argument 1 must be a string or integer
 
 		$query = array();
@@ -70,7 +70,7 @@ class Eden_Twitter_Suggestions extends Eden_Twitter_Base {
 	 */
 	 public function getCategory($slug, $lang = NULL) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string', 'null')				//Argument 1 must be a string 
 			->argument(2, 'string', 'null');			//Argument 1 must be a string 
 
@@ -93,7 +93,7 @@ class Eden_Twitter_Suggestions extends Eden_Twitter_Base {
 	 */
 	 public function getRecentStatus($slug) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string', 'null');			//Argument 1 must be a string
 
 		$query = array('slug' => $slug);

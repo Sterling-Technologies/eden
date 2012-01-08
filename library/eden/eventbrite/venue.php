@@ -31,7 +31,7 @@ class Eden_Eventbrite_Venue extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 		/* Magic
@@ -40,7 +40,7 @@ class Eden_Eventbrite_Venue extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	public function add($organizer, $venue, $country, $region, $address1 = NULL, $address2 = NULL, $city = NULL, $postal = NULL) {
 		//argument test
-		Eden_Eventbrite_Error::get()
+		Eden_Eventbrite_Error::i()
 			->argument(1, 'string')					//Argument must be a string
 			->argument(2, 'string')					//Argument msut be a string
 			->argument(3, 'string')					//Argument must be a string
@@ -85,7 +85,7 @@ class Eden_Eventbrite_Venue extends Eden_Eventbrite_Base {
 	
 	public function update($id, $venue, $address1 = NULL, $address2 = NULL, $city = NULL, $region = NULL, $postal = NULL, $country = NULL){
 		//argument test
-		Eden_Eventbrite_Error::get()
+		Eden_Eventbrite_Error::i()
 			->argument(1, 'int')					//Argument must be a integer
 			->argument(2, 'string')					//Argument must be a string
 			->argument(3, 'string', 'null')			//Argument must be a string or null

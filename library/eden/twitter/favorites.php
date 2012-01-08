@@ -32,7 +32,7 @@ class Eden_Twitter_Favorites extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($key, $secret) {
+	public static function i($key, $secret) {
 		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
 	
@@ -52,7 +52,7 @@ class Eden_Twitter_Favorites extends Eden_Twitter_Base {
 	 */
 	 public function getList($id = NULL, $since = NULL, $page = NULL, $entities = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int', 'string', 'null')		//Argument 1 must be a string or integer
 			->argument(2, 'int', 'null')				//Argument 1 must be an integer
 			->argument(3, 'int', 'null')				//Argument 4 must be an integer
@@ -91,7 +91,7 @@ class Eden_Twitter_Favorites extends Eden_Twitter_Base {
 	 */
 	 public function addFavorite($id, $entities = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int')						//Argument 1 must be an integer
 			->argument(2, 'boolean');					//Argument 2 must be a boolean
 
@@ -112,7 +112,7 @@ class Eden_Twitter_Favorites extends Eden_Twitter_Base {
 	 */
 	 public function removeFavorite($id) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int');						//Argument 1 must be na integer
 
 		$query = array('id' => $id);

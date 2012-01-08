@@ -30,7 +30,7 @@ class Eden_Eventbrite_Base extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 	
@@ -38,7 +38,7 @@ class Eden_Eventbrite_Base extends Eden_Class {
 	-------------------------------*/
 	public function __construct($user, $api) {
 		//argument test
-		Eden_Eventbrite_Error::get()
+		Eden_Eventbrite_Error::i()
 			->argument(1, 'string','array')	//Argument 1 must be a string or array
 			->argument(2, 'string');		//Argument 2 must be a string
 			
@@ -54,7 +54,7 @@ class Eden_Eventbrite_Base extends Eden_Class {
 	 * @return array
 	 */
 	public function getMeta($key = NULL) {
-		Eden_Google_Error::get()->argument(1, 'string', 'null');
+		Eden_Google_Error::i()->argument(1, 'string', 'null');
 		
 		if(isset($this->_meta[$key])) {
 			return $this->_meta[$key];
@@ -104,7 +104,7 @@ class Eden_Eventbrite_Base extends Eden_Class {
 		$url .= $connector.$query;
 
 		//set curl
-		$curl = Eden_Curl::get()
+		$curl = Eden_Curl::i()
 			->verifyHost(false)
 			->verifyPeer(false)
 			->setUrl($url)

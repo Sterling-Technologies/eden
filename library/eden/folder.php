@@ -30,7 +30,7 @@ class Eden_Folder extends Eden_Path {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($path) {
+	public static function i($path) {
 		return self::_getMultiple(__CLASS__, $path);
 	}
 	
@@ -48,13 +48,13 @@ class Eden_Folder extends Eden_Path {
 		//if chmod is not and integer or not between 0 and 777
 		if(!is_int($chmod) || $chmod < 0 || $chmod > 777) {
 			//throw an error
-			Eden_Folder_Error::get(Eden_Folder_Exception::CHMOD_IS_INVALID)->trigger();
+			Eden_Folder_Error::i(Eden_Folder_Exception::CHMOD_IS_INVALID)->trigger();
 		}
 		
 		//if it's not a directory
-		if(!is_dir($this->_path)) {
+		if(!is_dir($this->_data)) {
 			//then make it
-			mkdir($this->_path, $chmod, true);
+			mkdir($this->_data, $chmod, true);
 		}
 		
 		return $this;
@@ -109,7 +109,7 @@ class Eden_Folder extends Eden_Path {
 	 */
 	public function getFiles($regex = NULL, $recursive = false) {
 		//argument test
-		$error = Eden_Folder_Error::get()
+		$error = Eden_Folder_Error::i()
 			->argument(1, 'string', 'null')	//argument 1 must be a string
 			->argument(2, 'bool');		//argument 2 must be a boolean
 		
@@ -117,18 +117,18 @@ class Eden_Folder extends Eden_Path {
 		
 		$files = array();
 		
-		if ($handle = opendir($this->_path)) {
+		if ($handle = opendir($this->_data)) {
 			//for each file
 			while (false !== ($file = readdir($handle))) {
 				// If this is infact a file
-				if(filetype($this->_path . '/' . $file) == 'file'
+				if(filetype($this->_data . '/' . $file) == 'file'
 					&& (!$regex || preg_match($regex, $file))) {	
 					//add it
-					$files[] = Eden_File::get($this->_path . '/' . $file); 
+					$files[] = Eden_File::i($this->_data . '/' . $file); 
 				// recursive and this is infact a directory
 				} else if($recursive && $file != '.' && $file != '..' 
-					&& filetype($this->_path .'/'. $file) == 'dir') {
-					$subfiles = self::get($this->_path.'/'.$file);
+					&& filetype($this->_data .'/'. $file) == 'dir') {
+					$subfiles = self::i($this->_data.'/'.$file);
 					$files = array_merge($files, $subfiles->getFiles($regex, $recursive));
 				}
 			}
@@ -147,7 +147,7 @@ class Eden_Folder extends Eden_Path {
 	 */
 	public function getFolders($regex = NULL, $recursive = false) {
 		//argument test
-		Eden_Folder_Error::get()
+		Eden_Folder_Error::i()
 			->argument(1, 'string', 'null')	//argument 1 must be a string
 			->argument(2, 'bool');		//argument 2 must be a boolean
 			
@@ -155,19 +155,19 @@ class Eden_Folder extends Eden_Path {
 		
 		$folders = array();
 		
-		if($handle = opendir($this->_path)) {
+		if($handle = opendir($this->_data)) {
 			//walk the directory
 			while (false !== ($folder = readdir($handle))) {
 				// If this is infact a directory
 				//and if it matches the regex
 				if($folder != '.' && $folder != '..' 
-				  	&& filetype($this->_path .'/'. $folder) == 'dir'
+				  	&& filetype($this->_data .'/'. $folder) == 'dir'
 					&& (!$regex || preg_match($regex, $folder))) {
 					
 					//add it
-					$folders[] = Eden_Folder::get($this->_path . '/' . $folder); 
+					$folders[] = Eden_Folder::i($this->_data . '/' . $folder); 
 					if($recursive) {
-						$subfolders = Eden_Folder::get($this->_path.'/'.$folder);
+						$subfolders = Eden_Folder::i($this->_data.'/'.$folder);
 						$folders = array_merge($folders, $subfolders->getFolders($regex, $recursive));
 					}
 					
@@ -186,7 +186,7 @@ class Eden_Folder extends Eden_Path {
 	 * @return bool
 	 */
 	public function removeFolders($regex = NULL) {
-		Eden_Folder_Error::get()->argument(1, 'string', 'null');	//argument 1 must be a string
+		Eden_Folder_Error::i()->argument(1, 'string', 'null');	//argument 1 must be a string
 		
 		$this->absolute();
 		
@@ -212,7 +212,7 @@ class Eden_Folder extends Eden_Path {
 	 * @return bool
 	 */
 	public function removeFiles($regex = NULL) {
-		Eden_Folder_Error::get()->argument(1, 'string', 'null');	//argument 1 must be a string
+		Eden_Folder_Error::i()->argument(1, 'string', 'null');	//argument 1 must be a string
 		
 		//get the files
 		$files = $this->getFiles($regex);
@@ -237,15 +237,15 @@ class Eden_Folder extends Eden_Path {
 	 * @return bool
 	 */
 	public function isFolder($path = NULL) {
-		Eden_Folder_Error::get()->argument(1, 'string', 'null');	//argument 1 must be a string
+		Eden_Folder_Error::i()->argument(1, 'string', 'null');	//argument 1 must be a string
 		
 		//if path is string
 		if(is_string($path)) {
 			//return path appended
-			return is_dir($this->_path.'/'.$path);
+			return is_dir($this->_data.'/'.$path);
 		}
 		
-		return is_dir($this->_path);
+		return is_dir($this->_data);
 	}
 	
 	/**
@@ -255,7 +255,7 @@ class Eden_Folder extends Eden_Path {
 	 * @return bool
 	 */
 	public function isFile() {
-		return file_exists($this->_path);
+		return file_exists($this->_data);
 	}
 	
 	/* Protected Methods
@@ -278,7 +278,7 @@ class Eden_Folder_Error extends Eden_Error {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($message = NULL, $code = 0) {
+	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}

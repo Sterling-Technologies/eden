@@ -28,7 +28,7 @@ class Eden_Getsatisfaction_Post extends Eden_Getsatisfaction_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($key, $secret) {
+	public static function i($key, $secret) {
 		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
 	
@@ -72,7 +72,7 @@ class Eden_Getsatisfaction_Post extends Eden_Getsatisfaction_Base {
 	}
 	
 	public function setTags($tags) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'array');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'array');
 		
 		if(is_array($tags)) {
 			$tags = implode(',', $tags);
@@ -87,7 +87,7 @@ class Eden_Getsatisfaction_Post extends Eden_Getsatisfaction_Base {
 	}
 	
 	public function setProducts($products) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'array');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'array');
 		
 		if(is_array($products)) {
 			$tags = implode(',', $products);
@@ -98,7 +98,7 @@ class Eden_Getsatisfaction_Post extends Eden_Getsatisfaction_Base {
 	}
 	
 	public function setFeeling($feeling) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string');
 		
 		$this->_query['emotitag']['feeling'] = $feeling;
 		return $this;
@@ -125,7 +125,7 @@ class Eden_Getsatisfaction_Post extends Eden_Getsatisfaction_Base {
 	}
 	
 	public function setIntensity($intensity) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'int');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
 		if($intensity < 0) {
 			$intensity = 0;
@@ -138,7 +138,7 @@ class Eden_Getsatisfaction_Post extends Eden_Getsatisfaction_Base {
 	}
 	
 	public function add($company) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
 		
 		$url = sprintf(Eden_Getsatisfaction_Topic::URL_COMPANY, $company);
 		
@@ -146,7 +146,7 @@ class Eden_Getsatisfaction_Post extends Eden_Getsatisfaction_Base {
 	}
 	
 	public function edit($topic) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
 		
 		$url = sprintf(Eden_GetSatisfaction_Detail::URL, $topic);
 		

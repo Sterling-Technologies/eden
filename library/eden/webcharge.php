@@ -79,7 +79,7 @@ class Eden_Webcharge_Model extends Eden_Class
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $password, array $options = array()) {
+	public static function i($user, $password, array $options = array()) {
 		return self::_getMultiple(__CLASS__, $user, $password, $options);
 	}
 	
@@ -102,7 +102,7 @@ class Eden_Webcharge_Model extends Eden_Class
 	 * @return this
 	 */
 	public function setUser($user) {
-		Eden_Webcharge_Error::get()
+		Eden_Webcharge_Error::i()
 				->setMessage()->argument(1, 'string');
 		$this->_transaction['username'] = $user;
 		return $this;
@@ -115,7 +115,7 @@ class Eden_Webcharge_Model extends Eden_Class
 	 * @return this
 	 */
 	public function setPassword($password) {
-		Eden_Webcharge_Error::get()
+		Eden_Webcharge_Error::i()
 				->setMessage()->argument(1, 'string');
 		$this->_transaction['pw'] = $password;
 		return $this;
@@ -157,7 +157,7 @@ class Eden_Webcharge_Model extends Eden_Class
 		//test for valid amount
 		if(!$this->_transaction['fulltotal'] || !is_numeric($this->_transaction['fulltotal'])) {
 			//throw exception
-			Eden_Webcharge_Error::get()
+			Eden_Webcharge_Error::i()
 				->setMessage(Eden_Webcharge_Error::INVALID_AMOUNT)
 				->addVariable((string) $this->_transaction['fulltotal']);
 		}
@@ -165,7 +165,7 @@ class Eden_Webcharge_Model extends Eden_Class
 		//test for valid transaction type
 		if(!$this->_transaction['trantype'] || !in_array($this->_transaction['trantype'], $this->_transactionTypes)) {
 			//throw exception
-			Eden_Webcharge_Error::get()
+			Eden_Webcharge_Error::i()
 				->setMessage(Eden_Webcharge_Error::INVALID_TRANSACTION_TYPE)
 				->addVariable((string) $this->_transaction['trantype'])
 				->trigger();
@@ -174,7 +174,7 @@ class Eden_Webcharge_Model extends Eden_Class
 		//test for valid card type
 		if(!$this->_transaction['cardtype'] || !in_array($this->_transaction['cardtype'], $this->creditCards)) {
 			//throw exception
-			Eden_Webcharge_Error::get()
+			Eden_Webcharge_Error::i()
 				->setMessage(Eden_Webcharge_Error::INVALID_CARD_TYPE)
 				->addVariable((string) $this->_transaction['cardtype'])
 				->trigger();
@@ -183,7 +183,7 @@ class Eden_Webcharge_Model extends Eden_Class
 		//test for valid month
 		if(!$this->_transaction['month'] || !is_numeric($this->_transaction['month']) || strlen((string) $this->_transaction['month']) != 2) {
 			//throw exception
-			Eden_Webcharge_Error::get()
+			Eden_Webcharge_Error::i()
 				->setMessage(Eden_Webcharge_Error::INVALID_CREDIT_CARD_MONTH)
 				->addVariable((string) $this->_transaction['month'])
 				->trigger();
@@ -192,7 +192,7 @@ class Eden_Webcharge_Model extends Eden_Class
 		//test for valid year
 		if(!$this->_transaction['year'] || !is_numeric($this->_transaction['year']) || !in_array(strlen((string) $this->_transaction['year']), array(2, 4))) {
 			//throw exception																																	  
-			Eden_Webcharge_Error::get()
+			Eden_Webcharge_Error::i()
 				->setMessage(Eden_Webcharge_Error::INVALID_CREDIT_CARD_YEAR)
 				->addVariable((string) $this->_transaction['year'])
 				->trigger();
@@ -201,11 +201,11 @@ class Eden_Webcharge_Model extends Eden_Class
 		//test for valid creditcard name
 		if(!$this->_transaction['ccname']) {
 			//throw exception
-			Eden_Webcharge_Error::get(Eden_Webcharge_Error::INVALID_CREDIT_CARD_NAME)->trigger();
+			Eden_Webcharge_Error::i(Eden_Webcharge_Error::INVALID_CREDIT_CARD_NAME)->trigger();
 		}
 		
 		// Create the connection through the cURL extension
-		return Eden_Curl::get()
+		return Eden_Curl::i()
 			->setUrl(self::PAYMENT_URL)
 			->when($this->_proxy != NULL)
 			->setProxy($this->_proxy)

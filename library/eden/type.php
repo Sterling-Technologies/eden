@@ -32,21 +32,21 @@ class Eden_Type extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($type = NULL) {
+	public static function i($type = NULL) {
 		if(func_num_args() > 1) {
 			$type = func_get_args();
 		}
 		
 		if(is_array($type)) {
-			return Eden_Type_Array::get($type);
+			return Eden_Type_Array::i($type);
 		} 
 		
 		if(is_string($type)) {
-			return Eden_Type_String::get($type);
+			return Eden_Type_String::i($type);
 		}
 		
 		if(is_object($type)) {
-			return Eden_Type_Object::get($type);
+			return Eden_Type_Object::i($type);
 		}
 		
 		return self::_getSingleton(__CLASS__);
@@ -68,7 +68,7 @@ class Eden_Type extends Eden_Class {
 			$array = $args;
 		} 
 		
-		return Eden_Type_Array::get($array);
+		return Eden_Type_Array::i($array);
 	}
 	
 	/**
@@ -78,17 +78,7 @@ class Eden_Type extends Eden_Class {
 	 * @return Eden_Type_String
 	 */
 	public function getString($string) {
-		return Eden_Type_String::get($string);
-	}
-	
-	/**
-	 * Returns the object class
-	 *
-	 * @param object
-	 * @return Eden_Type_Object
-	 */
-	public function getObject($object) {
-		return Eden_Type_Object::get($object);
+		return Eden_Type_String::i($string);
 	}
 	
 	/* Protected Methods

@@ -34,7 +34,7 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 	/* Magic
@@ -55,7 +55,7 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	 */
 	 public function getList($since = NULL, $max = NULL, $count = NULL, $page = NULL, $entities = false, $skip = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int', 'null')				//Argument 1 must be an integer
 			->argument(2, 'int', 'null')				//Argument 2 must be an integer
 			->argument(3, 'int', 'null')				//Argument 3 must be an integer
@@ -108,7 +108,7 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	 */
 	 public function getSent($since = NULL, $max = NULL, $count = NULL, $page = NULL, $entities = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int', 'null')				//Argument 1 must be an integer
 			->argument(2, 'int', 'null')				//Argument 2 must be an integer
 			->argument(3, 'int', 'null')				//Argument 3 must be an integer
@@ -155,7 +155,7 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	 */
 	 public function remove($id, $entities = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int')						//Argument 1 must be an integer
 			->argument(2, 'bool');						//Argument 2 must be a boolean
 		
@@ -178,7 +178,7 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	 */
 	 public function add($text, $user = NULL,  $wrap = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string')					//Argument 1 must be a string
 			->argument(2, 'int','string','null')	//Argument 2 must be an integer or string 
 			->argument(3, 'bool');					//Argument 2 must be a boolean
@@ -208,7 +208,7 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	 */
 	 public function getDetail($id) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int');				//Argument 1 must be an integer
 		$url = sprintf(self::URL_SHOW_MESSAGE,$id);
 		return $this->_getResponse($url);

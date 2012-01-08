@@ -32,7 +32,7 @@ class Eden_File extends Eden_Path {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($path) {
+	public static function i($path) {
 		return self::_getMultiple(__CLASS__, $path);
 	}
 	
@@ -46,7 +46,7 @@ class Eden_File extends Eden_Path {
 	 * @return string
 	 */
 	public function getName() {
-		return basename($this->_path);
+		return basename($this->_data);
 	}
 	
 	/**
@@ -55,7 +55,7 @@ class Eden_File extends Eden_Path {
 	 * @return string
 	 */
 	public function getFolder() {
-		return dirname($this->_path);
+		return dirname($this->_data);
 	}
 	
 	/**
@@ -64,7 +64,7 @@ class Eden_File extends Eden_Path {
 	 * @return string
 	 */
 	public function getBase() {
-		$pathInfo = pathinfo($this->_path);
+		$pathInfo = pathinfo($this->_data);
 		return $pathInfo['filename'];
 	}
 	
@@ -74,7 +74,7 @@ class Eden_File extends Eden_Path {
 	 * @return string
 	 */
 	public function getExtension() {
-		$pathInfo = pathinfo($this->_path);
+		$pathInfo = pathinfo($this->_data);
 		
 		if(!isset($pathInfo['extension'])) {
 			return NULL;	
@@ -91,7 +91,7 @@ class Eden_File extends Eden_Path {
 	public function getData() {
 		$this->absolute();
 		
-		return include($this->_path);
+		return include($this->_data);
 	}
 	
 	/**
@@ -104,15 +104,15 @@ class Eden_File extends Eden_Path {
 		$this->absolute();
 		
 		//if the pat is not a real file
-		if(!is_file($this->_path)) {
+		if(!is_file($this->_data)) {
 			//throw an exception
-			Eden_File_Error::get()
+			Eden_File_Error::i()
 				->setMessage(Eden_File_Error::PATH_IS_NOT_FILE)
-				->addVariable($this->_path)
+				->addVariable($this->_data)
 				->trigger();
 		}
 		
-		return file_get_contents($this->_path);
+		return file_get_contents($this->_data);
 	}
 	
 	/**
@@ -126,14 +126,14 @@ class Eden_File extends Eden_Path {
 		//mime_content_type seems to be deprecated in some versions of PHP
 		//if it does exist then lets use it
 		if(function_exists('mime_content_type')) {
-			return mime_content_type($this->_path);
+			return mime_content_type($this->_data);
 		}
 		
 		//if not then use the replacement funciton fileinfo
 		//see: http://www.php.net/manual/en/function.finfo-file.php
 		if(function_exists('finfo_open')) {
 			$resource = finfo_open(FILEINFO_MIME_TYPE);
-			$mime = finfo_file($resource, $this->_path);
+			$mime = finfo_file($resource, $this->_data);
 			finfo_close($finfo);
 			
 			return $mime;
@@ -163,7 +163,7 @@ class Eden_File extends Eden_Path {
 	public function getSize() {
 		$this->absolute();
 		
-		return filesize($this->_path);
+		return filesize($this->_data);
 	}
 	
 	/**
@@ -174,7 +174,7 @@ class Eden_File extends Eden_Path {
 	public function getTime() {
 		$this->absolute();
 		
-		return filemtime($this->_path);
+		return filemtime($this->_data);
 	}
 	
 	/**
@@ -184,7 +184,7 @@ class Eden_File extends Eden_Path {
 	 * @return bool
 	 */
 	public function isFile() {
-		return file_exists($this->_path);
+		return file_exists($this->_data);
 	}
 	
 	/**
@@ -195,11 +195,11 @@ class Eden_File extends Eden_Path {
 	 */
 	public function setContent($content) {
 		//argument 1 must be string
-		Eden_File_Error::get()->argument(1, 'string');
+		Eden_File_Error::i()->argument(1, 'string');
 		
 		$this->absolute();
 		
-		file_put_contents($this->_path, $content);
+		file_put_contents($this->_data, $content);
 		
 		return $this;
 	}
@@ -221,7 +221,7 @@ class Eden_File extends Eden_Path {
 	 * @return bool
 	 */
 	public function touch() {
-		touch($this->_path);
+		touch($this->_data);
 		
 		return $this;
 	}
@@ -235,9 +235,9 @@ class Eden_File extends Eden_Path {
 		$this->absolute();
 		
 		//if it's a file
-		if(is_file($this->_path)) {
+		if(is_file($this->_data)) {
 			//remove it
-			unlink($this->_path);
+			unlink($this->_data);
 			
 			return $this;
 		}

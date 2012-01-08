@@ -39,14 +39,14 @@ class Eden_Cache extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($root, $key = 'key.php') {
+	public static function i($root, $key = 'key.php') {
 		return self::_getMultiple(__CLASS__, $root, $key);
 	}
 	
 	/* Magic
 	-------------------------------*/
 	public function __construct($root, $key = 'key.php') {
-		Eden_Cache_Error::get()
+		Eden_Cache_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string');
 		
@@ -63,7 +63,7 @@ class Eden_Cache extends Eden_Class {
 	 */
 	public function setKey($key) {
 		//argument 1 must be a string
-		Eden_Cache_Error::get()->argument(1, 'string');
+		Eden_Cache_Error::i()->argument(1, 'string');
 		
 		$this->_key = $key;
 		return $this;
@@ -77,9 +77,9 @@ class Eden_Cache extends Eden_Class {
 	 */
 	public function setRoot($root) {
 		//argument 1 must be a string
-		Eden_Cache_Error::get()->argument(1, 'string');
+		Eden_Cache_Error::i()->argument(1, 'string');
 		
-		$this->_path = (string) Eden_Path::get($root)->absolute();
+		$this->_path = (string) Eden_Path::i($root)->absolute();
 		
 		return $this;
 	}
@@ -91,7 +91,7 @@ class Eden_Cache extends Eden_Class {
 	 */
 	public function build() {
 		try {
-			$this->_cache = Eden_File::get($this->_path.'/'.$this->_key)->getData();
+			$this->_cache = Eden_File::i($this->_path.'/'.$this->_key)->getData();
 		} catch(Eden_File_Error $e) {
 			$this->_cache = array();
 		}
@@ -106,20 +106,20 @@ class Eden_Cache extends Eden_Class {
 	 * @param *mixed the data to be cached
 	 * @return Eden_CacheModel
 	 */
-	public function setData($key, $path, $data) {
+	public function set($key, $path, $data) {
 		//argument test
-		Eden_Cache_Error::get()
+		Eden_Cache_Error::i()
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 		
 		//get the proper path format
-		$path = $this->_path.Eden_Path::get($path);
+		$path = $this->_path.Eden_Path::i($path);
 		//set the data to the file
-		Eden_File::get($path)->setData($data);
+		Eden_File::i($path)->setData($data);
 		//store this data in memory by keyword
 		$this->_cache[$key] = $path;
 		//now we want to store the key and data file correlation
-		Eden_File::get($this->_path.'/'.$this->_key)->setData($this->_cache);
+		Eden_File::i($this->_path.'/'.$this->_key)->setData($this->_cache);
 		
 		return $this;
 	}
@@ -131,14 +131,14 @@ class Eden_Cache extends Eden_Class {
 	 * @param string|null returns this variable by default
 	 * @return mixed
 	 */
-	public function getData($key, $default = NULL) {
+	public function get($key, $default = NULL) {
 		//argument 1 must be a string
-		Eden_Cache_Error::get()->argument(1, 'string');
+		Eden_Cache_Error::i()->argument(1, 'string');
 		
 		//if the key exists
 		if($this->keyExists($key)) {
 			//return it
-			return Eden_File::get($this->_cache[$key])->getData($default);
+			return Eden_File::i($this->_cache[$key])->getData($default);
 		}
 		
 		//return the defauit
@@ -153,7 +153,7 @@ class Eden_Cache extends Eden_Class {
 	 */
 	public function keyExists($key) {
 		//argument 1 must be a string
-		Eden_Cache_Error::get()->argument(1, 'string');
+		Eden_Cache_Error::i()->argument(1, 'string');
 		
 		return isset($this->_cache[$key]) && file_exists($this->_cache[$key]);
 	}
@@ -178,7 +178,7 @@ class Eden_Cache_Error extends Eden_Error {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($message = NULL, $code = 0) {
+	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}

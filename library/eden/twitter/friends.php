@@ -44,7 +44,7 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 	/* Magic
@@ -63,7 +63,7 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	 */
 	 public function getFollowers($id = NULL, $cursor = NULL, $stringify = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int', 'string')				//Argument 1 must be an integer
 			->argument(2, 'int')						//Argument 2 must be an integer
 			->argument(3, 'bool');						//Argument 3 must be an boolean
@@ -105,7 +105,7 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	 */
 	 public function getFriends($id = NULL, $cursor = NULL, $stringify = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int','string')						//Argument 1 must be an integer
 			->argument(2, 'int')						//Argument 3 must be an integer
 			->argument(3, 'bool');						//Argument 4 must be an boolean
@@ -141,7 +141,7 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	 */
 	 public function friendsExist($userA = NULL, $userB = NULL) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string','int')						//Argument 1 must be an integer
 			->argument(2, 'string','int');						//Argument 2 must be an integer
 
@@ -178,7 +178,7 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	 */
 	 public function incomingFriends($cursor = NULL, $stringify = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int')							//Argument 1 must be an integer
 			->argument(2, 'boolean');						//Argument 2 must be an integer
 
@@ -205,7 +205,7 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	 */
 	 public function outgoingFriends($cursor = NULL, $stringify = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int')							//Argument 1 must be an integer
 			->argument(2, 'boolean');						//Argument 2 must be an integer
 
@@ -231,7 +231,7 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	 */
 	 public function getDetails($id = NULL, $target = NULL) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string','int')						//Argument 1 must be an string
 			->argument(2, 'string','int');						//Argument 2 must be an string
 
@@ -277,7 +277,7 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	 */
 	 public function followFriends($name = NULL, $id = NULL, $follow = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string')							//Argument 1 must be an string
 			->argument(2, 'int')							//Argument 2 must be an integer
 			->argument(3, 'boolean');						//Argument 3 must be an boolean
@@ -313,7 +313,7 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	 */
 	 public function unfollowFriends($name = NULL, $id = NULL, $entities = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string')							//Argument 1 must be an string
 			->argument(2, 'int')							//Argument 2 must be an integer
 			->argument(3, 'boolean');						//Argument 3 must be an boolean
@@ -349,7 +349,7 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	 */
 	 public function lookupFriends($id = NULL) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int', 'string');							//Argument 1 must be an string
 
 		$query = array();
@@ -386,7 +386,7 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	 */
 	 public function update($id = NULL, $device = NULL, $retweets = NULL) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string','int')					//Argument 1 must be a string or integer
 			->argument(2, 'boolean')						//Argument 2 must be a boolean
 			->argument(3, 'boolean');						//Argument 3 must be a boolean
@@ -427,7 +427,7 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	 */
 	 public function getNoRetweets($stringify = NULL) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'boolean');						//Argument 1 must be an boolean
 
 		$query = array();

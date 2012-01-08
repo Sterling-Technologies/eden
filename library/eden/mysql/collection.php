@@ -28,7 +28,7 @@ class Eden_Mysql_Collection extends Eden_Collection {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get(array $data = array()) {
+	public static function i(array $data = array()) {
 		return self::_getMultiple(__CLASS__,$data);
 	}
 	
@@ -58,7 +58,7 @@ class Eden_Mysql_Collection extends Eden_Collection {
 	 */
 	public function setTable($table) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		//for each row
 		foreach($this->_list as $row) {

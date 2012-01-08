@@ -57,10 +57,10 @@ class Eden_Google_Base extends Eden_Oauth_Base {
 	 */
 	public function getLoginUrl($redirect) {
 		//Argument 1 must be a string
-		Eden_Google_Error::get()->argument(1, 'string');
+		Eden_Google_Error::i()->argument(1, 'string');
 		
 		//get the token
-		$token = Eden_Oauth::get()
+		$token = Eden_Oauth::i()
 			->getConsumer(self::REQUEST_URL, $this->_key, $this->_secret)
 			->useAuthorization()
 			->setMethodToPost()
@@ -103,11 +103,11 @@ class Eden_Google_Base extends Eden_Oauth_Base {
 	 */
 	public function getAccessToken($token, $secret) {
 		//argument test
-		Eden_Google_Error::get()
+		Eden_Google_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string
 			
-		return Eden_Oauth::get()
+		return Eden_Oauth::i()
 			->getConsumer(self::ACCESS_URL, $this->_key, $this->_secret)
 			->useAuthorization()
 			->setMethodToPost()
@@ -130,7 +130,7 @@ class Eden_Google_Base extends Eden_Oauth_Base {
 	 * @return array
 	 */
 	public function getMeta($key = NULL) {
-		Eden_Google_Error::get()->argument(1, 'string', 'null');
+		Eden_Google_Error::i()->argument(1, 'string', 'null');
 		
 		if(isset($this->_meta[$key])) {
 			return $this->_meta[$key];
@@ -144,7 +144,7 @@ class Eden_Google_Base extends Eden_Oauth_Base {
 	protected function _getResponse($url, array $query = array()) {
 		$query['alt'] = 'jsonc';
 		
-		$rest = Eden_Oauth::get()
+		$rest = Eden_Oauth::i()
 			->getConsumer($url, $this->_key, $this->_secret)
 			->setHeaders(self::VERSION_HEADER, self::GDATA_VERSION)
 			->setToken($this->_accessToken, $this->_accessSecret)
@@ -169,7 +169,7 @@ class Eden_Google_Base extends Eden_Oauth_Base {
 		$headers[] = Eden_Oauth_Consumer::POST_HEADER;
 		$headers[] = 'Content-Type: application/json';
 		
-		$rest = Eden_Oauth::get()
+		$rest = Eden_Oauth::i()
 			->getConsumer($url, $this->_key, $this->_secret)
 			->setToken($this->_accessToken, $this->_accessSecret)
 			->setSignatureToHmacSha1();
@@ -198,7 +198,7 @@ class Eden_Google_Base extends Eden_Oauth_Base {
 		$url .= $connector.$authorization;
 		
 		//set curl
-		$curl = Eden_Curl::get()
+		$curl = Eden_Curl::i()
 			->verifyHost(false)
 			->verifyPeer(false)
 			->setUrl($url)

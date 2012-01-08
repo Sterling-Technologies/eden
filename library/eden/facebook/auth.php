@@ -34,7 +34,7 @@ class Eden_Facebook_Auth extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($key, $secret) {
+	public static function i($key, $secret) {
 		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
 	
@@ -77,7 +77,7 @@ class Eden_Facebook_Auth extends Eden_Class {
 		$parameters = http_build_query($parameters);
 		$url 		= self::AUTHENTICATION_APP_URL.'?'.$parameters;
 		
-		$response = Eden_Curl::get()
+		$response = Eden_Curl::i()
 			->setUrl($url)
 			->setConnectTimeout(10)
 			->setTimeout(60)

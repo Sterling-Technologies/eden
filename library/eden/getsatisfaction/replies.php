@@ -34,7 +34,7 @@ class Eden_Getsatisfaction_Replies extends Eden_Getsatisfaction_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($key, $secret) {
+	public static function i($key, $secret) {
 		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
 	
@@ -43,14 +43,14 @@ class Eden_Getsatisfaction_Replies extends Eden_Getsatisfaction_Base {
 	/* Public Methods
 	-------------------------------*/
 	public function setUser($user) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
 		
 		$this->_url = sprintf(self::URL_PEOPLE, $user);
 		return $this;
 	}
 	
 	public function setTopic($topic) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
 		
 		$this->_url = sprintf(self::URL_TOPIC, $topic);
 		return $this;
@@ -81,7 +81,7 @@ class Eden_Getsatisfaction_Replies extends Eden_Getsatisfaction_Base {
 	}
 	
 	public function setPage($page = 0) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'int');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
 		if($page < 0) {
 			$page = 0;
@@ -93,7 +93,7 @@ class Eden_Getsatisfaction_Replies extends Eden_Getsatisfaction_Base {
 	}
 	
 	public function setLimit($limit = 10) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'int');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
 		if($limit < 0) {
 			$limit = 10;
@@ -113,7 +113,7 @@ class Eden_Getsatisfaction_Replies extends Eden_Getsatisfaction_Base {
 	}
 	
 	public function reply($topic, $content, $face = NULL, $feeling = NULL, $intensity = NULL) {
-		Eden_Getsatisfaction_Error::get()
+		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string', 'numeric')
 			->argument(2, 'string')
 			->argument(3, 'string', 'null')

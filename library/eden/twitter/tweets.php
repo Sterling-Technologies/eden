@@ -37,7 +37,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($key, $secret) {
+	public static function i($key, $secret) {
 		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
 	
@@ -56,7 +56,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 */
 	 public function getWhoRetweeted($id, $count = NULL, $page = NULL) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int')						//Argument 1 must be an integer
 			->argument(2, 'int')						//Argument 2 must be an integer
 			->argument(3, 'int');						//Argument 3 must be an integer
@@ -86,7 +86,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 */
 	 public function getWhoRetweetedIds($id, $count = NULL, $page = NULL, $stringify = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int')						//Argument 1 must be an integer
 			->argument(2, 'int')						//Argument 2 must be an integer
 			->argument(3, 'int')						//Argument 3 must be an integer
@@ -123,7 +123,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 */
 	 public function getRetweets($id, $count = NULL, $trim = false, $entities = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int')						//Argument 1 must be an integer
 			->argument(2, 'int')						//Argument 2 must be an integer
 			->argument(3, 'bool')						//Argument 3 must be an boolean
@@ -157,7 +157,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 */
 	 public function getDetail($id, $trim = false, $entities = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int')						//Argument 1 must be an integer
 			->argument(2, 'bool')						//Argument 2 must be an boolean
 			->argument(3, 'bool');						//Argument 3 must be an boolean
@@ -186,7 +186,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 */
 	 public function remove($id, $entities = false, $trim = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int')						//Argument 1 must be an integer
 			->argument(2, 'bool')						//Argument 2 must be an boolean
 			->argument(3, 'bool');						//Argument 3 must be an boolean
@@ -215,7 +215,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 */
 	 public function retweet($id, $entities = false, $trim = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int')						//Argument 1 must be an integer
 			->argument(2, 'bool')						//Argument 2 must be an boolean
 			->argument(3, 'bool');						//Argument 3 must be an boolean
@@ -249,7 +249,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 */
 	 public function update($status, $reply = NULL, $lat = NULL, $long = NULL, $place = NULL, $display = NULL, $trim = FALSE, $entities = FALSE, $wrap = FALSE) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string')						//Argument 1 must be a string
 			->argument(2, 'string')						//Argument 2 must be a string
 			->argument(3, 'float')						//Argument 3 must be a float
@@ -317,7 +317,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 */
 	 public function updateMedia($status, $media, $sensitive = NULL, $id = NULL, $lat = NULL, $long = NULL, $place = NULL, $display = NULL) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string')					//Argument 1 must be a string
 			->argument(2, 'string')					//Argument 2 must be a string
 			->argument(3, 'boolean')				//Argument 3 must be a boolean 

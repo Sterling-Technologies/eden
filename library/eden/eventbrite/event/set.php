@@ -31,7 +31,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 	
@@ -41,7 +41,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	public function setId($id) {
 		//Argument 1 must be int
-		Eden_Eventbrite_Error::get()->argument(1, 'int');
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
 		
 		$query['event_id'] = $id;
 		
@@ -50,7 +50,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setTitle($title) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['title'] = $title;
 		
@@ -59,7 +59,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setDescription($description) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['description'] = $description;
 		
@@ -68,7 +68,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setStart($start) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string', 'int');
+		Eden_Eventbrite_Error::i()->argument(1, 'string', 'int');
 		
 		if(is_string($start)) {
 			$start = strtotime($start);
@@ -83,7 +83,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setEnd($end) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string', 'int');
+		Eden_Eventbrite_Error::i()->argument(1, 'string', 'int');
 		
 		if(is_string($end)) {
 			$end = strtotime($end);
@@ -98,7 +98,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setTimezone($zone) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['timezone'] = $zone;
 		
@@ -119,7 +119,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setUrl($url) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['personalized_url'] = $url;
 		
@@ -128,7 +128,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setVenue($venue) {
 		//Argument 1 must be a numeric
-		Eden_Eventbrite_Error::get()->argument(1, 'numeric');
+		Eden_Eventbrite_Error::i()->argument(1, 'numeric');
 		
 		$query['venue_id'] = $venue;
 		
@@ -137,7 +137,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setOrganizer($organizer) {
 		//Argument 1 must be a numeric
-		Eden_Eventbrite_Error::get()->argument(1, 'numeric');
+		Eden_Eventbrite_Error::i()->argument(1, 'numeric');
 		
 		$query['organizer_id'] = $organizer;
 		
@@ -146,7 +146,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setCapacity($capacity) {
 		//Argument 1 must be a numeric
-		Eden_Eventbrite_Error::get()->argument(1, 'numeric');
+		Eden_Eventbrite_Error::i()->argument(1, 'numeric');
 		
 		$query['capacity'] = $capacity;
 		
@@ -155,7 +155,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setCurrency($currency) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['currency'] = $currency;
 		
@@ -164,7 +164,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setStatus($status) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['status'] = $status;
 		
@@ -173,7 +173,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setHeader($html) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['custom_header'] = $html;
 		
@@ -182,7 +182,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setFooter($html) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['custom_footer'] = $html;
 		
@@ -191,7 +191,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setBackground($color) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['background_color'] = $color;
 		
@@ -200,7 +200,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setTextColor($color) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['text_color'] = $color;
 		
@@ -209,7 +209,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setLinkColor($color) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['link_color'] = $color;
 		
@@ -218,7 +218,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setTitleColor($color) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['title_text_color'] = $color;
 		
@@ -227,7 +227,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setBoxBackground($color) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['box_background_color'] = $color;
 		
@@ -236,7 +236,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setBoxColor($color) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['box_text_color'] = $color;
 		
@@ -245,7 +245,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setBorderColor($color) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['box_border_color'] = $color;
 		
@@ -254,7 +254,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setHeaderBackground($color) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['box_header_background_color'] = $color;
 		
@@ -263,7 +263,7 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function setHeaderColor($color) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['box_header_text_color'] = $color;
 		
@@ -272,20 +272,20 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 	
 	public function send() {
 		if(!isset($this->_query['title'])) {
-			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::TITLE_NOT_SET)->trigger();
+			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::TITLE_NOT_SET)->trigger();
 		}
 		
 		if(!isset($this->_query['start_date'])) {
-			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::START_NOT_SET)->trigger();
+			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::START_NOT_SET)->trigger();
 		}
 		
 		
 		if(!isset($this->_query['end_date'])) {
-			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::END_NOT_SET)->trigger();
+			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::END_NOT_SET)->trigger();
 		}
 		
 		if(!isset($this->_query['timezone'])) {
-			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::ZONE_NOT_SET)->trigger();
+			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::ZONE_NOT_SET)->trigger();
 		}
 		
 		$url = self::URL_NEW;
@@ -294,27 +294,27 @@ class Eden_Eventbrite_Event_Set extends Eden_Eventbrite_Base {
 			$url = self::URL_UPDATE;
 			
 			if(!isset($this->_query['privacy'])) {
-				Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::PRIVACY_NOT_SET)->trigger();
+				Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::PRIVACY_NOT_SET)->trigger();
 			}
 			
 			if(!isset($this->_query['personalized_url'])) {
-				Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::URL_NOT_SET)->trigger();
+				Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::URL_NOT_SET)->trigger();
 			}
 			
 			if(!isset($this->_query['organizer_id'])) {
-				Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::ORGANIZER_NOT_SET)->trigger();
+				Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::ORGANIZER_NOT_SET)->trigger();
 			}
 			
 			if(!isset($this->_query['venue_id'])) {
-				Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::VENUE_NOT_SET)->trigger();
+				Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::VENUE_NOT_SET)->trigger();
 			}
 			
 			if(!isset($this->_query['capacity'])) {
-				Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::CAPACITY_NOT_SET)->trigger();
+				Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::CAPACITY_NOT_SET)->trigger();
 			}
 			
 			if(!isset($this->_query['currency'])) {
-				Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::CURRENCY_NOT_SET)->trigger();
+				Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::CURRENCY_NOT_SET)->trigger();
 			}
 		}
 		

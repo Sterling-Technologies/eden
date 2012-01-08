@@ -37,7 +37,7 @@ class Eden_Mysql_Alter extends Eden_Sql_Query {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($name = NULL) {
+	public static function i($name = NULL) {
 		return self::_getMultiple(__CLASS__, $name);
 	}
 	
@@ -59,7 +59,7 @@ class Eden_Mysql_Alter extends Eden_Sql_Query {
 	 */
 	public function setName($name) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_name = $name;
 		return $this;
@@ -75,7 +75,7 @@ class Eden_Mysql_Alter extends Eden_Sql_Query {
 	 */
 	public function changeField($name, array $attributes) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_changeFields[$name] = $attributes;
 		return $this;
@@ -90,7 +90,7 @@ class Eden_Mysql_Alter extends Eden_Sql_Query {
 	 */
 	public function addField($name, array $attributes) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_addFields[$name] = $attributes;
 		return $this;
@@ -104,7 +104,7 @@ class Eden_Mysql_Alter extends Eden_Sql_Query {
 	 */
 	public function removeField($name) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_removeFields[] = $name;
 		return $this;
@@ -118,7 +118,7 @@ class Eden_Mysql_Alter extends Eden_Sql_Query {
 	 */
 	public function addKey($name) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_addKeys[] = '`'.$name.'`';
 		return $this;
@@ -132,7 +132,7 @@ class Eden_Mysql_Alter extends Eden_Sql_Query {
 	 */
 	public function removeKey($name) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_removeKeys[] = $name;
 		return $this;
@@ -146,7 +146,7 @@ class Eden_Mysql_Alter extends Eden_Sql_Query {
 	 */
 	public function addUniqueKey($name) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_addUniqueKeys[] = '`'.$name.'`';
 		return $this;
@@ -160,7 +160,7 @@ class Eden_Mysql_Alter extends Eden_Sql_Query {
 	 */
 	public function removeUniqueKey($name) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_removeUniqueKeys[] = $name;
 		return $this;
@@ -174,7 +174,7 @@ class Eden_Mysql_Alter extends Eden_Sql_Query {
 	 */
 	public function addPrimaryKey($name) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_addPrimaryKeys[] = '`'.$name.'`';
 		return $this;
@@ -188,7 +188,7 @@ class Eden_Mysql_Alter extends Eden_Sql_Query {
 	 */
 	public function removePrimaryKey($name) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_removePrimaryKeys[] = $name;
 		return $this;

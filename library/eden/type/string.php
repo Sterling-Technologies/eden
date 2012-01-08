@@ -55,13 +55,13 @@ class Eden_Type_String extends Eden_Type_Abstract {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($data) {
+	public static function i($data) {
 		if($data instanceof Eden_Type_String) {
 			return $data;
 		}
 		
 		//argument 1 must be scalar
-		Eden_Type_Error::get()->argument(1, 'scalar');
+		Eden_Type_Error::i()->argument(1, 'scalar');
 		
 		$data = (string) $data;
 		
@@ -84,7 +84,7 @@ class Eden_Type_String extends Eden_Type_Abstract {
 	 */
 	public function camelize($prefix = '-') {
 		//argument 1 must be a string
-		Eden_Type_Error::get()->argument(1, 'string');
+		Eden_Type_Error::i()->argument(1, 'string');
 		
 		$this->_data = str_replace($prefix, ' ', $this->_data);
 		$this->_data = str_replace(' ', '', ucwords($this->_data));
@@ -102,7 +102,7 @@ class Eden_Type_String extends Eden_Type_Abstract {
 	 */
 	public function uncamelize($prefix = '-') {
 		//argument 1 must be a string
-		Eden_Type_Error::get()->argument(1, 'string');
+		Eden_Type_Error::i()->argument(1, 'string');
 		
 		$this->_data = strtolower(preg_replace("/([A-Z])/", $prefix."$1", $this->_data));
 		
@@ -132,7 +132,7 @@ class Eden_Type_String extends Eden_Type_Abstract {
 	 */
 	public function titlize($prefix = '-') {
 		//argument 1 must be a string
-		Eden_Type_Error::get()->argument(1, 'string');
+		Eden_Type_Error::i()->argument(1, 'string');
 		
 		$this->_data = ucwords(str_replace($prefix, ' ', $this->_data));
 		

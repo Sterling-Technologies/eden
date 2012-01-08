@@ -40,7 +40,7 @@ class Eden_Getsatisfaction_Base extends Eden_Oauth_Base {
 	-------------------------------*/
 	public function __construct($key, $secret) {
 		//argument test
-		Eden_Getsatisfaction_Error::get()
+		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string
 			
@@ -58,10 +58,10 @@ class Eden_Getsatisfaction_Base extends Eden_Oauth_Base {
 	 */
 	public function getLoginUrl($redirect) {
 		//Argument 1 must be a string
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string');
 		
 		//get the token
-		$token = Eden_Oauth::get()
+		$token = Eden_Oauth::i()
 			->getConsumer(self::REQUEST_URL, $this->_key, $this->_secret)
 			->useAuthorization()
 			->setMethodToPost()
@@ -104,11 +104,11 @@ class Eden_Getsatisfaction_Base extends Eden_Oauth_Base {
 	 */
 	public function getAccessToken($token, $secret) {
 		//argument test
-		Eden_Google_Error::get()
+		Eden_Google_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string
 			
-		return Eden_Oauth::get()
+		return Eden_Oauth::i()
 			->getConsumer(self::ACCESS_URL, $this->_key, $this->_secret)
 			->useAuthorization()
 			->setMethodToPost()
@@ -138,7 +138,7 @@ class Eden_Getsatisfaction_Base extends Eden_Oauth_Base {
 	 * @return array
 	 */
 	public function getMeta($key = NULL) {
-		Eden_Google_Error::get()->argument(1, 'string', 'null');
+		Eden_Google_Error::i()->argument(1, 'string', 'null');
 		
 		if(isset($this->_meta[$key])) {
 			return $this->_meta[$key];
@@ -150,7 +150,7 @@ class Eden_Getsatisfaction_Base extends Eden_Oauth_Base {
 	/* Protected Methods
 	-------------------------------*/
 	protected function _getResponse($url, array $query = array()) {
-		$rest = Eden_Oauth::get()
+		$rest = Eden_Oauth::i()
 			->getConsumer($url, $this->_key, $this->_secret)
 			->setHeaders(self::VERSION_HEADER, self::GDATA_VERSION)
 			->setToken($this->_accessToken, $this->_accessSecret)
@@ -164,7 +164,7 @@ class Eden_Getsatisfaction_Base extends Eden_Oauth_Base {
 	}
 	
 	protected function _post($url, $query = array(), $jsonEncode = false) {
-		$rest = Eden_Oauth::get()
+		$rest = Eden_Oauth::i()
 			->getConsumer($url, $this->_key, $this->_secret)
 			->setToken($this->_accessToken, $this->_accessSecret)
 			->setMethodToPost()

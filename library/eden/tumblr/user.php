@@ -38,7 +38,7 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 	/* Magic
@@ -69,7 +69,7 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	 */
 	 public function getUser($limit = NULL, $offset = NULL, $type = NULL, $since = NULL, $reblog = NULL, $notes = NULL) {
 		//Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'integer')				//Argument 1 must be a integer
 			->argument(2, 'integer')				//Argument 2 must be a integer
 			->argument(3, 'string')					//Argument 3 must be a string
@@ -119,7 +119,7 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	 */
 	 public function getLikes($limit = NULL, $offset = NULL) {
 		//Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'integer')				//Argument 1 must be a integer
 			->argument(2, 'integer');				//Argument 2 must be a integer
 			
@@ -147,7 +147,7 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	 */
 	 public function getFollowing($limit = NULL, $offset = NULL) {
 		//Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'integer')				//Argument 1 must be a integer
 			->argument(2, 'integer');				//Argument 2 must be a integer
 			
@@ -173,7 +173,7 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	 */
 	 public function follow($url) {
 		//Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'string');			//Argument 1 must be a string
 			
 		$query = array('url' => $url);
@@ -189,7 +189,7 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	 */
 	 public function unfollow($url) {
 		//Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'string');			//Argument 1 must be a string
 			
 		$query = array('url' => $url);
@@ -206,7 +206,7 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	 */
 	 public function like($id, $reblog) {
 		//Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'integer')		//Argument 1 must be a integer
 			->argument(2, 'string');		//Argument 2 must be a string
 			
@@ -224,7 +224,7 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	 */
 	 public function unlike($id, $reblog) {
 		//Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'integer')		//Argument 1 must be a integer
 			->argument(2, 'string');		//Argument 2 must be a string
 			

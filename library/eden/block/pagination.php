@@ -35,7 +35,7 @@ class Eden_Block_Pagination extends Eden_Block {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($total) {
+	public static function i($total) {
 		return self::_getMultiple(__CLASS__, $total);
 	}
 	
@@ -54,7 +54,7 @@ class Eden_Block_Pagination extends Eden_Block {
 	 * @return this 
 	 */
 	public function setStart($start) {
-		Front_Error::get()->argument(1, 'int');
+		Front_Error::i()->argument(1, 'int');
 		if($start < 0) {
 			$start = 0;
 		}
@@ -71,7 +71,7 @@ class Eden_Block_Pagination extends Eden_Block {
 	 * @return this 
 	 */
 	public function setRange($range) {
-		Front_Error::get()->argument(1, 'int');
+		Front_Error::i()->argument(1, 'int');
 		if($range < 0) {
 			$range = 1;
 		}
@@ -88,7 +88,7 @@ class Eden_Block_Pagination extends Eden_Block {
 	 * @return this 
 	 */
 	public function setPage($page) {
-		Front_Error::get()->argument(1, 'int');
+		Front_Error::i()->argument(1, 'int');
 		if($page < 1) {
 			$page = 1;
 		}
@@ -105,7 +105,7 @@ class Eden_Block_Pagination extends Eden_Block {
 	 * @return this 
 	 */
 	public function setShow($show) {
-		Front_Error::get()->argument(1, 'int');
+		Front_Error::i()->argument(1, 'int');
 		if($show < 1) {
 			$show = 1;
 		}

@@ -38,7 +38,7 @@ class Eden_Mysql_Model extends Eden_Model {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		$data = self::_getStart(func_get_args());
 		return self::_getMultiple(__CLASS__, $data);
 	}
@@ -64,7 +64,7 @@ class Eden_Mysql_Model extends Eden_Model {
 	 */
 	public function setTable($table) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_table  = $table;
 		return $this;
@@ -79,7 +79,7 @@ class Eden_Mysql_Model extends Eden_Model {
 	 */
 	public function formatTime($column, $format = self::DATETIME) {
 		//Argument Test
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 1 must be a string
 		
@@ -116,7 +116,7 @@ class Eden_Mysql_Model extends Eden_Model {
 	 */
 	public function save($table = NULL, Eden_Mysql $database = NULL) {
 		//Argument 1 must be a string
-		$error = Eden_Mysql_Error::get()->argument(1, 'string', 'null');
+		$error = Eden_Mysql_Error::i()->argument(1, 'string', 'null');
 		
 		//if no table
 		if(is_null($table)) {
@@ -186,7 +186,7 @@ class Eden_Mysql_Model extends Eden_Model {
 	 */
 	public function remove($table = NULL, Eden_Mysql $database = NULL) {
 		//Argument 1 must be a string
-		$error = Eden_Mysql_Error::get()->argument(1, 'string', 'null');
+		$error = Eden_Mysql_Error::i()->argument(1, 'string', 'null');
 		
 		//if no table
 		if(is_null($table)) {

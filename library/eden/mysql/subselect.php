@@ -29,7 +29,7 @@ class Eden_Mysql_Subselect extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get(Eden_Sql_Select $parentQuery, $select = '*') {
+	public static function i(Eden_Sql_Select $parentQuery, $select = '*') {
 		return self::_getMultiple(__CLASS__, $parentQuery, $select);
 	}
 	
@@ -37,7 +37,7 @@ class Eden_Mysql_Subselect extends Eden_Class {
 	-------------------------------*/
 	public function __construct(Eden_Sql_Select $parentQuery, $select = '*') {
 		//Argument 2 must be a string
-		Eden_Mysql_Error::get()->argument(2, 'string');
+		Eden_Mysql_Error::i()->argument(2, 'string');
 		
 		$this->setParentQuery($parentQuery);
 		$this->_select = is_array($select) ? implode(', ', $select) : $select;

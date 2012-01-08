@@ -35,7 +35,7 @@ class Eden_Facebook_Post extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($token) {
+	public static function i($token) {
 		return self::_getMultiple(__CLASS__, $token);
 	}
 	
@@ -43,7 +43,7 @@ class Eden_Facebook_Post extends Eden_Class {
 	-------------------------------*/
 	public function __construct($token) {
 		//Argument 1 must be a string
-		Eden_Facebook_Error::get()->argument(1, 'string');	
+		Eden_Facebook_Error::i()->argument(1, 'string');	
 			
 		$this->_token 	= $token;
 	}
@@ -58,7 +58,7 @@ class Eden_Facebook_Post extends Eden_Class {
 	 */
 	public function setMessage($message) {
 		//Argument 1 must be a string
-		Eden_Facebook_Error::get()->argument(1, 'string');
+		Eden_Facebook_Error::i()->argument(1, 'string');
 		
 		$this->_message = $message;
 		return $this;
@@ -66,7 +66,7 @@ class Eden_Facebook_Post extends Eden_Class {
 	
 	public function setTitle($title){
 		//Argument 1 must be a string
-		Eden_Facebook_Error::get()->argument(1, 'string');
+		Eden_Facebook_Error::i()->argument(1, 'string');
 		
 		$this->_title = $title;
 		return $this;
@@ -74,7 +74,7 @@ class Eden_Facebook_Post extends Eden_Class {
 	
 	public function setDescription($description){
 		//Argument 1 must be a string
-		Eden_Facebook_Error::get()->argument(1, 'string');
+		Eden_Facebook_Error::i()->argument(1, 'string');
 		
 		$this->_description = $description;
 		return $this;
@@ -82,7 +82,7 @@ class Eden_Facebook_Post extends Eden_Class {
 	
 	public function setIcon($url){
 		//Argument 1 must be a string
-		Eden_Facebook_Error::get()->argument(1, 'string');
+		Eden_Facebook_Error::i()->argument(1, 'string');
 		
 		$this->_icon = $url;
 		return $this;
@@ -98,7 +98,7 @@ class Eden_Facebook_Post extends Eden_Class {
 	 */
 	public function setLink($url) {
 		//Argument 1 must be a string
-		Eden_Facebook_Error::get()->argument(1, 'string');
+		Eden_Facebook_Error::i()->argument(1, 'string');
 		
 		$this->_link = $url;
 		return $this;
@@ -112,7 +112,7 @@ class Eden_Facebook_Post extends Eden_Class {
 	 */
 	public function setPicture($url) {
 		//Argument 1 must be a string
-		Eden_Facebook_Error::get()->argument(1, 'string');
+		Eden_Facebook_Error::i()->argument(1, 'string');
 		
 		$this->_picture = $url;
 		return $this;
@@ -126,7 +126,7 @@ class Eden_Facebook_Post extends Eden_Class {
 	 */
 	public function setVideo($url) {
 		//Argument 1 must be a string
-		Eden_Facebook_Error::get()->argument(1, 'string');
+		Eden_Facebook_Error::i()->argument(1, 'string');
 		
 		$this->_video = $url;
 		return $this;	
@@ -183,7 +183,7 @@ class Eden_Facebook_Post extends Eden_Class {
 		$url .= '?'.http_build_query($query);
 		
 		//send it into curl
-		$response = Eden_Curl::get()
+		$response = Eden_Curl::i()
 			->setUrl($url)										//sets the url
 			->setConnectTimeout(10)								//sets connection timeout to 10 sec.
 			->setFollowLocation(true)							//sets the follow location to true 

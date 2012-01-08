@@ -35,7 +35,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($select = '*') {
+	public static function i($select = '*') {
 		return self::_getMultiple(__CLASS__, $select);
 	}
 	
@@ -56,7 +56,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	 */
 	public function select($select = '*') {
 		//Argument 1 must be a string or array
-		Eden_Sql_Error::get()->argument(1, 'string', 'array');
+		Eden_Sql_Error::i()->argument(1, 'string', 'array');
 		
 		//if select is an array
 		if(is_array($select)) {
@@ -78,7 +78,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	 */
 	public function from($from) {
 		//Argument 1 must be a string
-		Eden_Sql_Error::get()->argument(1, 'string');
+		Eden_Sql_Error::i()->argument(1, 'string');
 		
 		$this->_from = $from;
 		return $this;
@@ -97,7 +97,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	 */
 	public function join($type, $table, $where, $using = true) {
 		//argument test
-		Eden_Sql_Error::get()
+		Eden_Sql_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string') 	//Argument 2 must be a string
 			->argument(3, 'string') 	//Argument 3 must be a string
@@ -120,7 +120,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	 */
 	public function innerJoin($table, $where, $using = true) {
 		//argument test
-		Eden_Sql_Error::get()
+		Eden_Sql_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string') 	//Argument 2 must be a string
 			->argument(3, 'bool'); 		//Argument 3 must be a boolean
@@ -139,7 +139,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	 */
 	public function outerJoin($table, $where, $using = true) {
 		//argument test
-		Eden_Sql_Error::get()
+		Eden_Sql_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string') 	//Argument 2 must be a string
 			->argument(3, 'bool'); 		//Argument 3 must be a boolean
@@ -158,7 +158,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	 */
 	public function leftJoin($table, $where, $using = true) {
 		//argument test
-		Eden_Sql_Error::get()
+		Eden_Sql_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string') 	//Argument 2 must be a string
 			->argument(3, 'bool'); 		//Argument 3 must be a boolean
@@ -177,7 +177,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	 */
 	public function rightJoin($table, $where, $using = true) {
 		//argument test
-		Eden_Sql_Error::get()
+		Eden_Sql_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string') 	//Argument 2 must be a string
 			->argument(3, 'bool'); 		//Argument 3 must be a boolean
@@ -194,7 +194,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	 */
 	public function where($where) {
 		//Argument 1 must be a string or array
-		Eden_Sql_Error::get()->argument(1, 'string', 'array');
+		Eden_Sql_Error::i()->argument(1, 'string', 'array');
 		
 		if(is_string($where)) {
 			$where = array($where);
@@ -215,7 +215,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	 */
 	public function sortBy($field, $order = 'ASC') {
 		//argument test
-		Eden_Sql_Error::get()
+		Eden_Sql_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string'); 	//Argument 2 must be a string
 		
@@ -233,7 +233,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	 */
 	public function groupBy($group) {
 		 //Argument 1 must be a string or array
-		 Eden_Sql_Error::get()->argument(1, 'string', 'array');	
+		 Eden_Sql_Error::i()->argument(1, 'string', 'array');	
 			
 		if(is_string($group)) {
 			$group = array($group); 
@@ -253,7 +253,7 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	 */
 	public function limit($page, $length) {
 		//argument test
-		Eden_Sql_Error::get()
+		Eden_Sql_Error::i()
 			->argument(1, 'numeric')	//Argument 1 must be a number
 			->argument(2, 'numeric');	//Argument 2 must be a number
 		

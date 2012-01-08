@@ -8,9 +8,6 @@
  */
 
 require_once dirname(__FILE__).'/error.php';
-require_once dirname(__FILE__).'/route.php';
-require_once dirname(__FILE__).'/when.php';
-require_once dirname(__FILE__).'/map.php';
 
 /**
  * The base class for all classes wishing to integrate with Eve.
@@ -53,7 +50,7 @@ class Eden_Class {
 			//want to load a class so lets try
 			try {
 				//return the class
-				return Eden_Route::get()->getClassArray($name, $args);
+				return Eden_Route::i()->getClass($name, $args);
 			//only if there's a route exception do we want to catch it
 			//this is because a class can throw an exception in their construct
 			//so if that happens then we do know that the class has actually
@@ -63,9 +60,9 @@ class Eden_Class {
 		
 		try {
 			//let the router handle this
-			return Eden_Route::get()->callMethod($this, $name, true, $args);
+			return Eden_Route::i()->getMethod()->call($this, $name, $args);
 		} catch(Eden_Route_Error $e) {
-			Eden_Error::get($e->getMessage())->trigger();
+			Eden_Error::i($e->getMessage())->trigger();
 		}
 	}
 	
@@ -79,28 +76,29 @@ class Eden_Class {
 	 */
 	public function routeThis($route) {
 		//argument 1 must be a string
-		Eden_Error::get()->argument(1, 'string');
+		Eden_Error::i()->argument(1, 'string');
 		
-		Eden_Route::get()->routeClass($route, get_class($this));
-		return $this;
-	}
-	
-	/**
-	 * Creates a method route for this class.
-	 * 
-	 * @param *string the method route name
-	 * @param *string the class name to route to
-	 * @param *string the method name to route to
-	 * @return Eden_Class
-	 */
-	public function routeMethod($routeMethod, $class, $method) {
-		//argument 1-3 must be a string
-		Eden_Error::get()
-			->argument(1, 'string')
-			->argument(2, 'string')
-			->argument(3, 'string');
+		if(func_num_args() == 1) {
+			//when someone calls a class call this instead
+			Eden_Route::i()->getClass()->route($route, $this);
+			return $this;
+		}
 		
-		Eden_Route::get()->routeMethod(get_class($this), $routeMethod, $class, $method);
+		//argument 2 must be a string
+		Eden_Error::i()->argument(2, 'string', 'object');
+		
+		$args = func_get_args();
+		
+		$source = array_shift($args);
+		$class 	= array_shift($args);
+		$destination = NULL;
+		
+		if(count($args)) {
+			$destination = array_shift($args);
+		}
+		
+		//when someone calls a method here call something ele instead
+		Eden_Route::i()->getMethod()->route($this, $source, $class, $destination);
 		return $this;
 	}
 	
@@ -112,11 +110,11 @@ class Eden_Class {
 	 * @param array
 	 * @return mixed
 	 */
-	public function callThisMethod($method, array $args = array()) {
+	public function callThis($method, array $args = array()) {
 		//argument 1 must be a string
-		Eden_Error::get()->argument(1,'string');
+		Eden_Error::i()->argument(1,'string');
 		
-		return Eden_Route::get()->callMethod($this, $method, $args);
+		return Eden_Route::i()->getMethod($this, $method, $args);
 	}
 	
 	/**
@@ -130,7 +128,7 @@ class Eden_Class {
 			return $this;
 		}
 		
-		return Eden_When::get($this, $lines);
+		return Eden_When::i($this, $lines);
 	}
 	
 	/**
@@ -139,24 +137,14 @@ class Eden_Class {
 	 * @param bool
 	 * @return this|Eden_Noop
 	 */
-	public function map(array &$list, $lines = 0) {
-		return Eden_Map::get($this, $list, $lines);
-	}
-	
-	/**
-	 * Returns the original class
-	 *
-	 * @param bool
-	 * @return this|Eden_Noop
-	 */
-	public function endWhen() {
-		return $this;
+	public function loop(array &$list, $lines = 0) {
+		return Eden_Map::i($this, $list, $lines);
 	}
 	
 	/* Protected Methods
 	-------------------------------*/
 	protected static function _getSingleton($class) {
-		$class = Eden_Route::get()->getRouteClass($class, $class);
+		$class = Eden_Route::i()->getClass()->getRoute($class);
 		
 		if(!isset(self::$_instances[$class])) {
 			$args = func_get_args();
@@ -172,7 +160,7 @@ class Eden_Class {
 		$args = func_get_args();
 		$class = array_shift($args);
 		
-		$class = Eden_Route::get()->getRouteClass($class, $class);
+		$class = Eden_Route::i()->getClass()->getRoute($class);
 		
 		return self::_getInstance($class, $args);
 	}
@@ -189,7 +177,7 @@ class Eden_Class {
 		try {
 			return $reflect->newInstanceArgs($args);
 		} catch(Reflection_Exception $e) {
-			Eden_Error::get()
+			Eden_Error::i()
 				->setMessage(Eden_Error::REFLECTION_ERROR) 
 				->addVariable($class)
 				->addVariable('new')
@@ -197,3 +185,7 @@ class Eden_Class {
 		}
 	}
 }
+
+require_once dirname(__FILE__).'/route.php';
+require_once dirname(__FILE__).'/when.php';
+require_once dirname(__FILE__).'/map.php';

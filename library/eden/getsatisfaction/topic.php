@@ -37,7 +37,7 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($key, $secret) {
+	public static function i($key, $secret) {
 		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
 	
@@ -46,14 +46,14 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 	/* Public Methods
 	-------------------------------*/
 	public function setCompany($company) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
 		
 		$this->_url = sprintf(self::URL_COMPANY, $company);
 		return $this;
 	}
 	
 	public function setCompanyProduct($company, $product) {
-		Eden_Getsatisfaction_Error::get()
+		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string', 'numeric')
 			->argument(2, 'string', 'numeric');
 		
@@ -62,7 +62,7 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 	}
 	
 	public function setCompanyTag($company, $tag) {
-		Eden_Getsatisfaction_Error::get()
+		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string', 'numeric')
 			->argument(2, 'string', 'numeric');
 			
@@ -71,21 +71,21 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 	}
 	
 	public function setProduct($product) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
 		
 		$this->_url = sprintf(self::URL_PRODUCT, $product);
 		return $this;
 	}
 	
 	public function setUser($user) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
 		
 		$this->_url = sprintf(self::URL_PEOPLE, $user);
 		return $this;
 	}
 	
 	public function setFollowed($user) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
 		
 		$this->_url = sprintf(self::URL_PEOPLE_FOLLOWED, $user);
 		return $this;
@@ -147,7 +147,7 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 	}
 	
 	public function filterSince($since) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'int');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		if(is_string($since)) {
 			$since = strtotime($since);
@@ -159,7 +159,7 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 	}
 	
 	public function filterUser($user) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'int');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_query['user'] = $user;
 		
@@ -167,7 +167,7 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 	}
 	
 	public function filterCompany($company) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'int');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_query['company'] = $company;
 		
@@ -175,7 +175,7 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 	}
 	
 	public function filterProduct($product) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'int', 'array');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int', 'array');
 		
 		if(is_array($product)) {
 			$product = implode(',', $product);
@@ -187,7 +187,7 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 	}
 	
 	public function filterTag($tag) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string');
 		
 		$this->_query['tag'] = $tag;
 		
@@ -195,7 +195,7 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 	}
 	
 	public function filterDefined($defined) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'int');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_query['user_defined_code'] = $defined;
 		
@@ -243,7 +243,7 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 	}
 	
 	public function setPage($page = 0) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'int');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
 		if($page < 0) {
 			$page = 0;
@@ -255,7 +255,7 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 	}
 	
 	public function setLimit($limit = 10) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'int');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
 		if($limit < 0) {
 			$limit = 10;

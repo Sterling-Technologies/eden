@@ -31,7 +31,7 @@ class Eden_Template extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
@@ -46,8 +46,8 @@ class Eden_Template extends Eden_Class {
 	 * @param mixed
 	 * @return this
 	 */
-	public function setData($data, $value = NULL) {
-		Eden_Template_Error::get()->argument(0, 'array', 'string');
+	public function set($data, $value = NULL) {
+		Eden_Template_Error::i()->argument(0, 'array', 'string');
 		
 		if(is_array($data)) {
 			$this->_data = $data;
@@ -66,7 +66,7 @@ class Eden_Template extends Eden_Class {
 	 * @return string
 	 */
 	public function parseString($string) {
-		Eden_Template_Error::get()->argument(0, 'string');
+		Eden_Template_Error::i()->argument(0, 'string');
 		foreach($this->_data as $key => $value) {
 			$string = str_replace($key, $value, $string);
 		}
@@ -81,7 +81,7 @@ class Eden_Template extends Eden_Class {
 	 * @return string
 	 */
 	public function parsePhp($____file) {
-		Eden_Template_Error::get()->argument(0, $____file, 'string');
+		Eden_Template_Error::i()->argument(0, $____file, 'string');
 		
 		extract($this->_data, EXTR_SKIP); 	// Extract the values to a local namespace
 		ob_start();							// Start output buffering
@@ -98,7 +98,7 @@ class Eden_Template extends Eden_Class {
 	 * @return string
 	 */
 	public function parseEngine($template) {
-		Eden_Template_Error::get()->argument(0, 'string');
+		Eden_Template_Error::i()->argument(0, 'string');
 		
 		$lines = explode("\n", $template);
 		$count = count($lines);
@@ -143,8 +143,8 @@ class Eden_Template extends Eden_Class {
 					if(isset($this->_data[$key]) && is_array($this->_data[$key])) {
 						foreach($this->_data[$key] as $value) {
 							if(is_array($value)) {
-								 $lines[$i][] = Eden_Template::get()
-								 	->setData($value)
+								 $lines[$i][] = Eden_Template::i()
+								 	->set($value)
 									->parseEngine(implode("\n", $subTemplate));
 							}
 						}
@@ -178,7 +178,7 @@ class Eden_Template_Error extends Eden_Error {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($message = NULL, $code = 0) {
+	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}

@@ -33,7 +33,7 @@ abstract class Eden_Block extends Eden_Class {
 		try {
 			return (string) $this->render();
 		} catch(Exception $e) {
-			Eden_Error_Event::get()->exceptionHandler($e);
+			Eden_Error_Event::i()->exceptionHandler($e);
 		}
 		
 		return '';
@@ -62,7 +62,7 @@ abstract class Eden_Block extends Eden_Class {
 	 * @return string
 	 */
 	public function render() {
-		return Eden_Template::get()->setData($this->getVariables())->parsePhp($this->getTemplate());
+		return Eden_Template::i()->set($this->getVariables())->parsePhp($this->getTemplate());
 	}
 	
 	/* Protected Methods

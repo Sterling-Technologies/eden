@@ -26,7 +26,7 @@ class Eden_Oauth_Server extends Eden_Oauth_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	

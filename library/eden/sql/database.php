@@ -30,7 +30,7 @@ class Eden_Sql_Database extends Eden_Event {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	
@@ -45,9 +45,9 @@ class Eden_Sql_Database extends Eden_Event {
 	 */ 
 	public function delete($table = NULL) {
 		//Argument 1 must be a string or null
-		Eden_Sql_Error::get()->argument(1, 'string', 'null');
+		Eden_Sql_Error::i()->argument(1, 'string', 'null');
 		
-		return Eden_Sql_Delete::get($table);
+		return Eden_Sql_Delete::i($table);
 	}
 	
 	/**
@@ -57,9 +57,9 @@ class Eden_Sql_Database extends Eden_Event {
 	 */ 
 	public function insert($table = NULL) {
 		//Argument 1 must be a string or null
-		Eden_Sql_Error::get()->argument(1, 'string', 'null');
+		Eden_Sql_Error::i()->argument(1, 'string', 'null');
 		
-		return Eden_Sql_Insert::get($table);
+		return Eden_Sql_Insert::i($table);
 	}
 	
 	/**
@@ -69,9 +69,9 @@ class Eden_Sql_Database extends Eden_Event {
 	 */ 
 	public function select($select = '*') {
 		//Argument 1 must be a string or array
-		Eden_Sql_Error::get()->argument(1, 'string', 'array');
+		Eden_Sql_Error::i()->argument(1, 'string', 'array');
 		
-		return Eden_Sql_Select::get($select);
+		return Eden_Sql_Select::i($select);
 	}
 	
 	/**
@@ -81,9 +81,9 @@ class Eden_Sql_Database extends Eden_Event {
 	 */ 
 	public function update($table = NULL) {
 		//Argument 1 must be a string or null
-		Eden_Sql_Error::get()->argument(1, 'string', 'null');
+		Eden_Sql_Error::i()->argument(1, 'string', 'null');
 		
-		return Eden_Sql_Update::get($table);
+		return Eden_Sql_Update::i($table);
 	}
 	
 	/* Protected Methods

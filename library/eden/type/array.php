@@ -45,13 +45,12 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 		'array_datas'				=> self::PRE,	'count'							=> self::PRE,
 		'current'					=> self::PRE,	'each'							=> self::PRE,
 		'end'						=> self::PRE,	'extract'						=> self::PRE,
-		'in_array'					=> self::PRE,	'key'							=> self::PRE,
-		'next'						=> self::PRE,	'prev'							=> self::PRE,
-		'sizeof'					=> self::PRE,
+		'key'						=> self::PRE,	'next'							=> self::PRE,	
+		'prev'						=> self::PRE,	'sizeof'						=> self::PRE,
 		
 		'array_fill'	=> self::POST,	'array_map'	=> self::POST,
 		'array_search'	=> self::POST,	'compact'	=> self::POST,
-		'implode'		=> self::POST,	
+		'implode'		=> self::POST,	'in_array'	=> self::POST,
 		
 		'array_unshift' 	=> self::REFERENCE,	'array_walk_recursive'	=> self::REFERENCE, 
 		'array_walk' 		=> self::REFERENCE,	'arsort'				=> self::REFERENCE,
@@ -67,7 +66,7 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		$data = self::_getStart(func_get_args());
 		return self::_getMultiple(__CLASS__, $data);
 	}
@@ -85,7 +84,7 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 	}
 	
 	public function __toString() {
-		return json_encode($this->getData());
+		return json_encode($this->get());
 	}
 	
 	public function __get($name) {
@@ -135,12 +134,21 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 		try {
 			return parent::__call($name, $args);
 		} catch(Eden_Error $e) {
-			Eden_Type_Error::get($e->getMessage())->trigger();
+			Eden_Type_Error::i($e->getMessage())->trigger();
 		}
 	}
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Returns if the data is empty
+	 *
+	 * @return bool
+	 */
+	public function isEmpty() {
+		return empty($this->_data);
+	}
+	
 	/**
 	 * Copies the value of source key into destination key
 	 *
@@ -160,7 +168,7 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 	 */
 	public function cut($key) {
 		//argument 1 must be scalar
-		Eden_Type_Error::get()->argument(1, 'scalar');
+		Eden_Type_Error::i()->argument(1, 'scalar');
 		
 		//if nothing to cut
 		if(!isset($this->_data[$key])) {
@@ -185,7 +193,7 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 	 */
 	public function paste($after, $value, $key = NULL) {
 		//Argument test
-		Eden_Type_Error::get()
+		Eden_Type_Error::i()
 			->argument(1, 'scalar')				//Argument 1 must be a scalar
 			->argument(3, 'scalar', 'null');	//Argument 3 must be a scalar or null
 		
@@ -359,7 +367,7 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 		$data = $args[0];
 		
 		if($data instanceof Eden_Type_Array) {
-			$data = $data->getData();
+			$data = $data->get();
 		}
 		
 		if(!is_array($data)) {

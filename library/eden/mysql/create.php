@@ -33,7 +33,7 @@ class Eden_Mysql_Create extends Eden_Sql_Query {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($name = NULL) {
+	public static function i($name = NULL) {
 		return self::_getMultiple(__CLASS__, $name);
 	}
 	
@@ -55,7 +55,7 @@ class Eden_Mysql_Create extends Eden_Sql_Query {
 	 */
 	public function setName($name) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_name = $name;
 		return $this;
@@ -69,7 +69,7 @@ class Eden_Mysql_Create extends Eden_Sql_Query {
 	 */
 	public function setComments($comments) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_comments = $comments;
 		return $this;
@@ -128,7 +128,7 @@ class Eden_Mysql_Create extends Eden_Sql_Query {
 	 */
 	public function addField($name, array $attributes) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_fields[$name] = $attributes;
 		return $this;
@@ -143,7 +143,7 @@ class Eden_Mysql_Create extends Eden_Sql_Query {
 	 */
 	public function addKey($name, array $fields) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_keys[$name] = $fields;
 		return $this;
@@ -158,7 +158,7 @@ class Eden_Mysql_Create extends Eden_Sql_Query {
 	 */
 	public function addUniqueKey($name, array $fields) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_uniqueKeys[$name] = $fields;
 		return $this;
@@ -172,7 +172,7 @@ class Eden_Mysql_Create extends Eden_Sql_Query {
 	 */
 	public function addPrimaryKey($name) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_primaryKeys[] = $name;
 		return $this;

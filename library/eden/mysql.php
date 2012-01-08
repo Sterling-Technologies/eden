@@ -60,7 +60,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($host = NULL, $name = NULL, $user = NULL, $pass = NULL) {
+	public static function i($host = NULL, $name = NULL, $user = NULL, $pass = NULL) {
 		return self::_getMultiple(__CLASS__, $host, $name, $user, $pass);
 	}
 	
@@ -68,7 +68,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	-------------------------------*/
 	public function __construct($host, $name, $user, $pass = NULL) {
 		//argument test
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -154,7 +154,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @return Eden_Mysql_Search
 	 */
 	public function search() {
-		return Eden_Mysql_Search::get($this);
+		return Eden_Mysql_Search::i($this);
 	}
 	
 	/**
@@ -163,7 +163,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @return Eden_Mysql_Model
 	 */
 	public function model(array $data = array()) {
-		return Eden_Mysql_Model::get($data)->setDatabase($this);
+		return Eden_Mysql_Model::i($data)->setDatabase($this);
 	}
 	
 	/**
@@ -172,7 +172,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @return Eden_Mysql_Collection
 	 */
 	public function collection(array $data = array()) {
-		return Eden_Mysql_Collection::get($data)->setDatabase($this);
+		return Eden_Mysql_Collection::i($data)->setDatabase($this);
 	}
 	
 	/**
@@ -182,9 +182,9 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */ 
 	public function alter($name = NULL) {
 		//Argument 1 must be a string or null
-		Eden_Mysql_Error::get()->argument(1, 'string', 'null');
+		Eden_Mysql_Error::i()->argument(1, 'string', 'null');
 		
-		return Eden_Mysql_Alter::get($name);
+		return Eden_Mysql_Alter::i($name);
 	}
 	
 	/**
@@ -194,9 +194,9 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */ 
 	public function create($name = NULL) {
 		//Argument 1 must be a string or null
-		Eden_Mysql_Error::get()->argument(1, 'string', 'null');
+		Eden_Mysql_Error::i()->argument(1, 'string', 'null');
 		
-		return Eden_Mysql_Create::get($name);
+		return Eden_Mysql_Create::i($name);
 	}
 	
 	/**
@@ -206,9 +206,9 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */ 
 	public function subselect($parentQuery, $select = '*') {
 		//Argument 2 must be a string
-		Eden_Mysql_Error::get()->argument(2, 'string');
+		Eden_Mysql_Error::i()->argument(2, 'string');
 		
-		return Eden_Mysql_Subselect::get($parentQuery, $select);
+		return Eden_Mysql_Subselect::i($parentQuery, $select);
 	}
 	
 	/**
@@ -217,7 +217,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @return Eden_Sql_Utility
 	 */ 
 	public function utility() {
-		return Eden_Mysql_Utility::get();
+		return Eden_Mysql_Utility::i();
 	}
 	
 	/**
@@ -230,7 +230,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function getRow($table, $name, $value) {
 		//argument test
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string', 'numeric');	//Argument 3 must be a string or number
@@ -261,7 +261,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	public function getRows($table, array $joins = array(), $filters = NULL, 
 		array $sort = array(), $start = 0, $range = 0, $index = NULL) {
 		//argument test
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')						//Argument 1 must be a string
 			->argument(3, 'string', 'array', 'null')	//Argument 3 must be a string number or null
 			->argument(5, 'numeric')					//Argument 5 must be a number
@@ -344,7 +344,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function getModel($table, $name, $value) {
 		//argument test
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string', 'numeric');	//Argument 3 must be a string or number
@@ -355,7 +355,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 			return NULL;
 		}
 		
-		return Eden_Mysql_Model::get($result)->setDatabase($this)->setTable($table);
+		return Eden_Mysql_Model::i($result)->setDatabase($this)->setTable($table);
 	}
 	
 	/**
@@ -372,7 +372,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	public function getCollection($table, array $joins = array(), $filters = NULL, 
 		array $sort = array(), $start = 0, $range = 0, $index = NULL) {
 		//argument test
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')						//Argument 1 must be a string
 			->argument(3, 'string', 'array', 'null')	//Argument 3 must be a string number or null
 			->argument(5, 'numeric')					//Argument 5 must be a number
@@ -386,10 +386,10 @@ class Eden_Mysql extends Eden_Sql_Database {
 		}
 		
 		if(!is_null($index)) {
-			return Eden_Mysql_Model::get($results);
+			return Eden_Mysql_Model::i($results);
 		}
 		
-		return Eden_Mysql_Collection::get($results)->setDatabase($this)->setTable($table);
+		return Eden_Mysql_Collection::i($results)->setDatabase($this)->setTable($table);
 	}
 	
 	/**
@@ -401,7 +401,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function getRowsCount($table, array $joins = array(), $filters = NULL) {
 		//argument test
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')						//Argument 1 must be a string
 			->argument(3, 'string', 'array', 'null');	//Argument 3 must be a string number or null
 		
@@ -451,7 +451,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function insertRow($table, array $setting, $bind = true) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string')->argument(3, 'array', 'bool');
+		Eden_Mysql_Error::i()->argument(1, 'string')->argument(3, 'array', 'bool');
 		
 		$query = $this->insert($table);
 		
@@ -485,7 +485,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function insertRows($table, array $settings, $bind = true) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string')->argument(3, 'array', 'bool');
+		Eden_Mysql_Error::i()->argument(1, 'string')->argument(3, 'array', 'bool');
 		
 		$query = $this->insert($table);
 		
@@ -522,7 +522,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function updateRows($table, array $setting, $filters = NULL, $bind = true) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string')->argument(4, 'array', 'bool');
+		Eden_Mysql_Error::i()->argument(1, 'string')->argument(4, 'array', 'bool');
 		
 		$query = $this->update($table);
 		
@@ -569,7 +569,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function setRow($table, $name, $value, array $setting) {
 		//argument test
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string', 'numeric');	//Argument 3 must be a string or number
@@ -596,7 +596,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function deleteRows($table, $filters = NULL) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$query = $this->delete($table);
 		
@@ -627,7 +627,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function getPrimaryKey($table) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$query = $this->utility();
 		$results = $this->getColumns($table, "`Key` = 'PRI'");
@@ -642,7 +642,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function getColumns($table, $filters = NULL) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$query = $this->utility();
 		
@@ -667,7 +667,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function getTableSchema($table) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$backup = array();
 		//get the schema
@@ -742,7 +742,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function getTables($like = NULL) {
 		//Argument 1 must be a string or null
-		Eden_Mysql_Error::get()->argument(1, 'string', 'null');
+		Eden_Mysql_Error::i()->argument(1, 'string', 'null');
 		
 		$query = $this->utility();
 		$like = $like ? $this->bind($like) : NULL;
@@ -783,7 +783,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function query($query, array $binds = array()) {
 		//Argument 1 must be a string or null
-		Eden_Mysql_Error::get()->argument(1, 'string', 'Eden_Sql_Query');
+		Eden_Mysql_Error::i()->argument(1, 'string', 'Eden_Sql_Query');
 		
 		$connection = $this->getConnection();
 		$query 		= (string) $query;
@@ -800,7 +800,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 				$query = str_replace($key, "'$value'", $query);
 			}
 			
-			Eden_Mysql_Error::get()
+			Eden_Mysql_Error::i()
 				->setMessage(Eden_Mysql_Error::QUERY_ERROR)
 				->addVariable($query)
 				->addVariable($error[2])
@@ -829,7 +829,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function bind($value) {
 		//Argument 1 must be an array, string or number
-		Eden_Mysql_Error::get()->argument(1, 'array', 'string', 'numeric', 'null');
+		Eden_Mysql_Error::i()->argument(1, 'array', 'string', 'numeric', 'null');
 		
 		if(is_array($value)) {
 			foreach($value as $i => $item) {

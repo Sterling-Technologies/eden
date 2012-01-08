@@ -37,7 +37,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 	/* Magic
@@ -63,7 +63,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 */
 	 public function getTimeline($count = NULL, $since = NULL, $max = NULL, $page = NULL, $trim = false, $include = false, $entities = false, $replies = false, $detail =false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int', 'null')				//Argument 1 must be an integer
 			->argument(2, 'int', 'null')				//Argument 2 must be an integer
 			->argument(3, 'int', 'null')				//Argument 3 must be an integer
@@ -133,7 +133,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 */
 	 public function getMention($count = NULL, $since = NULL, $max = NULL, $page = NULL, $trim = false, $include = false, $entities = false, $detail =false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int', 'null')				//Argument 1 must be an integer
 			->argument(2, 'int', 'null')				//Argument 2 must be an integer
 			->argument(3, 'int', 'null')				//Argument 3 must be an integer
@@ -194,7 +194,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 */
 	 public function getPublic($trim = false, $entities = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'bool')						//Argument 1 must be a boolean
 			->argument(2, 'bool');						//Argument 2 must be a boolean
 			
@@ -223,7 +223,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 */
 	 public function getBy($count = NULL, $since = NULL, $max = NULL, $page = NULL, $trim = false, $entities = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int', 'null')				//Argument 1 must be an integer
 			->argument(2, 'int', 'null')				//Argument 2 must be an integer
 			->argument(3, 'int', 'null')				//Argument 3 must be an integer
@@ -277,7 +277,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 */
 	 public function getTo($count = NULL, $since = NULL, $max = NULL, $page = NULL, $trim = false, $entities = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int', 'null')				//Argument 1 must be an integer
 			->argument(2, 'int', 'null')				//Argument 2 must be an integer
 			->argument(3, 'int', 'null')				//Argument 3 must be an integer
@@ -331,7 +331,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 */
 	 public function getOf($count = NULL, $since = NULL, $max = NULL, $page = NULL, $trim = false, $entities = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int', 'null')				//Argument 1 must be an integer
 			->argument(2, 'int', 'null')				//Argument 2 must be an integer
 			->argument(3, 'int', 'null')				//Argument 3 must be an integer
@@ -393,7 +393,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 */
 	 public function getList($id = NULL, $since = NULL, $count = NULL, $max = NULL, $page = NULL, $trim = false, $include = false, $entities = false, $replies = false, $detail =false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int','string', 'null')		//Argument 1 must be an integer
 			->argument(2, 'int', 'null')				//Argument 2 must be an integer
 			->argument(3, 'int', 'null')				//Argument 3 must be an integer
@@ -481,7 +481,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 */
 	 public function getToUser($name = NULL, $id = NULL, $since = NULL, $count = NULL, $max = NULL, $page = NULL, $trim = false, $entities = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string', 'null')				//Argument 1 must be a string
 			->argument(2, 'string', 'int', 'null')		//Argument 2 must be a string or integer
 			->argument(3, 'int', 'null')				//Argument 3 must be an integer
@@ -555,7 +555,7 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	 */
 	 public function getByUser($name = NULL, $id = NULL, $since = NULL, $count = NULL, $max = NULL, $page = NULL, $trim = false, $entities = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string', 'null')				//Argument 1 must be a string
 			->argument(2, 'string', 'int', 'null')		//Argument 2 must be a string or integer
 			->argument(3, 'int', 'null')				//Argument 3 must be a integer

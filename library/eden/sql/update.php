@@ -28,7 +28,7 @@ class Eden_Sql_Update extends Eden_Sql_Delete {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($table = NULL) {
+	public static function i($table = NULL) {
 		return self::_getMultiple(__CLASS__, $table);
 	}
 	
@@ -46,7 +46,7 @@ class Eden_Sql_Update extends Eden_Sql_Delete {
 	 */
 	public function set($key, $value) {
 		//argument test
-		Eden_Sql_Error::get()
+		Eden_Sql_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'scalar', 'null');	//Argument 2 must be scalar or null
 		

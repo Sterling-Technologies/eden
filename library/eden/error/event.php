@@ -33,7 +33,7 @@ class Eden_Error_Event extends Eden_Event {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	

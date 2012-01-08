@@ -32,7 +32,7 @@ class Eden_Mysql_Utility extends Eden_Sql_Query
 	-------------------------------*/
 	/* Magic
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
@@ -45,7 +45,7 @@ class Eden_Mysql_Utility extends Eden_Sql_Query
 	 * @return this
 	 */
 	public function showTables($like = NULL) {
-		Eden_Mysql_Error::get()->argument(1, 'string', 'null');
+		Eden_Mysql_Error::i()->argument(1, 'string', 'null');
 		
 		$like = $like ? ' LIKE '.$like : NULL;
 		$this->_query = 'SHOW TABLES'.$like;
@@ -60,7 +60,7 @@ class Eden_Mysql_Utility extends Eden_Sql_Query
 	 */
 	public function showColumns($table, $where = NULL) {
 		//Argument 1 must be a string, 2 must be string null
-		Eden_Mysql_Error::get()->argument(1, 'string')->argument(2, 'string', 'null');
+		Eden_Mysql_Error::i()->argument(1, 'string')->argument(2, 'string', 'null');
 		
 		$where = $where ? ' WHERE '.$where : NULL;
 		$this->_query = 'SHOW FULL COLUMNS FROM `' . $table .'`' . $where;
@@ -75,7 +75,7 @@ class Eden_Mysql_Utility extends Eden_Sql_Query
 	 */
 	public function truncate($table) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_query = 'TRUNCATE `' . $table .'`';
 		return $this;
@@ -89,7 +89,7 @@ class Eden_Mysql_Utility extends Eden_Sql_Query
 	 */
 	public function dropTable($table) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_query = 'DROP TABLE `' . $table .'`';
 		return $this;
@@ -104,7 +104,7 @@ class Eden_Mysql_Utility extends Eden_Sql_Query
 	 */
 	public function renameTable($table, $name) {
 		//Argument 1 must be a string, 2 must be string
-		Eden_Mysql_Error::get()->argument(1, 'string')->argument(2, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string')->argument(2, 'string');
 		
 		$this->_query = 'RENAME TABLE `' . $table . '` TO `' . $name . '`';
 		return $this;

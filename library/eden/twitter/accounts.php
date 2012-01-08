@@ -37,7 +37,7 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($key, $secret) {
+	public static function i($key, $secret) {
 		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
 	
@@ -65,7 +65,7 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 */
 	 public function getCredentials($entities = false, $status = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'boolean')			//Argument 1 must be a string or integer
 			->argument(2, 'boolean');			//Argument 2 must be a string or integer
 			
@@ -101,7 +101,7 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 */
 	 public function updateProfile($name = NULL, $url = NULL, $location = NULL, $description = NULL, $entities = NULL, $status = NULL) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string')			//Argument 1 must be a string or integer
 			->argument(2, 'string')			//Argument 1 must be a string or integer
 			->argument(3, 'string')			//Argument 1 must be a string or integer
@@ -151,7 +151,7 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 */
 	 public function updateBackground($image = NULL, $tile = NULL, $entities = NULL, $status = NULL, $use = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string')			//Argument 1 must be a string 
 			->argument(2, 'string')			//Argument 1 must be a string 
 			->argument(3, 'boolean')		//Argument 1 must be a boolean
@@ -194,7 +194,7 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 */
 	 public function updateColor($background = NULL, $link = NULL, $border = NULL, $fill = NULL, $text = NULL, $entities = false, $status = false) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string')			//Argument 1 must be a string 
 			->argument(2, 'string')			//Argument 1 must be a string 
 			->argument(3, 'string')			//Argument 1 must be a string

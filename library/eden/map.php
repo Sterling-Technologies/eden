@@ -34,7 +34,7 @@ class Eden_Map extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($scope, array &$list, $lines = 0) {
+	public static function i($scope, array &$list, $lines = 0) {
 		return self::_getMultiple(__CLASS__, $scope, $list, $lines);
 	}
 	
@@ -61,14 +61,14 @@ class Eden_Map extends Eden_Class {
 	-------------------------------*/
 	/**
 	 * Returns the original class
-	 * Eden_Sesison()->map($products)->setData('name', 'chris');
+	 * Eden_Sesison()->map($products)->set('name', 'chris');
 	 * @param bool
 	 * @return this|Eden_Noop
 	 */
 	public function endMap() {
 		foreach($this->_list as $key => $object) {	
 			foreach($this->_map as $action) {
-				$this->_list[$key] = Eden_Route::get()->callMethod($object, $action[0], NULL, $action[1]);
+				$this->_list[$key] = Eden_Route::i()->callMethod($object, $action[0], NULL, $action[1]);
 			}
 		}
 		

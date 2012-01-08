@@ -33,7 +33,7 @@ class Eden_Block_Search extends Eden_Block {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
@@ -49,7 +49,7 @@ class Eden_Block_Search extends Eden_Block {
 	 * @return this 
 	 */
 	public function setKeyword($keyword) {
-		Front_Error::get()->argument(1, 'string', 'null');
+		Front_Error::i()->argument(1, 'string', 'null');
 		$this->_keyword = $keyword;
 		
 		return $this;

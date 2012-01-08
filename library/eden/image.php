@@ -39,14 +39,14 @@ class Eden_Image extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($data, $type = NULL, $path = true, $quality = 75) {
+	public static function i($data, $type = NULL, $path = true, $quality = 75) {
 		return self::_getMultiple(__CLASS__, $data, $type, $path, $quality);
 	}
 	
 	/* Magic
 	-------------------------------*/
 	public function __construct($data, $type = NULL, $path = true, $quality = 75) {
-		Eden_Image_Error::get()
+		Eden_Image_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string', 'null')
 			->argument(3, 'bool')
@@ -118,7 +118,7 @@ class Eden_Image extends Eden_Class {
 	 */
 	public function crop($width = NULL, $height = NULL) {
 		//argument test
-		Eden_Image_Error::get()
+		Eden_Image_Error::i()
 			->argument(1, 'numeric', 'null')	//Argument 1 must be a number or null
 			->argument(2, 'numeric', 'null');	//Argument 2 must be a number or null
 		
@@ -250,7 +250,7 @@ class Eden_Image extends Eden_Class {
 	 */
 	public function scale($width = NULL, $height = NULL) {
 		//argument test
-		Eden_Image_Error::get()
+		Eden_Image_Error::i()
 			->argument(1, 'numeric', 'null')	//Argument 1 must be a number or null
 			->argument(2, 'numeric', 'null');	//Argument 2 must be a number or null
 		
@@ -300,7 +300,7 @@ class Eden_Image extends Eden_Class {
 	 */
 	public function resize($width = NULL, $height = NULL) {
 		//argument test
-		Eden_Image_Error::get()
+		Eden_Image_Error::i()
 			->argument(1, 'numeric', 'null')	//Argument 1 must be a number or null
 			->argument(2, 'numeric', 'null');	//Argument 2 must be a number or null
 		
@@ -363,7 +363,7 @@ class Eden_Image extends Eden_Class {
 	 */
 	public function rotate($degree, $background = 0) {
 		//argument test
-		Eden_Image_Error::get()
+		Eden_Image_Error::i()
 			->argument(1, 'numeric')	//Argument 1 must be a number
 			->argument(2, 'numeric');	//Argument 2 must be a number
 		
@@ -387,7 +387,7 @@ class Eden_Image extends Eden_Class {
 	 */
 	public function invert($vertical = false) {
 		//Argument 1 must be a boolean
-		Eden_Image_Error::get()->argument(1, 'bool');
+		Eden_Image_Error::i()->argument(1, 'bool');
 		
 		//get the source width and height
 		$orgWidth = imagesx($this->_resource);
@@ -442,7 +442,7 @@ class Eden_Image extends Eden_Class {
 	 */
 	public function brightness($level) {
 		//Argument 1 must be a number
-		Eden_Image_Error::get()->argument(1, 'numeric');
+		Eden_Image_Error::i()->argument(1, 'numeric');
 		
 		//apply filter
 		imagefilter($this->_resource, IMG_FILTER_BRIGHTNESS, $level);
@@ -458,7 +458,7 @@ class Eden_Image extends Eden_Class {
 	 */
 	public function contrast($level) {
 		//Argument 1 must be a number
-		Eden_Image_Error::get()->argument(1, 'numeric');
+		Eden_Image_Error::i()->argument(1, 'numeric');
 		
 		//apply filter
 		imagefilter($this->_resource, IMG_FILTER_CONTRAST, $level);
@@ -477,7 +477,7 @@ class Eden_Image extends Eden_Class {
 	 */
 	public function colorize($red, $blue, $green, $alpha = 0) {
 		//argument test
-		Eden_Image_Error::get()
+		Eden_Image_Error::i()
 			->argument(1, 'numeric')	//Argument 1 must be a number
 			->argument(2, 'numeric')	//Argument 2 must be a number
 			->argument(3, 'numeric')	//Argument 3 must be a number
@@ -557,7 +557,7 @@ class Eden_Image extends Eden_Class {
 	 */
 	public function smooth($level) {
 		//Argument 1 must be a number
-		Eden_Image_Error::get()->argument(1, 'numeric');
+		Eden_Image_Error::i()->argument(1, 'numeric');
 		
 		//apply filter
 		imagefilter($this->_resource, IMG_FILTER_SMOOTH, $level);
@@ -602,7 +602,7 @@ class Eden_Image extends Eden_Class {
 	    #imagegif() - Output image to browser or file
 		#imagewbmp() - Output image to browser or file
 		#imagejpeg() - Output image to browser or file
-		//$path = Eden_Path::get()->getAbsolute($path);
+		//$path = Eden_Path::i()->getAbsolute($path);
 		
 		if(!$type) {
 			$type = $this->_type;
@@ -643,7 +643,7 @@ class Eden_Image extends Eden_Class {
 		//if the GD Library is not installed
 		if(!function_exists('gd_info')) {
 			//throw error
-			Eden_Image_Error::get(Eden_Image_Error::GD_NOT_INSTALLED)->trigger();
+			Eden_Image_Error::i(Eden_Image_Error::GD_NOT_INSTALLED)->trigger();
 		}
 		
 		# imagecreatefromgd — Create a new image from GD file or URL
@@ -693,7 +693,7 @@ class Eden_Image extends Eden_Class {
 		//if there is no resource still
 		if(!$resource) {
 			//throw error
-			Eden_Image_Error::get()
+			Eden_Image_Error::i()
 				->setMessage(Eden_Image_Error::NOT_VALID_IMAGE_FILE) 
 				->addVariable($path);
 		}

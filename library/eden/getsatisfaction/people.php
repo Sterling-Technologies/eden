@@ -34,7 +34,7 @@ class Eden_GetSatisfaction_People extends Eden_GetSatisfaction_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($key, $secret) {
+	public static function i($key, $secret) {
 		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
 	
@@ -43,28 +43,28 @@ class Eden_GetSatisfaction_People extends Eden_GetSatisfaction_Base {
 	/* Public Methods
 	-------------------------------*/
 	public function setCompany($company) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
 		
 		$this->_url = sprintf(self::URL_COMPANY, $company);
 		return $this;
 	}
 	
 	public function setEmployee($company) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
 		
 		$this->_url = sprintf(self::URL_EMPLOYEE, $company);
 		return $this;
 	}
 	
 	public function setTopic($topic) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
 		
 		$this->_url = sprintf(self::URL_TOPIC, $topic);
 		return $this;
 	}
 	
 	public function setKeyword($keyword) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string');
 		
 		$this->_query['query'] = $keyword;
 		
@@ -72,7 +72,7 @@ class Eden_GetSatisfaction_People extends Eden_GetSatisfaction_Base {
 	}
 	
 	public function setPage($page = 0) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'int');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
 		if($page < 0) {
 			$page = 0;
@@ -84,7 +84,7 @@ class Eden_GetSatisfaction_People extends Eden_GetSatisfaction_Base {
 	}
 	
 	public function setLimit($limit = 10) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'int');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
 		if($limit < 0) {
 			$limit = 10;

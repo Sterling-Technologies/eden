@@ -30,7 +30,7 @@ class Eden_Eventbrite_Event_Organizer extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 	
@@ -40,7 +40,7 @@ class Eden_Eventbrite_Event_Organizer extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	public function add($name, $description = NULL) {
 		//Argument Test
-		Eden_Eventbrite_Error::get()
+		Eden_Eventbrite_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string');			//Argument 2 must be a string
 		
@@ -53,7 +53,7 @@ class Eden_Eventbrite_Event_Organizer extends Eden_Eventbrite_Base {
 	
 	public function update($id, $name, $description = NULL) {
 		//Argument Test
-		Eden_Eventbrite_Error::get()
+		Eden_Eventbrite_Error::i()
 			->argument(1, 'int')				//Argument 1 must be an integer
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string');			//Argument 3 must be a string
@@ -68,7 +68,7 @@ class Eden_Eventbrite_Event_Organizer extends Eden_Eventbrite_Base {
 	
 	public function getEvents($id) {
 		//Argument 1 must be an int
-		Eden_Eventbrite_Error::get()->argument(1, 'int');
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
 		
 		$query = array('id'	=> $id);
 		

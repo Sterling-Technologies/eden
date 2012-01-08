@@ -33,7 +33,7 @@ class Eden_Event extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
@@ -52,7 +52,7 @@ class Eden_Event extends Eden_Class {
      * @return this
      */
     public function listen($event, $instance, $method = NULL, $important = true) {
-		Eden_Event_Error::get()
+		Eden_Event_Error::i()
 			->argument(1, 'string')					//argument 1 must be string
 			->argument(2, 'object', 'string')		//argument 2 must be object or string
 			->argument(3, 'null', 'string', 'bool')	//argument 3 must be string or null
@@ -99,7 +99,7 @@ class Eden_Event extends Eden_Class {
      * @return this
      */
     public function unlisten($event, $instance, $method = NULL) {
-		Eden_Event_Error::get()
+		Eden_Event_Error::i()
 			->argument(1, 'string', 'null')		//argument 1 must be string or null
 			->argument(2, 'object', 'string')	//argument 2 must be instance
 			->argument(3, 'string', 'null');	//argument 3 must be string or null
@@ -162,7 +162,7 @@ class Eden_Event extends Eden_Class {
      */
     public function trigger($event = NULL) {
 		//argument 1 must be string
-		Eden_Event_Error::get()->argument(1, 'string', 'null');
+		Eden_Event_Error::i()->argument(1, 'string', 'null');
 		
 		if(is_null($event)) {
 			$trace = debug_backtrace();
@@ -209,7 +209,7 @@ class Eden_Event_Error extends Eden_Error {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($message = NULL, $code = 0) {
+	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}

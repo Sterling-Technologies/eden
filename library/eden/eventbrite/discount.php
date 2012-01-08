@@ -31,7 +31,7 @@ class Eden_Eventbrite_Discount extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 	
@@ -41,7 +41,7 @@ class Eden_Eventbrite_Discount extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	public function add($event, $code, $amount, $percent, $tickets, $quantity, $start, $end) {
 		//Argument Test
-		Eden_Eventbrite_Error::get()
+		Eden_Eventbrite_Error::i()
 			->argument(1, 'int')				//Argument 1 must be an integer
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'float')				//Argument 3 must be a float
@@ -82,7 +82,7 @@ class Eden_Eventbrite_Discount extends Eden_Eventbrite_Base {
 	
 	public function update($id, $code, $amount, $percent, $tickets, $quantity, $start, $end) {
 		//Argument Test
-		Eden_Eventbrite_Error::get()
+		Eden_Eventbrite_Error::i()
 			->argument(1, 'int')				//Argument 1 must be an integer
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'float')				//Argument 3 must be a float

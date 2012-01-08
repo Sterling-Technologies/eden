@@ -30,7 +30,7 @@ class Eden_Eventbrite_Payment extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 	
@@ -40,7 +40,7 @@ class Eden_Eventbrite_Payment extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	public function setEvent($id) {
 		//Argument 1 must be int
-		Eden_Eventbrite_Error::get()->argument(1, 'int');
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
 		
 		$query['event_id'] = $id;
 		
@@ -55,7 +55,7 @@ class Eden_Eventbrite_Payment extends Eden_Eventbrite_Base {
 	
 	public function setPaypalEmail($email) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['paypal_email'] = $email;
 		
@@ -70,7 +70,7 @@ class Eden_Eventbrite_Payment extends Eden_Eventbrite_Base {
 	
 	public function setGoogleMerchantId($id) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['google_merchant_id'] = $id;
 		
@@ -79,7 +79,7 @@ class Eden_Eventbrite_Payment extends Eden_Eventbrite_Base {
 	
 	public function setGoogleMerchantKey($key) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['google_merchant_key'] = $key;
 		
@@ -94,7 +94,7 @@ class Eden_Eventbrite_Payment extends Eden_Eventbrite_Base {
 	
 	public function setCheckInstructions($check) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['insrtructions_check'] = $check;
 		
@@ -109,7 +109,7 @@ class Eden_Eventbrite_Payment extends Eden_Eventbrite_Base {
 	
 	public function setCashInstructions($check) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['insrtructions_cash'] = $check;
 		
@@ -124,7 +124,7 @@ class Eden_Eventbrite_Payment extends Eden_Eventbrite_Base {
 	
 	public function setInvoiceInstructions($check) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['insrtructions_invoice'] = $check;
 		

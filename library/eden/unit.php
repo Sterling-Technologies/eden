@@ -32,7 +32,7 @@ class Eden_Unit {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
@@ -75,7 +75,7 @@ class Eden_Unit {
 	-------------------------------*/
 	public function setPackage($name) {
 		//Argument 1 must be a string
-		Eden_Unit_Error::get()->argument(1, 'string');
+		Eden_Unit_Error::i()->argument(1, 'string');
 		
 		$this->_package = $name;
 		return $this;
@@ -83,7 +83,7 @@ class Eden_Unit {
 	
 	public function getTotalTests($package = NULL) {
 		//Argument 1 must be a string or null
-		Eden_Unit_Error::get()->argument(1, 'string', 'null');
+		Eden_Unit_Error::i()->argument(1, 'string', 'null');
 		
 		if(isset($this->_report[$package])) {
 			return count($this->_report[$package]);
@@ -99,7 +99,7 @@ class Eden_Unit {
 	
 	public function getPassFail($package = NULL) {
 		//Argument 1 must be a string or null
-		Eden_Unit_Error::get()->argument(1, 'string', 'null');
+		Eden_Unit_Error::i()->argument(1, 'string', 'null');
 		$passFail = array(0, 0);
 		if(isset($this->_report[$package])) {
 			foreach($this->_report[$package] as $test) {
@@ -131,7 +131,7 @@ class Eden_Unit {
 	-------------------------------*/
 	protected function _assertArrayHasKey($needle, $haystack) {
 		try {
-			Eden_Unit_Error::get()
+			Eden_Unit_Error::i()
 				->argument(1, 'string')		//Argument 1 must be a string
 				->argument(2, 'array');		//Argument 2 must be an array
 		} catch(Eden_Unit_Error $e) {
@@ -143,7 +143,7 @@ class Eden_Unit {
 	
 	protected function _assertClassHasAttribute($needle, $haystack) {
 		try { //try to validate arguments
-			Eden_Unit_Error::get()
+			Eden_Unit_Error::i()
 				->argument(1, 'string')				//Argument 1 must be a string
 				->argument(2, 'object', 'string');	//Argument 2 must be an object or string
 		} catch(Eden_Unit_Error $e) {
@@ -155,7 +155,7 @@ class Eden_Unit {
 	
 	protected function _assertContains($needle, $haystack) {
 		try { //try to validate arguments
-			Eden_Unit_Error::get()
+			Eden_Unit_Error::i()
 				->argument(1, 'string')
 				->argument(2, 'array', 'string');
 		} catch(Eden_Unit_Error $e) {
@@ -171,7 +171,7 @@ class Eden_Unit {
 	
 	protected function _assertContainsOnly($type, $haystack) {
 		try { //try to validate arguments
-			Eden_Unit_Error::get()
+			Eden_Unit_Error::i()
 				->argument(1, 'string')					//Argument 1 must be a string
 				->argument(2, 'object', 'array');	//Argument 2 must be an object or array
 		} catch(Eden_Unit_Error $e) {
@@ -205,7 +205,7 @@ class Eden_Unit {
 	
 	protected function _assertCount($number, $haystack) {
 		try { //try to validate arguments
-			Eden_Unit_Error::get()
+			Eden_Unit_Error::i()
 				->argument(1, 'int')					//Argument 1 must be a integer
 				->argument(2, 'array', 'string');	//Argument 2 must be an array or string
 		} catch(Eden_Unit_Error $e) {
@@ -233,7 +233,7 @@ class Eden_Unit {
 	
 	protected function _assertGreaterThan($number, $actual) {
 		try { //try to validate arguments
-			Eden_Unit_Error::get()
+			Eden_Unit_Error::i()
 				->argument(1, 'numeric')	//Argument 1 must be a number
 				->argument(2, 'numeric');	//Argument 2 must be a number
 		} catch(Eden_Unit_Error $e) {
@@ -245,7 +245,7 @@ class Eden_Unit {
 	
 	protected function _assertGreaterThanOrEqual($number, $actual) {
 		try { //try to validate arguments
-			Eden_Unit_Error::get()
+			Eden_Unit_Error::i()
 				->argument(1, 'numeric')	//Argument 1 must be a number
 				->argument(2, 'numeric');	//Argument 2 must be a number
 		} catch(Eden_Unit_Error $e) {
@@ -257,7 +257,7 @@ class Eden_Unit {
 	
 	protected function _assertInstanceOf($expected, $actual) {
 		try { //try to validate arguments
-			Eden_Unit_Error::get()
+			Eden_Unit_Error::i()
 				->argument(1, 'string')		//Argument 1 must be a string
 				->argument(2, 'object');	//Argument 2 must be an object
 		} catch(Eden_Unit_Error $e) {
@@ -269,7 +269,7 @@ class Eden_Unit {
 	
 	protected function _assertInternalType($type, $actual) {
 		try { //try to validate arguments
-			Eden_Unit_Error::get()->argument(1, 'string');	//Argument 1 must be a string
+			Eden_Unit_Error::i()->argument(1, 'string');	//Argument 1 must be a string
 		} catch(Eden_Unit_Error $e) {
 			return false;
 		}
@@ -289,7 +289,7 @@ class Eden_Unit {
 	
 	protected function _assertLessThan($number, $actual) {
 		try { //try to validate arguments
-			Eden_Unit_Error::get()
+			Eden_Unit_Error::i()
 				->argument(1, 'numeric')	//Argument 1 must be a number
 				->argument(2, 'numeric');	//Argument 2 must be a number
 		} catch(Eden_Unit_Error $e) {
@@ -301,7 +301,7 @@ class Eden_Unit {
 	
 	protected function _assertLessThanOrEqual($number, $actual) {
 		try { //try to validate arguments
-			Eden_Unit_Error::get()
+			Eden_Unit_Error::i()
 				->argument(1, 'numeric')	//Argument 1 must be a number
 				->argument(2, 'numeric');	//Argument 2 must be a number
 		} catch(Eden_Unit_Error $e) {
@@ -317,7 +317,7 @@ class Eden_Unit {
 	
 	protected function _assertRegExp($pattern, $string) {
 		try { //try to validate arguments
-			Eden_Unit_Error::get()
+			Eden_Unit_Error::i()
 				->argument(1, 'string')	//Argument 1 must be a string
 				->argument(2, 'string');	//Argument 2 must be a string
 		} catch(Eden_Unit_Error $e) {
@@ -333,7 +333,7 @@ class Eden_Unit {
 	
 	protected function _assertStringEndsWith($suffix, $string) {
 		try { //try to validate arguments
-			Eden_Unit_Error::get()
+			Eden_Unit_Error::i()
 				->argument(1, 'string')	//Argument 1 must be a string
 				->argument(2, 'string');	//Argument 2 must be a string
 		} catch(Eden_Unit_Error $e) {
@@ -345,7 +345,7 @@ class Eden_Unit {
 	
 	protected function _assertStringStartsWith($prefix, $string) {
 		try { //try to validate arguments
-			Eden_Unit_Error::get()
+			Eden_Unit_Error::i()
 				->argument(1, 'string')	//Argument 1 must be a string
 				->argument(2, 'string');	//Argument 2 must be a string
 		} catch(Eden_Unit_Error $e) {
@@ -377,7 +377,7 @@ class Eden_Unit_Error extends Eden_Error {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($message = NULL, $code = 0) {
+	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}

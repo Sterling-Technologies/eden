@@ -28,7 +28,7 @@ class Eden_GetSatisfaction_Detail extends Eden_GetSatisfaction_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($key, $secret) {
+	public static function i($key, $secret) {
 		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
 	
@@ -37,7 +37,7 @@ class Eden_GetSatisfaction_Detail extends Eden_GetSatisfaction_Base {
 	/* Public Methods
 	-------------------------------*/
 	public function getTopic($topic) {
-		Eden_Getsatisfaction_Error::get()->argument(1, 'string', 'int');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		return $this->_getResponse(sprintf(self::URL, $topic));
 	}

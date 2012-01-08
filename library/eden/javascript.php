@@ -27,7 +27,7 @@ class Eden_Javascript extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	
@@ -36,7 +36,7 @@ class Eden_Javascript extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	public function load() {
-		return Eden_Javascript_Class::get();
+		return Eden_Javascript_Class::i();
 	}
 	
 	public function render() {

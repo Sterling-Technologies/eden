@@ -31,7 +31,7 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 	
@@ -41,7 +41,7 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	public function setEvent($id) {
 		//Argument 1 must be numeric
-		Eden_Eventbrite_Error::get()->argument(1, 'numeric');
+		Eden_Eventbrite_Error::i()->argument(1, 'numeric');
 		$this->_query['event_id'] = $id;
 		
 		return $this;
@@ -49,7 +49,7 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	
 	public function setName($name) {
 		//Argument 1 must be numeric
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		$this->_query['name'] = $name;
 		
 		return $this;
@@ -57,7 +57,7 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	
 	public function setPrice($price) {
 		//Argument 1 must be float
-		Eden_Eventbrite_Error::get()->argument(1, 'float');
+		Eden_Eventbrite_Error::i()->argument(1, 'float');
 		$this->_query['price'] = $price;
 		
 		return $this;
@@ -65,7 +65,7 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	
 	public function setQuantity($quantity) {
 		//Argument 1 must be an integer
-		Eden_Eventbrite_Error::get()->argument(1, 'int');
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
 		$this->_query['quantity'] = $quantity;
 		
 		return $this;
@@ -79,7 +79,7 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	
 	public function setDescription($description) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		$this->_query['description'] = $description;
 		
 		return $this;
@@ -87,7 +87,7 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	
 	public function setStart($start) {
 		//Argument 1 must be an integer or string
-		Eden_Eventbrite_Error::get()->argument(1, 'int', 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'int', 'string');
 		//if start is a string
 		if(is_string($start)) {
 			//then convert it to unixcode
@@ -103,7 +103,7 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	
 	public function setEnd($end) {
 		//Argument 1 must be an integer or string
-		Eden_Eventbrite_Error::get()->argument(1, 'int', 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'int', 'string');
 		//if start is a string
 		if(is_string($start)) {
 			//then convert it to unixcode
@@ -125,7 +125,7 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	
 	public function setMin($quantity) {
 		//Argument 1 must be an integer
-		Eden_Eventbrite_Error::get()->argument(1, 'int');
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
 		if($min < 0) {
 			$min = 0;
 		}
@@ -136,7 +136,7 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	
 	public function setMax($max) {
 		//Argument 1 must be an integer
-		Eden_Eventbrite_Error::get()->argument(1, 'int');
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
 		if($max < 1) {
 			$max = 1;
 		}
@@ -148,7 +148,7 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	
 	public function setHide($hide) {
 		//Argument 1 must be a boolean
-		Eden_Eventbrite_Error::get()->argument(1, 'bool');
+		Eden_Eventbrite_Error::i()->argument(1, 'bool');
 		
 		//if the string hide is show
 		if($hide) { 
@@ -164,20 +164,20 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	
 	public function add() {
 		if(!isset($this->_query['event_id'])) {
-			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::EVENT_NOT_SET)->trigger();
+			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::EVENT_NOT_SET)->trigger();
 		}
 		
 		if(!isset($this->_query['name'])) {
-			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::NAME_NOT_SET)->trigger();
+			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::NAME_NOT_SET)->trigger();
 		}
 		
 		
 		if(!isset($this->_query['price'])) {
-			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::PRICE_NOT_SET)->trigger();
+			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::PRICE_NOT_SET)->trigger();
 		}
 		
 		if(!isset($this->_query['quantity'])) {
-			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::QUANTITY_NOT_SET)->trigger();
+			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::QUANTITY_NOT_SET)->trigger();
 		}
 		
 		$query = $this->_query;
@@ -190,20 +190,20 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	
 	public function update() {
 		if(!isset($this->_query['event_id'])) {
-			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::EVENT_NOT_SET)->trigger();
+			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::EVENT_NOT_SET)->trigger();
 		}
 		
 		if(!isset($this->_query['name'])) {
-			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::NAME_NOT_SET)->trigger();
+			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::NAME_NOT_SET)->trigger();
 		}
 		
 		
 		if(!isset($this->_query['price'])) {
-			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::PRICE_NOT_SET)->trigger();
+			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::PRICE_NOT_SET)->trigger();
 		}
 		
 		if(!isset($this->_query['quantity'])) {
-			Eden_Eventbrite_Error::get()->setMessage(Eden_Eventbrite_Error::QUANTITY_NOT_SET)->trigger();
+			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::QUANTITY_NOT_SET)->trigger();
 		}
 		
 		return $this->_getJsonResponse(self::URL_UPDATE, $this->_query);

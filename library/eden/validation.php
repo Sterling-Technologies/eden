@@ -28,7 +28,7 @@ class Eden_Validation extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($value) {
+	public static function i($value) {
 		return self::_getMultiple(__CLASS__, $value);
 	}
 	
@@ -154,7 +154,7 @@ class Eden_Validation extends Eden_Class {
 	 * @return bool
 	 */
 	public function lengthGreaterThan($number) {
-		Eden_Validation_Error::get()->argument('int');
+		Eden_Validation_Error::i()->argument('int');
 		return strlen((string)$this->_value) > $number;
 	}
 	
@@ -165,7 +165,7 @@ class Eden_Validation extends Eden_Class {
 	 * @return bool
 	 */
 	public function lengthLessThan($number) {
-		Eden_Validation_Error::get()->argument('int');
+		Eden_Validation_Error::i()->argument('int');
 		return strlen((string)$this->_value) < $number;
 	}
 	
@@ -176,7 +176,7 @@ class Eden_Validation extends Eden_Class {
 	 * @return bool
 	 */
 	public function lengthGreaterThanEqualTo($number) {
-		Eden_Validation_Error::get()->argument('int');
+		Eden_Validation_Error::i()->argument('int');
 		return strlen((string)$this->_value) >= $number;
 	}
 	
@@ -187,7 +187,7 @@ class Eden_Validation extends Eden_Class {
 	 * @return bool
 	 */
 	public function lengthLessThanEqualTo($number) {
-		Eden_Validation_Error::get()->argument('int');
+		Eden_Validation_Error::i()->argument('int');
 		return strlen((string)$this->_value) <= $number;
 	}
 	
@@ -198,7 +198,7 @@ class Eden_Validation extends Eden_Class {
 	 * @return bool
 	 */
 	public function wordCountEquals($number) {
-		Eden_Validation_Error::get()->argument('int');
+		Eden_Validation_Error::i()->argument('int');
 		$words = explode(' ', $this->_value);
 		return count($words) === $number;
 	}
@@ -210,7 +210,7 @@ class Eden_Validation extends Eden_Class {
 	 * @return bool
 	 */
 	public function wordCountGreaterThan($number) {
-		Eden_Validation_Error::get()->argument('int');
+		Eden_Validation_Error::i()->argument('int');
 		$words = explode(' ', $this->_value);
 		return count($words) > $number;
 	}
@@ -222,7 +222,7 @@ class Eden_Validation extends Eden_Class {
 	 * @return bool
 	 */
 	public function wordCountLessThan($number) {
-		Eden_Validation_Error::get()->argument('int');
+		Eden_Validation_Error::i()->argument('int');
 		$words = explode(' ', $this->_value);
 		return count($words) < $number;
 	}
@@ -234,7 +234,7 @@ class Eden_Validation extends Eden_Class {
 	 * @return bool
 	 */
 	public function wordCountGreaterThanEqualTo($number) {
-		Eden_Validation_Error::get()->argument('int');
+		Eden_Validation_Error::i()->argument('int');
 		$words = explode(' ', $this->_value);
 		return count($words) >= $number;
 	}
@@ -246,7 +246,7 @@ class Eden_Validation extends Eden_Class {
 	 * @return bool
 	 */
 	public function wordCountLessThanEqualTo($number) {
-		Eden_Validation_Error::get()->argument('int');
+		Eden_Validation_Error::i()->argument('int');
 		$words = explode(' ', $this->_value);
 		return count($words) <= $number;
 	}
@@ -260,7 +260,7 @@ class Eden_Validation extends Eden_Class {
 	 * @return bool
 	 */
 	public function greaterThan($number) {
-		Eden_Validation_Error::get()->argument('numeric');
+		Eden_Validation_Error::i()->argument('numeric');
 		return $this->_value > (float)$number;
 	}
 	
@@ -271,7 +271,7 @@ class Eden_Validation extends Eden_Class {
 	 * @return bool
 	 */
 	public function lessThan($number) {
-		Eden_Validation_Error::get()->argument('numeric');
+		Eden_Validation_Error::i()->argument('numeric');
 		return $this->_value < (float)$number;
 	}
 	
@@ -282,7 +282,7 @@ class Eden_Validation extends Eden_Class {
 	 * @return bool
 	 */
 	public function greaterThanEqualTo($number) {
-		Eden_Validation_Error::get()->argument('numeric');
+		Eden_Validation_Error::i()->argument('numeric');
 		return $this->_value >= (float)$number;
 	}
 	
@@ -293,7 +293,7 @@ class Eden_Validation extends Eden_Class {
 	 * @return bool
 	 */
 	public function lessThanEqualTo($number) {
-		Eden_Validation_Error::get()->argument('numeric');
+		Eden_Validation_Error::i()->argument('numeric');
 		return $this->_value <= (float)$number;
 	}
 	
@@ -317,7 +317,7 @@ class Eden_Validation_Error extends Eden_Error {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($message = NULL, $code = 0) {
+	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}

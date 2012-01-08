@@ -33,12 +33,12 @@ class Eden_Registry extends Eden_Type_Array {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		$data = self::_getStart(func_get_args());
 		
 		foreach($data as $key => $value) {
 			if(is_array($value)) {
-				$data[$key] = self::get($value);
+				$data[$key] = self::i($value);
 			}
 		} 
 		
@@ -47,6 +47,10 @@ class Eden_Registry extends Eden_Type_Array {
 	
 	/* Magic
 	-------------------------------*/
+	public function __toString() {
+		return json_encode($this->getArray());
+	}
+	
 	/* Public Methods
 	-------------------------------*/
 	/**
@@ -54,7 +58,7 @@ class Eden_Registry extends Eden_Type_Array {
 	 * 
 	 * @return mixed
 	 */
-	public function getData($modified = true) {
+	public function get($modified = true) {
 		$args = func_get_args();
 		
 		if(count($args) == 0) {
@@ -94,7 +98,7 @@ class Eden_Registry extends Eden_Type_Array {
 	 *
 	 * @return Eden_Registry
 	 */
-	public function setData() {
+	public function set() {
 		$args = func_get_args();
 		
 		if(count($args) < 2) {
@@ -105,7 +109,7 @@ class Eden_Registry extends Eden_Type_Array {
 		
 		if(count($args) == 1) {
 			if(is_array($args[0])) {
-				$args[0] = self::get($args[0]);
+				$args[0] = self::i($args[0]);
 			}
 			
 			$this->_data[$key] = $args[0];
@@ -114,7 +118,7 @@ class Eden_Registry extends Eden_Type_Array {
 		}
 		
 		if(!isset($this->_data[$key]) || !($this->_data[$key] instanceof Eden_Registry)) {
-			$this->_data[$key] = self::get();
+			$this->_data[$key] = self::i();
 		}
 		
 		call_user_func_array(array($this->_data[$key], __FUNCTION__), $args);
@@ -156,7 +160,7 @@ class Eden_Registry extends Eden_Type_Array {
 	 * 
 	 * @return Eden_Registry
 	 */
-	public function removeKey() {
+	public function remove() {
 		$args = func_get_args();
 		
 		if(count($args) == 0) {

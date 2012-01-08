@@ -32,7 +32,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($token) {
+	public static function i($token) {
 		return self::_getMultiple(__CLASS__, $token);
 	}
 	
@@ -53,7 +53,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		
 		if($auth) {
 			if(!$this->_token) {
-				Eden_Facebook_Error::get()
+				Eden_Facebook_Error::i()
 					->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
 					->addVariable($url)
 					->trigger();
@@ -70,7 +70,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$object = json_decode($object, true);
 		
 		if (isset($object['error'])) {
-			Eden_Facebook_Error::get()
+			Eden_Facebook_Error::i()
 				->setMessage(Eden_Facebook_Error::GRAPH_FAILED)
 				->addVariable($url)
 				->addVariable($object['error']['type'])
@@ -202,7 +202,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$url = self::GRAPH_URL.$id.'/feed';
 		
 		if(!$this->_token) {
-			Eden_Facebook_Error::get()
+			Eden_Facebook_Error::i()
 				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
 				->addVariable($url)
 				->trigger();
@@ -248,7 +248,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$url = self::GRAPH_URL.$id.'/comments';
 		
 		if(!$this->_token) {
-			Eden_Facebook_Error::get()
+			Eden_Facebook_Error::i()
 				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
 				->addVariable($url)
 				->trigger();
@@ -270,7 +270,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$url = self::GRAPH_URL.$id.'/likes';
 		
 		if(!$this->_token) {
-			Eden_Facebook_Error::get()
+			Eden_Facebook_Error::i()
 				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
 				->addVariable($url)
 				->trigger();
@@ -291,7 +291,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$url = self::GRAPH_URL.$id.'/notes';
 		
 		if(!$this->_token) {
-			Eden_Facebook_Error::get()
+			Eden_Facebook_Error::i()
 				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
 				->addVariable($url)
 				->trigger();
@@ -313,7 +313,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$url = self::GRAPH_URL.$id.'/events';
 		
 		if(!$this->_token) {
-			Eden_Facebook_Error::get()
+			Eden_Facebook_Error::i()
 				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
 				->addVariable($url)
 				->trigger();
@@ -335,7 +335,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$url = self::GRAPH_URL.$id.'/attending';
 		
 		if(!$this->_token) {
-			Eden_Facebook_Error::get()
+			Eden_Facebook_Error::i()
 				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
 				->addVariable($url)
 				->trigger();
@@ -356,7 +356,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$url = self::GRAPH_URL.$id.'/maybe';
 		
 		if(!$this->_token) {
-			Eden_Facebook_Error::get()
+			Eden_Facebook_Error::i()
 				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
 				->addVariable($url)
 				->trigger();
@@ -377,7 +377,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$url = self::GRAPH_URL.$id.'/declined';
 		
 		if(!$this->_token) {
-			Eden_Facebook_Error::get()
+			Eden_Facebook_Error::i()
 				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
 				->addVariable($url)
 				->trigger();
@@ -398,7 +398,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$url = self::GRAPH_URL.$id.'/links';
 		
 		if(!$this->_token) {
-			Eden_Facebook_Error::get()
+			Eden_Facebook_Error::i()
 				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
 				->addVariable($url)
 				->trigger();
@@ -440,7 +440,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$url = self::GRAPH_URL.$id.'/albums';
 		
 		if(!$this->_token) {
-			Eden_Facebook_Error::get()
+			Eden_Facebook_Error::i()
 				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
 				->addVariable($url)
 				->trigger();
@@ -464,7 +464,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$url = self::GRAPH_URL.$id.'/checkins';
 		
 		if(!$this->_token) {
-			Eden_Facebook_Error::get()
+			Eden_Facebook_Error::i()
 				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
 				->addVariable($url)
 				->trigger();
@@ -502,9 +502,9 @@ class Eden_Facebook_Graph extends Eden_Class {
 	-------------------------------*/
 	protected function _call($url, array $post = array()) {
 		//Argument 1 must be a string
-		Eden_Facebook_Error::get()->argument(1, 'string');
+		Eden_Facebook_Error::i()->argument(1, 'string');
 		
-		return Eden_Curl::get()
+		return Eden_Curl::i()
 			->setUrl($url)
 			->setConnectTimeout(10)
 			->setFollowLocation(true)

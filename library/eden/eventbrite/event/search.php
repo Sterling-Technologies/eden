@@ -30,7 +30,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 	
@@ -40,7 +40,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	public function setKeywords($keywords) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['keywords'] = $keywords;
 		
@@ -49,7 +49,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setCategory($category) {
 		//Argument 1 must be a string or array
-		Eden_Eventbrite_Error::get()->argument(1, 'string', 'array');
+		Eden_Eventbrite_Error::i()->argument(1, 'string', 'array');
 		
 		if(is_array($tickets)) {
 			$tickets = implode(',', $tickets);
@@ -62,7 +62,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setAddress($address) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['address'] = $address;
 		
@@ -71,7 +71,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setCity($city) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['city'] = $city;
 		
@@ -80,7 +80,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setRegion($region) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['region'] = $region;
 		
@@ -89,7 +89,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setPostal($postal) {
 		//Argument 1 must be a string or integer
-		Eden_Eventbrite_Error::get()->argument(1, 'string', 'int');
+		Eden_Eventbrite_Error::i()->argument(1, 'string', 'int');
 		
 		$query['postal_code'] = $postal;
 		
@@ -98,7 +98,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setCountry($country) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['country'] = $country;
 		
@@ -107,7 +107,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setWithin($within) {
 		//Argument 1 must be a int
-		Eden_Eventbrite_Error::get()->argument(1, 'int');
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
 		
 		$query['within'] = $within;
 		
@@ -116,7 +116,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setWithinUnit($unit) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['within_unit'] = $unit;
 		
@@ -125,7 +125,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setLatitude($latitude) {
 		//Argument 1 must be a float
-		Eden_Eventbrite_Error::get()->argument(1, 'float');
+		Eden_Eventbrite_Error::i()->argument(1, 'float');
 		
 		$query['latitude'] = $latitude;
 		
@@ -134,7 +134,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setLongitude($longitude) {
 		//Argument 1 must be a float
-		Eden_Eventbrite_Error::get()->argument(1, 'float');
+		Eden_Eventbrite_Error::i()->argument(1, 'float');
 		
 		$query['longitude'] = $longitude;
 		
@@ -143,7 +143,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setDate($date) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['date'] = $date;
 		
@@ -152,7 +152,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setDateCreated($date) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['date_created'] = $date;
 		
@@ -161,7 +161,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setDateModified($date) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['date_modified'] = $date;
 		
@@ -170,7 +170,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setOrganizer($organizer) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['organizer'] = $organizer;
 		
@@ -179,7 +179,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setMax($max) {
 		//Argument 1 must be a int
-		Eden_Eventbrite_Error::get()->argument(1, 'int');
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
 		
 		if($max > 100) {
 			$max = 100;
@@ -198,7 +198,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function sort($column) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		if(in_array($column, $this->_validSort)) {
 			$query['sort_by'] = $column;
@@ -209,7 +209,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setPage($page) {
 		//Argument 1 must be a int
-		Eden_Eventbrite_Error::get()->argument(1, 'int');
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
 		
 		$query['page'] = $page;
 		
@@ -218,7 +218,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 
 	public function setSince($since) {
 		//Argument 1 must be a int
-		Eden_Eventbrite_Error::get()->argument(1, 'int');
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
 		
 		$query['since_id'] = $since;
 		
@@ -227,7 +227,7 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	public function setTracking($tracking) {
 		//Argument 1 must be a string
-		Eden_Eventbrite_Error::get()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['tracking_link'] = $tracking;
 		

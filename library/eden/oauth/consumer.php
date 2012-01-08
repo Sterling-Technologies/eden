@@ -47,7 +47,7 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($url, $key, $secret) {
+	public static function i($url, $key, $secret) {
 		return self::_getMultiple(__CLASS__, $url, $key, $secret);
 	}
 	
@@ -55,7 +55,7 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	-------------------------------*/
 	public function __construct($url, $key, $secret) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string')		//Argument 2 must be a string
 			->argument(3, 'string');	//Argument 3 must be a string
@@ -79,7 +79,7 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	 * @return array
 	 */
 	public function getMeta($key = NULL) {
-		Eden_Oauth_Error::get()->argument(1, 'string', 'null');
+		Eden_Oauth_Error::i()->argument(1, 'string', 'null');
 		
 		if(isset($this->_meta[$key])) {
 			return $this->_meta[$key];
@@ -95,7 +95,7 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	 * @return this
 	 */
 	public function setHeaders($key, $value = NULL) {
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'array', 'string')
 			->argument(2, 'scalar','null');
 		
@@ -175,7 +175,7 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	 * @return this
 	 */
 	public function useAuthorization($use = true) {
-		Eden_Oauth_Error::get()->argument(1, 'bool');
+		Eden_Oauth_Error::i()->argument(1, 'bool');
 		$this->_useAuthorization = $use;
 		return $this;
 	}
@@ -187,7 +187,7 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	 * @return this
 	 */
 	public function setRealm($realm) {
-		Eden_Oauth_Error::get()->argument(1, 'string');
+		Eden_Oauth_Error::i()->argument(1, 'string');
 		$this->_realm = $realm;
 		return $this;
 	}
@@ -200,7 +200,7 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	 * @return this
 	 */
 	public function setVerifier($verifier) {
-		Eden_Oauth_Error::get()->argument(1, 'scalar');
+		Eden_Oauth_Error::i()->argument(1, 'scalar');
 		$this->_verifier = $verifier;
 		return $this;
 	}
@@ -214,7 +214,7 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	 * @return this
 	 */
 	public function setToken($token, $secret) {
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string');
 		
@@ -232,7 +232,7 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	 */
 	public function getAuthorization($signature, $string = true) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'bool');		//Argument 2 must be a boolean
 		
@@ -374,7 +374,7 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 		$url 	= $this->_url;
 		
 		//set curl
-		$curl = Eden_Curl::get()->verifyHost(false)->verifyPeer(false);
+		$curl = Eden_Curl::i()->verifyHost(false)->verifyPeer(false);
 		
 		//if post
 		if($this->_method == self::POST) {

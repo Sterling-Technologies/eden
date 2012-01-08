@@ -48,7 +48,7 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 				//call the parent
 				return parent::__call($name, $args);
 			} catch(Eden_Error $e) {
-				Eden_Type_Error::get($e->getMessage())->trigger();
+				Eden_Type_Error::i($e->getMessage())->trigger();
 			}
 		}
 		
@@ -82,7 +82,7 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 			}
 			
 			//return string class
-			return Eden_Type_String::get($result);
+			return Eden_Type_String::i($result);
 		} 
 		
 		//if the result is an array
@@ -95,7 +95,7 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 			}
 			
 			//return array class
-			return Eden_Type_Array::get($result);
+			return Eden_Type_Array::i($result);
 		}
 		
 		return $result;
@@ -119,9 +119,9 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 	 * @param bool whether to get the modified or original version
 	 * @return string
 	 */
-	public function getData($modified = true) {
+	public function get($modified = true) {
 		//argument 1 must be a bool
-		Eden_Type_Error::get()->argument(1, 'bool');
+		Eden_Type_Error::i()->argument(1, 'bool');
 		
 		return $modified ? $this->_data : $this->_original;
 	}

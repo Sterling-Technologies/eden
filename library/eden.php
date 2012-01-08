@@ -17,7 +17,7 @@ require_once 'eden/event.php';
  */
 function eden() {
 	//return the results
-	return Eden::get();
+	return Eden::i();
 }
 
 /**
@@ -43,7 +43,7 @@ class Eden extends Eden_Event {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	
@@ -77,13 +77,13 @@ class Eden extends Eden_Event {
 	 * @return this
 	 */
 	public function setRoot($root) {
-		Eden_Error::get()->argument(1, 'string');
+		Eden_Error::i()->argument(1, 'string');
 		
 		if(!class_exists('Eden_Path')) {
-			Eden_Loader::get()->load('Eden_Path');
+			Eden_Loader::i()->load('Eden_Path');
 		}
 		
-		$this->_root = (string) Eden_Path::get($root);
+		$this->_root = (string) Eden_Path::i($root);
 		
 		return $this;
 	}
@@ -118,7 +118,7 @@ class Eden extends Eden_Event {
 			require_once dirname(__FILE__).'/eden/loader.php';
 		
 			//set autoload class as the autoload handler
-			spl_autoload_register(array(Eden_Loader::get(), 'handler'));
+			spl_autoload_register(array(Eden_Loader::i(), 'handler'));
 		}
 		
 		//get paths
@@ -132,7 +132,7 @@ class Eden extends Eden_Event {
 		
 		//we need Eden_Path to fix the path formatting
 		if(!class_exists('Eden_Path')) {
-			Eden_Loader::get()->load('Eden_Path');
+			Eden_Loader::i()->load('Eden_Path');
 		}
 		
 		//no dupes
@@ -146,7 +146,7 @@ class Eden extends Eden_Event {
 			
 			if($path) {
 				//format the path
-				$path = (string) Eden_Path::get($path);
+				$path = (string) Eden_Path::i($path);
 			} else {
 				$path = $this->_root;
 			}
@@ -160,7 +160,7 @@ class Eden extends Eden_Event {
 			//if the path is still a real path
 			if(is_dir($path)) {
 				//add the root
-				Eden_Loader::get()->addRoot($path);
+				Eden_Loader::i()->addRoot($path);
 			}
 		}
 		
@@ -174,29 +174,29 @@ class Eden extends Eden_Event {
 	 * @return Eden_Framework
 	 */
 	public function routeClasses($routes) {
-		Eden_Error::get()->argument(1, 'string', 'array', 'bool');
-		$route = Eden_Route::get();
+		Eden_Error::i()->argument(1, 'string', 'array', 'bool');
+		$route = Eden_Route::i()->getClass();
 		
 		if($routes === true) {
-			$route->routeClass('Cache', 	'Eden_Cache')
-				->routeClass('String', 		'Eden_Type_String')
-				->routeClass('Array', 		'Eden_Type_Array')
-				->routeClass('Registry', 	'Eden_Registry')
-				->routeClass('Model', 		'Eden_Model')
-				->routeClass('Collection', 	'Eden_Collection')
-				->routeClass('Cookie', 		'Eden_Cookie')
-				->routeClass('Session', 	'Eden_Session')
-				->routeClass('Template', 	'Eden_Template')
-				->routeClass('Curl', 		'Eden_Curl')
-				->routeClass('Event', 		'Eden_Event')
-				->routeClass('Path', 		'Eden_Path')
-				->routeClass('File', 		'Eden_File')
-				->routeClass('Folder', 		'Eden_Folder')
-				->routeClass('Image', 		'Eden_Image')
-				->routeClass('Mysql', 		'Eden_Mysql')
-				->routeClass('Array', 		'Eden_Type_Array')
-				->routeClass('String', 		'Eden_Type_String')
-				->routeClass('Validation', 	'Eden_Validation');
+			$route->route('Cache', 		'Eden_Cache')
+				->route('String', 		'Eden_Type_String')
+				->route('Array', 		'Eden_Type_Array')
+				->route('Registry', 	'Eden_Registry')
+				->route('Model', 		'Eden_Model')
+				->route('Collection', 	'Eden_Collection')
+				->route('Cookie', 		'Eden_Cookie')
+				->route('Session', 		'Eden_Session')
+				->route('Template', 	'Eden_Template')
+				->route('Curl', 		'Eden_Curl')
+				->route('Event', 		'Eden_Event')
+				->route('Path', 		'Eden_Path')
+				->route('File', 		'Eden_File')
+				->route('Folder', 		'Eden_Folder')
+				->route('Image', 		'Eden_Image')
+				->route('Mysql', 		'Eden_Mysql')
+				->route('Array', 		'Eden_Type_Array')
+				->route('String', 		'Eden_Type_String')
+				->route('Validation', 	'Eden_Validation');
 			
 			return $this;
 		}
@@ -206,7 +206,7 @@ class Eden extends Eden_Event {
 		}
 		
 		foreach($routes as $alias => $class) {
-			$route->routeClass($alias, $class);
+			$route->route($alias, $class);
 		}
 		
 		return $this;
@@ -219,8 +219,16 @@ class Eden extends Eden_Event {
 	 * @return Eden_Framework
 	 */
 	public function routeMethods($routes) {
-		Eden_Error::get()->argument(1, 'string', 'array');
-		$route = Eden_Route::get();
+		Eden_Error::i()->argument(1, 'string', 'array', 'bool');
+		$route = Eden_Route::i()->getMethod();
+		
+		if(is_bool($routes)) {
+			$route->route(NULL, 'output', 'Eden_Tool')
+				->route(NULL, 'uid', 'Eden_Tool')
+				->route(NULL, 'type', 'Eden_Tool');
+			
+			return $this;
+		}
 		
 		if(is_string($routes)) {
 			$routes = include($routes);
@@ -243,7 +251,7 @@ class Eden extends Eden_Event {
 				}
 				
 				//route the method
-				$route->routeMethod($method, $routePath[0], $routePath[1]);
+				$route->route($method, $routePath[0], $routePath[1]);
 			}
 		}
 		
@@ -257,7 +265,7 @@ class Eden extends Eden_Event {
 	 */
 	public function startSession() {
 		//get the session class
-		Eden_Session::get()->start();
+		Eden_Session::i()->start();
 		
 		return $this;
 	}
@@ -268,7 +276,7 @@ class Eden extends Eden_Event {
 	 * @return this
 	 */
 	public function setTimezone($zone) {
-		Eden_Error::get()->argument(1, 'string');
+		Eden_Error::i()->argument(1, 'string');
 		
 		date_default_timezone_set($zone);
 		

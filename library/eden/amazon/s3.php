@@ -39,7 +39,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $pass, $host = 's3.amazonaws.com', $ssl = false) {
+	public static function i($user, $pass, $host = 's3.amazonaws.com', $ssl = false) {
 		return self::_getMultiple(__CLASS__, $user, $pass, $host, $ssl);
 	}
 	
@@ -89,7 +89,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 */
 	public function getBucket($name, $prefix = NULL, $marker = NULL, $maxKeys = NULL, $delimiter = NULL) {
 		//argument test
-		Eden_Amazon_Error::get()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')				//Argument 1 must be string
 			->argument(2, 'string', 'null')		//Argument 2 must be string or null
 			->argument(3, 'string', 'null')		//Argument 3 must be string or null
@@ -167,7 +167,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 */
 	public function getFolders($bucket, $path = NULL, $prefix = NULL, $marker = NULL, $maxKeys = NULL, $delimiter = NULL) {
 		//argument test
-		Eden_Amazon_Error::get()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')				//Argument 1 must be string
 			->argument(2, 'string', 'null')		//Argument 2 must be string or null
 			->argument(3, 'string', 'null')		//Argument 3 must be string or null
@@ -228,7 +228,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 */
 	public function getFiles($bucket, $path = NULL, $prefix = NULL, $marker = NULL, $maxKeys = NULL, $delimiter = NULL) {
 		//argument test
-		Eden_Amazon_Error::get()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')				//Argument 1 must be string
 			->argument(2, 'string', 'null')		//Argument 2 must be string or null
 			->argument(3, 'string', 'null')		//Argument 3 must be string or null
@@ -283,7 +283,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 */
 	public function addBucket($bucket, $acl = self::ACL_PRIVATE, $location = false) {
 		//argument test
-		Eden_Amazon_Error::get()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')				//Argument 1 must be string
 			->argument(2, 'string', 'null')		//Argument 2 must be string or null
 			->argument(3, 'bool');				//Argument 3 must be bool
@@ -321,7 +321,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 */
 	public function deleteBucket($bucket) {
 		//Argument 1 must be string
-		Eden_Amazon_Error::get()->argument(1, 'string');
+		Eden_Amazon_Error::i()->argument(1, 'string');
 		$this->_setResponse('DELETE', $bucket);
 		
 		if(!empty($this->_meta['error']) || empty($this->_response)) {
@@ -341,7 +341,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 */
 	public function setPermissions($bucket, $path = '/', array $acp = array()) {
 		//argument test
-		Eden_Amazon_Error::get()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')		//Argument 1 must be string
 			->argument(2, 'string');	//Argument 2 must be string
 		
@@ -403,7 +403,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 */
 	public function getPermissions($bucket, $path = '/') {
 		//argument test
-		Eden_Amazon_Error::get()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')		//Argument 1 must be string
 			->argument(2, 'string');	//Argument 2 must be string
 		
@@ -468,7 +468,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 */
 	public function addFile($bucket, $path, $data, $acl = self::ACL_PRIVATE, $file = false) {
 		//argument test
-		Eden_Amazon_Error::get()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')		//Argument 1 must be string
 			->argument(2, 'string')		//Argument 2 must be string
 			->argument(4, 'string')		//Argument 4 must be string
@@ -523,7 +523,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 */
 	public function getFile($bucket, $path) {
 		//argument test
-		Eden_Amazon_Error::get()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')		//Argument 1 must be string
 			->argument(2, 'string');	//Argument 2 must be string
 			
@@ -546,7 +546,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 */
 	public function getFileInfo($bucket, $path) {
 		//argument test
-		Eden_Amazon_Error::get()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')		//Argument 1 must be string
 			->argument(2, 'string');	//Argument 2 must be string
 		
@@ -572,7 +572,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 */
 	public function deleteFile($bucket, $path) {
 		//argument test
-		Eden_Amazon_Error::get()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')		//Argument 1 must be string
 			->argument(2, 'string');	//Argument 2 must be string
 		
@@ -594,7 +594,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 */
 	public function deleteFolder($bucket, $path) {
 		//argument test
-		Eden_Amazon_Error::get()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')		//Argument 1 must be string
 			->argument(2, 'string');	//Argument 2 must be string
 			
@@ -632,7 +632,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 */
 	public function getFolderSize($bucket, $path) {
 		//argument test
-		Eden_Amazon_Error::get()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')		//Argument 1 must be string
 			->argument(2, 'string');	//Argument 2 must be string
 			
@@ -730,7 +730,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 		$curlHeaders[] = 'Authorization: ' . $this->_getSignature($signature);
 		
 		//setup curl
-		$curl = Eden_Curl::get()
+		$curl = Eden_Curl::i()
 			->setUserAgent('S3/php')
 			->setUrl($url)
 			->setHeaders($curlHeaders)

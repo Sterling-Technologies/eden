@@ -39,7 +39,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 	/* Magic
@@ -56,7 +56,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 */
 	 public function getList($hostName, $apiKey) {
 		//Argument Test
-		Eden_Tumblr_Error::get()
+		Eden_Tumblr_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string');			//Argument 2 must be a string
 			
@@ -74,7 +74,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 */
 	 public function getAvatar($hostName, $size = NULL) {
 		//Argument Test
-		Eden_Tumblr_Error::get()
+		Eden_Tumblr_Error::i()
 			->argument(1, 'string')						//Argument 1 must be a string
 			->argument(2, 'integer', 'null');			//Argument 2 must be a integer or null
 			
@@ -97,7 +97,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 */
 	 public function getFollower($hostName, $limit = NULL, $offset = NULL) {
 		//Argument Test
-		Eden_Tumblr_Error::get()
+		Eden_Tumblr_Error::i()
 			->argument(1, 'string')						//Argument 1 must be a string
 			->argument(2, 'integer', 'null')				//Argument 2 must be a integer or null
 			->argument(3, 'integer', 'null');			//Argument 2 must be a integer or null
@@ -135,7 +135,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 public function getPost($hostName, $apiKey, $type = NULL, $id = NULL, $tag = NULL,
 							 $limit = NULL, $offset = NULL, $reblog = NULL, $notes = NULL, $format = NULL) {
 		//Argument Test
-		Eden_Tumblr_Error::get()
+		Eden_Tumblr_Error::i()
 			->argument(1, 'string')					//Argument 1 must be a string
 			->argument(2, 'string')					//Argument 2 must be a string
 			->argument(3, 'string', 'null')			//Argument 3 must be a string or null
@@ -220,7 +220,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 */
 	 public function add($type, $state = NULL, $tag = NULL, $tweets = NULL, $date = NULL, $markdown = NULL, $slug = NULL) {
 		 //Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'string')					//Argument 1 must be a string
 			->argument(2, 'string', 'null')			//Argument 2 must be a string or null
 			->argument(3, 'string', 'null')			//Argument 3 must be a string or null
@@ -277,7 +277,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 */
 	 public function addText($body, $title = NULL) {
 		 //Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'string')					//Argument 1 must be a string
 			->argument(2, 'string', 'null');		//Argument 2 must be a string or null
 			
@@ -302,7 +302,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 */
 	 public function addPhoto($source, $data, $caption = NULL, $link = NULL) {
 		 //Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'string')					//Argument 1 must be a string
 			->argument(2, 'array')					//Argument 1 must be a array
 			->argument(3, 'string', 'null')			//Argument 1 must be a array
@@ -332,7 +332,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 */
 	 public function addQuote($quote, $source = NULL) {
 		 //Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'string')					//Argument 1 must be a string
 			->argument(2, 'string', 'null');		//Argument 1 must be a string	
 			
@@ -356,7 +356,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 */
 	 public function addLink($url, $title = NULL, $description = NULL) {
 		 //Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'string')					//Argument 1 must be a string
 			->argument(2, 'string', 'null')			//Argument 2 must be a string
 			->argument(3, 'string', 'null');		//Argument 3 must be a string	
@@ -385,7 +385,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 */
 	 public function addChat($conversation, $title = NULL) {
 		 //Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'string')					//Argument 1 must be a string
 			->argument(2, 'string', 'null');		//Argument 2 must be a string	
 			
@@ -409,7 +409,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 */
 	 public function addAudio($data, $external, $caption = NULL) {
 		 //Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'string')					//Argument 1 must be a string
 			->argument(2, 'string')					//Argument 2 must be a string
 			->argument(3, 'string', 'null');		//Argument 3 must be a string	
@@ -434,7 +434,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 */
 	 public function addVideo($data, $embed, $caption = NULL) {
 		 //Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'string')					//Argument 1 must be a string
 			->argument(2, 'string')					//Argument 2 must be a string
 			->argument(3, 'string', 'null');		//Argument 3 must be a string	
@@ -457,7 +457,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 */
 	 public function update($Id) {
 		 //Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'integer');					//Argument 1 must be a integer
 			
 		$query = array('Id' => $Id);
@@ -475,7 +475,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 */
 	 public function reblog($Id, $reblog, $comment) {
 		 //Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'integer')				//Argument 1 must be a integer
 			->argument(2, 'integer')				//Argument 2 must be a integer
 			->argument(3, 'string');					//Argument 3 must be a integer
@@ -497,7 +497,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 */
 	 public function remove($Id) {
 		 //Argument Test
-		 Eden_Tumblr_Error::get()
+		 Eden_Tumblr_Error::i()
 			->argument(1, 'integer');				//Argument 1 must be a integer 
 			
 		$query = array('Id' => $Id);

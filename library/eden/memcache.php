@@ -38,7 +38,7 @@ class Eden_Memcache extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($host = 'localhost', $port = 11211, $timeout = 1) {
+	public static function i($host = 'localhost', $port = 11211, $timeout = 1) {
 		return self::_getMultiple(__CLASS__, $host, $port, $timeout);
 	}
 	
@@ -46,7 +46,7 @@ class Eden_Memcache extends Eden_Class {
 	-------------------------------*/
 	public function __construct($host = 'localhost', $port = 11211, $timeout = 1) {
 		//argument test
-		$error = Eden_Memcache_Error::get()
+		$error = Eden_Memcache_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'int')			//Argument 2 must be an integer
 			->argument(3, 'int');		//Argument 3 must be an integer
@@ -88,7 +88,7 @@ class Eden_Memcache extends Eden_Class {
 	 */
 	public function addServer($host = 'localhost', $port = 11211, $persistent = true, $weight = NULL, $timeout = 1) {
 		//argument test
-		Eden_Memcache_Error::get()
+		Eden_Memcache_Error::i()
 			->argument(1, 'string')			//Argument 1 must be a string
 			->argument(2, 'int')				//Argument 2 must be an integer
 			->argument(3, 'bool')		//Argument 3 must be a boolean
@@ -109,9 +109,9 @@ class Eden_Memcache extends Eden_Class {
 	 * @param int expire 
 	 * @return bool
 	 */
-	public function setData($key, $data, $flag = NULL, $expire = NULL) {
+	public function set($key, $data, $flag = NULL, $expire = NULL) {
 		//argument test
-		Eden_Memcache_Error::get()
+		Eden_Memcache_Error::i()
 			->argument(1, 'string')			//Argument 1 must be a string
 			->argument(3, 'int', 'null')		//Argument 3 must be an integer or null
 			->argument(4, 'int', 'null');	//Argument 4 must be an integer or null
@@ -128,9 +128,9 @@ class Eden_Memcache extends Eden_Class {
 	 * @param int MemCache flag
 	 * @return variable
 	 */
-	public function getData($key, $flag = NULL) {
+	public function get($key, $flag = NULL) {
 		//argument test
-		Eden_Memcache_Error::get()
+		Eden_Memcache_Error::i()
 			->argument(1, 'string', 'array')	//Argument 1 must be a string or array
 			->argument(2, 'int', 'null');	//Argument 2 must be an integer or null
 		
@@ -143,9 +143,9 @@ class Eden_Memcache extends Eden_Class {
 	 * @param string the key to the data
 	 * @return this
 	 */
-	public function deleteData($key) {
+	public function remove($key) {
 		//Argument 1 must be a string or array
-		Eden_Memcache_Error::get()->argument(1, 'string', 'array');
+		Eden_Memcache_Error::i()->argument(1, 'string', 'array');
 		
 		$this->_memcache->delete($key);
 		
@@ -185,7 +185,7 @@ class Eden_Memcache_Error extends Eden_Error {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($message = NULL, $code = 0) {
+	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}

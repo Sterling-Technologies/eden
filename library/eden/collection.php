@@ -32,7 +32,7 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get(array $data = array()) {
+	public static function i(array $data = array()) {
 		return self::_getMultiple(__CLASS__,$data);
 	}
 	
@@ -51,7 +51,7 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 			$value = isset($args[0]) ? $args[0] : NULL;
 			
 			//make a new model
-			$list = Eden_Model::get();
+			$list = Eden_Model::i();
 			//for each row
 			foreach($this->_list as $i => $row) {
 				//just add the column they want
@@ -81,13 +81,13 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 		try {
 			return parent::__call($name, $args);
 		} catch(Eden_Error $e) {
-			Eden_Collection_Error::get($e->getMessage())->trigger();
+			Eden_Collection_Error::i($e->getMessage())->trigger();
 		}
 	}
 	
 	public function __get($name) {
 		//get all rows column values
-		$list = Eden_Model::get();
+		$list = Eden_Model::i();
 		
 		//for each row
 		foreach($this->_list as $i => $row) {
@@ -108,7 +108,7 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	}
 	
 	public function __toString() {
-		return json_encode($this->getArray());
+		return json_encode($this->get());
 	}
 	
 	/* Public Methods
@@ -121,7 +121,7 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	 */
 	public function add($row = array()) {
 		//Argument 1 must be an array or Eden_Model
-		Eden_Collection_Error::get()->argument(1, 'array', $this->_model);
+		Eden_Collection_Error::i()->argument(1, 'array', $this->_model);
 		
 		//if it's an array
 		if(is_array($row)) {
@@ -145,7 +145,7 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	 */
 	public function copy($source, $destination) {
 		//Argument Test
-		Eden_Collection_Error::get()
+		Eden_Collection_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string
 		
@@ -160,7 +160,7 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	
 	public function cut($index = self::LAST) {
 		//Argument 1 must be a string or integer
-		Eden_Collection_Error::get()->argument(1, 'string', 'int');
+		Eden_Collection_Error::i()->argument(1, 'string', 'int');
 		
 		//if index is first
 		if($index == self::FIRST) {
@@ -190,15 +190,15 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	 * @param bool
 	 * @return array
 	 */
-	public function getArray($modified = true) {
+	public function get($modified = true) {
 		//Argument 1 must be a boolean
-		Eden_Collection_Error::get()->argument(1, 'bool');
+		Eden_Collection_Error::i()->argument(1, 'bool');
 		
 		$array = array();
 		//for each row
 		foreach($this->_list as $i => $row) {
 			//get the array of that (recursive)
-			$array[$i] = $row->getData($modified);
+			$array[$i] = $row->get($modified);
 		}
 		
 		return $array;
@@ -263,7 +263,7 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	 */
 	public function offsetSet($offset, $value) {
 		//Argument 2 must be an array or Eden_Model
-		Eden_Collection_Error::get()->argument(2, 'array', $this->_model);
+		Eden_Collection_Error::i()->argument(2, 'array', $this->_model);
 		
 		if(is_array($value)) {
 			//make it a model
@@ -295,9 +295,9 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	 * @return bool
 	 */
 	public function offsetUnset($offset) {
-		$this->_list = Eden_Model::get($this->_list)
+		$this->_list = Eden_Model::i($this->_list)
 			->cut($offset)
-			->getData();
+			->get();
     }
     
 	/**
@@ -361,7 +361,7 @@ class Eden_Collection_Error extends Eden_Error {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($message = NULL, $code = 0) {
+	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}

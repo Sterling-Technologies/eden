@@ -140,7 +140,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	

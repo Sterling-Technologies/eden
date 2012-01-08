@@ -33,7 +33,7 @@ class Eden_Eventbrite_Event extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 	
@@ -43,7 +43,7 @@ class Eden_Eventbrite_Event extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	public function copy($id, $name) {
 		//argument test
-		Eden_Eventbrite_Error::get()
+		Eden_Eventbrite_Error::i()
 			->argument(1, 'numeric')	//Argument 1 must be numeric
 			->argument(2, 'string');	//Argument 2 must be a string
 		
@@ -54,7 +54,7 @@ class Eden_Eventbrite_Event extends Eden_Eventbrite_Base {
 	
 	public function getDetail($id) {
 		//Argument 1 must be numeric
-		Eden_Eventbrite_Error::get()->argument(1, 'numeric');	
+		Eden_Eventbrite_Error::i()->argument(1, 'numeric');	
 		
 		$query = array('id' => $id);
 		
@@ -63,7 +63,7 @@ class Eden_Eventbrite_Event extends Eden_Eventbrite_Base {
 	
 	public function getAttendees($id, $count = 50, $page = 1, $display = NULL, $barcodes = false) {
 		//argument test
-		$error = Eden_Eventbrite_Error::get()
+		$error = Eden_Eventbrite_Error::i()
 			->argument(1, 'numeric')			//Argument 1 must be numeric
 			->argument(2, 'numeric')			//Argument 2 must be numeric
 			->argument(3, 'numeric')			//Argument 3 must be numeric
@@ -85,7 +85,7 @@ class Eden_Eventbrite_Event extends Eden_Eventbrite_Base {
 	
 	public function getDiscounts($id) {
 		//Argument 1 must be numeric
-		Eden_Eventbrite_Error::get()->argument(1, 'numeric');	
+		Eden_Eventbrite_Error::i()->argument(1, 'numeric');	
 		
 		$query = array('id' => $id);
 		

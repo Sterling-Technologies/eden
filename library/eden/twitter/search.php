@@ -32,7 +32,7 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 	/* Magic
@@ -58,7 +58,7 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	 */
 	 public function search($q, $callback = NULL, $geocode = NULL, $lang = NULL, $locale = NULL, $page = NULL, $result = NULL, $rpp = NULL, $show = false, $until = NULL, $since = NULL, $entities = NULL) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string','int')		//Argument 1 must be a string or int
 			->argument(2, 'string', 'null')		//Argument 2 must be a string
 			->argument(3, 'float', 'null')		//Argument 3 must be a flaot

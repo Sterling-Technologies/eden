@@ -18,7 +18,7 @@ require_once dirname(__FILE__).'/class.php';
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: path.php 3 2010-01-06 01:16:54Z blanquera $
  */
-class Eden_Path extends Eden_Class implements ArrayAccess {
+class Eden_Path extends Eden_Type_String implements ArrayAccess {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
@@ -29,7 +29,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($path) {
+	public static function i($path) {
 		return self::_getMultiple(__CLASS__, $path);
 	}
 	
@@ -37,12 +37,12 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 	-------------------------------*/
 	public function __construct($path) {
 		//argument 1 must be a string
-		Eden_Path_Error::get()->argument(1, 'string');
-		$this->_path = $this->_format($path);
+		Eden_Path_Error::i()->argument(1, 'string');
+		$this->_data = $this->_format($path);
 	}
 	
 	public function __toString() {
-		return $this->_path;
+		return $this->_data;
 	}
 	
 	/* Public Methods
@@ -57,10 +57,10 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 	 */
 	public function absolute($root = NULL) {
 		//argument 1 must be a string or null
-		Eden_Path_Error::get()->argument(1, 'string', 'null');
+		Eden_Path_Error::i()->argument(1, 'string', 'null');
 		
 		//if path is a directory or file
-		if(is_dir($this->_path) || is_file($this->_path)) {
+		if(is_dir($this->_data) || is_file($this->_data)) {
 			return $this;
 		}
 		
@@ -71,18 +71,18 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 		}
 		
 		//get the absolute path
-		$absolute = $this->_format($root).$this->_path;
+		$absolute = $this->_format($root).$this->_data;
 
 		//if absolute is a directory or file
 		if(is_dir($absolute) || is_file($absolute)) {
-			$this->_path = $absolute;
+			$this->_data = $absolute;
 			return $this;
 		}
 		
 		//if we are here then it means that no path was found so we should throw an exception
-		Eden_Path_Error::get()
+		Eden_Path_Error::i()
 			->setMessage(Eden_Path_Error::FULL_PATH_NOT_FOUND)
-			->addVariable($this->_path)
+			->addVariable($this->_data)
 			->addVariable($absolute)
 			->trigger();
 	}
@@ -95,7 +95,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 	 */
 	public function append($path) {
 		//argument 1 must be a string
-		$error = Eden_Path_Error::get()->argument(1, 'string');
+		$error = Eden_Path_Error::i()->argument(1, 'string');
 		
 		//each argument will be a path
 		$paths = func_get_args();
@@ -105,7 +105,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 			//check for type errors
 			$error->argument($i + 1, $path, 'string');
 			//add to path
-			$this->_path .= $this->_format($path);
+			$this->_data .= $this->_format($path);
 		}
 		
 		return $this;
@@ -119,7 +119,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 	 */
 	public function prepend($path) {
 		//argument 1 must be a string
-		$error = Eden_Path_Error::get()->argument(1, 'string');
+		$error = Eden_Path_Error::i()->argument(1, 'string');
 		
 		//each argument will be a path
 		$paths = func_get_args();
@@ -129,7 +129,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 			//check for type errors
 			$error->argument($i + 1, $path, 'string');
 			//add to path
-			$this->_path = $this->_format($path).$this-_path;
+			$this->_data = $this->_format($path).$this-_path;
 		}
 		
 		return $this;
@@ -143,7 +143,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 	 */
 	public function replace($path) {
 		//argument 1 must be a string
-		Eden_Path_Error::get()->argument(1, 'string');
+		Eden_Path_Error::i()->argument(1, 'string');
 		
 		//get the path array
 		$pathArray = $this->getArray();
@@ -155,7 +155,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 		$pathArray[] = $path;
 		
 		//assign back to path
-		$this->_path = implode('/', $pathArray);
+		$this->_data = implode('/', $pathArray);
 		
 		return $this;
 	}
@@ -173,7 +173,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 		array_pop($pathArray);
 		
 		//set path
-		$this->_path = implode('/', $pathArray);
+		$this->_data = implode('/', $pathArray);
 		
 		return $this;
 	}
@@ -184,7 +184,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 	 * @return array
 	 */
 	public function getArray() {
-		return explode('/', $this->_path);
+		return explode('/', $this->_data);
 	}
 	
 	/**
@@ -205,7 +205,7 @@ class Eden_Path extends Eden_Class implements ArrayAccess {
 			$pathArray = $this->getArray();
 			if($offset > 0 && $offset < count($pathArray)) {
 				$pathArray[$offset] = $value;
-				$this->_path = implode('/', $pathArray);
+				$this->_data = implode('/', $pathArray);
 			}
 		}
     }
@@ -289,7 +289,7 @@ class Eden_Path_Error extends Eden_Error {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($message = NULL, $code = 0) {
+	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}

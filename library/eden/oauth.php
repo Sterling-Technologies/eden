@@ -32,7 +32,7 @@ class Eden_Oauth extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	
@@ -46,7 +46,7 @@ class Eden_Oauth extends Eden_Class {
 	 * @return Eden_Oauth_Consumer
 	 */
 	public function getConsumer($url, $key, $secret) {
-		return Eden_Oauth_Consumer::get($url, $key, $secret);
+		return Eden_Oauth_Consumer::i($url, $key, $secret);
 	}
 	
 	/**
@@ -55,7 +55,7 @@ class Eden_Oauth extends Eden_Class {
 	 * @return Eden_Oauth_Server
 	 */
 	public function getServer() {
-		return Eden_Oauth_Server::get();
+		return Eden_Oauth_Server::i();
 	}
 	
 	/**
@@ -71,7 +71,7 @@ class Eden_Oauth extends Eden_Class {
 	 */
 	public function getHmacPostRequestToken($url, $key, $secret, array $query = array(), $realm = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -99,7 +99,7 @@ class Eden_Oauth extends Eden_Class {
 	 */
 	public function getPlainPostRequestToken($url, $key, $secret, array $query = array(), $realm = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -127,7 +127,7 @@ class Eden_Oauth extends Eden_Class {
 	 */
 	public function getHmacPostAuthorizationRequestToken($url, $key, $secret, array $query = array(), $realm = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -156,7 +156,7 @@ class Eden_Oauth extends Eden_Class {
 	 */
 	public function getPlainPostAuthorizationRequestToken($url, $key, $secret, array $query = array(), $realm = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -185,7 +185,7 @@ class Eden_Oauth extends Eden_Class {
 	 */
 	public function getHmacGetRequestToken($url, $key, $secret, array $query = array(), $realm = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -213,7 +213,7 @@ class Eden_Oauth extends Eden_Class {
 	 */
 	public function getPlainGetRequestToken($url, $key, $secret, array $query = array(), $realm = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -241,7 +241,7 @@ class Eden_Oauth extends Eden_Class {
 	 */
 	public function getHmacGetAuthorizationRequestToken($url, $key, $secret, array $query = array(), $realm = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -270,7 +270,7 @@ class Eden_Oauth extends Eden_Class {
 	 */
 	public function getPlainGetAuthorizationRequestToken($url, $key, $secret, array $query = array(), $realm = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -303,7 +303,7 @@ class Eden_Oauth extends Eden_Class {
 	public function getHmacPostAccessToken($url, $key, $secret, $token, 
 		$tokenSecret, array $query = array(), $realm = NULL, $verifier = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -342,7 +342,7 @@ class Eden_Oauth extends Eden_Class {
 	public function getPlainPostAccessToken($url, $key, $secret, $token, 
 		$tokenSecret, array $query = array(), $realm = NULL, $verifier = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -381,7 +381,7 @@ class Eden_Oauth extends Eden_Class {
 	public function getHmacPostAuthorizationAccessToken($url, $key, $secret, $token, 
 		$tokenSecret, array $query = array(), $realm = NULL, $verifier = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -421,7 +421,7 @@ class Eden_Oauth extends Eden_Class {
 	public function getPlainPostAuthorizationAccessToken($url, $key, $secret, $token, 
 		$tokenSecret, array $query = array(), $realm = NULL, $verifier = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -461,7 +461,7 @@ class Eden_Oauth extends Eden_Class {
 	public function getHmacGetAccessToken($url, $key, $secret, $token, 
 		$tokenSecret, array $query = array(), $realm = NULL, $verifier = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -500,7 +500,7 @@ class Eden_Oauth extends Eden_Class {
 	public function getPlainGetAccessToken($url, $key, $secret, $token, 
 		$tokenSecret, array $query = array(), $realm = NULL, $verifier = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -539,7 +539,7 @@ class Eden_Oauth extends Eden_Class {
 	public function getHmacGetAuthorizationAccessToken($url, $key, $secret, $token, 
 		$tokenSecret, array $query = array(), $realm = NULL, $verifier = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
@@ -579,7 +579,7 @@ class Eden_Oauth extends Eden_Class {
 	public function getPlainGetAuthorizationAccessToken($url, $key, $secret, $token, 
 		$tokenSecret, array $query = array(), $realm = NULL, $verifier = NULL) {
 		//argument test
-		Eden_Oauth_Error::get()
+		Eden_Oauth_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string

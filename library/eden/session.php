@@ -32,7 +32,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	
@@ -79,8 +79,8 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 * @param mixed
 	 * @return this
 	 */
-	public function setData($data, $value = NULL) {
-		$error = Eden_Session_Error::get()->argument(1, 'array', 'string');
+	public function set($data, $value = NULL) {
+		$error = Eden_Session_Error::i()->argument(1, 'array', 'string');
 		
 		if(!self::$_session) {
 			$error->setMessage(Eden_Session_Error::ERROR_ERROR_NOT_STARTED)->trigger();
@@ -102,8 +102,8 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 * @param string|null
 	 * @return mixed
 	 */
-	public function getData($key = NULL) {
-		$error = Eden_Session_Error::get()->argument(1, 'string', 'null');
+	public function get($key = NULL) {
+		$error = Eden_Session_Error::i()->argument(1, 'string', 'null');
 		
 		if(!self::$_session) {
 			$error->setMessage(Eden_Session_Error::ERROR_ERROR_NOT_STARTED)->trigger();
@@ -127,7 +127,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
 	public function getId() {
 		if(!self::$_session) {
-			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
+			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
 		return session_id();
@@ -140,7 +140,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return int
 	 */
 	public function setId($sid) {
-		$error = Eden_Session_Error::get()->argument(1, 'numeric');
+		$error = Eden_Session_Error::i()->argument(1, 'numeric');
 		
 		if(!self::$_session) {
 			$error->setMessage(Eden_Session_Error::ERROR_ERROR_NOT_STARTED)->trigger();
@@ -156,7 +156,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 * @return this
 	 */
 	public function remove($name) {
-		Eden_Session_Error::get()->argument(1, 'string');
+		Eden_Session_Error::i()->argument(1, 'string');
 		
 		if(isset($_SESSION[$name])) {
 			unset($_SESSION[$name]);
@@ -172,7 +172,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
 	public function clear() {
 		if(!self::$_session) {
-			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
+			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
 		$_SESSION = array();
@@ -188,7 +188,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
 	public function rewind() {
 		if(!self::$_session) {
-			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
+			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         reset($_SESSION);
@@ -202,7 +202,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
     public function current() {
 		if(!self::$_session) {
-			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
+			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         return current($_SESSION);
@@ -216,7 +216,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
     public function key() {
 		if(!self::$_session) {
-			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
+			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         return key($_SESSION);
@@ -230,7 +230,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
     public function next() {
 		if(!self::$_session) {
-			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
+			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         next($_SESSION);
@@ -244,7 +244,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
     public function valid() {
 		if(!self::$_session) {
-			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
+			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         return isset($_SESSION[$this->key()]);
@@ -259,7 +259,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
 	public function offsetSet($offset, $value) {
 		if(!self::$_session) {
-			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
+			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         if (is_null($offset)) {
@@ -277,7 +277,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
     public function offsetExists($offset) {
 		if(!self::$_session) {
-			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
+			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         return isset($_SESSION[$offset]);
@@ -291,7 +291,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
 	public function offsetUnset($offset) {
 		if(!self::$_session) {
-			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
+			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         unset($_SESSION[$offset]);
@@ -305,7 +305,7 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	 */
 	public function offsetGet($offset) {
 		if(!self::$_session) {
-			Eden_Session_Error::get(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
+			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
         return isset($_SESSION[$offset]) ? $_SESSION[$offset] : NULL;
@@ -333,7 +333,7 @@ class Eden_Session_Error extends Eden_Error {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($message = NULL, $code = 0) {
+	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}

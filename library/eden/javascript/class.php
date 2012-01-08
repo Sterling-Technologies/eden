@@ -28,7 +28,7 @@ class Eden_Javascript_Class extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
@@ -78,7 +78,7 @@ class Eden_Javascript_Class extends Eden_Class {
 	/* Protected Methods
 	-------------------------------*/
 	protected function ___encode($value) {
-		$type = Eden_Tool::get()->type($value);
+		$type = Eden_Tool::i()->type($value);
 		switch($type) {
 			case 'array':
 			case 'object':

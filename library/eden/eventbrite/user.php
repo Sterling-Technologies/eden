@@ -39,7 +39,7 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($user, $api) {
+	public static function i($user, $api) {
 		return self::_getMultiple(__CLASS__, $user, $api);
 	}
 	
@@ -49,7 +49,7 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	public function getDetail($id = NULL, $email = NULL) {
 		//argument test
-		Eden_Eventbrite_Error::get()
+		Eden_Eventbrite_Error::i()
 			->argument(1, 'int', 'null')				//Argument 1 must be a integer or null
 			->argument(2, 'string', 'null');			//Argument 2 must be a string or null		
 		
@@ -71,7 +71,7 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 	
 	public function getEvents($user = NULL, $hide = NULL, $status = NULL, $order = NULL) {
 			//argument test		
-		Eden_Eventbrite_Error::get()
+		Eden_Eventbrite_Error::i()
 			->argument(1, 'string', 'null')							//Argument 1 must be a string or null
 			->argument(2, 'string', 'array', 'null')				//Argument 2 must be a string or null
 			->argument(3, 'string', 'null')							//Argument 3 must be a string or null
@@ -147,7 +147,7 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 	
 	public function getOrganizers($user, $pass) {
 		//argument test
-		Eden_Eventbrite_Error::get()
+		Eden_Eventbrite_Error::i()
 			->argument(1, 'string')					//Argument 1 must be a string
 			->argument(2, 'string');				//Argument 2 must be  a string
 		
@@ -165,7 +165,7 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 	
 	public function getVenue($user, $pass) {
 		//argument test
-		Eden_Eventbrite_Error::get()
+		Eden_Eventbrite_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string');			//Argument 2 must be a string
 		
@@ -178,7 +178,7 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 	
 	public function add($user, $pass) {
 		//argument test
-		$error = Eden_Eventbrite_Error::get()
+		$error = Eden_Eventbrite_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a atring
 			->argument(2, 'string');			//Argument 2 must be a string
 		//if the string lenght of pass is less than 4
@@ -195,7 +195,7 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 
 	public function update($email = NULL, $pass = NULL) {
 		//argument test
-		Eden_Eventbrite_Error::get()
+		Eden_Eventbrite_Error::i()
 			->argument(1, 'string', 'null')			//Argument 1 must be a string or null
 			->argument(2, 'string', 'null');		//Argument 2 must be a string or null
 			

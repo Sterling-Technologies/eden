@@ -34,7 +34,7 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($key, $secret) {
+	public static function i($key, $secret) {
 		return self::_getMultiple(__CLASS__, $key, $secret);
 	}
 	
@@ -52,7 +52,7 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 	 */
 	 public function getList($id = NULL, $name = NULL) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int','string','null')			//Argument 1 must be a string or integer
 			->argument(2, 'int','string','null');			//Argument 2 must be a string or integer
 			
@@ -96,7 +96,7 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 	 
 	 public function getStatus($id, $slug, $ownerName = NULL, $ownerId = NULL, $since = NULL, $max = NULL, $perpage = NULL, $entities = NULL, $rts = NULL) {
 		//Argument Test
-		Eden_Twitter_Error::get()
+		Eden_Twitter_Error::i()
 			->argument(1, 'int')							//Argument 1 must be a string or integer
 			->argument(2, 'string')					//Argument 2 must be a string or integer
 			->argument(3, 'int','string','null')			//Argument 2 must be a string or integer

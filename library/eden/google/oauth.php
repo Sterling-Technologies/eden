@@ -30,7 +30,7 @@ class Eden_Google_Oauth extends Eden_Google_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($key, $secret, $scope) {
+	public static function i($key, $secret, $scope) {
 		return self::_getMultiple(__CLASS__, $key, $secret, $scope);
 	}
 	
@@ -38,7 +38,7 @@ class Eden_Google_Oauth extends Eden_Google_Base {
 	-------------------------------*/
 	public function __construct($key, $secret, $scope) {
 		//argument test
-		Eden_Google_Error::get()
+		Eden_Google_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string')		//Argument 2 must be a string
 			->argument(3, 'string');	//Argument 3 must be a string

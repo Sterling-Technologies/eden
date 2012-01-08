@@ -43,7 +43,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get(Eden_Mysql $database) {
+	public static function i(Eden_Mysql $database) {
 		return self::_getMultiple(__CLASS__,$database);
 	}
 	
@@ -61,12 +61,12 @@ class Eden_Mysql_Search extends Eden_Class {
 				$separator = (string) $args[1];
 			}
 			
-			$key = Eden_Type_String::get($name)
+			$key = Eden_Type_String::i($name)
 				->substr(8)
 				->preg_replace("/([A-Z0-9])/", $separator."$1")
 				->substr(strlen($separator))
 				->strtolower()
-				->getData();
+				->get();
 			
 			if(!isset($args[0])) {
 				$args[0] = NULL;
@@ -84,12 +84,12 @@ class Eden_Mysql_Search extends Eden_Class {
 				$separator = (string) $args[1];
 			}
 			
-			$key = Eden_Type_String::get($name)
+			$key = Eden_Type_String::i($name)
 				->substr(6)
 				->preg_replace("/([A-Z0-9])/", $separator."$1")
 				->substr(strlen($separator))
 				->strtolower()
-				->getData();
+				->get();
 			
 			if(!isset($args[0])) {
 				$args[0] = self::ASC;
@@ -103,7 +103,7 @@ class Eden_Mysql_Search extends Eden_Class {
 		try {
 			return parent::__call($name, $args);
 		} catch(Eden_Error $e) {
-			Eden_Mysql_Error::get($e->getMessage())->trigger();
+			Eden_Mysql_Error::i($e->getMessage())->trigger();
 		}
 	}
 	
@@ -132,7 +132,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return this
 	 */
 	public function setTable($table) {
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		$this->_table = $table;
 		return $this;
 	}
@@ -145,7 +145,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return this
 	 */
 	public function addInnerJoinOn($table, $where) {
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string');
 		
@@ -165,7 +165,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return this
 	 */
 	public function addInnerJoinUsing($table, $where) {
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string');
 		
@@ -185,7 +185,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return this
 	 */
 	public function addLeftJoinOn($table, $where) {
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string');
 		
@@ -205,7 +205,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return this
 	 */
 	public function addLeftJoinUsing($table, $where) {
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string');
 		
@@ -225,7 +225,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return this
 	 */
 	public function addRightJoinOn($table, $where) {
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string');
 		
@@ -245,7 +245,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return this
 	 */
 	public function addRightJoinUsing($table, $where) {
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string');
 		
@@ -265,7 +265,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return this
 	 */
 	public function addOuterJoinOn($table, $where) {
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string');
 		
@@ -285,7 +285,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return this
 	 */
 	public function addOuterJoinUsing($table, $where) {
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string');
 		
@@ -305,7 +305,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return this
 	 */
 	public function addFilter() {
-		Eden_Mysql_Error::get()->argument(1, 'string');
+		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_filter[] = func_get_args();
 		
@@ -320,7 +320,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return this
 	 */
 	public function addSort($column, $order = self::ASC) {
-		Eden_Mysql_Error::get()
+		Eden_Mysql_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string');
 		
@@ -342,7 +342,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 */
 	public function setGroup($group) {
 		 //Argument 1 must be a string or array
-		 Eden_Mysql_Error::get()->argument(1, 'string', 'array');	
+		 Eden_Mysql_Error::i()->argument(1, 'string', 'array');	
 			
 		if(is_string($group)) {
 			$group = array($group); 
@@ -359,7 +359,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return this
 	 */
 	public function setStart($start) {
-		Eden_Mysql_Error::get()->argument(1, 'int');
+		Eden_Mysql_Error::i()->argument(1, 'int');
 		
 		if($start < 0) {
 			$start = 0;
@@ -377,7 +377,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return this
 	 */
 	public function setRange($range) {
-		Eden_Mysql_Error::get()->argument(1, 'int');
+		Eden_Mysql_Error::i()->argument(1, 'int');
 		
 		if($range < 0) {
 			$range = 25;
@@ -395,7 +395,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return this
 	 */
 	public function setPage($page) {
-		Eden_Mysql_Error::get()->argument(1, 'int');
+		Eden_Mysql_Error::i()->argument(1, 'int');
 		
 		if($page < 1) {
 			$page = 1;

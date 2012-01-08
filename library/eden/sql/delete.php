@@ -29,7 +29,7 @@ class Eden_Sql_Delete extends Eden_Sql_Query {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($table = NULL) {
+	public static function i($table = NULL) {
 		return self::_getMultiple(__CLASS__, $table);
 	}
 	
@@ -51,7 +51,7 @@ class Eden_Sql_Delete extends Eden_Sql_Query {
 	 */
 	public function setTable($table) {
 		//Argument 1 must be a string
-		Eden_Sql_Error::get()->argument(1, 'string');
+		Eden_Sql_Error::i()->argument(1, 'string');
 		
 		$this->_table = $table;
 		return $this;
@@ -66,7 +66,7 @@ class Eden_Sql_Delete extends Eden_Sql_Query {
 	 */
 	public function where($where) {
 		//Argument 1 must be a string or array
-		Eden_Sql_Error::get()->argument(1, 'string', 'array');
+		Eden_Sql_Error::i()->argument(1, 'string', 'array');
 		
 		if(is_string($where)) {
 			$where = array($where);

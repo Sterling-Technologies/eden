@@ -29,7 +29,7 @@ class Eden_Timezone extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	
@@ -45,7 +45,7 @@ class Eden_Timezone extends Eden_Class {
 	 */
 	public function getTimeZones($key = NULL) {
 		//Argument 1 must be a string or null
-		Eden_Timezone_Error::get()->argument(1, 'string', 'null');
+		Eden_Timezone_Error::i()->argument(1, 'string', 'null');
 		
 		$zones = array();
 		$zonesProcessed = array();
@@ -88,7 +88,7 @@ class Eden_Timezone extends Eden_Class {
 	 */
 	public function getTimeInZone($zoneName, $systemTime = NULL) {
 		//argument testing
-		Eden_Timezone_Error::get()
+		Eden_Timezone_Error::i()
 			->argument(1, 'string')			//Argument 1 must be a string
 			->argument(2, 'int', 'null');	//Argument 2 must be a string or null
 			
@@ -120,7 +120,7 @@ class Eden_Timezone_Error extends Eden_Error {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($message = NULL, $code = 0) {
+	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}

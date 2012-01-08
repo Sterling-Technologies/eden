@@ -32,7 +32,7 @@ class Eden_Google_Shortener extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($key) {
+	public static function i($key) {
 		return self::_getMultiple(__CLASS__, $key);
 	}
 	
@@ -40,7 +40,7 @@ class Eden_Google_Shortener extends Eden_Class {
 	-------------------------------*/
 	public function __construct($key) {
 		//Argument 1 must be a string
-		Eden_Google_Error::get()->argument(1, 'string');
+		Eden_Google_Error::i()->argument(1, 'string');
 			
 		$this->_key = $key; 
 	}
@@ -122,7 +122,7 @@ class Eden_Google_Shortener extends Eden_Class {
 	 * @return array
 	 */
 	public function getMeta($key = NULL) {
-		Eden_Google_Error::get()->argument(1, 'string', 'null');
+		Eden_Google_Error::i()->argument(1, 'string', 'null');
 		
 		if(isset($this->_meta[$key])) {
 			return $this->_meta[$key];
@@ -155,7 +155,7 @@ class Eden_Google_Shortener extends Eden_Class {
 		$url .= $connector.$query;
 
 		//set curl
-		$curl = Eden_Curl::get()
+		$curl = Eden_Curl::i()
 			->verifyHost(false)
 			->verifyPeer(false)
 			->setUrl($url)
@@ -193,7 +193,7 @@ class Eden_Google_Shortener extends Eden_Class {
 		$url .= $connector.'key='.$this->_key;
 		
 		//set curl
-		$curl = Eden_Curl::get()
+		$curl = Eden_Curl::i()
 			->verifyHost(false)
 			->verifyPeer(false)
 			->setUrl($url)
