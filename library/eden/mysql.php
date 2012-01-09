@@ -352,7 +352,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 		$result = $this->getRow($table, $name, $value);
 		
 		if(is_null($result)) {
-			return NULL;
+			return Eden_Mysql_Model::i()->setDatabase($this)->setTable($table);
 		}
 		
 		return Eden_Mysql_Model::i($result)->setDatabase($this)->setTable($table);
@@ -382,7 +382,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 		$results = $this->getRows($table, $joins, $filters, $sort, $start, $range, $index);
 		
 		if(is_null($results)) {
-			return NULL;
+			return Eden_Mysql_Collection::i()->setDatabase($this)->setTable($table);
 		}
 		
 		if(!is_null($index)) {
