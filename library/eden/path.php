@@ -129,7 +129,7 @@ class Eden_Path extends Eden_Type_String implements ArrayAccess {
 			//check for type errors
 			$error->argument($i + 1, $path, 'string');
 			//add to path
-			$this->_data = $this->_format($path).$this-_path;
+			$this->_data = $this->_format($path).$this->_data;
 		}
 		
 		return $this;

@@ -71,6 +71,8 @@ class Eden_Mysql_Search extends Eden_Class {
 			if(!isset($args[0])) {
 				$args[0] = NULL;
 			}
+			
+			$key = $key.'=%s';
 				
 			$this->addFilter($key, $args[0]);
 			

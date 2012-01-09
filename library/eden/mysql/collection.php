@@ -76,7 +76,7 @@ class Eden_Mysql_Collection extends Eden_Collection {
 	 * @param string
 	 * @return this
 	 */
-	public function formatTime($column, $format = self::DATETIME) {
+	public function formatTime($column, $format = Eden_Mysql_Model::DATETIME) {
 		//for each row
 		foreach($this->_list as $row) {
 			//let the row handle this
