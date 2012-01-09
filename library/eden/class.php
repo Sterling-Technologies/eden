@@ -8,6 +8,9 @@
  */
 
 require_once dirname(__FILE__).'/error.php';
+require_once dirname(__FILE__).'/route.php';
+require_once dirname(__FILE__).'/when.php';
+require_once dirname(__FILE__).'/map.php';
 
 /**
  * The base class for all classes wishing to integrate with Eve.
@@ -185,7 +188,3 @@ class Eden_Class {
 		}
 	}
 }
-
-require_once dirname(__FILE__).'/route.php';
-require_once dirname(__FILE__).'/when.php';
-require_once dirname(__FILE__).'/map.php';
