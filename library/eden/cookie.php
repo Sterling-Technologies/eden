@@ -87,7 +87,7 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	 * @param string|null the domain
 	 * @return this
 	 */
-	public function set(array $data, $expires = 0, $path = NULL, $domain = NULL, $secure = false, $httponly = false) {
+	public function setData(array $data, $expires = 0, $path = NULL, $domain = NULL, $secure = false, $httponly = false) {
 		foreach($data as $key => $value) {
 			$this->set($key, $value, $expires, $path, $domain, $secure, $httponly);
 		}
