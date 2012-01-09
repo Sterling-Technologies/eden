@@ -108,6 +108,112 @@ class Eden_Mysql_Model extends Eden_Model {
 	}
 	
 	/**
+	 * Inserts model to database
+	 *
+	 * @param string
+	 * @param Eden_Mysql
+	 * @return this
+	 */
+	public function insert($table = NULL, Eden_Mysql $database = NULL) {
+		//Argument 1 must be a string
+		$error = Eden_Mysql_Error::i()->argument(1, 'string', 'null');
+		
+		//if no table
+		if(is_null($table)) {
+			//if no default table either
+			if(!$this->_table) {
+				//throw error
+				$error->setMessage(Eden_Mysql_Error::TABLE_NOT_SET)->trigger();
+			}
+			
+			$table = $this->_table;
+		}
+		
+		//if no database
+		if(is_null($database)) {
+			//and no default database
+			if(!$this->_database) {
+				$error->setMessage(Eden_Mysql_Error::DATABASE_NOT_SET)->trigger();
+			}
+			
+			$database = $this->_database;
+		}
+		
+		//get the meta data, the valid column values and whether is primary is set
+		$meta 			= $this->_getMeta($table, $database);
+		$data 			= $this->_getValidColumns(array_keys($meta[self::COLUMNS]));	
+		
+		//update original data
+		$this->_original = $this->_data;
+		
+		//we insert it
+		$database->insertRow($table, $data);
+		
+		//only if we have 1 primary key
+		if(count($meta[self::PRIMARY]) == 1) {
+			//set the primary key
+			$this->_data[$meta[self::PRIMARY][0]] = $database->getLastInsertedId();	
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Updates model to database
+	 *
+	 * @param string
+	 * @param Eden_Mysql
+	 * @return this
+	 */
+	public function update($table = NULL, Eden_Mysql $database = NULL) {
+		//Argument 1 must be a string
+		$error = Eden_Mysql_Error::i()->argument(1, 'string', 'null');
+		
+		//if no table
+		if(is_null($table)) {
+			//if no default table either
+			if(!$this->_table) {
+				//throw error
+				$error->setMessage(Eden_Mysql_Error::TABLE_NOT_SET)->trigger();
+			}
+			
+			$table = $this->_table;
+		}
+		
+		//if no database
+		if(is_null($database)) {
+			//and no default database
+			if(!$this->_database) {
+				$error->setMessage(Eden_Mysql_Error::DATABASE_NOT_SET)->trigger();
+			}
+			
+			$database = $this->_database;
+		}
+		
+		//get the meta data, the valid column values and whether is primary is set
+		$meta 			= $this->_getMeta($table, $database);
+		$data 			= $this->_getValidColumns(array_keys($meta[self::COLUMNS]));	
+		
+		//update original data
+		$this->_original = $this->_data;
+		
+		//from here it means that this table has primary 
+		//columns and all primary values are set
+		
+		$filter = array();
+		//for each primary key
+		foreach($meta[self::PRIMARY] as $column) {
+			//add the condition to the filter
+			$filter[] = array($column.'=%s', $data[$column]);
+		}
+		
+		//we update it
+		$database->updateRows($table, $data, $filter);
+		
+		return $this;
+	}
+	
+	/**
 	 * Inserts or updates model to database
 	 *
 	 * @param string
@@ -141,7 +247,6 @@ class Eden_Mysql_Model extends Eden_Model {
 		
 		//get the meta data, the valid column values and whether is primary is set
 		$meta 			= $this->_getMeta($table, $database);
-		$data 			= $this->_getValidColumns(array_keys($meta[self::COLUMNS]));
 		$primarySet 	= $this->_isPrimarySet($meta[self::PRIMARY]);	
 		
 		//update original data
@@ -149,32 +254,10 @@ class Eden_Mysql_Model extends Eden_Model {
 		
 		//if no primary meta or primary values are not set
 		if(empty($meta[self::PRIMARY]) || !$primarySet) {
-			//we insert it
-			$database->insertRow($table, $data);
-			
-			//only if we have 1 primary key
-			if(count($meta[self::PRIMARY]) == 1) {
-				//set the primary key
-				$this->_data[$meta[self::PRIMARY][0]] = $database->getLastInsertedId();	
-			}
-			
-			return $this;
+			return $this->insert($table, $database);
 		}
 		
-		//from here it means that this table has primary 
-		//columns and all primary values are set
-		
-		$filter = array();
-		//for each primary key
-		foreach($meta[self::PRIMARY] as $column) {
-			//add the condition to the filter
-			$filter[] = array($column.'=%s', $data[$column]);
-		}
-		
-		//we update it
-		$database->updateRows($table, $data, $filter);
-		
-		return $this;
+		return $this->update($table, $database);
 	}
 	
 	/**

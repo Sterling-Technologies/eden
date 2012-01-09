@@ -99,6 +99,46 @@ class Eden_Mysql_Collection extends Eden_Collection {
 	}
 	
 	/**
+	 * Insert collection to database
+	 *
+	 * @param string
+	 * @param Eden_Mysql
+	 * @return this
+	 */
+	public function insert($table = NULL, Eden_Mysql $database = NULL) {
+		//for each row
+		foreach($this->_list as $i => $row) {
+			if(!is_object($row) || !method_exists($row, 'insert')) {
+				continue;
+			}
+			
+			$row->insert($table, $database);
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Updates collection to database
+	 *
+	 * @param string
+	 * @param Eden_Mysql
+	 * @return this
+	 */
+	public function update($table = NULL, Eden_Mysql $database = NULL) {
+		//for each row
+		foreach($this->_list as $i => $row) {
+			if(!is_object($row) || !method_exists($row, 'update')) {
+				continue;
+			}
+			
+			$row->update($table, $database);
+		}
+		
+		return $this;
+	}
+	
+	/**
 	 * Inserts or updates collection to database
 	 *
 	 * @param string
