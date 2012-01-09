@@ -44,6 +44,10 @@ class Eden_Mysql_Collection extends Eden_Collection {
 	public function setDatabase(Eden_Mysql $database) {
 		//for each row
 		foreach($this->_list as $row) {
+			if(!is_object($row) || !method_exists($row, 'setDatabase')) {
+				continue;
+			}
+			
 			//let the row handle this
 			$row->setDatabase($database);
 		}
@@ -62,6 +66,10 @@ class Eden_Mysql_Collection extends Eden_Collection {
 		
 		//for each row
 		foreach($this->_list as $row) {
+			if(!is_object($row) || !method_exists($row, 'setTable')) {
+				continue;
+			}
+			
 			//let the row handle this
 			$row->setTable($table);
 		}
@@ -79,6 +87,10 @@ class Eden_Mysql_Collection extends Eden_Collection {
 	public function formatTime($column, $format = Eden_Mysql_Model::DATETIME) {
 		//for each row
 		foreach($this->_list as $row) {
+			if(!is_object($row) || !method_exists($row, 'formatTime')) {
+				continue;
+			}
+			
 			//let the row handle this
 			$row->formatTime($column, $format);
 		}
@@ -96,6 +108,10 @@ class Eden_Mysql_Collection extends Eden_Collection {
 	public function save($table = NULL, Eden_Mysql $database = NULL) {
 		//for each row
 		foreach($this->_list as $i => $row) {
+			if(!is_object($row) || !method_exists($row, 'save')) {
+				continue;
+			}
+			
 			$row->save($table, $database);
 		}
 		
@@ -112,6 +128,10 @@ class Eden_Mysql_Collection extends Eden_Collection {
 	public function remove($table = NULL, Eden_Mysql $database = NULL) {
 		//for each row
 		foreach($this->_list as $i => $row) {
+			if(!is_object($row) || !method_exists($row, 'remove')) {
+				continue;
+			}
+			
 			//let the row handle this
 			$row->remove($table, $database);
 		}
