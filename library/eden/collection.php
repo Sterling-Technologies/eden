@@ -211,7 +211,7 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	 * @return void
 	 */
 	public function rewind() {
-        reset($this->_data);
+        reset($this->_list);
     }
 
 	/**
@@ -221,7 +221,7 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	 * @return void
 	 */
     public function current() {
-        return current($this->_data);
+        return current($this->_list);
     }
 
 	/**
@@ -231,7 +231,7 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	 * @return void
 	 */
     public function key() {
-        return key($this->_data);
+        return key($this->_list);
     }
 
 	/**
@@ -241,7 +241,7 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	 * @return void
 	 */
     public function next() {
-        next($this->_data);
+        next($this->_list);
     }
 
 	/**
