@@ -37,6 +37,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	protected $_start		= 0;
 	protected $_range		= 0;
 	
+	protected $_model	 	= 'Eden_Mysql_Model';
 	protected $_collection 	= 'Eden_Mysql_Collection';
 	
 	/* Private Properties
@@ -415,7 +416,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return this
 	 */
 	public function setCollection($collection) {
-		$error = Eden_Mysql_Error::get()->argument(1, 'string');
+		$error = Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		if(!is_subclass_of($collection, 'Eden_Collection')) {
 			$error->setMessage(Eden_Mysql_Error::NOT_SUB_COLLECTION)
@@ -428,6 +429,25 @@ class Eden_Mysql_Search extends Eden_Class {
 	}
 	
 	/**
+	 * Sets default model
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setModel($model) {
+		$error = Eden_Mysql_Error::i()->argument(1, 'string');
+		
+		if(!is_subclass_of($model, 'Eden_Model')) {
+			$error->setMessage(Eden_Mysql_Error::NOT_SUB_MODEL)
+				->addVariable($model)
+				->trigger();
+		}
+		
+		$this->_model = $model;
+		return $this;
+	}
+	
+	/**
 	 * Returns the results in a collection
 	 *
 	 * @return Eden_Mysql_Collection
@@ -436,7 +456,8 @@ class Eden_Mysql_Search extends Eden_Class {
 		$collection = $this->_collection;
 		return $this->$collection($this->getRows())
 			->setDatabase($this->_database)
-			->setTable($this->_table);
+			->setTable($this->_table)
+			->setModel($this->_model);
 	}
 	
 	/**

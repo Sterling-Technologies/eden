@@ -152,7 +152,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @return this
 	 */
 	public function setModel($model) {
-		$error = Eden_Mysql_Error::get()->argument(1, 'string');
+		$error = Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		if(!is_subclass_of($model, 'Eden_Model')) {
 			$error->setMessage(Eden_Mysql_Error::NOT_SUB_MODEL)
@@ -171,7 +171,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @return this
 	 */
 	public function setCollection($collection) {
-		$error = Eden_Mysql_Error::get()->argument(1, 'string');
+		$error = Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		if(!is_subclass_of($collection, 'Eden_Collection')) {
 			$error->setMessage(Eden_Mysql_Error::NOT_SUB_COLLECTION)
@@ -198,7 +198,9 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @return Eden_Mysql_Search
 	 */
 	public function search() {
-		return Eden_Mysql_Search::i($this);
+		return Eden_Mysql_Search::i($this)
+			->setCollection($this->_collection)
+			->setModel($this->_model);
 	}
 	
 	/**
@@ -218,7 +220,9 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function collection(array $data = array()) {
 		$collection = $this->_collection;
-		return $this->$collection($data)->setDatabase($this);
+		return $this->$collection($data)
+			->setDatabase($this)
+			->setModel($this->_model);
 	}
 	
 	/**
@@ -429,7 +433,9 @@ class Eden_Mysql extends Eden_Sql_Database {
 		
 		$results = $this->getRows($table, $joins, $filters, $sort, $start, $range, $index);
 		
-		$collection = $this->collection()->setTable($table);
+		$collection = $this->collection()
+			->setTable($table)
+			->setModel($this->_model);
 		
 		if(is_null($results)) {
 			return $collection;

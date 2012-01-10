@@ -119,7 +119,7 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	 * @return this
 	 */
 	public function setModel($model) {
-		$error = Eden_Collection_Error::get()->argument(1, 'string');
+		$error = Eden_Collection_Error::i()->argument(1, 'string');
 		
 		if(!is_subclass_of($model, 'Eden_Model')) {
 			$error->setMessage(Eden_Collection_Error::NOT_SUB_MODEL)
