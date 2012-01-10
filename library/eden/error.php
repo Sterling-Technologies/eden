@@ -46,6 +46,8 @@ class Eden_Error extends Exception {
 	const DEBUG 		= 'DEBUG'; 			//used for temporary developer output
 	const INFORMATION 	= 'INFORMATION'; 	//used for permanent developer notes
 	
+	const DEBUG_NOT_STRING 		= 'Debug was expecting a string';
+	const DEBUG_NOT_PROPERTY 	= 'Debug: %s is not a property of %s';
 	
 	/* Public Properties
 	-------------------------------*/
