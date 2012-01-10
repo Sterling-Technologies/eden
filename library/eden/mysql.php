@@ -220,9 +220,10 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */
 	public function collection(array $data = array()) {
 		$collection = $this->_collection;
-		return $this->$collection($data)
+		return $this->$collection()
 			->setDatabase($this)
-			->setModel($this->_model);
+			->setModel($this->_model)
+			->set($data);
 	}
 	
 	/**

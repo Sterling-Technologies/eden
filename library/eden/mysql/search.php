@@ -454,10 +454,11 @@ class Eden_Mysql_Search extends Eden_Class {
 	 */
 	public function getCollection() {
 		$collection = $this->_collection;
-		return $this->$collection($this->getRows())
+		return $this->$collection()
 			->setDatabase($this->_database)
 			->setTable($this->_table)
-			->setModel($this->_model);
+			->setModel($this->_model)
+			->set($this->getRows());
 	}
 	
 	/**

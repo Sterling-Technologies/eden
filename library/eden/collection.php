@@ -128,6 +128,7 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 		}
 		
 		$this->_model = $model;
+		
 		return $this;
 	}
 	
