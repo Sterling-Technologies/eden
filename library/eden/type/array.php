@@ -72,7 +72,7 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 	
 	/* Magic
 	-------------------------------*/
-	public function __construct($data) {
+	public function __construct($data = array()) {
 		//if there is more arguments or data is not an array
 		if(func_num_args() > 1 || !is_array($data)) {
 			//just get the args
@@ -145,7 +145,7 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 	 * @return this
 	 */
 	public function set($value) {
-		Eden_Type_Error::get()->argument(1, 'array');
+		Eden_Type_Error::i()->argument(1, 'array');
 		$this->_data = $value;
 		return $this;
 	}

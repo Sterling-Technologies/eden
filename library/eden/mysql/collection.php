@@ -22,7 +22,9 @@ class Eden_Mysql_Collection extends Eden_Collection {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_model 	= 'Eden_Mysql_Model';
+	protected $_model 		= 'Eden_Mysql_Model';
+	protected $_database	= NULL;
+	protected $_table		= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -42,6 +44,8 @@ class Eden_Mysql_Collection extends Eden_Collection {
 	 * @param Eden_Mysql
 	 */
 	public function setDatabase(Eden_Mysql $database) {
+		$this->_database = $database;
+		
 		//for each row
 		foreach($this->_list as $row) {
 			if(!is_object($row) || !method_exists($row, 'setDatabase')) {
@@ -63,6 +67,8 @@ class Eden_Mysql_Collection extends Eden_Collection {
 	public function setTable($table) {
 		//Argument 1 must be a string
 		Eden_Mysql_Error::i()->argument(1, 'string');
+		
+		$this->_table = $table;
 		
 		//for each row
 		foreach($this->_list as $row) {
@@ -94,6 +100,37 @@ class Eden_Mysql_Collection extends Eden_Collection {
 			//let the row handle this
 			$row->formatTime($column, $format);
 		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds a row to the collection
+	 *
+	 * @param array|Eden_Model
+	 * @return this
+	 */
+	public function add($row = array()) {
+		//Argument 1 must be an array or Eden_Model
+		Eden_Mysql_Error::i()->argument(1, 'array', $this->_model);
+		
+		//if it's an array
+		if(is_array($row)) {
+			//make it a model
+			$model = $this->_model;
+			$row = $this->$model($row);
+		}
+		
+		if(!is_null($this->_database)) {
+			$row->setDatabase($this->_database);
+		}
+		
+		if(!is_null($this->_table)) {
+			$row->setTable($this->_table);
+		}
+		
+		//add it now
+		$this->_list[] = $row;
 		
 		return $this;
 	}

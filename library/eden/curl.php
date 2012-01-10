@@ -151,7 +151,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 			$method = substr($name, 3);
 			
 			if(isset(self::$_setBoolKeys[$method])) {
-				Eden_Curl_Error::get()->vargument($name, $args, 1, 'bool');
+				Eden_Curl_Error::i()->vargument($name, $args, 1, 'bool');
 				$key = self::$_setBoolKeys[$method];
 				$this->_options[$key] = $args[0];
 				
@@ -159,7 +159,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 			}
 			
 			if(isset(self::$_setIntegerKeys[$method])) {
-				Eden_Curl_Error::get()->vargument($name, $args, 1, 'int');
+				Eden_Curl_Error::i()->vargument($name, $args, 1, 'int');
 				$key = self::$_setIntegerKeys[$method];
 				$this->_options[$key] = $args[0];
 				
@@ -167,7 +167,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 			}
 			
 			if(isset(self::$_setStringKeys[$method])) {
-				Eden_Curl_Error::get()->vargument($name, $args, 1, 'string');
+				Eden_Curl_Error::i()->vargument($name, $args, 1, 'string');
 				$key = self::$_setStringKeys[$method];
 				$this->_options[$key] = $args[0];
 				
@@ -175,7 +175,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 			}
 			
 			if(isset(self::$_setArrayKeys[$method])) {
-				Eden_Curl_Error::get()->vargument($name, $args, 1, 'array');
+				Eden_Curl_Error::i()->vargument($name, $args, 1, 'array');
 				$key = self::$_setArrayKeys[$method];
 				$this->_options[$key] = $args[0];
 				
@@ -190,7 +190,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 			}
 			
 			if(isset(self::$_setCallbackKeys[$method])) {
-				Eden_Curl_Error::get()->vargument($name, $args, 1, 'array', 'string');
+				Eden_Curl_Error::i()->vargument($name, $args, 1, 'array', 'string');
 				$key = self::$_setCallbackKeys[$method];
 				$this->_options[$key] = $args[0];
 				
@@ -210,7 +210,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	 * @return this
 	 */
 	public function verifyHost($on = true) {
-		Eden_Curl_Error::get()->argument(1, 'bool');
+		Eden_Curl_Error::i()->argument(1, 'bool');
 		$this->options[CURLOPT_SSL_VERIFYHOST] = $on ? 1 : 2;
 		return $this;
 	}
@@ -222,7 +222,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	 * @return this
 	 */
 	public function verifyPeer($on = true) {
-		Eden_Curl_Error::get()->argument(1, 'bool');
+		Eden_Curl_Error::i()->argument(1, 'bool');
 		$this->options[CURLOPT_SSL_VERIFYPEER] = $on;
 		return $this;
 	}
@@ -234,7 +234,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	 * @return this
 	 */
 	public function setUrlParameter($key, $value = NULL) {
-		Eden_Curl_Error::get()
+		Eden_Curl_Error::i()
 			->argument(1, 'array', 'string')
 			->argument(2, 'scalar');
 		
@@ -253,7 +253,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	 * @return this
 	 */
 	public function setHeaders($key, $value = NULL) {
-		Eden_Curl_Error::get()
+		Eden_Curl_Error::i()
 			->argument(1, 'array', 'string')
 			->argument(2, 'scalar','null');
 		
@@ -322,7 +322,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	 */
 	public function getJsonResponse($assoc = true) {
 		$this->_meta['response'] = $this->getResponse();
-		Eden_Curl_Error::get()->argument(1, 'bool');
+		Eden_Curl_Error::i()->argument(1, 'bool');
 		return json_decode($this->_meta['response'], $assoc);
 	}
 	
@@ -368,7 +368,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	 * @return array
 	 */
 	public function getMeta($key = NULL) {
-		Eden_Curl_Error::get()->argument(1, 'string', 'null');
+		Eden_Curl_Error::i()->argument(1, 'string', 'null');
 		
 		if(isset($this->_meta[$key])) {
 			return $this->_meta[$key];
@@ -505,7 +505,7 @@ class Eden_Curl_Error extends Eden_Error {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get($message = NULL, $code = 0) {
+	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}
