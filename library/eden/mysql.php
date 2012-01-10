@@ -851,10 +851,20 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 *
 	 * @param void
 	 * @return array
-	 * @notes returns all the binds stored in registry
 	 */
 	public function getBinds() {
 		return $this->_binds;
+	}
+	
+	/**
+	 * Sets all the bound values of this query
+	 *
+	 * @param array
+	 * @return this
+	 */
+	public function setBinds(array $binds) {
+		$this->_binds = $binds;
+		return $this;
 	}
 	
 	/* Protected Methods

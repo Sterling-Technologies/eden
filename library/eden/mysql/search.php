@@ -426,9 +426,7 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return array
 	 */
 	public function getRows() {
-		$database = $this->_database;
-		
-		$query = $this->_getQuery($database);
+		$query = $this->_getQuery();
 		
 		if(!empty($this->_columns)) {
 			$query->select(implode(', ', $this->_columns));
@@ -446,7 +444,7 @@ class Eden_Mysql_Search extends Eden_Class {
 			$query->groupBy($this->_group);
 		}
 		
-		return $database->query($query, $database->getBinds());
+		return $this->_database->query($query, $this->_database->getBinds());
 	}
 	
 	/**
@@ -455,25 +453,31 @@ class Eden_Mysql_Search extends Eden_Class {
 	 * @return int
 	 */
 	public function getTotal() {
-		$database 	= $this->_database;
-		$query 		= $this->_getQuery($database)->select('COUNT(*) as total');
+		$query 		= $this->_getQuery()->select('COUNT(*) as total');
 		
-		$rows = $database->query($query, $database->getBinds());
+		$rows = $this->_database->query($query, $this->_database->getBinds());
+		
+		if(!isset($rows[0]['total'])) {
+			return 0;
+		}
 		
 		return $rows[0]['total'];
 	}
 	
 	/* Protected Methods
 	-------------------------------*/
-	protected function _getQuery($database) {
-		$query = $database->select()->from($this->_table);
+	protected function _getQuery() {
+		$query = $this->_database->select()->from($this->_table);
 		
 		foreach($this->_join as $join) {
+			if(!is_array($join[2])) {
+				$join[2] = array($join[2]);
+			}
 			
 			$where = array_shift($join[2]);
 			if(!empty($join[2])) {
 				foreach($join[2] as $i => $value) {
-					$join[2][$i] = $database->bind($value);
+					$join[2][$i] = $this->_database->bind($value);
 				}
 				
 				$where = vsprintf($where, $join[2]);
@@ -488,7 +492,7 @@ class Eden_Mysql_Search extends Eden_Class {
 			$where = array_shift($filter);
 			if(!empty($filter)) {
 				foreach($filter as $i => $value) {
-					$filter[$i] = $database->bind($value);
+					$filter[$i] = $this->_database->bind($value);
 				}
 				
 				$where = vsprintf($where, $filter);

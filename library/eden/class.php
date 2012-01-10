@@ -126,7 +126,7 @@ class Eden_Class {
 	 * @param bool
 	 * @return this|Eden_Noop
 	 */
-	public function when($isTrue, $lines) {
+	public function when($isTrue, $lines = 0) {
 		if($isTrue) {
 			return $this;
 		}
