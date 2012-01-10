@@ -63,7 +63,7 @@ class Eden_Route_Class extends Eden_Class {
 			$class = $this->getRoute($class);	
 		}
 		
-		$this->_route[$route] = $class;
+		$this->_route[strtolower($route)] = $class;
 		return $this;
 	}
 	
@@ -78,8 +78,8 @@ class Eden_Route_Class extends Eden_Class {
 		//argument 1 must be a string
 		Eden_Route_Error::i()->argument(1, 'string');
 		
-		if(isset($this->_route[$route])) {
-			return $this->_route[$route];
+		if($this->isRoute($route)) {
+			return $this->_route[strtolower($route)];
 		}
 		
 		return $route;
@@ -101,7 +101,7 @@ class Eden_Route_Class extends Eden_Class {
 	 * @return bool
 	 */
 	public function isRoute($route) {
-		return isset($this->_route[$route]);
+		return isset($this->_route[strtolower($route)]);
 	}
 	
 	/**
@@ -145,8 +145,8 @@ class Eden_Route_Class extends Eden_Class {
 				->getMethod('i')
 				->getDeclaringClass()
 				->getName();
-			
-			if($declared == $route) {	
+				
+			if(strtolower($declared) == strtolower($route)) {	
 				return Eden_Route_Method::i()->callStatic($class, 'i', $args);
 			}
 		}

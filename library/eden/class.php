@@ -189,9 +189,21 @@ class Eden_Class {
 	 * @param string
 	 * @return this
 	 */
-	public function debug($variable) {
+	public function debug($variable = NULL) {
 		//we are using tool in all cases
-		$tool = Eden_Tool::i();
+		$tool 	= Eden_Tool::i();
+		$class 	= get_class($this);
+		
+		//if variale is null
+		if(is_null($variable)) {
+			//output the class
+			$tool
+				->output('DEBUG '.$class.':')
+				->output($this);
+				
+			return $this;
+		}
+		
 		//if variable is not a string
 		if(!is_string($variable)) {
 			//soft output error
@@ -203,7 +215,7 @@ class Eden_Class {
 		if(isset($this->$variable)) {
 			//output it
 			$tool
-				->output('DEBUG $this->'.$variable.':')
+				->output('DEBUG '.$class.'->'.$variable.':')
 				->output($this->$variable);
 				
 			return $this;
@@ -215,7 +227,7 @@ class Eden_Class {
 		if(isset($this->$private)) {
 			//output it
 			$tool
-				->output('DEBUG $this->'.$private.':')
+				->output('DEBUG '.$class.'->'.$private.':')
 				->output($this->$private);
 				
 			return $this;
@@ -223,7 +235,7 @@ class Eden_Class {
 		
 		//soft output error
 		$tool->output(sprintf(Eden_Error::DEBUG_NOT_PROPERTY, 
-			$variable, get_class($this)));
+			$variable, $clas));
 			
 		return $this;
 	}

@@ -75,13 +75,14 @@ class Eden_Route_Method extends Eden_Class {
 		$route = Eden_Route_Class::i();
 		if(!is_null($source)) {
 			$source = $route->getRoute($source);
+			$source = strtolower($source);
 		}
 		
 		if(is_string($class)) {
 			$class = $route->getRoute($class);
 		}
 		
-		$this->_route[$source][$alias] = array($class, $method);
+		$this->_route[$source][strtolower($alias)] = array($class, $method);
 		
 		return $this;
 	}
@@ -99,14 +100,14 @@ class Eden_Route_Method extends Eden_Class {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 		
-		if(isset($this->_route[NULL][$method])) {
-			return $this->_route[NULL][$method];
+		if($this->isRoute(NULL, $method)) {
+			return $this->_route[NULL][strtolower($method)];
 		}
 		
 		$class = Eden_Route_Class::i()->getRoute($class);
 		
-		if(isset($this->_route[$class][$method])) {
-			return $this->_route[$class][$method];
+		if($this->isRoute($class, $method)) {
+			return $this->_route[strtolower($class)][strtolower($method)];
 		}
 		
 		return array($class, $method);
@@ -129,7 +130,11 @@ class Eden_Route_Method extends Eden_Class {
 	 * @return bool
 	 */
 	public function isRoute($class, $method) {
-		return isset($this->_route[$class][$method]);
+		if(is_string($class)) {
+			strtolower($class);
+		}
+		
+		return isset($this->_route[$class][strtolower($method)]);
 	}
 	
 	/**
