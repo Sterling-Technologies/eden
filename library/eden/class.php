@@ -9,6 +9,8 @@
 
 require_once dirname(__FILE__).'/error.php';
 require_once dirname(__FILE__).'/route.php';
+
+require_once dirname(__FILE__).'/tool.php';
 require_once dirname(__FILE__).'/when.php';
 require_once dirname(__FILE__).'/map.php';
 
@@ -179,6 +181,51 @@ class Eden_Class {
 	 */
 	public function loop(array &$list, $lines = 0) {
 		return Eden_Map::i($this, $list, $lines);
+	}
+	
+	/** 
+	 * Force outputs any class property
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function debug($variable) {
+		//we are using tool in all cases
+		$tool = Eden_Tool::i();
+		//if variable is not a string
+		if(!is_string($variable)) {
+			//soft output error
+			$tool->output(Eden_Error::DEBUG_NOT_STRING);
+			return $this;
+		}
+		
+		//if variable is set
+		if(isset($this->$variable)) {
+			//output it
+			$tool
+				->output('DEBUG $this->'.$variable.':')
+				->output($this->$variable);
+				
+			return $this;
+		}
+		
+		//could be private
+		$private = '_'.$variable;
+		//if private variable is set
+		if(isset($this->$private)) {
+			//output it
+			$tool
+				->output('DEBUG $this->'.$private.':')
+				->output($this->$private);
+				
+			return $this;
+		}
+		
+		//soft output error
+		$tool->output(sprintf(Eden_Error::DEBUG_NOT_PROPERTY, 
+			$variable, get_class($this)));
+			
+		return $this;
 	}
 	
 	/* Protected Methods
