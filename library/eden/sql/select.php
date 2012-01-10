@@ -35,8 +35,8 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($select = '*') {
-		return self::_getMultiple(__CLASS__, $select);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

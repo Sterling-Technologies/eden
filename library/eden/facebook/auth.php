@@ -34,8 +34,8 @@ class Eden_Facebook_Auth extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($key, $secret) {
-		return self::_getMultiple(__CLASS__, $key, $secret);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

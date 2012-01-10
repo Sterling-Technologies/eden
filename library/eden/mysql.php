@@ -42,6 +42,9 @@ class Eden_Mysql extends Eden_Sql_Database {
 	const FIRST = 'first';
 	const LAST	= 'last';
 	
+	const MODEL 		= 'Eden_Mysql_Model';
+	const COLLECTION 	= 'Eden_Mysql_Collection';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -53,15 +56,18 @@ class Eden_Mysql extends Eden_Sql_Database {
 	protected $_pass = NULL;
 	protected $_queries = array();
 	
-	protected $_connection = NULL;
-	protected $_binds 	= array();
+	protected $_connection 	= NULL;
+	protected $_binds 		= array();
+	
+	protected $_model 		= self::MODEL;
+	protected $_collection 	= self::COLLECTION;
 	
 	/* Private Properties
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($host = NULL, $name = NULL, $user = NULL, $pass = NULL) {
-		return self::_getMultiple(__CLASS__, $host, $name, $user, $pass);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic
@@ -140,6 +146,44 @@ class Eden_Mysql extends Eden_Sql_Database {
 	}
 	
 	/**
+	 * Sets the default model
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setModel($model) {
+		$error = Eden_Mysql_Error::get()->argument(1, 'string');
+		
+		if(!is_subclass_of($model, 'Eden_Model')) {
+			$error->setMessage(Eden_Mysql_Error::NOT_SUB_MODEL)
+				->addVariable($model)
+				->trigger();
+		}
+		
+		$this->_model = $model;
+		return $this;
+	}
+	
+	/**
+	 * Sets default collection
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCollection($collection) {
+		$error = Eden_Mysql_Error::get()->argument(1, 'string');
+		
+		if(!is_subclass_of($collection, 'Eden_Collection')) {
+			$error->setMessage(Eden_Mysql_Error::NOT_SUB_COLLECTION)
+				->addVariable($collection)
+				->trigger();
+		}
+		
+		$this->_collection = $collection;
+		return $this;
+	}
+	
+	/**
 	 * Returns the last inserted id
 	 *
 	 * @return int the id
@@ -163,7 +207,8 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @return Eden_Mysql_Model
 	 */
 	public function model(array $data = array()) {
-		return Eden_Mysql_Model::i($data)->setDatabase($this);
+		$model = $this->_model;
+		return $this->$model($data)->setDatabase($this);
 	}
 	
 	/**
@@ -172,7 +217,8 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @return Eden_Mysql_Collection
 	 */
 	public function collection(array $data = array()) {
-		return Eden_Mysql_Collection::i($data)->setDatabase($this);
+		$collection = $this->_collection;
+		return $this->$collection($data)->setDatabase($this);
 	}
 	
 	/**
@@ -351,11 +397,13 @@ class Eden_Mysql extends Eden_Sql_Database {
 
 		$result = $this->getRow($table, $name, $value);
 		
+		$model = $this->model()->setTable($table);
+		
 		if(is_null($result)) {
-			return Eden_Mysql_Model::i()->setDatabase($this)->setTable($table);
+			return $model;
 		}
 		
-		return Eden_Mysql_Model::i($result)->setDatabase($this)->setTable($table);
+		return $model->set($result);
 	}
 	
 	/**
@@ -381,15 +429,17 @@ class Eden_Mysql extends Eden_Sql_Database {
 		
 		$results = $this->getRows($table, $joins, $filters, $sort, $start, $range, $index);
 		
+		$collection = $this->collection()->setTable($table);
+		
 		if(is_null($results)) {
-			return Eden_Mysql_Collection::i()->setDatabase($this)->setTable($table);
+			return $collection;
 		}
 		
 		if(!is_null($index)) {
-			return Eden_Mysql_Model::i($results);
+			return $this->model($results)->setTable($table);
 		}
 		
-		return Eden_Mysql_Collection::i($results)->setDatabase($this)->setTable($table);
+		return $collection->set($results);
 	}
 	
 	/**

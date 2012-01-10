@@ -38,9 +38,10 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($user, $api) {
-		return self::_getMultiple(__CLASS__, $user, $api);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
+	
 	/* Magic
 	-------------------------------*/
 	/* Public Methods

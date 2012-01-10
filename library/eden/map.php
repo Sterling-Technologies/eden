@@ -34,15 +34,15 @@ class Eden_Map extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($scope, array &$list, $lines = 0) {
-		return self::_getMultiple(__CLASS__, $scope, $list, $lines);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic
 	-------------------------------*/
-	public function __construct($scope, array &$list, $lines = 0) {
+	public function __construct($scope, array $list, $lines = 0) {
 		$this->_scope 	= $scope;
-		$this->_list 	= &$list;
+		$this->_list 	= $list;
 		$this->_lines 	= $lines;
 	}
 	

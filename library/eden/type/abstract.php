@@ -104,6 +104,16 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * Sets data
+	 *
+	 * @return this
+	 */
+	public function set($value) {
+		$this->_data = $value;
+		return $this;
+	}
+	
+	/**
 	 * Reverts changes back to the original
 	 *
 	 * @return this

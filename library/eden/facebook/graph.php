@@ -32,8 +32,8 @@ class Eden_Facebook_Graph extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($token) {
-		return self::_getMultiple(__CLASS__, $token);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

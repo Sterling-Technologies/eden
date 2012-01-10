@@ -34,19 +34,31 @@ class Eden_Registry extends Eden_Type_Array {
 	/* Get
 	-------------------------------*/
 	public static function i() {
-		$data = self::_getStart(func_get_args());
-		
-		foreach($data as $key => $value) {
-			if(is_array($value)) {
-				$data[$key] = self::i($value);
-			}
-		} 
-		
-		return self::_getMultiple(__CLASS__, $data);
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic
 	-------------------------------*/
+	public function __construct($data = array()) {
+		//if there is more arguments or data is not an array
+		if(func_num_args() > 1 || !is_array($data)) {
+			//just get the args
+			$data = func_get_args();
+		}
+		
+		foreach($data as $key => $value) {
+			if(!is_array($value)) {
+				continue;
+			}
+			
+			$class = get_class($this);
+			
+			$data[$key] = $this->$class($value);
+		}
+		
+		parent::__construct($data);
+	}
+	
 	public function __toString() {
 		return json_encode($this->getArray());
 	}
@@ -98,7 +110,7 @@ class Eden_Registry extends Eden_Type_Array {
 	 *
 	 * @return Eden_Registry
 	 */
-	public function set() {
+	public function set($value) {
 		$args = func_get_args();
 		
 		if(count($args) < 2) {

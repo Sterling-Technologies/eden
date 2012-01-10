@@ -47,8 +47,8 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($url, $key, $secret) {
-		return self::_getMultiple(__CLASS__, $url, $key, $secret);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

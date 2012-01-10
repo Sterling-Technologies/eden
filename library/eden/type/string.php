@@ -55,21 +55,20 @@ class Eden_Type_String extends Eden_Type_Abstract {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($data) {
-		if($data instanceof Eden_Type_String) {
-			return $data;
-		}
-		
-		//argument 1 must be scalar
-		Eden_Type_Error::i()->argument(1, 'scalar');
-		
-		$data = (string) $data;
-		
-		return self::_getMultiple(__CLASS__, $data);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic
 	-------------------------------*/
+	public function __construct($data) {
+		//argument 1 must be scalar
+		Eden_Type_Error::i()->argument(1, 'scalar');
+		$data = (string) $data;
+		
+		parent::__construct($data);
+	}
+	
 	public function __toString() {
 		return $this->_data;
 	}

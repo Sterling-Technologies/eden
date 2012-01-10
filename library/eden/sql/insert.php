@@ -29,8 +29,8 @@ class Eden_Sql_Insert extends Eden_Sql_Query {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($table = NULL) {
-		return self::_getMultiple(__CLASS__, $table);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

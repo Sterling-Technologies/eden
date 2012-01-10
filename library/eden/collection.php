@@ -20,28 +20,27 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	-------------------------------*/
 	const FIRST = 'first';
 	const LAST	= 'last';
+	const MODEL = 'Eden_Model';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
 	protected $_list 	= array();
-	protected $_model 	= 'Eden_Model';
+	protected $_model 	= self::MODEL;
 	
 	/* Private Properties
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i(array $data = array()) {
-		return self::_getMultiple(__CLASS__,$data);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic
 	-------------------------------*/
 	public function __construct(array $data = array()) {
-		foreach($data as $row) {
-			$this->add($row);
-		}
+		$this->set($data);
 	}
 	
 	public function __call($name, $args) {
@@ -113,6 +112,38 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Sets default model
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setModel($model) {
+		$error = Eden_Collection_Error::get()->argument(1, 'string');
+		
+		if(!is_subclass_of($model, 'Eden_Model')) {
+			$error->setMessage(Eden_Collection_Error::NOT_SUB_MODEL)
+				->addVariable($model)
+				->trigger();
+		}
+		
+		$this->_model = $model;
+		return $this;
+	}
+	
+	/**
+	 * Sets data
+	 *
+	 * @return this
+	 */
+	public function set(array $data = array()) {
+		foreach($data as $row) {
+			$this->add($row);
+		}
+		
+		return $this;
+	}
+	
 	/**
 	 * Adds a row to the collection
 	 *
@@ -351,7 +382,8 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 class Eden_Collection_Error extends Eden_Error {
 	/* Constants
 	-------------------------------*/
-	const NOT_COLLECTION = 'The data passed into __construct is not a collection.';
+	const NOT_COLLECTION 	= 'The data passed into __construct is not a collection.';
+	const NOT_SUB_MODEL 	= 'Class %s is not a child of Eden_Model';
 	
 	/* Public Properties
 	-------------------------------*/

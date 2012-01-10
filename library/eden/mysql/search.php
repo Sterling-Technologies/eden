@@ -43,8 +43,8 @@ class Eden_Mysql_Search extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i(Eden_Mysql $database) {
-		return self::_getMultiple(__CLASS__,$database);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic
@@ -405,6 +405,25 @@ class Eden_Mysql_Search extends Eden_Class {
 		
 		$this->_start = ($page - 1) * $this->_range;
 		
+		return $this;
+	}
+	
+	/**
+	 * Sets default collection
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCollection($collection) {
+		$error = Eden_Mysql_Error::get()->argument(1, 'string');
+		
+		if(!is_subclass_of($collection, 'Eden_Collection')) {
+			$error->setMessage(Eden_Mysql_Error::NOT_SUB_COLLECTION)
+				->addVariable($collection)
+				->trigger();
+		}
+		
+		$this->_collection = $collection;
 		return $this;
 	}
 	

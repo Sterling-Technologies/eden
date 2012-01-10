@@ -39,8 +39,8 @@ class Eden_Image extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($data, $type = NULL, $path = true, $quality = 75) {
-		return self::_getMultiple(__CLASS__, $data, $type, $path, $quality);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

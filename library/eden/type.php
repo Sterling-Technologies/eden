@@ -45,10 +45,6 @@ class Eden_Type extends Eden_Class {
 			return Eden_Type_String::i($type);
 		}
 		
-		if(is_object($type)) {
-			return Eden_Type_Object::i($type);
-		}
-		
 		return self::_getSingleton(__CLASS__);
 	}
 	

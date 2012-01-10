@@ -32,8 +32,8 @@ class Eden_When extends Eden_Class implements ArrayAccess, Iterator {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($scope, $lines = 0) {
-		return self::_getMultiple(__CLASS__, $scope, $lines);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

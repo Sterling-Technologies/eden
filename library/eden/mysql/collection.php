@@ -28,8 +28,8 @@ class Eden_Mysql_Collection extends Eden_Collection {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i(array $data = array()) {
-		return self::_getMultiple(__CLASS__,$data);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

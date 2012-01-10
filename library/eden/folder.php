@@ -30,8 +30,8 @@ class Eden_Folder extends Eden_Path {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($path) {
-		return self::_getMultiple(__CLASS__, $path);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

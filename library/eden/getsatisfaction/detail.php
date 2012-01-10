@@ -28,8 +28,8 @@ class Eden_GetSatisfaction_Detail extends Eden_GetSatisfaction_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($key, $secret) {
-		return self::_getMultiple(__CLASS__, $key, $secret);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

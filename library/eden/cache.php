@@ -39,8 +39,8 @@ class Eden_Cache extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($root, $key = 'key.php') {
-		return self::_getMultiple(__CLASS__, $root, $key);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

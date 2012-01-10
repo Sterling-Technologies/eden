@@ -150,27 +150,31 @@ class Eden_Class {
 		$class = Eden_Route::i()->getClass()->getRoute($class);
 		
 		if(!isset(self::$_instances[$class])) {
-			$args = func_get_args();
-			array_shift($args);
-			
-			self::$_instances[$class] = self::_getInstance($class, $args);
+			self::$_instances[$class] = self::_getInstance($class);
 		}
 		
 		return self::$_instances[$class];
 	}
 	
 	protected static function _getMultiple($class) {
-		$args = func_get_args();
-		$class = array_shift($args);
-		
-		$class = Eden_Route::i()->getClass()->getRoute($class);
-		
-		return self::_getInstance($class, $args);
+		$class = Eden_Route::i()->getClass()->getRoute($class);		
+		return self::_getInstance($class);
 	}
 	
 	/* Private Methods
 	-------------------------------*/
-	private static function _getInstance($class, $args) {
+	private static function _getInstance($class) {
+		$trace 	= debug_backtrace();
+		$args 	= array();
+		
+		if(isset($trace[1]['args']) && count($trace[1]['args']) > 1) {
+			$args = $trace[1]['args'];
+			//shift out the class name
+			array_shift($args);
+		} else if(isset($trace[2]['args']) && count($trace[2]['args']) > 0) {
+			$args = $trace[2]['args'];
+		}
+		
 		if(count($args) === 0 || !method_exists($class, '__construct')) {
 			return new $class;
 		}

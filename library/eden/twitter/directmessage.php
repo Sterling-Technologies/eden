@@ -34,9 +34,10 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($user, $api) {
-		return self::_getMultiple(__CLASS__, $user, $api);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
+	
 	/* Magic
 	-------------------------------*/
 	/* Public Methods

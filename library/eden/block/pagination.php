@@ -35,8 +35,8 @@ class Eden_Block_Pagination extends Eden_Block {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($total) {
-		return self::_getMultiple(__CLASS__, $total);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

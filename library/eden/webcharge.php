@@ -79,8 +79,8 @@ class Eden_Webcharge_Model extends Eden_Class
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($user, $password, array $options = array()) {
-		return self::_getMultiple(__CLASS__, $user, $password, $options);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

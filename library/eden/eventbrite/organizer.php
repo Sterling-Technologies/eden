@@ -30,8 +30,8 @@ class Eden_Eventbrite_Event_Organizer extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($user, $api) {
-		return self::_getMultiple(__CLASS__, $user, $api);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

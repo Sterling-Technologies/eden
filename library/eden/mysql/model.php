@@ -39,8 +39,7 @@ class Eden_Mysql_Model extends Eden_Model {
 	/* Get
 	-------------------------------*/
 	public static function i() {
-		$data = self::_getStart(func_get_args());
-		return self::_getMultiple(__CLASS__, $data);
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

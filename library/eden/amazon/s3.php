@@ -39,8 +39,8 @@ class Eden_Amazon_S3 extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($user, $pass, $host = 's3.amazonaws.com', $ssl = false) {
-		return self::_getMultiple(__CLASS__, $user, $pass, $host, $ssl);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

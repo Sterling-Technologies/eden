@@ -37,8 +37,8 @@ class Eden_Mysql_Alter extends Eden_Sql_Query {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($name = NULL) {
-		return self::_getMultiple(__CLASS__, $name);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

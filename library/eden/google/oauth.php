@@ -30,8 +30,8 @@ class Eden_Google_Oauth extends Eden_Google_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($key, $secret, $scope) {
-		return self::_getMultiple(__CLASS__, $key, $secret, $scope);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

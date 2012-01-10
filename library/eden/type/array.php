@@ -67,13 +67,12 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 	/* Get
 	-------------------------------*/
 	public static function i() {
-		$data = self::_getStart(func_get_args());
-		return self::_getMultiple(__CLASS__, $data);
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic
 	-------------------------------*/
-	public function __construct($data = array()) {
+	public function __construct($data) {
 		//if there is more arguments or data is not an array
 		if(func_num_args() > 1 || !is_array($data)) {
 			//just get the args
@@ -140,6 +139,17 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Sets data
+	 *
+	 * @return this
+	 */
+	public function set($value) {
+		Eden_Type_Error::get()->argument(1, 'array');
+		$this->_data = $value;
+		return $this;
+	}
+	
 	/**
 	 * Returns if the data is empty
 	 *
@@ -359,24 +369,6 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 	
 	/* Protected Methods
 	-------------------------------*/
-	protected static function _getStart(array $args) {
-		if(count($args) != 1) {
-			return $args;
-		}
-		
-		$data = $args[0];
-		
-		if($data instanceof Eden_Type_Array) {
-			$data = $data->get();
-		}
-		
-		if(!is_array($data)) {
-			$data = array($data);
-		}
-		
-		return $data;
-	}
-	
 	protected function _getMethodType(&$name) {
 		
 		if(isset(self::$_methods[$name])) {

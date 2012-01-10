@@ -32,8 +32,8 @@ class Eden_Google_Shortener extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($key) {
-		return self::_getMultiple(__CLASS__, $key);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic

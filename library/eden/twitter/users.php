@@ -36,8 +36,8 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function i($key, $secret) {
-		return self::_getMultiple(__CLASS__, $key, $secret);
+	public static function i() {
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Magic
