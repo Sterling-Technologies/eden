@@ -8,14 +8,14 @@
  */
 
 /**
- * Mysql Model
+ * Sql Model
  *
  * @package    Eden
- * @category   mysql
+ * @category   sql
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Mysql_Model extends Eden_Model {
+class Eden_Sql_Model extends Eden_Model {
 	/* Constants
 	-------------------------------*/
 	const COLUMNS 	= 'columns';
@@ -49,9 +49,9 @@ class Eden_Mysql_Model extends Eden_Model {
 	/**
 	 * Sets the default database
 	 *
-	 * @param Eden_Mysql
+	 * @param Eden_Sql
 	 */
-	public function setDatabase(Eden_Mysql $database) {
+	public function setDatabase(Eden_Sql $database) {
 		$this->_database  = $database;
 		return $this;
 	}
@@ -63,7 +63,7 @@ class Eden_Mysql_Model extends Eden_Model {
 	 */
 	public function setTable($table) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::i()->argument(1, 'string');
+		Eden_Sql_Error::i()->argument(1, 'string');
 		
 		$this->_table  = $table;
 		return $this;
@@ -78,7 +78,7 @@ class Eden_Mysql_Model extends Eden_Model {
 	 */
 	public function formatTime($column, $format = self::DATETIME) {
 		//Argument Test
-		Eden_Mysql_Error::i()
+		Eden_Sql_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 1 must be a string
 		
@@ -110,19 +110,19 @@ class Eden_Mysql_Model extends Eden_Model {
 	 * Inserts model to database
 	 *
 	 * @param string
-	 * @param Eden_Mysql
+	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function insert($table = NULL, Eden_Mysql $database = NULL) {
+	public function insert($table = NULL, Eden_Sql $database = NULL) {
 		//Argument 1 must be a string
-		$error = Eden_Mysql_Error::i()->argument(1, 'string', 'null');
+		$error = Eden_Sql_Error::i()->argument(1, 'string', 'null');
 		
 		//if no table
 		if(is_null($table)) {
 			//if no default table either
 			if(!$this->_table) {
 				//throw error
-				$error->setMessage(Eden_Mysql_Error::TABLE_NOT_SET)->trigger();
+				$error->setMessage(Eden_Sql_Error::TABLE_NOT_SET)->trigger();
 			}
 			
 			$table = $this->_table;
@@ -132,7 +132,7 @@ class Eden_Mysql_Model extends Eden_Model {
 		if(is_null($database)) {
 			//and no default database
 			if(!$this->_database) {
-				$error->setMessage(Eden_Mysql_Error::DATABASE_NOT_SET)->trigger();
+				$error->setMessage(Eden_Sql_Error::DATABASE_NOT_SET)->trigger();
 			}
 			
 			$database = $this->_database;
@@ -161,19 +161,19 @@ class Eden_Mysql_Model extends Eden_Model {
 	 * Updates model to database
 	 *
 	 * @param string
-	 * @param Eden_Mysql
+	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function update($table = NULL, Eden_Mysql $database = NULL) {
+	public function update($table = NULL, Eden_Sql $database = NULL) {
 		//Argument 1 must be a string
-		$error = Eden_Mysql_Error::i()->argument(1, 'string', 'null');
+		$error = Eden_Sql_Error::i()->argument(1, 'string', 'null');
 		
 		//if no table
 		if(is_null($table)) {
 			//if no default table either
 			if(!$this->_table) {
 				//throw error
-				$error->setMessage(Eden_Mysql_Error::TABLE_NOT_SET)->trigger();
+				$error->setMessage(Eden_Sql_Error::TABLE_NOT_SET)->trigger();
 			}
 			
 			$table = $this->_table;
@@ -183,7 +183,7 @@ class Eden_Mysql_Model extends Eden_Model {
 		if(is_null($database)) {
 			//and no default database
 			if(!$this->_database) {
-				$error->setMessage(Eden_Mysql_Error::DATABASE_NOT_SET)->trigger();
+				$error->setMessage(Eden_Sql_Error::DATABASE_NOT_SET)->trigger();
 			}
 			
 			$database = $this->_database;
@@ -216,19 +216,19 @@ class Eden_Mysql_Model extends Eden_Model {
 	 * Inserts or updates model to database
 	 *
 	 * @param string
-	 * @param Eden_Mysql
+	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function save($table = NULL, Eden_Mysql $database = NULL) {
+	public function save($table = NULL, Eden_Sql $database = NULL) {
 		//Argument 1 must be a string
-		$error = Eden_Mysql_Error::i()->argument(1, 'string', 'null');
+		$error = Eden_Sql_Error::i()->argument(1, 'string', 'null');
 		
 		//if no table
 		if(is_null($table)) {
 			//if no default table either
 			if(!$this->_table) {
 				//throw error
-				$error->setMessage(Eden_Mysql_Error::TABLE_NOT_SET)->trigger();
+				$error->setMessage(Eden_Sql_Error::TABLE_NOT_SET)->trigger();
 			}
 			
 			$table = $this->_table;
@@ -238,7 +238,7 @@ class Eden_Mysql_Model extends Eden_Model {
 		if(is_null($database)) {
 			//and no default database
 			if(!$this->_database) {
-				$error->setMessage(Eden_Mysql_Error::DATABASE_NOT_SET)->trigger();
+				$error->setMessage(Eden_Sql_Error::DATABASE_NOT_SET)->trigger();
 			}
 			
 			$database = $this->_database;
@@ -263,19 +263,19 @@ class Eden_Mysql_Model extends Eden_Model {
 	 * Removes model from database
 	 *
 	 * @param string
-	 * @param Eden_Mysql
+	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function remove($table = NULL, Eden_Mysql $database = NULL) {
+	public function remove($table = NULL, Eden_Sql $database = NULL) {
 		//Argument 1 must be a string
-		$error = Eden_Mysql_Error::i()->argument(1, 'string', 'null');
+		$error = Eden_Sql_Error::i()->argument(1, 'string', 'null');
 		
 		//if no table
 		if(is_null($table)) {
 			//if no default table either
 			if(!$this->_table) {
 				//throw error
-				$error->setMessage(Eden_Mysql_Error::TABLE_NOT_SET)->trigger();
+				$error->setMessage(Eden_Sql_Error::TABLE_NOT_SET)->trigger();
 			}
 			
 			$table = $this->_table;
@@ -285,7 +285,7 @@ class Eden_Mysql_Model extends Eden_Model {
 		if(is_null($database)) {
 			//and no default database
 			if(!$this->_database) {
-				$error->setMessage(Eden_Mysql_Error::DATABASE_NOT_SET)->trigger();
+				$error->setMessage(Eden_Sql_Error::DATABASE_NOT_SET)->trigger();
 			}
 			
 			$database = $this->_database;

@@ -16,8 +16,13 @@ require_once 'eden/event.php';
  * @version    $Id: framework.php 9 2010-01-12 15:42:40Z blanquera $
  */
 function eden() {
-	//return the results
-	return Eden::i();
+	$class = Eden::i();
+	if(func_num_args() == 0) {
+		return $class;
+	}
+	
+	$args = func_get_args();
+	return $class->__invoke($args);
 }
 
 /**
@@ -179,8 +184,6 @@ class Eden extends Eden_Event {
 		
 		if($routes === true) {
 			$route->route('Cache', 		'Eden_Cache')
-				->route('String', 		'Eden_Type_String')
-				->route('Array', 		'Eden_Type_Array')
 				->route('Registry', 	'Eden_Registry')
 				->route('Model', 		'Eden_Model')
 				->route('Collection', 	'Eden_Collection')
@@ -194,8 +197,7 @@ class Eden extends Eden_Event {
 				->route('Folder', 		'Eden_Folder')
 				->route('Image', 		'Eden_Image')
 				->route('Mysql', 		'Eden_Mysql')
-				->route('Array', 		'Eden_Type_Array')
-				->route('String', 		'Eden_Type_String')
+				->route('Type', 		'Eden_Type')
 				->route('Validation', 	'Eden_Validation');
 			
 			return $this;

@@ -26,7 +26,6 @@ abstract class Eden_Sql_Query extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	
 	/* Magic
 	-------------------------------*/
 	public function __toString() {
