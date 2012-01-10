@@ -26,6 +26,8 @@ require_once dirname(__FILE__).'/map.php';
 class Eden_Class {
 	/* Constants
 	-------------------------------*/
+	const INSTANCE = 'multiple';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -65,6 +67,41 @@ class Eden_Class {
 			//let the router handle this
 			return Eden_Route::i()->getMethod()->call($this, $name, $args);
 		} catch(Eden_Route_Error $e) {
+			Eden_Error::i($e->getMessage())->trigger();
+		}
+	}
+	
+	public function __invoke() {
+		//if arguments are 0
+		if(func_num_args() == 0) {
+			//return this
+			return $this;
+		}
+		
+		//get the arguments
+		$args = func_get_args();
+		
+		//if the first argument is an array
+		if(is_array($args[0])) {
+			//make the args that
+			$args = $args[0];
+		}
+		
+		//take our the class name
+		$class = array_shift($args);
+		//if this class does not start with Eden
+		if(strpos('Eden_', $class) !== 0) {
+			//add it
+			$class = 'Eden_'.$class;
+		}
+		
+		//try to
+		try {
+			//instantiate it
+			return Eden_Route::i()->getClass($class, $args);
+		} catch(Eden_Route_Error $e) {
+			//throw the error at this point 
+			//to get rid of false positives
 			Eden_Error::i($e->getMessage())->trigger();
 		}
 	}
