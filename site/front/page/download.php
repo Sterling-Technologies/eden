@@ -13,10 +13,6 @@
 class Front_Page_Download extends Front_Page {
 	/* Constants
 	-------------------------------*/
-	const REPO_URL 	= 'http://svn.openovate.com/edenv2/trunk/library';
-	const REPO_USER = 'cblanquera';
-	const REPO_PASS = 'gphead';
-	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -142,11 +138,7 @@ class Front_Page_Download extends Front_Page {
 	-------------------------------*/
 	protected function _getClass($class) {	
 		$path = strtolower('/'.str_replace('_', '/', $class)).'.php';
-		$code = $this->Eden_Curl()
-			->setUrl(self::REPO_URL.$path)
-			->setUserPwd(self::REPO_USER.':'.self::REPO_PASS)
-			->setHttpAuth(CURLAUTH_BASIC)
-			->getResponse();
+		$code = $this->File($this->_request['path']['library'].$path)->getContent();
 			
 		return $this->_getMinify($code);
 	}
