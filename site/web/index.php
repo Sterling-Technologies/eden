@@ -45,4 +45,3 @@ print front()
 /* Get the Response
 -------------------------------*/
 ->getResponse();
-echo Eden_MySql_Model::get(front()->getDatabase(), 'store')->load(1)->getStoreName();

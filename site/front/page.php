@@ -23,8 +23,9 @@ abstract class Front_Page extends Eden_Class {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_request = NULL;
-	protected $_messages = array();
+	protected $_meta		= array();
+	protected $_request 	= NULL;
+	protected $_messages 	= array();
 	
 	/* Private Properties
 	-------------------------------*/
@@ -40,7 +41,7 @@ abstract class Front_Page extends Eden_Class {
 		try {
 			$output = $this->render();
 		} catch(Exception $e) {
-			Eden_Error_Event::get()->exceptionHandler($e);
+			Eden_Error_Event::i()->exceptionHandler($e);
 			
 			return '';
 		}
@@ -70,9 +71,9 @@ abstract class Front_Page extends Eden_Class {
 	}
 	
 	protected function _renderPage() {
-		$tpl = $this->_request->getData('path', 'template');
+		$tpl = $this->_request['path']['template'];
 		
-		$messages 	= $this->_request->getData('message');
+		$messages 	= $this->_request['message'];
 		
 		if(is_array($messages)) {
 			foreach($messages as $message) {

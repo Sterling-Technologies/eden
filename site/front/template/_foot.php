@@ -1,1 +1,1 @@
-FOOT
+<div class="links">&copy; Openovate Labs 2012-2013</div>

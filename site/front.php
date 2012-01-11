@@ -18,7 +18,13 @@ require_once dirname(__FILE__).'/../library/eden.php';
  * @version    $Id: application.php 21 2010-01-06 01:19:17Z blanquera $
  */
 function front() {
-	return Front::get();
+	$class = Front::i();
+	if(func_num_args() == 0) {
+		return $class;
+	}
+	
+	$args = func_get_args();
+	return $class->__invoke($args);
 }
 
 /**
@@ -46,19 +52,23 @@ class Front extends Eden {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get() {
+	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	
 	/* Magic
 	-------------------------------*/
 	public function __construct() {
+		if(!self::$_active) {
+			self::$_active = $this;
+		}
+		
 		$this->_root = dirname(__FILE__);
 		
 		$this->setLoader();
 		
 		//require registry
-		$this->_registry = Eden_Loader::get()
+		$this->_registry = Eden_Loader::i()
 			->load('Eden_Registry')
 			->Eden_Registry();
 	}
@@ -76,26 +86,23 @@ class Front extends Eden {
 	 * @return this
 	 */
 	public function setDebug($reporting = NULL, $default = NULL) {
-		Eden_Error::get()->argument(1, 'int', 'null')->argument(2, 'bool', 'null');
+		Eden_Error::i()->argument(1, 'int', 'null')->argument(2, 'bool', 'null');
 		
-		Eden_Loader::get()
+		Eden_Loader::i()
 			->load('Eden_Template')
 			->Eden_Error_Event()
-			->when(!is_null($reporting))
+			->when(!is_null($reporting), 1)
 			->setReporting($reporting)
-			->endWhen()
-			->when($default === true)
+			->when($default === true, 4)
 			->setErrorHandler()
 			->setExceptionHandler()
 			->listen('error', $this, 'error')
 			->listen('exception', $this, 'error')
-			->endWhen()
-			->when($default === false)
+			->when($default === false, 4)
 			->releaseErrorHandler()
 			->releaseExceptionHandler()
 			->unlisten('error', $this, 'error')
-			->unlisten('exception', $this, 'error')
-			->endWhen();
+			->unlisten('exception', $this, 'error');
 		
 		return $this;
 	}
@@ -118,15 +125,15 @@ class Front extends Eden {
 		
 		//foreach default path
 		foreach($default as $key => $path) {
-			$this->_registry->setData('path', $key, $path);
+			$this->_registry->set('path', $key, $path);
 		}
 		
 		//for each path
 		foreach($paths as $key => $path) {
 			//make them absolute
-			$path = (string) Eden_Path::get($path)->absolute();
+			$path = (string) Eden_Path::i($path)->absolute();
 			//set it
-			$this->_registry->setData('path', $key, $path);
+			$this->_registry->set('path', $key, $path);
 		}
 		
 		return $this;
@@ -138,13 +145,13 @@ class Front extends Eden {
 	 * @return this
 	 */
 	public function setPages($pages, $absolute = false) {
-		Front_Error::get()
+		Front_Error::i()
 			->argument(1, 'string', 'array')
 			->argument(2, 'bool');
 			
 		if(is_string($pages)) {
 			if(!$absolute) {
-				$pages = $this->_registry->getData('path', 'config').'/'.$pages;
+				$pages = $this->_registry->get('path', 'config').'/'.$pages;
 			}
 			
 			$pages = include($pages);
@@ -177,7 +184,7 @@ class Front extends Eden {
 		$path = str_replace('favicon.ico', '/', $path);
 		
 		//fix the request path
-		$path = (string) Eden_Path::get($path);
+		$path = (string) Eden_Path::i($path);
 		
 		//get the path array
 		$pathArray = explode('/',  $path);
@@ -246,14 +253,13 @@ class Front extends Eden {
 			'variables'	=> $variables);
 		
 		//set the request
-		$request->setData('server', $_SERVER)
-			->setData('cookie', $_COOKIE)
-			->setData('request', $_REQUEST)
-			->setData('get', $_GET)
-			->setData('post', $_POST)
-			->setData('files', $_FILES)
-			->setData('request', $path)
-			->setData('page', $page);
+		$request->set('server', $_SERVER)
+			->set('cookie', $_COOKIE)
+			->set('get', $_GET)
+			->set('post', $_POST)
+			->set('files', $_FILES)
+			->set('request', $path)
+			->set('page', $page);
 		
 		return $this;
 	}
@@ -271,7 +277,7 @@ class Front extends Eden {
 			$request = $this->_registry;
 		}
 		
-		$page = $request->getData('page');
+		$page = $request->get('page');
 
 		if(!$page || !class_exists($page)) {
 			$page = $default;
@@ -285,7 +291,7 @@ class Front extends Eden {
 			exit;
 		}
 		
-		$request->setData('response', $response);
+		$request->set('response', $response);
 		
 		return $this;
 	}
@@ -303,7 +309,7 @@ class Front extends Eden {
 			$request = $this->_registry;
 		}
 		
-		return $request->getData('response');
+		return $request->get('response');
 	}
 	
 	/* Public Database Methods
@@ -317,7 +323,7 @@ class Front extends Eden {
 								$host = NULL, 	$name = NULL, 
 								$user = NULL, 	$pass = NULL, 
 								$default = true) {
-		Front_Error::get()
+		Front_Error::i()
 			->argument(1, 'string', 'array', 'null')
 			->argument(2, 'string', 'null')
 			->argument(3, 'string', 'null')
@@ -339,14 +345,14 @@ class Front extends Eden {
 		//connect to the data as described in the config
 		switch($type) {
 			case 'postgre':
-				$database = Eden_Pgsql::get($host, $name, $user, $pass);
+				$database = Eden_Postgre::i($host, $name, $user, $pass);
 				break;
 			case 'mysql':
-				$database = Eden_Mysql::get($host, $name, $user, $pass);
+				$database = Eden_Mysql::i($host, $name, $user, $pass);
 				break;
 		}
 		
-		$this->_registry->setData('database', $key, $database);
+		$this->_registry->set('database', $key, $database);
 		
 		if($default) {
 			$this->_database = $database;
@@ -366,7 +372,7 @@ class Front extends Eden {
 			return $this->_database;
 		}
 		
-		return $this->_registry->getData('database', $key);
+		return $this->_registry->get('database', $key);
 	}
 	
 	/**
@@ -376,7 +382,7 @@ class Front extends Eden {
 	 * @return this
 	 */
 	public function setDefaultDatabase($key) {
-		Front_Error::get()->argument(1, 'string');
+		Front_Error::i()->argument(1, 'string');
 		
 		$args = func_get_args();
 		//if the args are greater than 5
@@ -386,7 +392,7 @@ class Front extends Eden {
 		}
 		
 		//now set it
-		$this->_database = $this->_registry->getData('database', $key);
+		$this->_database = $this->_registry->getValue('database', $key);
 		
 		return $this;
 	}
@@ -400,7 +406,7 @@ class Front extends Eden {
 	 * @return Eden_Application
 	 */
 	public function setFilters($filters) {
-		Front_Error::get()->argument(1, 'string', 'array');
+		Front_Error::i()->argument(1, 'string', 'array');
 		
 		if(is_string($filters)) {
 			$filters = include($filters);
@@ -429,14 +435,14 @@ class Front extends Eden {
 	public function setCache($root) {
 		//we need Eden_Path to fix the path formatting
 		if(!class_exists('Eden_Path')) {
-			Eden_Loader::get()->load('Eden_Path');
+			Eden_Loader::i()->load('Eden_Path');
 		}
 		
 		//format the path
-		$root = (string) Eden_Path::get($root);
+		$root = (string) Eden_Path::i($root);
 		
 		// Start the Global Cache
-		Eden_Cache::get($root);
+		Eden_Cache::i($root);
 		
 		return $this;
 	}
@@ -457,8 +463,8 @@ class Front extends Eden {
 	 * @return Eden_Template
 	 */
 	public function template($file, array $data = array()) {
-		Front_Error::get()->argument(1, 'string');
-		return Eden_Template::get()->setData($data)->parsePhp($file);
+		Front_Error::i()->argument(1, 'string');
+		return Eden_Template::i()->set($data)->parsePhp($file);
 	}
 	
 	/**
@@ -466,48 +472,32 @@ class Front extends Eden {
 	 *
 	 * @return void
 	 */
-	public function error($event, $trace, $offset, $type, $level, $class, $file, $line, $message) {
-		//if there is a trace template and there's at least 2 leads
-		if(count($trace) > $offset) {
-			//for each trace
-			foreach($trace as $i => $call) {
-				//if we are at the first one
-				if($i < $offset) {
-					//ignore it because it will be the actual 
-					//call to the error or exception
-					unset($trace[$i]);
-					continue;
-				}
-				
-				//either way make this array to a comma separated string
-				$argments = NULL;
-				if(isset($call['args'])) {
-					$argments = implode(', ', $this->_getArguments($call['args']));
-				}
-				//lets formulate the method
-				$method = $call['function'].'('.$argments.')';
-				if(isset($call['class'])) {
-					$method = $call['class'].'->'.$method;
-				}
-				
-				$tline = isset($call['line']) ? $call['line'] : 'N/A';
-				$tfile = isset($call['file']) ? $call['file'] : 'Virtual Call';
-				
-				//convert trace from array to string
-				$trace[$i] = array($method, $tfile, $tline);
+	public function error($event, $type, $level, $class, $file, $line, $message, $trace, $offset) {
+		$history = array();
+		for(; isset($trace[$offset]); $offset++) {
+			$row = $trace[$offset];
+			 
+			//lets formulate the method
+			$method = $row['function'].'()';
+			if(isset($row['class'])) {
+				$method = $row['class'].'->'.$method;
 			}
-		} else {
-			$trace = array();
+			 
+			$rowLine = isset($row['line']) ? $row['line'] : 'N/A';
+			$rowFile = isset($row['file']) ? $row['file'] : 'Virtual Call';
+			 
+			//add to history
+			$history[] = array($method, $rowFile, $rowLine);
 		}
-		
-		echo $this->Eden_Template()
-			->setData('trace', $trace)
-			->setData('type', $type)
-			->setData('level', $level)
-			->setData('class', $class)
-			->setData('file', $file)
-			->setData('line', $line)
-			->setData('message', $message)
+		 
+		echo Eden_Template::i()
+			->set('history', $history)
+			->set('type', $type)
+			->set('level', $level)
+			->set('class', $class)
+			->set('file', $file)
+			->set('line', $line)
+			->set('message', $message)
 			->parsePhp(dirname(__FILE__).'/front/template/error.php');
 	}
 	

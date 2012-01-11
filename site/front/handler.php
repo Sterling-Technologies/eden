@@ -23,7 +23,7 @@ class Front_Handler extends Eden_Class {
 	-------------------------------*/
 	/* Get
 	-------------------------------*/
-	public static function get(Eden $app) {
+	public static function i(Eden $app) {
 		return self::_getSingleton(__CLASS__, $app);
 	}
 	

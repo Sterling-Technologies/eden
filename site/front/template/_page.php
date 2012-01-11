@@ -10,8 +10,8 @@
     <meta name="<?php print $name; ?>" content="<?php print $content; ?>" />
     <?php endforeach; ?>
     <?php endif; ?>
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/reset.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/assets/main.css" />
-    <script type="text/javascript" src="/assets/main.js"></script>
 </head>
 
 <body>
