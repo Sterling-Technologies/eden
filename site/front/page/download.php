@@ -64,20 +64,29 @@ class Front_Page_Download extends Front_Page {
 	protected $_database = array(
 		'Eden_Sql_Error',
 		'Eden_Mysql_Error',
+		'Eden_Postgre_Error',
 		'Eden_Sql_Database',
 		'Eden_Sql_Query',
 		'Eden_Sql_Delete',
 		'Eden_Sql_Select',
 		'Eden_Sql_Update',
 		'Eden_Sql_Insert',
+		'Eden_Sql_Collection',
+		'Eden_Sql_Model',
+		'Eden_Sql_Search',
 		'Eden_Mysql_Alter',
 		'Eden_Mysql_Create',
 		'Eden_Mysql_Subselect',
 		'Eden_Mysql_Utility',
-		'Eden_Mysql_Collection',
-		'Eden_Mysql_Model',
-		'Eden_Mysql_Search',
-		'Eden_Mysql');
+		'Eden_Mysql',
+		'Eden_Postgre_Alter',
+		'Eden_Postgre_Create',
+		'Eden_Postgre_Delete',
+		'Eden_Postgre_Insert',
+		'Eden_Postgre_Select',
+		'Eden_Postgre_Update',
+		'Eden_Postgre_Utility',
+		'Eden_Postgre');
 		
 	protected $_cache = array(
 		'Eden_Cache',
