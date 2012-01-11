@@ -2,7 +2,7 @@
 $loader->load('Eden_Session');
 $unit->setPackage('Eden_Session Tests');
 
-$session = Eden_Session::get();
+$session = Eden_Session::i();
 
 //-------------------------//
 // Test 1

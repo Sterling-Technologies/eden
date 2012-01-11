@@ -13,10 +13,6 @@
 class Front_Page_Api extends Front_Page {
 	/* Constants
 	-------------------------------*/
-	const REPO_URL 	= 'http://svn.openovate.com/edenv2/trunk/library';
-	const REPO_USER = 'cblanquera';
-	const REPO_PASS = 'gphead';
-	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -40,6 +36,7 @@ class Front_Page_Api extends Front_Page {
 	public function render() {
 		$source 	= $this->_request['get']['source'];
 		$pathArray 	= $this->_request['request']['variables']->get(false);
+		$library	= $this->_request['path']['library'];
 		$path 		= '/'.implode('/', $pathArray);
 		$code 		= $minify =NULL;
 		$notes 		= array();
@@ -49,14 +46,9 @@ class Front_Page_Api extends Front_Page {
 		}
 		
 		if(strpos($path, '.') !== false) {
-			$code = $this->Eden_Curl()
-				->setUrl(self::REPO_URL.$path)
-				->setUserPwd(self::REPO_USER.':'.self::REPO_PASS)
-				->setHttpAuth(CURLAUTH_BASIC)
-				->getResponse();
 			
+			$code = $this->File($library.$path)->getContent();
 			$minify = $this->_getMinify($code);
-			
 			$notes = strpos($path, '.php') ? $this->_getNotes($code) : array();
 		}
 		

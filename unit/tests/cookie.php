@@ -2,7 +2,7 @@
 $loader->load('Eden_Cookie');
 $unit->setPackage('Eden_Cookie Tests');
 
-$cookie = Eden_Cookie::get();
+$cookie = Eden_Cookie::i();
 
 //-------------------------//
 // Test 1

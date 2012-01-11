@@ -18,10 +18,6 @@
 class Front_Block_Menu extends Eden_Block {
 	/* Constants
 	-------------------------------*/
-	const REPO_URL 	= 'http://svn.openovate.com/edenv2/trunk/library';
-	const REPO_USER = 'cblanquera';
-	const REPO_PASS = 'gphead';
-	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -70,7 +66,7 @@ class Front_Block_Menu extends Eden_Block {
 	 * @return array
 	 */
 	public function getVariables() {
-		$contents = $this->_getContents($this->_root);
+		$contents 	= $this->_getContents($this->_root);
 		return array('contents' => $contents, 'current' => $this->_path, 'root' => $this->_root);
 	}
 	
@@ -85,26 +81,11 @@ class Front_Block_Menu extends Eden_Block {
 	}
 	
 	protected function _getContents($path) {
-		$response = $this->Eden_Curl()
-			->setUrl(self::REPO_URL.$path)
-			->setUserPwd(self::REPO_USER.':'.self::REPO_PASS)
-			->setHttpAuth(CURLAUTH_BASIC)
-			->setFollowLocation(true)
-			->getResponse();
-		
-		$lines = explode("\n", $response);
-		$folders = $files = array();
-		foreach($lines as $line) {
-			if(preg_match("/<li><a/", $line)) {
-				$line = strip_tags(trim($line));
-				if(preg_match("/\//", $line)) {
-					$folders[] = str_replace('/', '', $line);
-				} else if($line != '..') {
-					$files[] = $line;
-				}
-			}
-		}
-		
+		$request 	= front()->getRegistry();
+		$library	= $request['path']['library'];
+		$folder		= $this->Folder($library.$path);
+		$files		= $folder->getFiles();
+		$folders	= $folder->getFolders();
 		return array('folders' => $folders, 'files' => $files);
 	}
 }

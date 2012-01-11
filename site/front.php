@@ -115,13 +115,14 @@ class Front extends Eden {
 	 */
 	public function setPaths(array $paths = array()) {
 		$default = array(
-			'root' 			=> $this->_root,
-			'model'			=> $this->_root.'/model',
-			'web'			=> $this->_root.'/web', 
-			'assets'		=> $this->_root.'/web/assets',
-			'cache'			=> $this->_root.'/front/cache',
-			'config'		=> $this->_root.'/front/config',
-			'template'		=> $this->_root.'/front/template');
+			'root' 		=> $this->_root,
+			'library' 	=> realpath($this->_root.'/../library'),
+			'plugs'		=> $this->_root.'/plugs',
+			'web'		=> $this->_root.'/web', 
+			'assets'	=> $this->_root.'/web/assets',
+			'cache'		=> $this->_root.'/front/cache',
+			'config'	=> $this->_root.'/front/config',
+			'template'	=> $this->_root.'/front/template');
 		
 		//foreach default path
 		foreach($default as $key => $path) {
@@ -550,36 +551,6 @@ class Front extends Eden {
 		}
 		
 		return $variables;
-	}
-	
-	protected function _getArguments($arguments) {
-		if(empty($arguments)) {
-			return array();
-		}
-		
-		//for each argument
-		foreach($arguments as $i => $argument) {
-			//is it a string ?
-			if(is_string($argument)) {
-				$argument = "'".$argument."'";
-			//is it an array ?
-			} else if(is_array($argument)) {
-				$argument = 'Array';
-			//is it an object ?
-			} else if(is_object($argument)) {
-				$argument = get_class($argument);
-			//is it a bool ?
-			} else if(is_bool($argument)) {
-				$argument = $argument ? 'true' : 'false';
-			//is it null ?
-			} else if(is_null($argument)) {
-				$argument = 'null';
-			}
-			
-			$arguments[$i] = $argument;
-		}
-		
-		return $arguments;
 	}
 	
 	/* Private Methods

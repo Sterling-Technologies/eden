@@ -17,7 +17,15 @@ print front()
 
 /* Set Autoload
 -------------------------------*/
-->setLoader(NULL, '/model')
+->setLoader(NULL)
+
+/* Route Classes
+-------------------------------*/
+->routeClasses(true)
+
+/* Route Methods
+-------------------------------*/
+->routeMethods(true)
 
 /* Set Paths
 -------------------------------*/

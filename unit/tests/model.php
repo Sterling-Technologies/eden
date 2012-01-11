@@ -2,7 +2,7 @@
 $loader->load('Eden_Model');
 $unit->setPackage('Eden_Model Tests');
 
-$post = Eden_Model::get()
+$post = Eden_Model::i()
 	->setMetaData('post_id')
 	->setMetaData('post_title')
 	->setMetaData('post_detail');

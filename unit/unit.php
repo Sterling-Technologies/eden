@@ -2,7 +2,7 @@
 include '../eden.php';
 include '../eden/loader.php';
 
-$loader = Eden_Loader::get()->load('Eden_Unit');
+$loader = Eden_Loader::i()->load('Eden_Unit');
 $unit 	= $loader->Eden_Unit();
 
 include 'unit/class.php';

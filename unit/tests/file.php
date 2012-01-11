@@ -4,7 +4,7 @@ $unit->setPackage('Eden_File Tests');
 
 //-------------------------//
 // Test 1
-$file = Eden_File::get('home//openovate\public/eden.openovate.com/web/workspace.php');
+$file = Eden_File::i('home//openovate\public/eden.openovate.com/web/workspace.php');
 $unit->assertEquals('/projects/openovate/eden/v2/workspace.php', (string) $file, 'Format File Test.');
 $unit->assertEquals('workspace.php', $file->getName(), 'getName()');
 $unit->assertEquals('/projects/openovate/eden/v2', $file->getFolder(), 'getFolder()');

@@ -170,12 +170,12 @@ class Eden_Path extends Eden_Type_String implements ArrayAccess {
 		$pathArray = $this->getArray();
 		
 		//remove the last
-		array_pop($pathArray);
+		$path = array_pop($pathArray);
 		
 		//set path
 		$this->_data = implode('/', $pathArray);
 		
-		return $this;
+		return $path;
 	}
 	
 	/**
@@ -235,8 +235,18 @@ class Eden_Path extends Eden_Type_String implements ArrayAccess {
 	 * @return bool
 	 */
 	public function offsetGet($offset) {
+		$pathArray = $this->getArray();
+		
+		if($offset == 'first') {
+           $offset = 0;
+		}
+		
+		if($offset == 'last') {
+           $offset = count($pathArray) - 1;
+		}
+		
 		if(is_numeric($offset)) {
-			$pathArray = $this->getArray();
+			
 			return isset($pathArray[$offset]) ? $pathArray[$offset] : NULL;	
 		}
 		

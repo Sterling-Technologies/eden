@@ -59,7 +59,7 @@ class Front_Block_Log extends Eden_Block {
 	 * @return array
 	 */
 	public function getVariables() {
-		exec(sprintf(self::REPO_LOG, self::REPO_USER, self::REPO_PASS, self::REPO_URL), $log);
+		exec(sprintf(self::REPO_LOG, self::REPO_USER, self::REPO_PASS, self::REPO_URL.$this->_path), $log);
 		$log = implode("\n", $log);
 		$log = simplexml_load_string($log);
 		$history = array();
