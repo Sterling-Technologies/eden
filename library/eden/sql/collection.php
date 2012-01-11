@@ -43,7 +43,7 @@ class Eden_Sql_Collection extends Eden_Collection {
 	 *
 	 * @param Eden_Sql
 	 */
-	public function setDatabase(Eden_Sql $database) {
+	public function setDatabase(Eden_Sql_Database $database) {
 		$this->_database = $database;
 		
 		//for each row
@@ -92,7 +92,7 @@ class Eden_Sql_Collection extends Eden_Collection {
 	public function setModel($model) {
 		$error = Eden_Sql_Error::i()->argument(1, 'string');
 		
-		if(!is_subclass_of($model, Eden_Sql_Database::MODEL)) {
+		if(!is_subclass_of($model, 'Eden_Model')) {
 			$error->setMessage(Eden_Sql_Error::NOT_SUB_MODEL)
 				->addVariable($model)
 				->trigger();
@@ -161,7 +161,7 @@ class Eden_Sql_Collection extends Eden_Collection {
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function insert($table = NULL, Eden_Sql $database = NULL) {
+	public function insert($table = NULL, Eden_Sql_Database $database = NULL) {
 		//for each row
 		foreach($this->_list as $i => $row) {
 			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
@@ -181,7 +181,7 @@ class Eden_Sql_Collection extends Eden_Collection {
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function update($table = NULL, Eden_Sql $database = NULL) {
+	public function update($table = NULL, Eden_Sql_Database $database = NULL) {
 		//for each row
 		foreach($this->_list as $i => $row) {
 			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
@@ -201,7 +201,7 @@ class Eden_Sql_Collection extends Eden_Collection {
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function save($table = NULL, Eden_Sql $database = NULL) {
+	public function save($table = NULL, Eden_Sql_Database $database = NULL) {
 		//for each row
 		foreach($this->_list as $i => $row) {
 			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
@@ -221,7 +221,7 @@ class Eden_Sql_Collection extends Eden_Collection {
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function remove($table = NULL, Eden_Sql $database = NULL) {
+	public function remove($table = NULL, Eden_Sql_Database $database = NULL) {
 		//for each row
 		foreach($this->_list as $i => $row) {
 			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {

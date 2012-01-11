@@ -51,7 +51,7 @@ class Eden_Sql_Model extends Eden_Model {
 	 *
 	 * @param Eden_Sql
 	 */
-	public function setDatabase(Eden_Sql $database) {
+	public function setDatabase(Eden_Sql_Database $database) {
 		$this->_database  = $database;
 		return $this;
 	}
@@ -113,7 +113,7 @@ class Eden_Sql_Model extends Eden_Model {
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function insert($table = NULL, Eden_Sql $database = NULL) {
+	public function insert($table = NULL, Eden_Sql_Database $database = NULL) {
 		//Argument 1 must be a string
 		$error = Eden_Sql_Error::i()->argument(1, 'string', 'null');
 		
@@ -164,7 +164,7 @@ class Eden_Sql_Model extends Eden_Model {
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function update($table = NULL, Eden_Sql $database = NULL) {
+	public function update($table = NULL, Eden_Sql_Database $database = NULL) {
 		//Argument 1 must be a string
 		$error = Eden_Sql_Error::i()->argument(1, 'string', 'null');
 		
@@ -219,7 +219,7 @@ class Eden_Sql_Model extends Eden_Model {
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function save($table = NULL, Eden_Sql $database = NULL) {
+	public function save($table = NULL, Eden_Sql_Database $database = NULL) {
 		//Argument 1 must be a string
 		$error = Eden_Sql_Error::i()->argument(1, 'string', 'null');
 		
@@ -266,7 +266,7 @@ class Eden_Sql_Model extends Eden_Model {
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function remove($table = NULL, Eden_Sql $database = NULL) {
+	public function remove($table = NULL, Eden_Sql_Database $database = NULL) {
 		//Argument 1 must be a string
 		$error = Eden_Sql_Error::i()->argument(1, 'string', 'null');
 		

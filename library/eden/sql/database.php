@@ -7,7 +7,7 @@
  * distributed with this package.
  */
 
-require_once dirname(__FILE__).'/event.php';
+require_once dirname(__FILE__).'/../event.php';
 require_once dirname(__FILE__).'/error.php';
 require_once dirname(__FILE__).'/query.php';
 require_once dirname(__FILE__).'/delete.php';

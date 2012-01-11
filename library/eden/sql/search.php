@@ -52,7 +52,7 @@ class Eden_Sql_Search extends Eden_Class {
 	
 	/* Magic
 	-------------------------------*/
-	public function __construct(Eden_Sql $database) {
+	public function __construct(Eden_Sql_Database $database) {
 		$this->_database 	= $database;
 	}
 	
@@ -123,7 +123,7 @@ class Eden_Sql_Search extends Eden_Class {
 	public function setCollection($collection) {
 		$error = Eden_Sql_Error::i()->argument(1, 'string');
 		
-		if(!is_subclass_of($collection, Eden_Sql_Database::COLLECTION)) {
+		if(!is_subclass_of($collection, 'Eden_Collection')) {
 			$error->setMessage(Eden_Sql_Error::NOT_SUB_COLLECTION)
 				->addVariable($collection)
 				->trigger();
@@ -142,7 +142,7 @@ class Eden_Sql_Search extends Eden_Class {
 	public function setModel($model) {
 		$error = Eden_Sql_Error::i()->argument(1, 'string');
 		
-		if(!is_subclass_of($model, Eden_Sql_Database::MODEL)) {
+		if(!is_subclass_of($model, 'Eden_Model')) {
 			$error->setMessage(Eden_Sql_Error::NOT_SUB_MODEL)
 				->addVariable($model)
 				->trigger();

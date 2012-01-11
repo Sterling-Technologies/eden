@@ -29,12 +29,6 @@ require_once dirname(__FILE__).'/mysql/utility.php';
 class Eden_Mysql extends Eden_Sql_Database {
 	/* Constants
 	-------------------------------*/
-	const FIRST = 'first';
-	const LAST	= 'last';
-	
-	const MODEL 		= 'Eden_Mysql_Model';
-	const COLLECTION 	= 'Eden_Mysql_Collection';
-	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -57,18 +51,20 @@ class Eden_Mysql extends Eden_Sql_Database {
 	
 	/* Magic
 	-------------------------------*/
-	public function __construct($host, $name, $user, $pass = NULL) {
+	public function __construct($host, $name, $user, $pass = NULL, $port = NULL) {
 		//argument test
 		Eden_Mysql_Error::i()
-			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(1, 'string', 'null')		//Argument 1 must be a string or null
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string')				//Argument 3 must be a string
-			->argument(4, 'string', 'null');	//Argument 4 must be a number or null
+			->argument(4, 'string', 'null')		//Argument 4 must be a number or null
+			->argument(5, 'numeric', 'null'); 	//Argument 4 must be a number or null
 		
 		$this->_host = $host;
 		$this->_name = $name;
 		$this->_user = $user;
 		$this->_pass = $pass; 
+		$this->_port = $port;
 	}
 	
 	/* Public Methods
@@ -80,7 +76,16 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 * @return this
 	 */
 	public function connect(array $options = array()) {
-		$connection = 'mysql:host='.$this->_host.';dbname='.$this->_name;
+		$host = $port = NULL;
+		
+		if(!is_null($this->_host)) { 
+			$host = 'host='.$this->_host.';';
+			if(!is_null($this->_port)) { 
+				$port = 'port='.$this->_port.';';
+			}
+		}
+		
+		$connection = 'mysql:'.$host.$port.'dbname='.$this->_name;
 		
 		$this->_connection = new PDO($connection, $this->_user, $this->_pass, $options);
 		
