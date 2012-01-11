@@ -1,5 +1,6 @@
 <ul>
 <?php foreach($contents['folders'] as $folder): ?>
+<?php if(strpos($folder, '.svn') !== false) { continue; } ?>
 <li>
 	<?php if(strpos($current, $root.'/'.$folder['last']) === 0): ?>
 	<strong><?php echo $folder['last']; ?></strong>
