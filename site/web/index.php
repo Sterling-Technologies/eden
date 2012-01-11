@@ -31,6 +31,11 @@ print front()
 -------------------------------*/
 ->setPaths()
 
+
+/* Set Timezone
+-------------------------------*/
+->setTimezone('America/Los_Angeles')
+
 /* Set Database
 -------------------------------*/
 ->addDatabase(array(
