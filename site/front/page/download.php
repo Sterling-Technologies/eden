@@ -33,6 +33,7 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Route',
 		'Eden_When',
 		'Eden_Map',
+		'Eden_Tool', 
 		'Eden_Loader',
 		'Eden_Type',
 		'Eden_Type_Abstract',
@@ -45,7 +46,6 @@ class Front_Page_Download extends Front_Page {
 		'Eden');
 	
 	protected $_utilities = array(
-		'Eden_Tool', 
 		'Eden_Template',
 		'Eden_Session',
 		'Eden_Cookie',
