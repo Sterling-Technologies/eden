@@ -13,6 +13,7 @@
 		<?php elseif(!$source): ?>
 		<a href="?source=1">View Source</a>
 		<?php foreach($notes as $class => $class_note): ?>
+		<?php if(!isset($class_note['meta'])) { continue; } ?>
 		<div class="class">
 			<h3>
 				<?php if($class_note['meta']['abstract']): ?>
@@ -29,7 +30,7 @@
 						->Eden_Type_String($class_note['meta']['extends'])
 						->trim()
 						->str_replace('_', '/')
-						->strtolower(); ?>"
+						->strtolower(); ?>.php"
 					><?php echo trim($class_note['meta']['extends']); ?></a>
 				</li>
 				<?php endif ?>

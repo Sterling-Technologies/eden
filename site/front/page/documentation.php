@@ -39,6 +39,9 @@ class Front_Page_Documentation extends Front_Page {
 		$file = $this->_request['request']['string'].'.php';
 		if($file != '/documentation.php') {
 			$template = $this->_request['path']['template'];
+			if(!file_exists($template.$file)) {
+				$file = '/soon.php';
+			}
 			$content = front()->template($template.$file);
 		}
 		$this->_body = array('content' => $content);

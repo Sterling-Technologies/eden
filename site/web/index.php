@@ -11,6 +11,7 @@ require dirname(__FILE__).'/../front.php';
 /* Get Application
 -------------------------------*/
 print front()
+
 /* Set Debug
 -------------------------------*/
 ->setDebug(E_ALL, true)
