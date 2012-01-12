@@ -1,7 +1,7 @@
 <ul>
 <?php foreach($contents['folders'] as $folder): ?>
 <?php if(strpos($folder, '.svn') !== false) { continue; } ?>
-<li>
+<li class="folder">
 	<?php if(strpos($current, $root.'/'.$folder['last']) === 0): ?>
 	<strong><?php echo $folder['last']; ?></strong>
 	<?php echo front()->Front_Block_Menu()->setPath($current)->setRoot($root.'/'.$folder['last']); ?>
@@ -11,7 +11,7 @@
 </li>
 <?php endforeach; ?>
 <?php foreach($contents['files'] as $file): ?>
-<li>
+<li class="file">
 	<?php if($current == $root.'/'.$file['last']): ?>
 	<strong><?php echo $file['last']; ?></strong>
 	<?php else: ?>
