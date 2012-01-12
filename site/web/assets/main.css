@@ -95,7 +95,7 @@ form label {
 	font-family: Helvetica, Verdana, sans-serif, Arial;
 	float: left;
 	font-size: 13px;
-	padding-top: 10px;
+	padding: 15px 15px 15px 0;
 }
 
 form .form-row { margin-bottom: 10px; }
@@ -256,18 +256,28 @@ tr.row-inactive td { color: #999999; }
 .api .three-column-layout h1 { font-family: "Trebuchet MS", Arial, Helvetica, sans-serif; }
 
 /* Page: Documentation */
+.download .two-column-layout,
 .documentation .two-column-layout { width: 100%; }
+
+.download .two-column-layout .column-1, 
 .documentation .two-column-layout .column-1 { width: 25%; }
+
+.download .two-column-layout .column-2, 
 .documentation .two-column-layout .column-2 { width: 75%; }
+
+.download .two-column-layout .column-1 ol,
 .documentation .two-column-layout .column-1 ol {
-	line-height: 20px;
+	line-height: 20px; 
 	padding-left: 35px; 
 }
+
+.download .two-column-layout .column-1 ul,
 .documentation .two-column-layout .column-1 ul { 
 	line-height: 20px;
 	padding-left: 15px; 
 }
 
+.download .two-column-layout .column-2 h3, 
 .documentation .two-column-layout .column-2 h3 { 
 	clear: both; 
 	padding-top: 10px;
@@ -372,3 +382,12 @@ tr.row-inactive td { color: #999999; }
 
 .documentation .two-column-layout .column-2 .prev { float: left; }
 .documentation .two-column-layout .column-2 .next { float: right; }
+
+/* Page: Download */
+
+.download .two-column-layout .column-2 h3 { padding-top: 25px;}
+.download .two-column-layout .column-2 h4 { margin: 5px 0; }
+.download .two-column-layout .column-2 form .submit {
+	font-weight: bold;
+    padding: 5px;
+}
