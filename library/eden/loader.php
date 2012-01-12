@@ -45,10 +45,6 @@ class Eden_Loader extends Eden_Class {
 	
 	/* Magic
 	-------------------------------*/
-	public function __construct() {
-		$this->addRoot(realpath(dirname(__FILE__).'/..'));
-	}
-	
 	/* Public Methods
 	-------------------------------*/
 	/**

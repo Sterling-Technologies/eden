@@ -10,6 +10,8 @@
     <meta name="<?php print $name; ?>" content="<?php print $content; ?>" />
     <?php endforeach; ?>
     <?php endif; ?>
+	<link href='http://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" media="screen" href="/assets/reset.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/assets/main.css" />
 </head>

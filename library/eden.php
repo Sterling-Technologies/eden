@@ -120,10 +120,15 @@ class Eden extends Eden_Event {
 	public function setLoader() { 
 		if(!class_exists('Eden_Loader')) {
 			//require autoload
-			require_once dirname(__FILE__).'/eden/loader.php';
+			require_once dirname(__FILE__).'/eden/loader.php';	
+		}
 		
-			//set autoload class as the autoload handler
-			spl_autoload_register(array(Eden_Loader::i(), 'handler'));
+		//set autoload class as the autoload handler
+		spl_autoload_register(array(Eden_Loader::i(), 'handler'));
+		
+		//we need Eden_Path to fix the path formatting
+		if(!class_exists('Eden_Path')) {
+			Eden_Loader::i()->addRoot(dirname(__FILE__))->load('Eden_Path');
 		}
 		
 		//get paths
@@ -133,11 +138,6 @@ class Eden extends Eden_Event {
 		if(empty($paths)) {
 			//do nothing more
 			return $this;
-		}
-		
-		//we need Eden_Path to fix the path formatting
-		if(!class_exists('Eden_Path')) {
-			Eden_Loader::i()->load('Eden_Path');
 		}
 		
 		//no dupes

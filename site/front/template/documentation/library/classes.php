@@ -36,8 +36,8 @@ echo eden()->My_Session(); //--> My_Session
 <sub>Figure 3. Passing arguments to the constructor</sub>
 <div class="example"><pre class="brush: php;">
 class My_Session extends Eden_Class {
-	public static function i($name, $age) {
-		return self::_getSingleton(__CLASS__, $name, $age);
+	public static function i() {
+		return self::_getSingleton(__CLASS__);
 	}	
 	
 	public function __construct($name, $age) {}
@@ -45,7 +45,10 @@ class My_Session extends Eden_Class {
 
 echo eden()->My_Session('Chris', 29); //--> My_Session
 </pre></div>
-
+<blockquote class="tip clearfix">
+	<span class="icon"></span>
+	There is no need to set arguments in static <em>i</em> method.
+</blockquote>
 <p>Now that we have a class, let's build a method called <sub>start()</sub> which demonstrates calling other methods in <strong>Eden</strong>.</p>
 
 <sub>Figure 4. The power of <em>$this</em></sub>

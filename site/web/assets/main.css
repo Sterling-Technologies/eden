@@ -44,7 +44,7 @@ a:focus, a:hover,
 a:active, a:visited {
 	outline: none;
 	text-decoration: none;
-	color: #006699;
+	color: #375FA0;
 }
 
 strong { font-weight: bold; }
@@ -56,12 +56,12 @@ p {
 
 h1, h2, h3, h4, h5, h6 { font-weight: bold; }
 
-h1 { font-size: 22px; } 
-h2 { font-size: 20px; } 
-h3 { font-size: 18px; } 
-h4 { font-size: 16px; } 
-h5 { font-size: 14px; } 
-h6 { font-size: 13px; }
+h1 { font-family: 'Lora', serif; font-size: 22px; } 
+h2 { font-family: 'Lora', serif; font-size: 20px; } 
+h3 { font-family: 'Lora', serif; font-size: 18px; } 
+h4 { font-family: 'Lora', serif; font-size: 16px; } 
+h5 { font-family: 'Lora', serif; font-size: 14px; } 
+h6 { font-family: 'Lora', serif; font-size: 13px; }
 
 /* Layout Styles */
 .column-layout .column {
@@ -189,7 +189,8 @@ tr.row-inactive td { color: #999999; }
 .page {
 	background-color: #FFFFFF;
 	border: 1px solid #232323;
-	font-family: Arial, Helvetica, sans-serif;
+	color: #222222;
+	font-family: 'Lato', san-serif;
 	font-size: 13px;
 	margin: 20px auto;
 	padding: 20px;
@@ -206,7 +207,8 @@ tr.row-inactive td { color: #999999; }
 } 
 
 .page .head { 
-	padding-top: 10px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #CCC;
 }
 
 .page .body {
@@ -221,11 +223,14 @@ tr.row-inactive td { color: #999999; }
 }
 
 /* Page Head */
-.page .head .menu { 
-	padding: 0 10px;
-	text-align: right; 
+.page .head h1 a { 
+	color: #222;
+	font-size: 30px;
+	font-family: 'Lora', serif; 
 }
-.page .head .menu a { margin-left: 20px; }
+
+.page .body .column-1 ul > li { list-style: none; }
+.page .head .menu a { margin-right: 20px; }
 
 /* Page: API */
 .api .three-column-layout { width: 100%; }
@@ -239,16 +244,23 @@ tr.row-inactive td { color: #999999; }
 .api .three-column-layout ol,
 .api .three-column-layout ul { 
 	line-height: 20px;
-	margin: 5px 10px;
-	padding-left: 15px; 
 }
 
 .api .three-column-layout .column-2 .crumbs { margin: 5px 0 10px 0; }
 .api .three-column-layout .column-2 .class { padding-right: 10px; }
 
+.api .three-column-layout .column-2 ol,
+.api .three-column-layout .column-2 ul { 
+	font-style: italic;
+	padding-left: 40px;
+}
+
 .api .three-column-layout .column-2 .class h4,
 .api .three-column-layout .column-2 .class h3 { margin: 10px 0;}
-
+.api .three-column-layout .column-2 .class h6 { 
+	margin-top: 10px; 
+	font-weight: normal;
+}
 .api .three-column-layout .column-2 .method {
 	border-bottom: 1px solid #999999; 
 	padding: 10px 15px;
@@ -257,12 +269,23 @@ tr.row-inactive td { color: #999999; }
 	border-bottom: 1px solid #999999; 
 	padding: 10px;
 }
-.api .three-column-layout .column-3 .log .meta { font-size: 10px; }
+.api .three-column-layout .column-3 .log .meta { 
+	font-size: 10px; 
+	margin-bottom: 15px;
+}
 
 .api .three-column-layout .column-2 .method-zebra { background-color: #EFEFEF; }
 .api .three-column-layout .column-3 .log-zebra { background-color: #EFEFEF; }
-.api .three-column-layout h1 { font-family: "Trebuchet MS", Arial, Helvetica, sans-serif; }
-
+.api .folder { 
+	list-style: none; 
+	padding-left: 20px;
+	background: url(/assets/images/book.gif) no-repeat 0 3px transparent;
+}
+.api .file { 
+	list-style: none; 
+	padding-left: 20px;
+	background: url(/assets/images/code.gif) no-repeat 0 3px transparent;
+}
 /* Page: Documentation */
 .download .two-column-layout,
 .documentation .two-column-layout { width: 100%; }
@@ -292,7 +315,7 @@ tr.row-inactive td { color: #999999; }
 }
 .documentation .two-column-layout .column-2 h4 { margin: 20px 0 5px; }
 .documentation .two-column-layout .column-2 p {
-	font-family: Georgia, "Times New Roman", Times, serif;
+	font-family: 'Lato', sans-serif;
 	line-height: 24px;
 	margin: 5px 0 10px;
 }
