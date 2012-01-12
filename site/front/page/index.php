@@ -20,7 +20,7 @@ class Front_Page_Index extends Front_Page {
 	protected $_meta = array();
 	protected $_body = array();
 	protected $_title = 'Eden';
-	protected $_class = 'home';
+	protected $_class = 'documentation';
 	protected $_template = '/index.php';
 	protected $_session = false;
 	

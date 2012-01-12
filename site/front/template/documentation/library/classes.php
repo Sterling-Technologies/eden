@@ -122,10 +122,12 @@ echo eden()
 <sub>Figure 6. Solution: Back to the Router</sub>
 <div class="example"><pre class="brush: php;">
 //Everytime Eden_Session is called, call My_Session instead
-eden()->Eden_Route()->routeClass('Eden_Session', 'My_Session');
+eden('route')->getClass()->route('Eden_Session', 'My_Session');
 
 //Example of calling Eden_Session
 eden()->Eden_Session()->start(); //--> Starting Session ...
+
+eden('session')->start() //--> Starting Session ...
 
 Eden_Session::i()->start(); //--> Starting Session ...
 </pre></div>

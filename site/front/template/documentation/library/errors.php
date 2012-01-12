@@ -1,5 +1,5 @@
 <a class="prev" href="/documentation/library/autoloading">&laquo; 3. Autoloading</a>
-<a class="next" href="/documentation/library/types">5. Data Types &raquo;</a>
+<a class="next" href="/documentation/library/events">5. Event Driven &raquo;</a>
 
 <h3>4. Error Handling</h3>
 
@@ -291,7 +291,7 @@ eden()->Exception_In_Me()->doSomething('Chris', 29, 186.5, '6', false, NULL, 85.
 </blockquote>
 
 <h4>Summary</h4>
-<p>By now you should understand all the advantages with an error handler like <strong>Eden's</strong>. With <strong>Eden</strong> as a whole, not only are we making simplier code but, we can also control how strict our applications can be <em>(in other words &quot;idiot proofing&quot;)</em>. Our next section <a href="/documentation/library/types">5. Data Types</a> will show you some tricks to manipulating strings and arrays.</p>
+<p>By now you should understand all the advantages with an error handler like <strong>Eden's</strong>. With <strong>Eden</strong> as a whole, not only are we making simplier code but, we can also control how strict our applications can be <em>(in other words &quot;idiot proofing&quot;)</em>. We seen how powerful and flexible an event driven design can be with error handling. Let's talk further about events in our next section, <a href="/documentation/library/events">5. Event Driven</a>.</p>
 
 <a class="prev" href="/documentation/library/autoloading">&laquo; 3. Autoloading</a>
-<a class="next" href="/documentation/library/types">5. Data Types &raquo;</a>
+<a class="next" href="/documentation/library/events">5. Event Driven &raquo;</a>

@@ -1,12 +1,13 @@
 <ul>
 	<li>I. <a href="/documentation/start">Quick Start</a></li>
 	<li>
-		II. <a href="/documentation/library">The Library</a>
+		II. <strong>The Library</strong>
 		<ol>
 			<li><a href="/documentation/library/features">Features</a></li>
 			<li><a href="/documentation/library/classes">Writing Classes</a></li>
 			<li><a href="/documentation/library/autoloading">Autoloading</a></li>
 			<li><a href="/documentation/library/errors">Error Handling</a></li>
+			<li><a href="/documentation/library/events">Event Driven</a></li>
 			<li><a href="/documentation/library/types">Data Types</a></li>
 			<li><a href="/documentation/library/files">Files and Folders</a></li>
 			<li><a href="/documentation/library/sessions">Sessions and Cookies</a></li>
@@ -84,7 +85,6 @@
 					<li>B. <a href="/documentation/library/jabber">Jabber</a></li>
 				</ul>
 			</li>
-			<li><a href="/documentation/library/events">Event Driven</a></li>
 			<li><a href="/documentation/library/testing">Unit Testing</a></li>
 			<li>
 				<strong>Experimental</strong>

@@ -1,4 +1,4 @@
-<a class="prev" href="/documentation/library">&laquo; I. The Library </a>
+<a class="prev" href="/documentation/start">&laquo; I. Quick Start</a>
 <a class="next" href="/documentation/library/classes">2. Classes &raquo;</a>
 
 <h3>1. Features</h3>
@@ -16,7 +16,7 @@
 
 <sub>Figure 1. Our Hello World Example</sub>
 <div class="example"><pre class="brush: php;">
-eden()->Eden_Tool()->output('Hello World'); //--> Hello World
+eden('tool')->output('Hello World'); //--> Hello World
 
 /* vs */
 
@@ -31,7 +31,7 @@ $tool->output('Hello World'); //--> Hello World
 
 <sub>Figure 2. The Chain</sub>
 <div class="example"><pre class="brush: php;">
-echo eden()->Eden_Type_String('Hello World')->str_replace(' ','-')->strtolower()->substr(0, 8); //--> hello-wo
+echo eden('type', 'Hello World')->str_replace(' ','-')->strtolower()->substr(0, 8); //--> hello-wo
 
 /* vs */
 
@@ -44,8 +44,7 @@ echo substr(strtolower(str_replace(' ', '-', 'Hello World')), 0, 8); //--> hello
 
 <sub>Figure 3. Vertical</sub>
 <div class="example"><pre class="brush: php;">
-echo eden()
-	->Eden_Type_String('Hello World')
+echo eden('type', 'Hello World')
 	->str_replace(' ','-')
 	->strtolower()
 	->substr(0, 8); //--> hello-wo
@@ -63,13 +62,12 @@ echo $string; //--> hello-wo
 
 <sub>Figure 4. Jumping from class to class</sub>
 <div class="example"><pre class="brush: php;">
-echo eden()
-	->Eden_Session() // instantiate Eden_Session class
-	->start() //start the session
-	->setData('name', 'developer') //set session data
-	->Eden_Array(array(2, 3, 4)) // instantiate Eden_Array class
+echo eden('session')				//instantiate Eden_Session class
+	->start()						//start the session
+	->set('name', 'developer')		//set session data
+	->Eden_Type(2, 3, 4) 			//instantiate Eden_Type_Array class
 	->unshift(1)
-	->implode(' '); //--> 1 2 3 4
+	->implode(' ');					//--> 1 2 3 4
 </pre></div>
 
 <h4>Objects as Arrays</h4>
@@ -78,26 +76,26 @@ echo eden()
 
 <sub>Figure 5. ArrayAccess</sub>
 <div class="example"><pre class="brush: php;">
-$session = eden()->Eden_Session()->start();
+$session = eden('session')->start();
 $session['name'] = 'Chris';
 echo $_SESSION['name']; //--> Chris
 
-$cookie = eden()->Eden_Cookie()->set('age', 29);
+$cookie = eden('cookie')->set('age', 29);
 echo $cookie['age']; //--> 29
 
-$array = eden()->Eden_Array(array(1, 2, 4));
+$array = eden('type', 1, 2, 4);
 foreach($array as $value) {
 	echo $value.' '; //-->1 2 4
 }
 
-$file = eden()->Eden_File('/some/path/to/file.txt');
+$file = eden('file', '/some/path/to/file.txt');
 echo $file[1]; //--> some
 
-$folder = eden()->Eden_Folder('/some/path/to');
+$folder = eden('folder', '/some/path/to');
 $folder[] = 'folder'; 
 echo $folder; //--> /some/path/to/folder
 
-$user = eden()->Eden_Mysql_Model($database, 'user')->setUserName('Chris');
+$user = eden('model')->setUserName('Chris');
 echo $user['user_name']; //--> Chris
 </pre></div>
 
@@ -110,7 +108,7 @@ function mailme($event, $email) {
 	echo "mailing $email now";
 }
 
-$event = eden()->Eden_Event()->listen('error', 'mailme');
+$event = eden('event')->listen('error', 'mailme');
  
 //... somewhere later ...
  
@@ -123,11 +121,11 @@ $event->trigger('error', 'your@email.com');
 <sub>Figure 7. Virtual Classes</sub>
 <div class="example"><pre class="brush: php;">
 //Make an alias for Eden_Session called Session
-eden()->Eden_Route()->routeClass('Session', 'Eden_Session');
+eden('route')->getClass()->route('My', 'My_Long_Class_Name');
 
 //... some where later in your code ...
 
-echo eden()->Session()->start()->getId(); //--> [SOME SESSION ID]
+eden()->My(); // My_Long_Class_Name
 </pre></div>
 
 <blockquote class="tip clearfix">
@@ -135,12 +133,12 @@ echo eden()->Session()->start()->getId(); //--> [SOME SESSION ID]
 	Aliasing an alias will result in both aliases pointing to the same class. 
 </blockquote>
 
-<p>In the example above, we first made an alias to <sub>Eden_Session</sub> called <sub>Session</sub>. After that line, anytime that alias is called <strong>Eden</strong> will know to instantiate <sub>Eden_Session</sub> instead. This inherently also solves for a major flaw in CMS and framework design which we will get into in <a href="/documentation/library/classes">2. Classes</a> later. For now let's work with <strong>Virtual Methods</strong>.</p>
+<p>In the example above, we first made an alias to <sub>My_Long_Class_Name</sub> called <sub>My</sub>. After that line, anytime that alias is called <strong>Eden</strong> will know to instantiate <sub>My_Long_Class_Name</sub> instead. This inherently also solves for a major flaw in CMS and framework design which we will get into in <a href="/documentation/library/classes">2. Classes</a> later. For now let's work with <strong>Virtual Methods</strong>.</p>
 
 <sub>Figure 8. Virtual Methods</sub>
 <div class="example"><pre class="brush: php;">
 //Make an alias for Eden_Tool->output called Eden->out
-eden()->Eden_Route()->routeMethod('Eden', 'out', 'Eden_Tool', 'output');
+eden('route')->getMethod()->route('Eden', 'out', 'Eden_Tool', 'output');
 
 //... some where later in your code ...
 
@@ -166,9 +164,10 @@ eden()->out('This method doesn\'t really exist'); //--> This method doesn't real
 //Make an alias for Eden_Session called Session
 //Make an alias for Eden_Tool->output called Session->out
 eden()
-	->Eden_Route()
-	->routeClass('Session', 'Eden_Session')
-	->routeMethod('Session', 'out', 'Eden_Tool', 'output');
+	->Eden_Route_Class()
+	->route('Session', 'Eden_Session')
+	->Eden_Route_Method()
+	->route('Session', 'out', 'Eden_Tool', 'output');
 
 //... some where later in your code ...
 

@@ -1,4 +1,3 @@
-<h3>Documentation</h3>
 <div class="two-column-layout column-layout clearfix">
 	<div class="column-1 column"><?php include(dirname(__FILE__).'/_menu.php'); ?></div>
 	<div class="column-2 column">

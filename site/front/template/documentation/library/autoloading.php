@@ -7,8 +7,7 @@
 
 <sub>Figure 1. Load a class</sub>
 <div class="example"><pre class="brush: php;">
-eden()
-	->Eden_Loader()
+eden('loader')
 	->addRoot('/our/root/path')
 	->addRoot('/another/root/path')
 	->load('My_Session');
@@ -18,7 +17,7 @@ eden()
 
 <blockquote class="tip clearfix">
 	<span class="icon"></span>
-	Calling <strong>Eden_Loader</strong> like <em>eden()->Eden_Loader()</em> is the same as <em>Eden_Loader::i()</em>. Up to you which one you prefer.
+	Calling <strong>Eden_Loader</strong> like <em>eden('loader')</em> or <em>eden()->Eden_Loader()</em> is the same as <em>Eden_Loader::i()</em>. Up to you which one you prefer.
 </blockquote>
 
 <p>Whenever <sub>Eden_Loader</sub> is called it's <strong>loaded as a singleton</strong> so there's no need to set it to a variable. If we are not working with other libraries or want to turn on <strong>Eden's</strong> autoloader, <sub>Figure 2</sub> shows us how we can acheive this.</p>
