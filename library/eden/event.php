@@ -34,7 +34,7 @@ class Eden_Event extends Eden_Class {
 	/* Get
 	-------------------------------*/
 	public static function i() {
-		return self::_getMultiple(__CLASS__);
+		return self::_getSingleton(__CLASS__);
 	}
 	
 	/* Magic
