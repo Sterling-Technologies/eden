@@ -20,6 +20,7 @@
         <div class="body"><?php print $body; ?></div>
         <div class="foot"><?php print $foot; ?></div>
     </div>
+    
 </body>
 
 </html>
