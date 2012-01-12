@@ -351,6 +351,9 @@ class Front extends Eden {
 			case 'mysql':
 				$database = Eden_Mysql::i($host, $name, $user, $pass);
 				break;
+			case 'sqlite':
+				$database = Eden_Sqlite::i($host);
+				break;
 		}
 		
 		$this->_registry->set('database', $key, $database);

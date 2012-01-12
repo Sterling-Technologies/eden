@@ -65,6 +65,7 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Sql_Error',
 		'Eden_Mysql_Error',
 		'Eden_Postgre_Error',
+		'Eden_Sqlite_Error',
 		'Eden_Sql_Database',
 		'Eden_Sql_Query',
 		'Eden_Sql_Delete',
@@ -86,7 +87,11 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Postgre_Select',
 		'Eden_Postgre_Update',
 		'Eden_Postgre_Utility',
-		'Eden_Postgre');
+		'Eden_Postgre',
+		'Eden_Sqlite_Alter',
+		'Eden_Sqlite_Create',
+		'Eden_Sqlite_Utility',
+		'Eden_Sqlite');
 		
 	protected $_cache = array(
 		'Eden_Cache',

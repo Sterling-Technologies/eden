@@ -15,7 +15,7 @@
  * @author     Christian Blanquera <cblanquera@gmail.com>
  * @version    $Id: create.php 1 2010-01-02 23:06:36Z blanquera $
  */
-class Eden_Postgre_Create extends Eden_Sql_Query {
+class Eden_Sqlite_Create extends Eden_Sql_Query {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
@@ -23,9 +23,11 @@ class Eden_Postgre_Create extends Eden_Sql_Query {
 	/* Protected Properties
 	-------------------------------*/
 	protected $_name		= NULL;
+	protected $_comments 	= NULL;
 	protected $_fields 		= array();
+	protected $_keys 		= array();
+	protected $_uniqueKeys 	= array();
 	protected $_primaryKeys = array();
-	protected $_oids		= false;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -53,9 +55,23 @@ class Eden_Postgre_Create extends Eden_Sql_Query {
 	 */
 	public function setName($name) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::i()->argument(1, 'string');
+		Eden_Sqlite_Error::i()->argument(1, 'string');
 		
 		$this->_name = $name;
+		return $this;
+	}
+	
+	/**
+	 * Sets comments
+	 *
+	 * @param string comments
+	 * @return this
+	 */
+	public function setComments($comments) {
+		//Argument 1 must be a string
+		Eden_Sqlite_Error::i()->argument(1, 'string');
+		
+		$this->_comments = $comments;
 		return $this;
 	}
 	
@@ -71,13 +87,24 @@ class Eden_Postgre_Create extends Eden_Sql_Query {
 	}
 	
 	/**
-	 * Sets a list of primary keys to the table
+	 * Sets a list of keys to the table
 	 *
-	 * @param array primaryKeys
+	 * @param array keys
 	 * @return this
 	 */
-	public function setPrimaryKeys(array $primaryKeys) {
-		$this->_primaryKeys = $primaryKeys;
+	public function setForiegnKeys(array $keys) {
+		$this->_keys = $keys;
+		return $this;
+	}
+	
+	/**
+	 * Sets a list of unique keys to the table
+	 *
+	 * @param array uniqueKeys
+	 * @return this
+	 */
+	public function setUniqueKeys(array $uniqueKeys) {
+		$this->_uniqueKeys = $uniqueKeys;
 		return $this;
 	}
 	
@@ -90,31 +117,42 @@ class Eden_Postgre_Create extends Eden_Sql_Query {
 	 */
 	public function addField($name, array $attributes) {
 		//Argument 1 must be a string
-		Eden_Mysql_Error::i()->argument(1, 'string');
+		Eden_Sqlite_Error::i()->argument(1, 'string');
 		
 		$this->_fields[$name] = $attributes;
 		return $this;
 	}
 	
 	/**
-	 * Adds a primary key
+	 * Adds an index key
 	 *
 	 * @param string name
+	 * @param array fields
 	 * @return this
 	 */
-	public function addPrimaryKey($name) {
-		//Argument 1 must be a string
-		Eden_Mysql_Error::i()->argument(1, 'string');
+	public function addForeignKey($name, $table, $key) {
+		//argument test
+		Eden_Sqlite_Error::i()
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string')		//Argument 2 must be a string
+			->argument(3, 'string');	//Argument 3 must be a string
 		
-		$this->_primaryKeys[] = $name;
+		$this->_keys[$name] = array($table, $key);
 		return $this;
 	}
 	
-	public function withOids($oids) {
-		//Argument 1 must be a boolean
-		Eden_Mysql_Error::i()->argument(1, 'bool');
+	/**
+	 * Adds a unique key
+	 *
+	 * @param string name
+	 * @param array fields
+	 * @return this
+	 */
+	public function addUniqueKey($name, array $fields) {
+		//Argument 1 must be a string
+		Eden_Sqlite_Error::i()->argument(1, 'string');
 		
-		$this->_oids = $oids;
+		$this->_uniqueKeys[$name] = $fields;
 		return $this;
 	}
 	
@@ -133,17 +171,14 @@ class Eden_Postgre_Create extends Eden_Sql_Query {
 			$field = array('"'.$name.'"');
 			if(isset($attr['type'])) {	
 				$field[] = isset($attr['length']) ? $attr['type'] . '('.$attr['length'].')' : $attr['type'];
-				if(isset($attr['list']) && $attr['list']) {
-					$field[count($field)-1].='[]';
-				}
+			}
+			
+			if(isset($attr['primary'])) {
+				$field[] = 'PRIMARY KEY';
 			}
 			
 			if(isset($attr['attribute'])) {
 				$field[] = $attr['attribute'];
-			}
-			
-			if(isset($attr['unique']) && $attr['unique']) {
-				$field[] = 'UNIQUE';
 			}
 			
 			if(isset($attr['null'])) {
@@ -167,10 +202,25 @@ class Eden_Postgre_Create extends Eden_Sql_Query {
 			$fields[] = implode(' ', $field);
 		}
 		
-		$oids = $this->_oids ? 'WITH OIDS':NULL;
 		$fields = !empty($fields) ? implode(', ', $fields) : '';
-		$primary = !empty($this->_primaryKeys) ? ', PRIMARY KEY ("'.implode('", ""', $this->_primaryKeys).'")' : '';
-		return sprintf('CREATE TABLE %s (%s%s) %s', $table, $fields, $primary, $oids);
+		
+		$uniques = array();
+		foreach($this->_uniqueKeys as $key => $value) {
+			$uniques[] = 'UNIQUE "'. $key .'" ("'.implode('", "', $value).'")';
+		}
+		
+		$uniques = !empty($uniques) ? ', ' . implode(", \n", $uniques) : '';
+		
+		$keys = array();
+		foreach($this->_keys as $key => $value) {
+			$keys[] = 'FOREIGN KEY "'. $key .'" REFERENCES '.$value[0].'('.$value[1].')';
+		}
+		
+		$keys = !empty($keys) ? ', ' . implode(", \n", $keys) : '';
+		
+		return sprintf(
+			'CREATE TABLE %s (%s%s%s)',
+			$table, $fields, $unique, $keys);
 	}
 	
 	/* Protected Methods
