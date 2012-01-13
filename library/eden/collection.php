@@ -84,19 +84,6 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 		}
 	}
 	
-	public function __get($name) {
-		//get all rows column values
-		$list = Eden_Model::i();
-		
-		//for each row
-		foreach($this->_list as $i => $row) {
-			//ad just the name
-			$list[] = $row[$name];
-		}
-		
-		return $list;
-	}
-	
 	public function __set($name, $value) {
 		//set all rows with this column and value
 		foreach($this->_list as $i => $row) {

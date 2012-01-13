@@ -73,6 +73,30 @@ class Eden_Class {
 		}
 	}
 	
+	public function __get($name) {
+		//if the method name starts with a capital letter
+		//most likely they want a class
+		if(preg_match("/^[A-Z]/", $name)) {
+			//lets first consider that they may just
+			//want to load a class so lets try
+			try {
+				//return the class
+				return Eden_Route::i()->getClass($name);
+			//only if there's a route exception do we want to catch it
+			//this is because a class can throw an exception in their construct
+			//so if that happens then we do know that the class has actually
+			//been called and an exception is suppose to happen
+			} catch(Eden_Route_Error $e) {}
+		}
+		
+		try {
+			//let the router handle this
+			return Eden_Route::i()->getMethod()->call($this, $name);
+		} catch(Eden_Route_Error $e) {
+			Eden_Error::i($e->getMessage())->trigger();
+		}
+	}
+	
 	public function __invoke() {
 		//if arguments are 0
 		if(func_num_args() == 0) {

@@ -86,14 +86,6 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 		return json_encode($this->get());
 	}
 	
-	public function __get($name) {
-		if(isset($this->_data[$name])) {
-			return $this->_data[$name];
-		}
-		
-		return NULL;
-	}
-	
 	public function __set($name, $value) {
 		$this->_data[$name] = $value;
 	}
@@ -111,7 +103,11 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 			//get rid of get
 			$key = strtolower(substr($key, 3+strlen($separator)));
 			
-			return $this->__get($key);
+			if(isset($this->_data[$name])) {
+				return $this->_data[$name];
+			}
+			
+			return NULL;
 			
 		} else if (strpos($name, 'set') === 0) {
 			//setUserName('Chris', '-')

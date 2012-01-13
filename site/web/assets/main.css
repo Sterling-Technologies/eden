@@ -44,7 +44,7 @@ a:focus, a:hover,
 a:active, a:visited {
 	outline: none;
 	text-decoration: none;
-	color: #375FA0;
+	color: #5F6D90;
 }
 
 strong { font-weight: bold; }
@@ -193,7 +193,7 @@ tr.row-inactive td { color: #999999; }
 	font-family: 'Lato', san-serif;
 	font-size: 13px;
 	margin: 20px auto;
-	padding: 20px;
+	padding: 10px;
 	width: 1000px;
 	-moz-border-radius: 10px;
     -webkit-border-radius: 10px;
@@ -207,7 +207,8 @@ tr.row-inactive td { color: #999999; }
 } 
 
 .page .head { 
-	padding-bottom: 10px;
+	padding-left: 90px;
+	background: url(/assets/images/logo.png) no-repeat 0 5px transparent;
 	border-bottom: 1px solid #CCC;
 }
 
@@ -223,9 +224,10 @@ tr.row-inactive td { color: #999999; }
 }
 
 /* Page Head */
+.page .head h1 {}
 .page .head h1 a { 
 	color: #222;
-	font-size: 30px;
+	font-size: 20px;
 	font-family: 'Lora', serif; 
 }
 
