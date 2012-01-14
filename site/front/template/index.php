@@ -21,9 +21,9 @@
 			<li><a href="/documentation/library/mongo">MongoDB</a> (IN DEV)</li>
 			<li><a href="/documentation/library/memcache">Memcache</a></li>
 			<li><a href="/documentation/library/apc">APC</a></li>
-			<li><a href="/documentation/library/mailing/imap">IMAP</a> (IN DEV)</li>
-			<li><a href="/documentation/library/mailing/smtp">SMTP</a> (IN DEV)</li>
-			<li><a href="/documentation/library/mailing/pop3">POP3</a> (IN DEV)</li>
+			<li><a href="/documentation/library/mailing/imap">IMAP</a></li>
+			<li><a href="/documentation/library/mailing/smtp">SMTP</a></li>
+			<li><a href="/documentation/library/mailing/pop3">POP3</a></li>
 			<li><a href="/documentation/library/google/calendar">Google Calendar</a> (IN DEV)</li>
 			<li><a href="/documentation/library/google/docs">Google Docs</a> (IN DEV)</li>
 			<li><a href="/documentation/library/google/gmail">Gmail</a> (IN DEV)</li>
