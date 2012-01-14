@@ -83,7 +83,7 @@ class Eden_Mail extends Eden_Class {
 	 * @param string
 	 * @return Eden_Mail_Pop3
 	 */
-	public function smtp($host, $user, $pass, $port = NULL, $ssl = false, $tls = false) {
+	public function pop3($host, $user, $pass, $port = NULL, $ssl = false, $tls = false) {
 		Eden_Mail_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string')

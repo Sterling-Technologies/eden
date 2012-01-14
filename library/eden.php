@@ -12,8 +12,7 @@ require_once 'eden/event.php';
 /**
  * The starting point of every framework call.
  *
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: framework.php 9 2010-01-12 15:42:40Z blanquera $
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 function eden() {
 	$class = Eden::i();
@@ -31,8 +30,7 @@ function eden() {
  *
  * @package    Eden
  * @category   framework	
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: framework.php 9 2010-01-12 15:42:40Z blanquera $
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden extends Eden_Event {
 	/* Constants
@@ -46,14 +44,12 @@ class Eden extends Eden_Event {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	public function __construct() {
 		if(!self::$_active) {
 			self::$_active = $this;
