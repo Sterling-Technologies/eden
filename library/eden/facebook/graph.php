@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.st.
@@ -11,10 +11,8 @@
  * Facebook Authentication
  *
  * @package    Eden
- * @subpackage file
- * @category   path
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: model.php 4 2010-01-06 04:41:07Z blanquera $
+ * @category   facebook
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Facebook_Graph extends Eden_Class {
 	/* Constants
@@ -30,14 +28,12 @@ class Eden_Facebook_Graph extends Eden_Class {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	public function __construct($token) {
 		$this->_token = $token;
 	}

@@ -1,16 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Untitled Document</title>
-</head>
-
-<body>
-</body>
-</html><?php //-->
+<?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -20,9 +11,8 @@
  * Get Satisfaction Product Methods 
  *
  * @package    Eden
- * @category   Get Satisfaction
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
+ * @category   getsatisfaction
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_GetSatisfaction_Product extends Eden_GetSatisfaction_Base {
 	/* Constants
@@ -41,14 +31,12 @@ class Eden_GetSatisfaction_Product extends Eden_GetSatisfaction_Base {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
 	public function setCompany($company) {

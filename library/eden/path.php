@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -13,10 +13,8 @@ require_once dirname(__FILE__).'/class.php';
  * General available methods for common pathing issues 
  *
  * @package    Eden
- * @subpackage path
- * @category   path
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: path.php 3 2010-01-06 01:16:54Z blanquera $
+ * @category   core
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Path extends Eden_Type_String implements ArrayAccess {
 	/* Constants
@@ -27,14 +25,12 @@ class Eden_Path extends Eden_Type_String implements ArrayAccess {
 	-------------------------------*/
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	public function __construct($path) {
 		//argument 1 must be a string
 		Eden_Path_Error::i()->argument(1, 'string');

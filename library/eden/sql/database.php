@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -27,8 +27,7 @@ require_once dirname(__FILE__).'/search.php';
  *
  * @package    Eden
  * @category   sql
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: abstract.php 1 2010-01-02 23:06:36Z blanquera $
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 abstract class Eden_Sql_Database extends Eden_Event {
 	/* Constants

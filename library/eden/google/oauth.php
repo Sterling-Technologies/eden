@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -12,8 +12,7 @@
  *
  * @package    Eden
  * @category   google
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Google_Oauth extends Eden_Google_Base {
 	/* Constants
@@ -28,14 +27,12 @@ class Eden_Google_Oauth extends Eden_Google_Base {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	public function __construct($key, $secret, $scope) {
 		//argument test
 		Eden_Google_Error::i()

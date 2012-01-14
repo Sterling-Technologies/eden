@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -11,10 +11,8 @@
  * Generates subselect query string syntax
  *
  * @package    Eden
- * @subpackage database
- * @category   database
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: subselect.php 1 2010-01-02 23:06:36Z blanquera $
+ * @category   sql
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Mysql_Subselect extends Eden_Class {
 	/* Constants
@@ -27,14 +25,12 @@ class Eden_Mysql_Subselect extends Eden_Class {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	public function __construct(Eden_Sql_Select $parentQuery, $select = '*') {
 		//Argument 2 must be a string
 		Eden_Mysql_Error::i()->argument(2, 'string');

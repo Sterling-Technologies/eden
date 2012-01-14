@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -10,12 +10,14 @@
 require_once dirname(__FILE__).'/class.php';
 
 /**
- * cURL wrapper
+ * cURL allows you to connect and communicate to many 
+ * different types of servers with many different types 
+ * of protocols. We rely on cURL heavily as the main
+ * transport for all API interactions.
  *
  * @package    Eden
  * @category   curl
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Curl extends Eden_Class implements ArrayAccess {
 	/* Constants
@@ -138,14 +140,12 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	public function __call($name, $args) {
 		if(strpos($name, 'set') === 0) {
 			$method = substr($name, 3);

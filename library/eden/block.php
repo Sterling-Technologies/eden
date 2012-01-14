@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -12,9 +12,8 @@
  * A block is a default and customizable piece of output.
  *
  * @package    Eden
- * @category   site
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: abstract.php 5 2010-01-08 22:21:29Z blanquera $
+ * @category   core
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 abstract class Eden_Block extends Eden_Class {
 	/* Constants

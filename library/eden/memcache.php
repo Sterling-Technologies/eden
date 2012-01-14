@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -20,10 +20,8 @@ require_once dirname(__FILE__).'/class.php';
  * cached copy rather than  recomputing the original data.
  *
  * @package    Eden
- * @subpackage memcache
  * @category   cache
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: model.php 1 2010-01-02 23:06:36Z blanquera $
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Memcache extends Eden_Class {
 	/* Constants
@@ -36,14 +34,12 @@ class Eden_Memcache extends Eden_Class {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	public function __construct($host = 'localhost', $port = 11211, $timeout = 1) {
 		//argument test
 		$error = Eden_Memcache_Error::i()

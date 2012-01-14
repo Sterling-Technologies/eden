@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -11,9 +11,8 @@
  * Amazon S3
  *
  * @package    Eden
- * @subpackage amazon
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: abstract.php 1 2010-01-02 23:06:36Z blanquera $
+ * @category   amazon
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Amazon_S3 extends Eden_Class {
 	/* Constants
@@ -37,14 +36,12 @@ class Eden_Amazon_S3 extends Eden_Class {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	public function __construct($user, $pass, $host = 's3.amazonaws.com', $ssl = false) {
 		$this->_host 	= $host;
 		$this->_user 	= $user;

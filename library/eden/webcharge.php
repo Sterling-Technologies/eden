@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -12,10 +12,8 @@
  * model for payment processing.
  *
  * @package    Eden
- * @subpackage webcharge
- * @category   service
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: model.php 1 2010-01-02 23:06:36Z blanquera $
+ * @category   webcharge
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Webcharge_Model extends Eden_Class
 {
@@ -77,14 +75,12 @@ class Eden_Webcharge_Model extends Eden_Class
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	public function __construct($user = NULL, $password = NULL, array $options = array()) {
 		$this->setUser($user)->setPassword($password);
 			

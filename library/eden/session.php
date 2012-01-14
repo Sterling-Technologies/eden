@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -14,10 +14,8 @@ require_once dirname(__FILE__).'/class.php';
  * server session procedures.
  *
  * @package    Eden
- * @subpackage session
- * @category   tool
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: session.php 1 2010-01-02 23:06:36Z blanquera $
+ * @category   utility
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	/* Constants
@@ -30,14 +28,12 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	public function __toString() {
 		if(!self::$_session) {
 			return '[]';

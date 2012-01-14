@@ -1,39 +1,42 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2010-2012 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
 
 /**
- * Javascript Errors
+ * Mail exception
  *
  * @package    Eden
- * @category   javascript
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: exception.php 1 2010-01-02 23:06:36Z blanquera $
+ * @category   mail
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
-class Eden_Javascript_Error extends Eden_Error {
+class Eden_Mail_Error extends Eden_Error {
 	/* Constants
 	-------------------------------*/
+	const SERVER_ERROR 		= 'Problem connecting to %s . Check server, port or ssl settings for your email server.';
+	const LOGIN_ERROR 		= 'Your email provider has rejected your login information. Verify your email and/or password is correct.';
+	const TLS_ERROR			= 'Problem connecting to %s with TLS on.';
+	const SMTP_ADD_EMAIL 	= 'Adding %s to email failed.'; 
+	const SMTP_DATA 		= 'Server did not allow data to be added.'; 
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}
 	
-	/* Magic
-	-------------------------------*/
-    /* Public Methods
+	/* Public Methods
 	-------------------------------*/
 	/* Protected Methods
 	-------------------------------*/

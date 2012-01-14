@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -12,18 +12,16 @@ require_once dirname(__FILE__).'/route.php';
 
 require_once dirname(__FILE__).'/tool.php';
 require_once dirname(__FILE__).'/when.php';
-require_once dirname(__FILE__).'/map.php';
 
 /**
- * The base class for all classes wishing to integrate with Eve.
+ * The base class for all classes wishing to integrate with Eden.
  * Extending this class will allow your methods to seemlessly be 
  * overloaded and overrided as well as provide some basic class
  * loading patterns.
  *
  * @package    Eden
- * @category   framework	
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: class.php 1 2010-01-02 23:06:36Z blanquera $
+ * @category   core	
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Class {
 	/* Constants
@@ -68,30 +66,6 @@ class Eden_Class {
 		try {
 			//let the router handle this
 			return Eden_Route::i()->getMethod()->call($this, $name, $args);
-		} catch(Eden_Route_Error $e) {
-			Eden_Error::i($e->getMessage())->trigger();
-		}
-	}
-	
-	public function __get($name) {
-		//if the method name starts with a capital letter
-		//most likely they want a class
-		if(preg_match("/^[A-Z]/", $name)) {
-			//lets first consider that they may just
-			//want to load a class so lets try
-			try {
-				//return the class
-				return Eden_Route::i()->getClass($name);
-			//only if there's a route exception do we want to catch it
-			//this is because a class can throw an exception in their construct
-			//so if that happens then we do know that the class has actually
-			//been called and an exception is suppose to happen
-			} catch(Eden_Route_Error $e) {}
-		}
-		
-		try {
-			//let the router handle this
-			return Eden_Route::i()->getMethod()->call($this, $name);
 		} catch(Eden_Route_Error $e) {
 			Eden_Error::i($e->getMessage())->trigger();
 		}
@@ -195,16 +169,6 @@ class Eden_Class {
 		}
 		
 		return Eden_When::i($this, $lines);
-	}
-	
-	/**
-	 * Invokes Chain map
-	 *
-	 * @param bool
-	 * @return this|Eden_Noop
-	 */
-	public function loop(array &$list, $lines = 0) {
-		return Eden_Map::i($this, $list, $lines);
 	}
 	
 	/** 

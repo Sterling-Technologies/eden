@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -21,10 +21,8 @@ require_once dirname(__FILE__).'/class.php';
  * slashes. For example: Eden_Cache_Model is located at eve/cache/model.
  *
  * @package    Eden
- * @subpackage autoload
- * @category   framework
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: autoload.php 1 2010-01-02 23:06:36Z blanquera $
+ * @category   core
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Loader extends Eden_Class {
 	/* Constants
@@ -37,14 +35,12 @@ class Eden_Loader extends Eden_Class {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
 	/**

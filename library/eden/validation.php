@@ -1,19 +1,18 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
 
 /**
- * Validation
+ * Given the value, this class can perform many common tests against it.
  *
  * @package    Eden
  * @category   validation
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: abstract.php 5 2010-01-08 22:21:29Z blanquera $
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Validation extends Eden_Class {
 	/* Constants
@@ -26,14 +25,12 @@ class Eden_Validation extends Eden_Class {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	public function __construct($value) {
 		$this->_value = $value;
 	}

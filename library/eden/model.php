@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -10,11 +10,11 @@
 require_once dirname(__FILE__).'/type.php';
 
 /**
+ * Base model that allows setting and getting of key values
  *
  * @package    Eden
- * @category   registry
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
+ * @category   model
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Model extends Eden_Type_Array {
 	/* Constants
@@ -25,14 +25,12 @@ class Eden_Model extends Eden_Type_Array {
 	-------------------------------*/
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
 	/* Protected Methods

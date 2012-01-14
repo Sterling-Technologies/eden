@@ -11,8 +11,7 @@
  *
  * @package    Eden
  * @category   error
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: exception.php 1 2010-01-02 23:06:36Z blanquera $
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Error_Event extends Eden_Event {
 	/* Constants
@@ -31,14 +30,12 @@ class Eden_Error_Event extends Eden_Event {
 	-------------------------------*/
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
 	/** 

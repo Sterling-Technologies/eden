@@ -1,19 +1,18 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
 
 /**
- *  Eventbrite oauth
+ * Eventbrite Base
  *
  * @package    Eden
- * @category   google
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
+ * @category   eventbrite
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Eventbrite_Base extends Eden_Class {
 	/* Constants
@@ -28,14 +27,12 @@ class Eden_Eventbrite_Base extends Eden_Class {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	public function __construct($user, $api) {
 		//argument test
 		Eden_Eventbrite_Error::i()

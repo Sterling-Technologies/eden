@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -11,10 +11,8 @@
  * Generates utility query strings
  *
  * @package    Eden
- * @subpackage database
- * @category   database
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: utility.php 1 2010-01-02 23:06:36Z blanquera $
+ * @category   sql
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Sqlite_Utility extends Eden_Sql_Query
 {

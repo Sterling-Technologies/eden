@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -16,15 +16,16 @@ require_once dirname(__FILE__).'/mysql/utility.php';
 
 /**
  * Abstractly defines a layout of available methods to
- * connect to and query a database. This class also lays out 
- * query building methods that auto renders a valid query
- * the specific database will understand without actually 
- * needing to know the query language.
+ * connect to and query a MySQL database. This class also 
+ * lays out query building methods that auto renders a 
+ * valid query the specific database will understand without 
+ * actually needing to know the query language. Extending
+ * all SQL classes, comes coupled with loosely defined
+ * searching, collections and models.
  *
  * @package    Eden
  * @category   sql
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: abstract.php 1 2010-01-02 23:06:36Z blanquera $
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Mysql extends Eden_Sql_Database {
 	/* Constants
@@ -43,14 +44,12 @@ class Eden_Mysql extends Eden_Sql_Database {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	public function __construct($host, $name, $user, $pass = NULL, $port = NULL) {
 		//argument test
 		Eden_Mysql_Error::i()

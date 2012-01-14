@@ -1,19 +1,28 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
 
+require_once dirname(__FILE__).'/curl.php';
+require_once dirname(__FILE__).'/facebook/error.php';
+require_once dirname(__FILE__).'/facebook/auth.php';
+require_once dirname(__FILE__).'/facebook/graph.php';
+require_once dirname(__FILE__).'/facebook/post.php';
+
 /**
- * Facebook
+ * Facebook API factory. This is a factory class with 
+ * methods that will load up different Facebook classes.
+ * Facebook classes are organized as described on their 
+ * developer site: auth, graph, FQL. We also added a post 
+ * class for more advanced options when posting to Facebook.
  *
  * @package    Eden
- * @category   tool
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: tool.php 3 2010-01-06 01:16:54Z blanquera $
+ * @category   facebook
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Facebook extends Eden_Class {
 	/* Constants
@@ -24,14 +33,12 @@ class Eden_Facebook extends Eden_Class {
 	-------------------------------*/
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
 	/**

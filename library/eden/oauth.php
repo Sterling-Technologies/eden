@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -14,12 +14,13 @@ require_once dirname(__FILE__).'/oauth/consumer.php';
 require_once dirname(__FILE__).'/oauth/server.php';
 
 /**
- *  Trigger when something is false
+ * Oauth Factory; A summary of 2-legged and 3-legged OAuth
+ * which can generally connect to any properly implemented
+ * OAuth server.
  *
  * @package    Eden
  * @category   core
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Oauth extends Eden_Class {
 	/* Constants
@@ -30,14 +31,12 @@ class Eden_Oauth extends Eden_Class {
 	-------------------------------*/
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
 	/**

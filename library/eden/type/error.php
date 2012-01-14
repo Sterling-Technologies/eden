@@ -11,9 +11,8 @@
  * Type Errors
  *
  * @package    Eden
- * @category   type
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: exception.php 1 2010-01-02 23:06:36Z blanquera $
+ * @category   core
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Type_Error extends Eden_Error {
 	/* Constants
