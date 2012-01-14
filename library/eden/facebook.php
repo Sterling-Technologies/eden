@@ -12,6 +12,9 @@ require_once dirname(__FILE__).'/facebook/error.php';
 require_once dirname(__FILE__).'/facebook/auth.php';
 require_once dirname(__FILE__).'/facebook/graph.php';
 require_once dirname(__FILE__).'/facebook/post.php';
+require_once dirname(__FILE__).'/facebook/select.php';
+require_once dirname(__FILE__).'/facebook/search.php';
+require_once dirname(__FILE__).'/facebook/fql.php';
 
 /**
  * Facebook API factory. This is a factory class with 
@@ -27,6 +30,9 @@ require_once dirname(__FILE__).'/facebook/post.php';
 class Eden_Facebook extends Eden_Class {
 	/* Constants
 	-------------------------------*/
+	const RSS = 'https://www.facebook.com/feeds/page.php?id=%s&format=rss20';
+	const RSS_AGENT = 'Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.2.13) Gecko/20101206 Ubuntu/10.10 (maverick) Firefox/3.6.13';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -87,6 +93,24 @@ class Eden_Facebook extends Eden_Class {
 	public function fql($token) {
 		Eden_Facebook_Error::i()->argument(1, 'string');
 		return Eden_Facebook_Fql::i($token);
+	}
+	
+	/**
+	 * Returns an RSS feed to a public id
+	 *
+	 * @param int
+	 * @return SimpleXml
+	 */
+	public function rss($id) {
+		Eden_Facebook_Error::i()->argument(1, 'int');
+		return $this->Eden_Curl()
+			->setUrl(sprintf(self::RSS, $id))
+			->setUserAgent(self::RSS_AGENT)
+			->setConnectTimeout(10)
+			->setFollowLocation(true)
+			->setTimeout(60)
+			->verifyPeer(false)
+			->getSimpleXmlResponse();
 	}
 	
 	/* Protected Methods

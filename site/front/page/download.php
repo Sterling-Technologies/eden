@@ -150,7 +150,10 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Facebook',
 		'Eden_Facebook_Auth',
 		'Eden_Facebook_Graph',
-		'Eden_Facebook_Post');
+		'Eden_Facebook_Post',
+		'Eden_Facebook_Select',
+		'Eden_Facebook_Search',
+		'Eden_Facebook_Fql');
 		
 	protected $_getsatisfaction = array(
 		'Eden_Oauth_Error',

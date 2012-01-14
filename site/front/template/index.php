@@ -31,7 +31,7 @@
 			<li><a href="/documentation/library/google/maps">Google Maps</a> (IN DEV)</li>
 			<li><a href="/documentation/library/google/plus">Google+</a> (IN DEV)</li>
 			<li><a href="/documentation/library/google/shortner">Google Shortner</a></li>
-			<li><a href="/documentation/library/facebook">Facebook</a> (ADDING FQL)</li>
+			<li><a href="/documentation/library/facebook">Facebook</a></li>
 			<li><a href="/documentation/library/twitter">Twitter</a> (IN DEV)</li>
 			<li><a href="/documentation/library/tumbler">Tumbler</a> (IN DEV)</li>
 			<li><a href="/documentation/library/getsatisfaction">Get Satisfaction</a></li>
