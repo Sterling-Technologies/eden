@@ -1,17 +1,12 @@
 <?php //-->
 /*
- * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
- *
- * Copyright and license information can be found at LICENSE.txt
- * distributed with this package.
+ * This file is part a custom application package.
+ * (c) 2011-2012 Openovate Labs
  */
 
 /**
  * Front application exception
  *
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: exception.php 9 2010-01-03 00:28:47Z blanquera $
  */
 class Front_Error extends Eden_Error {
 	/* Constants

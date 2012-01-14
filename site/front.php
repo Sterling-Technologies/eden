@@ -1,10 +1,7 @@
 <?php //-->
 /*
- * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
- *
- * Copyright and license information can be found at LICENSE.txt
- * distributed with this package.
+ * This file is part a custom application package.
+ * (c) 2011-2012 Openovate Labs
  */
  
 require_once dirname(__FILE__).'/../library/eden.php';
@@ -14,8 +11,6 @@ require_once dirname(__FILE__).'/../library/eden.php';
  * using the framework you can rename this function to whatever you
  * like.
  *
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: application.php 21 2010-01-06 01:19:17Z blanquera $
  */
 function front() {
 	$class = Front::i();
@@ -33,8 +28,6 @@ function front() {
  *
  * @package    Eden
  * @category   site
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: application.php 9 2010-01-12 15:42:40Z blanquera $
  */
 class Front extends Eden {
 	/* Constants
@@ -50,14 +43,12 @@ class Front extends Eden {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getSingleton(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	public function __construct() {
 		if(!self::$_active) {
 			self::$_active = $this;

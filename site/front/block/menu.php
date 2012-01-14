@@ -1,19 +1,11 @@
 <?php //-->
 /*
- * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
- *
- * Copyright and license information can be found at LICENSE.txt
- * distributed with this package.
+ * This file is part a custom application package.
+ * (c) 2011-2012 Openovate Labs
  */
 
 /**
  * Pagination block
- *
- * @package    Eden
- * @category   site
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: form.php 1 2010-01-02 23:06:36Z blanquera $
  */
 class Front_Block_Menu extends Eden_Block {
 	/* Constants
@@ -27,14 +19,12 @@ class Front_Block_Menu extends Eden_Block {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	/* Magic
-	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
 	/**

@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part a custom application package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Christian Blanquera <cblanquera@gmail.com>
  */
  
 /**
@@ -9,8 +9,6 @@
  * Starts laying out how classes and methods are handled.
  *  
  * @package    Back
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: application.php 21 2010-01-06 01:19:17Z blanquera $
  */
 class Front_Handler extends Eden_Class {
 	/* Constants

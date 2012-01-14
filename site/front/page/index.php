@@ -1,14 +1,11 @@
 <?php //-->
 /*
  * This file is part a custom application package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Christian Blanquera <cblanquera@gmail.com>
  */
 
 /**
  * Default logic to output a page
- *
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: index.php 14 2010-01-13 03:39:03Z blanquera $
  */
 class Front_Page_Index extends Front_Page {
 	/* Constants

@@ -1,10 +1,7 @@
 <?php //-->
 /*
- * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
- *
- * Copyright and license information can be found at LICENSE.txt
- * distributed with this package.
+ * This file is part a custom application package.
+ * (c) 2011-2012 Openovate Labs
  */
 
 /**
@@ -13,8 +10,6 @@
  * being the final point where data manipulation can occur.
  *
  * @package    Eden
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: page.php 8 2010-01-09 07:04:02Z blanquera $
  */
 abstract class Front_Page extends Eden_Class {
 	/* Constants

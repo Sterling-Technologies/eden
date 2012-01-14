@@ -1,14 +1,11 @@
 <?php //-->
 /*
  * This file is part a custom application package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Christian Blanquera <cblanquera@gmail.com>
  */
 
 /**
  * Default logic to output a page
- *
- * @author     Christian Blanquera <cblanquera@gmail.com>
- * @version    $Id: index.php 14 2010-01-13 03:39:03Z blanquera $
  */
 class Front_Page_Download extends Front_Page {
 	/* Constants
@@ -32,7 +29,6 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Route_Function',
 		'Eden_Route',
 		'Eden_When',
-		'Eden_Map',
 		'Eden_Tool', 
 		'Eden_Loader',
 		'Eden_Type',
@@ -41,6 +37,10 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Type_Array',
 		'Eden_Type_String',
 		'Eden_Collection',
+		'Eden_Curl',
+		'Eden_Path',
+		'Eden_File',
+		'Eden_Folder',
 		'Eden_Block',
 		'Eden_Model',
 		'Eden');
@@ -50,22 +50,13 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Session',
 		'Eden_Cookie',
 		'Eden_Registry',
-		'Eden_Curl',
-		'Eden_Path',
-		'Eden_File',
-		'Eden_Folder',
 		'Eden_Image',
 		'Eden_Unit',
-		'Eden_Validation',
-		'Eden_Oauth_Error',
-		'Eden_Oauth_Base',
-		'Eden_Oauth_Consumer');
-		
-	protected $_database = array(
+		'Eden_Validation');
+
+	protected $_mysql = array(
 		'Eden_Sql_Error',
 		'Eden_Mysql_Error',
-		'Eden_Postgre_Error',
-		'Eden_Sqlite_Error',
 		'Eden_Sql_Database',
 		'Eden_Sql_Query',
 		'Eden_Sql_Delete',
@@ -79,7 +70,20 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Mysql_Create',
 		'Eden_Mysql_Subselect',
 		'Eden_Mysql_Utility',
-		'Eden_Mysql',
+		'Eden_Mysql');
+		
+	protected $_postgre = array(
+		'Eden_Sql_Error',
+		'Eden_Postgre_Error',
+		'Eden_Sql_Database',
+		'Eden_Sql_Query',
+		'Eden_Sql_Delete',
+		'Eden_Sql_Select',
+		'Eden_Sql_Update',
+		'Eden_Sql_Insert',
+		'Eden_Sql_Collection',
+		'Eden_Sql_Model',
+		'Eden_Sql_Search',
 		'Eden_Postgre_Alter',
 		'Eden_Postgre_Create',
 		'Eden_Postgre_Delete',
@@ -87,7 +91,20 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Postgre_Select',
 		'Eden_Postgre_Update',
 		'Eden_Postgre_Utility',
-		'Eden_Postgre',
+		'Eden_Postgre');
+		
+	protected $_sqlite = array(
+		'Eden_Sql_Error',
+		'Eden_Sqlite_Error',
+		'Eden_Sql_Database',
+		'Eden_Sql_Query',
+		'Eden_Sql_Delete',
+		'Eden_Sql_Select',
+		'Eden_Sql_Update',
+		'Eden_Sql_Insert',
+		'Eden_Sql_Collection',
+		'Eden_Sql_Model',
+		'Eden_Sql_Search',
 		'Eden_Sqlite_Alter',
 		'Eden_Sqlite_Create',
 		'Eden_Sqlite_Utility',
@@ -97,6 +114,61 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Cache',
 		'Eden_Apc',
 		'Eden_Memcache');
+	
+	protected $_mail = array(
+		'Eden_Mail',
+		'Eden_Mail_Error',
+		'Eden_Mail_Imap',
+		'Eden_Mail_Pop3',
+		'Eden_Mail_Smtp');
+	
+	protected $_amazon = array(
+		'Eden_Oauth_Error',
+		'Eden_Oauth_Base',
+		'Eden_Oauth_Consumer',
+		'Eden_Amazon_Error',
+		'Eden_Amazon_S3');
+		
+	protected $_eventbrite = array(
+		'Eden_Oauth_Error',
+		'Eden_Oauth_Base',
+		'Eden_Oauth_Consumer',
+		'Eden_Eventbrite',
+		'Eden_Eventbrite_Error',
+		'Eden_Eventbrite_Base',
+		'Eden_Eventbrite_Discount',
+		'Eden_Eventbrite_Event',
+		'Eden_Eventbrite_Organizer',
+		'Eden_Eventbrite_Payment',
+		'Eden_Eventbrite_Ticket',
+		'Eden_Eventbrite_User',
+		'Eden_Eventbrite_Venue',
+		'Eden_Eventbrite_Event_Search',
+		'Eden_Eventbrite_Event_Set');
+	
+	protected $_facebook = array(
+		'Eden_Facebook',
+		'Eden_Facebook_Auth',
+		'Eden_Facebook_Graph',
+		'Eden_Facebook_Post');
+		
+	protected $_getsatisfaction = array(
+		'Eden_Oauth_Error',
+		'Eden_Oauth_Base',
+		'Eden_Oauth_Consumer',
+		'Eden_Getsatisfaction',
+		'Eden_Getsatisfaction_Error',
+		'Eden_Getsatisfaction_Base',
+		'Eden_Getsatisfaction_Company',
+		'Eden_Getsatisfaction_Detail',
+		'Eden_Getsatisfaction_Oauth',
+		'Eden_Getsatisfaction_People',
+		'Eden_Getsatisfaction_Post',
+		'Eden_Getsatisfaction_Product',
+		'Eden_Getsatisfaction_Replies',
+		'Eden_Getsatisfaction_Tag',
+		'Eden_Getsatisfaction_Topic');
+	
 	
 	/* Private Properties
 	-------------------------------*/
@@ -126,13 +198,43 @@ class Front_Page_Download extends Front_Page {
 				$classes = array_merge($classes, $this->_utilities);
 			}
 			
-			if($package->inArray('database')) {
-				$classes = array_merge($classes, $this->_database);
+			if($package->inArray('mail')) {
+				$classes = array_merge($classes, $this->_mail);
+			}
+			
+			if($package->inArray('mysql')) {
+				$classes = array_merge($classes, $this->_mysql);
+			}
+			
+			if($package->inArray('postgre')) {
+				$classes = array_merge($classes, $this->_postgre);
+			}
+			
+			if($package->inArray('sqlite')) {
+				$classes = array_merge($classes, $this->_sqlite);
 			}
 			
 			if($package->inArray('cache')) {
 				$classes = array_merge($classes, $this->_cache);
 			}
+			
+			if($package->inArray('amazon')) {
+				$classes = array_merge($classes, $this->_amazon);
+			}
+			
+			if($package->inArray('eventbrite')) {
+				$classes = array_merge($classes, $this->_eventbrite);
+			}
+			
+			if($package->inArray('facebook')) {
+				$classes = array_merge($classes, $this->_facebook);
+			}
+			
+			if($package->inArray('getsatisfaction')) {
+				$classes = array_merge($classes, $this->_getsatisfaction);
+			}
+			
+			$classes = array_unique($classes);
 			
 			$bundle = '<?php ';
 			foreach($classes as $class) {
