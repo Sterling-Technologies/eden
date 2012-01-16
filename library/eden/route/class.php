@@ -94,6 +94,20 @@ class Eden_Route_Class extends Eden_Class {
 	}
 	
 	/**
+	 * Unsets the route
+	 *
+	 * @param *string the class route name
+	 * @return string|variable
+	 */
+	public function release($route) {
+		if($this->isRoute($route)) {
+			unset($this->_route[strtolower($route)]);
+		}
+		
+		return $this;
+	}
+	
+	/**
 	 * Checks to see if a name is a route
 	 *
 	 * @param string
