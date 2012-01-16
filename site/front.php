@@ -59,7 +59,7 @@ class Front extends Eden {
 		$this->setLoader();
 		
 		//require registry
-		$this->_registry = Eden_Loader::i()
+		$this->_registry = Eden_Loader::i(true)
 			->load('Eden_Registry')
 			->Eden_Registry();
 	}
