@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2011-2012 Openovate Labs
+ * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -12,7 +12,8 @@
  *
  * @package    Eden
  * @category   Paypal
- * @author     Christian Blanquera cblanquera@openovate.com
+ * @author     Christian Blanquera <cblanquera@gmail.com>
+ * @version    $Id: exception.php 1 2010-01-02 23:06:36Z blanquera $
  */
 class Eden_Paypal_Error extends Eden_Error {
 	/* Constants
