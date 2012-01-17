@@ -7,8 +7,10 @@
 <?php if($i == $page): ?>
 <strong><?php echo $i; ?></strong>
 <?php else: ?>
+<?php $query['page'] = $i; ?>
+<?php $string = http_build_query($query); ?>
 <a class="<?php echo $class; ?>" 
-	href="<?php echo $url; ?>?<?php echo front()->getQuery($query, 'page', $i); ?>"
+	href="<?php echo $url; ?>?<?php echo $string; ?>"
 	><?php echo $i; ?></a>
 <?php endif; ?>
 <?php endfor; ?>
