@@ -37,14 +37,14 @@
 			<li><a href="/documentation/library/getsatisfaction">Get Satisfaction</a></li>
 			<li><a href="/documentation/library/eventbrite">Eventbrite</a></li>
 			<li><a href="/documentation/library/webcharge">Web Charge</a> (IN DEV)</li>
-			<li><a href="/documentation/library/paypal">Paypal</a> (IN DEV)</li>
+			<li><a href="/documentation/library/paypal">Paypal</a></li>
 			<li><a href="/documentation/library/authorizenet">Authorize.net</a> (IN DEV)</li>
 			<li><a href="/documentation/library/lbc">LBC</a> (IN DEV)</li>
 			<li><a href="/documentation/library/fedex">FedEx</a> (IN DEV)</li>
 			<li><a href="/documentation/library/ups">UPS</a> (IN DEV)</li>
 			<li><a href="/documentation/library/dhl">DHL</a> (IN DEV)</li>
 			<li><a href="/documentation/library/amazon">Amazon EC2 &amp; S3</a> (ADDING EC2)</li>
-			<li><a href="/documentation/library/jabber">Jabber</a> (IN DEV)</li>
+			<li><a href="/documentation/library/jabber">Jabber</a></li>
 		</ul>
 		
 		<p>Although <strong>Eden</strong> support the above services, it's not enough to say it works. We focus on <em>end developer</em> usage; getting results or performing actions with less code. <sub>Figure 1</sub>, for example, shows how easy it is to get your <strong>Facebook</strong> friends.</p>

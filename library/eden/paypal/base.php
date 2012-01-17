@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -12,8 +12,7 @@
  *
  * @package    Eden
  * @category   paypal
- * @author     Christian Symon M. Buenavista <sbuenavista@openovate.com>
- * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
+ * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Paypal_Base extends Eden_Class {
 	/* Constants
@@ -40,36 +39,25 @@ class Eden_Paypal_Base extends Eden_Class {
 	-------------------------------*/
 	/* Magic
 	-------------------------------*/
-	public function __construct($user, $password, $signature, $certificate) {
+	public function __construct($user, $password, $signature, $certificate, $live = false) {
 		$this->_user		= $user;
 		$this->_password	= $password;
 		$this->_signature	= $signature;
 		$this->_certificate	= $certificate;
-		$this->_url			= self::TEST_URL;
+		
+		$this->_url	= self::TEST_URL;
+		if($live) {
+			$this->_url = self::LIVE_URL;
+		}
 	}
 	
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set to API to test mode
+	 * Populates after a request has been sent
 	 *
-	 * @return this
+	 * @return array
 	 */
-	public function setTestMode() {
-		$this->_url = self::TEST_URL;
-		return $this;
-	}
-	
-	/**
-	 * Set to API to Live mode
-	 *
-	 * @return this
-	 */
-	public function setLiveMode() {
-		$this->_url = self::LIVE_URL;
-		return $this;
-	}
-	
 	public function getMeta() {
 		return $this->_meta;
 	}

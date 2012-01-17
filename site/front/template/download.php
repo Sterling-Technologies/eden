@@ -17,6 +17,8 @@
 				<label><input type="checkbox" class="checkbox" name="package[]" value="eventbrite" /> Eventbrite</label>
 				<label><input type="checkbox" class="checkbox" name="package[]" value="facebook" /> Facebook</label>
 				<label><input type="checkbox" class="checkbox" name="package[]" value="getsatisfaction" /> Get Satisfaction</label>
+				<label><input type="checkbox" class="checkbox" name="package[]" value="jabber" /> Jabber</label>
+				<label><input type="checkbox" class="checkbox" name="package[]" value="paypal" /> PayPal</label>
 			</div>
 			<input type="submit" class="submit" value="Download" />
         </form>

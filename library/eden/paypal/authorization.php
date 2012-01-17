@@ -1,7 +1,7 @@
 <?php //-->
 /*
  * This file is part of the Eden package.
- * (c) 2009-2011 Christian Blanquera <cblanquera@gmail.com>
+ * (c) 2011-2012 Openovate Labs
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -12,8 +12,7 @@
  *
  * @package    Eden
  * @category   Paypal
- * @author     Christian Symon M. Buenavista <sbuenavista@openovate.com>
- * @version    $Id: registry.php 1 2010-01-02 23:06:36Z blanquera $
+ * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Paypal_Authorization extends Eden_Paypal_Base {
 	/* Constants
@@ -34,7 +33,7 @@ class Eden_Paypal_Authorization extends Eden_Paypal_Base {
 	const CURRENCY			= 'CURRENCYCODE';
 	const COMPLETE_TYPE		= 'COMPLETETYPE';
 	const COMPLETE			= 'COMPLETE';
-	const NO_COMPLETE		= 'NoComplete'
+	const NO_COMPLETE		= 'NoComplete';
 	const NOTE				= 'NOTE';
 	
 	/* Public Properties
@@ -49,20 +48,18 @@ class Eden_Paypal_Authorization extends Eden_Paypal_Base {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}	
 	
-	/* Magic
-	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
 	/**
 	 * Set item amount  
 	 *
-	 * @param integer or float		Item amount
+	 * @param integer|float Item amount
 	 * @return this
 	 */
 	public function setAmount($amount) {
@@ -76,7 +73,7 @@ class Eden_Paypal_Authorization extends Eden_Paypal_Base {
 	/**
 	 * Set currency code 
 	 *
-	 * @param string		Currency code
+	 * @param string Currency code
 	 * @return this
 	 */
 	public function setCurrency($currency) {

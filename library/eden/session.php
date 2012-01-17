@@ -327,15 +327,13 @@ class Eden_Session_Error extends Eden_Error {
 	-------------------------------*/
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}
 	
-	/* Magic
-	-------------------------------*/
     /* Public Methods
 	-------------------------------*/
 	/* Protected Methods

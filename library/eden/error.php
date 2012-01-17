@@ -53,15 +53,13 @@ class Eden_Error extends Exception {
 	
 	/* Private Properties
 	-------------------------------*/
-	/* Get
+	/* Magic
 	-------------------------------*/
 	public static function i($message = NULL, $code = 0) {
 		$class = __CLASS__;
 		return new $class($message, $code);
 	}
 	
-	/* Magic
-	-------------------------------*/
     public function __construct($message = NULL, $code = 0) {
 		$this->_type = self::LOGIC;
 		$this->_level = self::ERROR;

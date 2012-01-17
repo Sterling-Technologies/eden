@@ -172,6 +172,17 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Getsatisfaction_Tag',
 		'Eden_Getsatisfaction_Topic');
 	
+	protected $_paypal = array(
+		'Eden_Paypal_Error',
+		'Eden_Paypal_Base',
+		'Eden_Paypal_Authorization',
+		'Eden_Paypal_Billing',
+		'Eden_Paypal_Checkout',
+		'Eden_Paypal_Direct',
+		'Eden_Paypal_Recurring',
+		'Eden_Paypal_Transaction');
+	
+	protected $_jabber = array('Eden_Jabber');
 	
 	/* Private Properties
 	-------------------------------*/
@@ -235,6 +246,14 @@ class Front_Page_Download extends Front_Page {
 			
 			if($package->inArray('getsatisfaction')) {
 				$classes = array_merge($classes, $this->_getsatisfaction);
+			}
+			
+			if($package->inArray('paypal')) {
+				$classes = array_merge($classes, $this->_paypal);
+			}
+			
+			if($package->inArray('jabber')) {
+				$classes = array_merge($classes, $this->_jabber);
 			}
 			
 			$classes = array_unique($classes);
