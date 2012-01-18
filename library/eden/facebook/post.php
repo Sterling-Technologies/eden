@@ -29,6 +29,7 @@ class Eden_Facebook_Post extends Eden_Class {
 	protected $_title		= NULL;
 	protected $_description	= NULL;
 	protected $_icon		= NULL;
+	protected $_id			= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -47,6 +48,14 @@ class Eden_Facebook_Post extends Eden_Class {
 	
 	/* Public Methods
 	-------------------------------*/
+	public function setId($id) {
+		//Argument 1 must be a string
+		Eden_Facebook_Error::i()->argument(1, 'numeric');
+		
+		$this->_id = $id;
+		return $this;
+	}
+	
 	/**
 	 * sets the message to your post
 	 *
@@ -175,7 +184,7 @@ class Eden_Facebook_Post extends Eden_Class {
 		print_r($post);
 		
 		//get the facebook graph url
-		$url = Eden_Facebook_Graph::GRAPH_URL.$id.'/feed';
+		$url = Eden_Facebook_Graph::GRAPH_URL.$this->_id.'/feed';
 		$query = array('access_token' => $this->_token);
 		$url .= '?'.http_build_query($query);
 		
@@ -188,10 +197,10 @@ class Eden_Facebook_Post extends Eden_Class {
 			->verifyPeer(false)									//verifying Peer must be boolean
 			->setUserAgent(Eden_Facebook_Auth::USER_AGENT)		//set facebook USER_AGENT
 			->setHeaders('Expect')								//set headers to EXPECT
-			->when(!empty($post))								//if post is not empty
+			//->when(!empty($post))								//if post is not empty
 			->setPost(true)										//set post to true
 			->setPostFields(http_build_query($post))			//set post fields
-			->endWhen()											//endif/endwhen
+			//->endWhen()											//endif/endwhen
 			->getJsonResponse();								//get the json response
 		print_r($response);
 		return $response['id'];									//return the id
