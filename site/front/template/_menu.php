@@ -76,6 +76,7 @@
 					<li>B. <a href="/documentation/library/fedex">FedEx</a></li>
 					<li>C. <a href="/documentation/library/ups">UPS</a></li>
 					<li>D. <a href="/documentation/library/dhl">DHL</a></li>
+					<li>E. <a href="/documentation/library/xend">Xend</a></li>
 				</ul>
 			</li>
 			<li>

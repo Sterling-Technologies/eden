@@ -43,6 +43,7 @@
 			<li><a href="/documentation/library/fedex">FedEx</a> (IN DEV)</li>
 			<li><a href="/documentation/library/ups">UPS</a> (IN DEV)</li>
 			<li><a href="/documentation/library/dhl">DHL</a> (IN DEV)</li>
+			<li><a href="/documentation/library/xend">Xend</a></li>
 			<li><a href="/documentation/library/amazon">Amazon EC2 &amp; S3</a> (ADDING EC2)</li>
 			<li><a href="/documentation/library/jabber">Jabber</a></li>
 		</ul>

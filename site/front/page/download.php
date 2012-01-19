@@ -184,6 +184,15 @@ class Front_Page_Download extends Front_Page {
 	
 	protected $_jabber = array('Eden_Jabber');
 	
+	protected $_xend = array(
+		'Eden_Xend_Error',
+		'Eden_Xend_Base',
+		'Eden_Xend_Booking',
+		'Eden_Xend_Rate',
+		'Eden_Xend_Shipment',
+		'Eden_Xend_Tracking',
+		'Eden_Xend');
+	
 	/* Private Properties
 	-------------------------------*/
 	/* Get
@@ -250,6 +259,10 @@ class Front_Page_Download extends Front_Page {
 			
 			if($package->inArray('paypal')) {
 				$classes = array_merge($classes, $this->_paypal);
+			}
+			
+			if($package->inArray('xend')) {
+				$classes = array_merge($classes, $this->_xend);
 			}
 			
 			if($package->inArray('jabber')) {
