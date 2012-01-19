@@ -14,7 +14,7 @@
 		<p>The library is separated into different sections covering databases, caching, file system, persistent data, etc. which is common in most frameworks, but <strong>Eden</strong> also covers web services, payment gateways, shipping and cloud technologies out of the box.</p>
 		
 		<h5>What's Out of the Box:</h5>
-		<ul class="three-column">
+		<ul class="three-column clearfix">
 			<li><a href="/documentation/library/mysql">MySQL</a></li>
 			<li><a href="/documentation/library/sqlite">SQLite</a></li>
 			<li><a href="/documentation/library/posgres">PosgreSQL</a></li>
