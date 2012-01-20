@@ -129,7 +129,7 @@ class Eden_Route_Method extends Eden_Class {
 	 */
 	public function isRoute($class, $method) {
 		if(is_string($class)) {
-			strtolower($class);
+			$class = strtolower($class);
 		}
 		
 		return isset($this->_route[$class][strtolower($method)]);

@@ -32,7 +32,8 @@ class Eden_Unit {
 	/* Magic
 	-------------------------------*/
 	public static function i() {
-		return self::_getMultiple(__CLASS__);
+		$class = __CLASS__;
+		return new $class();
 	}
 	
 	public function __construct() {
