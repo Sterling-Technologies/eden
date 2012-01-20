@@ -180,7 +180,8 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Paypal_Checkout',
 		'Eden_Paypal_Direct',
 		'Eden_Paypal_Recurring',
-		'Eden_Paypal_Transaction');
+		'Eden_Paypal_Transaction',
+		'Eden_Paypal');
 	
 	protected $_jabber = array('Eden_Jabber');
 	
@@ -192,6 +193,16 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Xend_Shipment',
 		'Eden_Xend_Tracking',
 		'Eden_Xend');
+	
+	protected $_authorizenet = array(
+		'Eden_Authorizenet_Error',
+		'Eden_Authorizenet_Base',
+		'Eden_Authorizenet_Customer',
+		'Eden_Authorizenet_Direct',
+		'Eden_Authorizenet_Payment',
+		'Eden_Authorizenet_Server',
+		'Eden_Authorizenet_Recurring',
+		'Eden_Authorizenet');
 	
 	/* Private Properties
 	-------------------------------*/
@@ -267,6 +278,10 @@ class Front_Page_Download extends Front_Page {
 			
 			if($package->inArray('jabber')) {
 				$classes = array_merge($classes, $this->_jabber);
+			}
+			
+			if($package->inArray('authorizenet')) {
+				$classes = array_merge($classes, $this->_authorizenet);
 			}
 			
 			$classes = array_unique($classes);

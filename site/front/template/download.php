@@ -19,6 +19,7 @@
 				<label><input type="checkbox" class="checkbox" name="package[]" value="getsatisfaction" /> Get Satisfaction</label>
 				<label><input type="checkbox" class="checkbox" name="package[]" value="jabber" /> Jabber</label>
 				<label><input type="checkbox" class="checkbox" name="package[]" value="paypal" /> PayPal</label>
+				<label><input type="checkbox" class="checkbox" name="package[]" value="authorizenet" /> Authorize.net</label>
 				<label><input type="checkbox" class="checkbox" name="package[]" value="xend" /> Xend</label>
 			</div>
 			<input type="submit" class="submit" value="Download" />
