@@ -212,7 +212,6 @@ class Eden_Authorizenet_Recurring extends Eden_Authorizenet_Base {
 	 *
 	 * @params *integer
 	 * @return this
-	 * @note 
 	 */
 	public function setTotalOccurrences($total) {
 		//Argument 1 must be an integer
