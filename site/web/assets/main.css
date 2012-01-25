@@ -416,6 +416,11 @@ tr.row-inactive td { color: #999999; }
 .documentation .two-column-layout .column-2 .prev { float: left; }
 .documentation .two-column-layout .column-2 .next { float: right; }
 
+#disqus-thread {
+	clear: both;
+	padding-top: 20px;
+}
+
 /* Page: Download */
 
 .download .two-column-layout .column-2 h3 { padding-top: 25px;}
