@@ -416,7 +416,7 @@ tr.row-inactive td { color: #999999; }
 .documentation .two-column-layout .column-2 .prev { float: left; }
 .documentation .two-column-layout .column-2 .next { float: right; }
 
-#disqus-thread {
+#disqus_thread {
 	clear: both;
 	padding-top: 20px;
 }
