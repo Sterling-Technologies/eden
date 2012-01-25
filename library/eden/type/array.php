@@ -101,8 +101,8 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 			//get rid of get
 			$key = strtolower(substr($key, 3+strlen($separator)));
 			
-			if(isset($this->_data[$name])) {
-				return $this->_data[$name];
+			if(isset($this->_data[$key])) {
+				return $this->_data[$key];
 			}
 			
 			return NULL;
