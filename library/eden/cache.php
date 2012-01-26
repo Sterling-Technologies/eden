@@ -141,6 +141,26 @@ class Eden_Cache extends Eden_Class {
 	}
 	
 	/**
+	 * Sets a data cache
+	 *
+	 * @param *string the key to the data
+	 * @return this
+	 */
+	public function remove($key) {
+		//argument test
+		Eden_Cache_Error::i()->argument(1, 'string');		//argument 1 must be a string
+		
+		if(isset($this->_cache[$key])) {
+			unset($this->_cache[$key]);
+		}
+		
+		//now we want to store the key and data file correlation
+		Eden_File::i($this->_path.'/'.$this->_key)->setData($this->_cache);
+		
+		return $this;
+	}
+	
+	/**
 	 * Gets the unix time of when a cache has been created
 	 *
 	 * @param *string the key to the data
@@ -157,6 +177,16 @@ class Eden_Cache extends Eden_Class {
 		}
 		
 		return 0;
+	}
+	
+	/**
+	 * returns a list of keys
+	 *
+	 * @return array
+	 */
+	public function getKeys() {		
+		//return the defauit
+		return array_keys($this->_cache);
 	}
 	
 	/**
