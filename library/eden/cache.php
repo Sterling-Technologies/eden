@@ -88,7 +88,7 @@ class Eden_Cache extends Eden_Class {
 	public function build() {
 		try {
 			$this->_cache = Eden_File::i($this->_path.'/'.$this->_key)->getData();
-		} catch(Eden_File_Error $e) {
+		} catch(Eden_Path_Error $e) {
 			$this->_cache = array();
 		}
 		return $this;
