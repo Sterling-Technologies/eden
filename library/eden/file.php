@@ -194,7 +194,11 @@ class Eden_File extends Eden_Path {
 		//argument 1 must be string
 		Eden_File_Error::i()->argument(1, 'string');
 		
-		$this->absolute();
+		try {
+			$this->absolute();
+		} catch(Eden_Path_Error $e) {
+			$this->touch();
+		}
 		
 		file_put_contents($this->_data, $content);
 		
