@@ -124,7 +124,6 @@ class Eden_Cache extends Eden_Class {
 	 * Gets a data cache
 	 *
 	 * @param *string the key to the data
-	 * @param string|null returns this variable by default
 	 * @return mixed
 	 */
 	public function get($key, $default = NULL) {
@@ -134,11 +133,30 @@ class Eden_Cache extends Eden_Class {
 		//if the key exists
 		if($this->keyExists($key)) {
 			//return it
-			return Eden_File::i($this->_cache[$key])->getData($default);
+			return Eden_File::i($this->_cache[$key])->getData();
 		}
 		
 		//return the defauit
 		return $default;
+	}
+	
+	/**
+	 * Gets the unix time of when a cache has been created
+	 *
+	 * @param *string the key to the data
+	 * @return int
+	 */
+	public function getCreated($key) {
+		//argument 1 must be a string
+		Eden_Cache_Error::i()->argument(1, 'string');
+		
+		//if the key exists
+		if($this->keyExists($key)) {
+			//return it
+			return Eden_File::i($this->_cache[$key])->getTime();
+		}
+		
+		return 0;
 	}
 	
 	/**
