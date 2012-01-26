@@ -181,8 +181,6 @@ class Eden_Facebook_Post extends Eden_Class {
 			$post['source'] = $this->_video;
 		}
 		
-		print_r($post);
-		
 		//get the facebook graph url
 		$url = Eden_Facebook_Graph::GRAPH_URL.$this->_id.'/feed';
 		$query = array('access_token' => $this->_token);
@@ -197,12 +195,10 @@ class Eden_Facebook_Post extends Eden_Class {
 			->verifyPeer(false)									//verifying Peer must be boolean
 			->setUserAgent(Eden_Facebook_Auth::USER_AGENT)		//set facebook USER_AGENT
 			->setHeaders('Expect')								//set headers to EXPECT
-			//->when(!empty($post))								//if post is not empty
 			->setPost(true)										//set post to true
 			->setPostFields(http_build_query($post))			//set post fields
-			//->endWhen()											//endif/endwhen
 			->getJsonResponse();								//get the json response
-		print_r($response);
+			
 		return $response['id'];									//return the id
 	}
 	
