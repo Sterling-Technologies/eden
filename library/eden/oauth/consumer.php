@@ -36,6 +36,7 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	protected $_time		= NULL; 
 	protected $_nonce		= NULL; 
 	protected $_verifier	= NULL; 
+	protected $_callback	= NULL;
 	protected $_signature	= NULL;
 	protected $_meta		= array();
 	protected $_headers		= array();
@@ -222,6 +223,21 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	}
 	
 	/**
+	 * Sets the callback for authorization
+	 * This should be set if wanting an access token
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCallback($url) {
+		Eden_Oauth_Error::i()->argument(1, 'string');
+		
+		$this->_callback = $url;
+		
+		return $this;
+	}
+	
+	/**
 	 * Returns the authorization header string
 	 *
 	 * @param string
@@ -243,7 +259,8 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 			'oauth_timestamp'			=> $this->_time,
 			'oauth_nonce'				=> $this->_nonce,
 			'oauth_version'				=> self::OAUTH_VERSION,
-			'oauth_verifier'			=> $this->_verifier);
+			'oauth_verifier'			=> $this->_verifier,
+			'oauth_callback'			=> $this->_callback);
 		
 		//if no realm
 		if(is_null($this->_realm)) {
@@ -261,6 +278,13 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 		if(is_null($this->_verifier)) {
 			//remove it
 			unset($params['oauth_verifier']);
+		}
+		
+		
+		//if no callback
+		if(is_null($this->_callback)) {
+			//remove it
+			unset($params['oauth_callback']);
 		}
 		
 		if(!$string) {
@@ -285,7 +309,8 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 			'oauth_timestamp'			=> $this->_time,
 			'oauth_nonce'				=> $this->_nonce,
 			'oauth_version'				=> self::OAUTH_VERSION,
-			'oauth_verifier'			=> $this->_verifier);
+			'oauth_verifier'			=> $this->_verifier,
+			'oauth_callback'			=> $this->_callback);
 		
 		//if no token
 		if(is_null($this->_requestToken)) {
@@ -297,6 +322,12 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 		if(is_null($this->_verifier)) {
 			//unset that parameter
 			unset($params['oauth_verifier']);
+		}
+		
+		//if no callback
+		if(is_null($this->_callback)) {
+			//remove it
+			unset($params['oauth_callback']);
 		}
 		
 		$query = array_merge($params, $query); //merge the params and the query

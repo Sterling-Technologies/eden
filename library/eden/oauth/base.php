@@ -40,7 +40,7 @@ class Eden_Oauth_Base extends Eden_Class {
 	-------------------------------*/
 	/* Protected Methods
 	-------------------------------*/
-	protected function _buildQuery($params, $noQuotes = true, $subList = false) {
+	protected function _buildQuery($params, $separator = '&', $noQuotes = true, $subList = false) {
 		if(empty($params)) {
 			return '';
 		}
@@ -61,23 +61,26 @@ class Eden_Oauth_Base extends Eden_Class {
 				// If two or more parameters share the same name,
 				// they are sorted by their value. OAuth Spec: 9.1.1 (1)
 				natsort($value);
-				$params[$key] = $this->_buildQuery($value, $noQuotes, true);
-			} else {
-				
-				if(!$noQuotes) {
-					$value = '"'.$value.'"';
-				}
-
-				$params[$key] = $value;
+				$params[$key] = $this->_buildQuery($value, $separator, $noQuotes, true);	
+				continue;
 			}
+			
+			if(!$noQuotes) {
+				$value = '"'.$value.'"';
+			}
+
+			$params[$key] = $value;
 		}
 		
 		if($subList) {
 			return $params;
 		}
 		
-		return urldecode(http_build_query($params));
+		foreach($params as $key => $value) {
+			$params[$key] = $key.'='.$value;
+		}
 		
+		return implode($separator, $params);
 	}
 	
 	protected function _parseString($string) {

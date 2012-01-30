@@ -113,6 +113,10 @@ class Eden_Template extends Eden_Class {
 			preg_match_all("/<php:(.*?) \/>/", $lines[$i], $patterns);
 			if(!empty($patterns[0]) && !empty($patterns[1])) {
 				foreach($patterns[1] as $j => $key) {
+					if(strpos($key, '<') !== false || strpos($key, '<') !== false) {
+						continue;
+					}
+					
 					$value = isset($this->_data[$key]) ? $this->_data[$key] : '';
 					$lines[$i] = str_replace($patterns[0][$j], $value, $lines[$i]);
 				}
@@ -122,13 +126,22 @@ class Eden_Template extends Eden_Class {
 			preg_match_all("/<php:(.*?)>/", $lines[$i], $patterns);
 			if(!empty($patterns[0]) && !empty($patterns[1])) {
 				foreach($patterns[1] as $j => $key) {
-					$subTemplate = array();
+					$start = strpos($lines[$i], '<php:'.$key.'>') + strlen('<php:'.$key.'>');
+					$subTemplate = array(substr($lines[$i], $start));
 					$closePattern = str_replace('<php:'.$key.'>', '</php:'.$key.'>', $lines[$i]);
+					
+					if(strpos($lines[$i], $closePattern) !== false) {
+						$end = strpos($lines[$i], '</php:'.$key.'>');
+						if($end != 0) {
+							$subTemplate[] = substr($lines[$i], 0, $end);
+						}
+					}
+					
 					unset($lines[$i]);
 					$i++;
-					while($i < $count && $lines[$i] != $closePattern) {
+					while($i < $count && strpos($lines[$i], $closePattern) === false) {
 						$subTemplate[] = $lines[$i];
-						
+
 						unset($lines[$i]);
 						$i++;
 						
@@ -138,11 +151,12 @@ class Eden_Template extends Eden_Class {
 					
 					if(isset($this->_data[$key]) && is_array($this->_data[$key])) {
 						foreach($this->_data[$key] as $value) {
-							if(is_array($value)) {
-								 $lines[$i][] = Eden_Template::i()
-								 	->set($value)
-									->parseEngine(implode("\n", $subTemplate));
+							if(!is_array($value)) {
+								$value = array($key => $value);
 							}
+							 $lines[$i][] = Eden_Template::i()
+								->set($value)
+								->parseEngine(implode("\n", $subTemplate));
 						}
 					}
 					
