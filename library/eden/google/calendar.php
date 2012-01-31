@@ -17,8 +17,9 @@
 class Eden_Google_Calendar extends Eden_Google_Base {
 	/* Constants
 	-------------------------------*/
-	const SCOPE 			= 'https://www.google.com/calendar/feeds/';
-	const URL_CALENDAR_LIST = 'https://www.google.com/calendar/feeds/%s/allcalendars/full';
+	const URL_CALENDAR_LIST 	= 'https://www.googleapis.com/calendar/v3/users/%s/calendarList';
+	const DEFAULT_USER			= 'me';
+	const DEFAULT_CALENDAR		= 'primary';
 	
 	/* Public Properties
 	-------------------------------*/
@@ -32,19 +33,23 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	public function __construct($key, $secret) {
+	public function __construct($token) {
 		//argument test
-		Eden_Google_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string');	//Argument 2 must be a string
-			
-		$this->_key 	= $key; 
-		$this->_secret 	= $secret;
-		$this->_scope	= self::SCOPE;
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_token 	= $token; 
 	}
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Returns Google Create Event	 
+	 *
+	 * @return Eden_Google_Calendar_Event_Create
+	 */
+	public function createEvent() {
+		return Eden_Google_Calendar_Event_Create::i($this->_token);
+	}
+	
 	public function getCalendarList($user = self::DEFAULT_USER) {
 		$url = sprintf(self::URL_CALENDAR_LIST, $user);
 		//Argument 1 must be a string
