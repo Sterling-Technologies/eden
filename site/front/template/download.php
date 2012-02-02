@@ -16,6 +16,8 @@
 				<label><input type="checkbox" class="checkbox" name="package[]" value="amazon" /> Amazon</label>
 				<label><input type="checkbox" class="checkbox" name="package[]" value="eventbrite" /> Eventbrite</label>
 				<label><input type="checkbox" class="checkbox" name="package[]" value="facebook" /> Facebook</label>
+				<label><input type="checkbox" class="checkbox" name="package[]" value="twitter" /> Twitter</label>
+				<label><input type="checkbox" class="checkbox" name="package[]" value="tumblr" /> Tumblr</label>
 				<label><input type="checkbox" class="checkbox" name="package[]" value="getsatisfaction" /> Get Satisfaction</label>
 				<label><input type="checkbox" class="checkbox" name="package[]" value="jabber" /> Jabber</label>
 				<label><input type="checkbox" class="checkbox" name="package[]" value="paypal" /> PayPal</label>

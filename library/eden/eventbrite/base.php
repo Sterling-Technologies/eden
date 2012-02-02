@@ -51,7 +51,7 @@ class Eden_Eventbrite_Base extends Eden_Class {
 	 * @return array
 	 */
 	public function getMeta($key = NULL) {
-		Eden_Google_Error::i()->argument(1, 'string', 'null');
+		Eden_Eventbrite_Error::i()->argument(1, 'string', 'null');
 		
 		if(isset($this->_meta[$key])) {
 			return $this->_meta[$key];

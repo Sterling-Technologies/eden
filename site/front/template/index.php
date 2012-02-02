@@ -32,8 +32,8 @@
 			<li><a href="/documentation/library/google/plus">Google+</a> (IN DEV)</li>
 			<li><a href="/documentation/library/google/shortner">Google Shortner</a></li>
 			<li><a href="/documentation/library/facebook">Facebook</a></li>
-			<li><a href="/documentation/library/twitter">Twitter</a> (IN DEV)</li>
-			<li><a href="/documentation/library/tumbler">Tumbler</a> (IN DEV)</li>
+			<li><a href="/documentation/library/twitter">Twitter</a></li>
+			<li><a href="/documentation/library/tumbler">Tumbler</a></li>
 			<li><a href="/documentation/library/getsatisfaction">Get Satisfaction</a></li>
 			<li><a href="/documentation/library/eventbrite">Eventbrite</a></li>
 			<li><a href="/documentation/library/webcharge">Web Charge</a> (IN DEV)</li>

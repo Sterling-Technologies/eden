@@ -62,7 +62,7 @@ class Eden_Eventbrite extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Eventbrite_Discount::i($user, $user);
+		return Eden_Eventbrite_Discount::i($user, $api);
 	}
 	
 	/**
@@ -77,7 +77,7 @@ class Eden_Eventbrite extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Eventbrite_Event::i($user, $user);
+		return Eden_Eventbrite_Event::i($user, $api);
 	}
 	
 	/**
@@ -92,7 +92,7 @@ class Eden_Eventbrite extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Eventbrite_Organizer::i($user, $user);
+		return Eden_Eventbrite_Organizer::i($user, $api);
 	}
 	
 	/**
@@ -107,7 +107,7 @@ class Eden_Eventbrite extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Eventbrite_Payment::i($user, $user);
+		return Eden_Eventbrite_Payment::i($user, $api);
 	}
 	
 	/**
@@ -122,7 +122,7 @@ class Eden_Eventbrite extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Eventbrite_Ticket::i($user, $user);
+		return Eden_Eventbrite_Ticket::i($user, $api);
 	}
 	
 	/**
@@ -137,7 +137,7 @@ class Eden_Eventbrite extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Eventbrite_User::i($user, $user);
+		return Eden_Eventbrite_User::i($user, $api);
 	}
 	
 	/**
@@ -152,7 +152,7 @@ class Eden_Eventbrite extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Eventbrite_Venue::i($user, $user);
+		return Eden_Eventbrite_Venue::i($user, $api);
 	}
 	
 	/**
@@ -167,7 +167,7 @@ class Eden_Eventbrite extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Eventbrite_Event_Search::i($user, $user);
+		return Eden_Eventbrite_Event_Search::i($user, $api);
 	}
 	
 	/**
@@ -182,7 +182,7 @@ class Eden_Eventbrite extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Eventbrite_Event_Set::i($user, $user);
+		return Eden_Eventbrite_Event_Set::i($user, $api);
 	}
 	
 	/* Protected Methods

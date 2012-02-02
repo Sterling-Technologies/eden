@@ -173,6 +173,45 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Getsatisfaction_Tag',
 		'Eden_Getsatisfaction_Topic');
 	
+	protected $_tumblr = array(
+		'Eden_Oauth_Error',
+		'Eden_Oauth_Base',
+		'Eden_Oauth_Consumer',
+		'Eden_Tumblr',
+		'Eden_Tumblr_Error',
+		'Eden_Tumblr_Base',
+		'Eden_Tumblr_Oauth',
+		'Eden_Tumblr_Blog',
+		'Eden_Tumblr_User');
+	
+	protected $_twitter = array(
+		'Eden_Oauth_Error',
+		'Eden_Oauth_Base',
+		'Eden_Oauth_Consumer',
+		'Eden_Twitter',
+		'Eden_Twitter_Error',
+		'Eden_Twitter_Base',
+		'Eden_Twitter_Oauth',
+		'Eden_Twitter_Accounts',
+		'Eden_Twitter_Block',
+		'Eden_Twitter_Directmessage',
+		'Eden_Twitter_Favorites',
+		'Eden_Twitter_Friends',
+		'Eden_Twitter_Geo',
+		'Eden_Twitter_Help',
+		'Eden_Twitter_Legal',
+		'Eden_Twitter_List',
+		'Eden_Twitter_Localtrends',
+		'Eden_Twitter_Notification',
+		'Eden_Twitter_Saved',
+		'Eden_Twitter_Search',
+		'Eden_Twitter_Spam',
+		'Eden_Twitter_Suggestions',
+		'Eden_Twitter_Timelines',
+		'Eden_Twitter_Trends',
+		'Eden_Twitter_Tweets',
+		'Eden_Twitter_Users');
+	
 	protected $_paypal = array(
 		'Eden_Paypal_Error',
 		'Eden_Paypal_Base',
@@ -283,6 +322,14 @@ class Front_Page_Download extends Front_Page {
 			
 			if($package->inArray('authorizenet')) {
 				$classes = array_merge($classes, $this->_authorizenet);
+			}
+			
+			if($package->inArray('tumblr')) {
+				$classes = array_merge($classes, $this->_tumblr);
+			}
+			
+			if($package->inArray('twitter')) {
+				$classes = array_merge($classes, $this->_twitter);
 			}
 			
 			$classes = array_unique($classes);

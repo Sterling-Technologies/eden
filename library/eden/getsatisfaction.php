@@ -59,7 +59,7 @@ class Eden_Getsatisfaction extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Getsatisfaction_Company::i($user, $user);
+		return Eden_Getsatisfaction_Company::i($key, $secret);
 	}
 	
 	/**
@@ -74,7 +74,7 @@ class Eden_Getsatisfaction extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Getsatisfaction_Detail::i($user, $user);
+		return Eden_Getsatisfaction_Detail::i($key, $secret);
 	}
 	
 	/**
@@ -89,7 +89,7 @@ class Eden_Getsatisfaction extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Getsatisfaction_Oauth::i($user, $user);
+		return Eden_Getsatisfaction_Oauth::i($key, $secret);
 	}
 	
 	/**
@@ -104,7 +104,7 @@ class Eden_Getsatisfaction extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Getsatisfaction_People::i($user, $user);
+		return Eden_Getsatisfaction_People::i($key, $secret);
 	}
 	
 	/**
@@ -119,7 +119,7 @@ class Eden_Getsatisfaction extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Getsatisfaction_Post::i($user, $user);
+		return Eden_Getsatisfaction_Post::i($key, $secret);
 	}
 	
 	/**
@@ -134,7 +134,7 @@ class Eden_Getsatisfaction extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Getsatisfaction_Product::i($user, $user);
+		return Eden_Getsatisfaction_Product::i($key, $secret);
 	}
 	
 	/**
@@ -149,7 +149,7 @@ class Eden_Getsatisfaction extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Getsatisfaction_Replies::i($user, $user);
+		return Eden_Getsatisfaction_Replies::i($key, $secret);
 	}
 	
 	/**
@@ -164,7 +164,7 @@ class Eden_Getsatisfaction extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Getsatisfaction_Tag::i($user, $user);
+		return Eden_Getsatisfaction_Tag::i($key, $secret);
 	}
 	
 	/**
@@ -179,7 +179,7 @@ class Eden_Getsatisfaction extends Eden_Class {
 			->argument(1, 'string')
 			->argument(1, 'string');
 			
-		return Eden_Getsatisfaction_Topic::i($user, $user);
+		return Eden_Getsatisfaction_Topic::i($key, $secret);
 	}
 	
 	/* Protected Methods
