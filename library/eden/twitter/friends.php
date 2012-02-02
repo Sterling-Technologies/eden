@@ -463,5 +463,3 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	/* Private Methods
 	-------------------------------*/
 }
-
-?>
