@@ -17,8 +17,8 @@
 class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_GET_LIST		= 'http://api.tumblr.com/v2/user/info';
-	const URL_GET_USER		= 'http://api.tumblr.com/v2/user/dashboard';
+	const URL_GET_INFO		= 'http://api.tumblr.com/v2/user/info';
+	const URL_GET_DASHBOARD	= 'http://api.tumblr.com/v2/user/dashboard';
 	const URL_GET_LIKES		= 'http://api.tumblr.com/v2/user/likes';
 	const URL_GET_FOLLOWING	= 'http://api.tumblr.com/v2/user/following';
 	const URL_FOLLOW		= 'http://api.tumblr.com/v2/user/follow';
@@ -49,7 +49,6 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	
 	/* Public Methods
 	-------------------------------*/
-	
 	/**
 	 * Set limit
 	 *
@@ -132,10 +131,9 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	 *
 	 * @return array
 	 */
-	public function getList() {
-		
-		$url = sprintf(self::URL_GET_LIST);
-		return $this->_post($url);
+	public function getInfo() {
+		$url = self::URL_GET_INFO;
+		return $this->_getResponse($url);
 	}
 	
 	/**
@@ -144,7 +142,7 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	 *
 	 * @return array
 	 */
-	public function getUser() {
+	public function getDashboard() {
 		//populate fields	
 		$query = array(
 			'limit'			=> $this->_limit,
@@ -154,7 +152,7 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 			'reblog_info'	=> $this->_reblog,
 			'notes_info'	=> $this->_notes);
 		
-		return $this->_getResponse(self::URL_GET_USER, $query);
+		return $this->_getResponse(self::URL_GET_DASHBOARD, $query);
 	}
 	
 	/**
