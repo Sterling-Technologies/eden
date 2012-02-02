@@ -61,7 +61,7 @@ class Eden_Tumblr extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Tumblr_Blog
 	 */
-	public function blog($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function blog($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//argument test
 		Eden_Tumblr_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -69,7 +69,7 @@ class Eden_Tumblr extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Tumblr_Blog::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Tumblr_Blog::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -81,7 +81,7 @@ class Eden_Tumblr extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Tumblr_User
 	 */
-	public function user($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function user($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//argument test
 		Eden_Tumblr_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -89,7 +89,7 @@ class Eden_Tumblr extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Tumblr_User::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Tumblr_User::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/* Protected Methods

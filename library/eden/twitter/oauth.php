@@ -17,9 +17,9 @@
 class Eden_Twitter_Oauth extends Eden_Class {
 	/* Constants
 	-------------------------------*/
-	const REQUEST_URL 		= 'http://www.tumblr.com/oauth/request_token'; 
-	const AUTHORIZE_URL		= 'http://www.tumblr.com/oauth/authorize';
-	const ACCESS_URL		= 'http://www.tumblr.com/oauth/access_token';
+	const REQUEST_URL 		= 'https://api.twitter.com/oauth/request_token'; 
+	const AUTHORIZE_URL		= 'https://api.twitter.com/oauth/authorize';
+	const ACCESS_URL		= 'https://api.twitter.com/oauth/access_token';
 	
 	/* Public Properties
 	-------------------------------*/
@@ -40,7 +40,7 @@ class Eden_Twitter_Oauth extends Eden_Class {
 	
 	public function __construct($key, $secret) {
 		//argument test
-		Eden_Tumblr_Error::i()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string
 			
@@ -76,7 +76,7 @@ class Eden_Twitter_Oauth extends Eden_Class {
 	 */
 	public function getLoginUrl($token, $redirect) {
 		//Argument tests
-		Eden_Tumblr_Error::i()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string
 		
@@ -96,7 +96,7 @@ class Eden_Twitter_Oauth extends Eden_Class {
 	 */
 	public function getAccessToken($token, $secret, $verifier) {
 		//argument test
-		Eden_Tumblr_Error::i()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string')		//Argument 2 must be a string
 			->argument(3, 'string');	//Argument 3 must be a string

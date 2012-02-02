@@ -63,7 +63,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Accounts
 	 */
-	public function account($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function account($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -71,7 +71,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Accounts::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Accounts::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -83,7 +83,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Block
 	 */
-	public function block($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function block($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -91,7 +91,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Block::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Block::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -103,7 +103,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Directmessage
 	 */
-	public function directMessage($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function directMessage($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -111,7 +111,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Directmessage::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Directmessage::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -123,7 +123,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Favorites
 	 */
-	public function favorites($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function favorites($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -131,7 +131,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Favorites::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Favorites::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -143,7 +143,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Friends
 	 */
-	public function friends($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function friends($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -151,7 +151,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Friends::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Friends::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -163,7 +163,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Geo
 	 */
-	public function geo($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function geo($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -171,7 +171,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Geo::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Geo::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -183,7 +183,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Help
 	 */
-	public function help($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function help($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -191,7 +191,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Help::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Help::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -203,7 +203,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Legal
 	 */
-	public function legal($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function legal($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -211,7 +211,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Legal::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Legal::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -223,7 +223,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_List
 	 */
-	public function lists($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function lists($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -231,7 +231,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_List::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_List::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -243,7 +243,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_LocalTrends
 	 */
-	public function localTrends($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function localTrends($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -251,7 +251,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_LocalTrends::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_LocalTrends::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -263,7 +263,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Notification
 	 */
-	public function notification($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function notification($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -271,7 +271,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Notification::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Notification::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -283,7 +283,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Saved
 	 */
-	public function saved($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function saved($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -291,7 +291,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Saved::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Saved::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -303,7 +303,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Search
 	 */
-	public function search($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function search($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -311,7 +311,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Search::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Search::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -323,7 +323,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Spam
 	 */
-	public function spam($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function spam($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -331,7 +331,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Spam::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Spam::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -343,7 +343,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Suggestions
 	 */
-	public function suggestions($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function suggestions($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -351,7 +351,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Suggestions::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Suggestions::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -363,7 +363,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Timelines
 	 */
-	public function timelines($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function timelines($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -371,7 +371,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Timelines::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Timelines::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -383,7 +383,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Trends
 	 */
-	public function trends($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function trends($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -391,7 +391,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Trends::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Trends::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -403,7 +403,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Tweets
 	 */
-	public function tweets($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function tweets($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -411,7 +411,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Tweets::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Tweets::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -423,7 +423,7 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Twitter_Users
 	 */
-	public function users($requestKey, $requestSecret, $accessToken, $accessSecret) {
+	public function users($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -431,7 +431,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Users::i($requestKey, $requestSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Users::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/* Protected Methods
