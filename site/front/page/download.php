@@ -148,6 +148,7 @@ class Front_Page_Download extends Front_Page {
 	
 	protected $_facebook = array(
 		'Eden_Facebook',
+		'Eden_Facebook_Error',
 		'Eden_Facebook_Auth',
 		'Eden_Facebook_Graph',
 		'Eden_Facebook_Post',
