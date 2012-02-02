@@ -22,6 +22,9 @@ require_once dirname(__FILE__).'/class.php';
 class Eden_Curl extends Eden_Class implements ArrayAccess {
 	/* Constants
 	-------------------------------*/
+	const PUT 		= 'PUT';
+	const DELETE 	= 'DELETE';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -128,7 +131,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 		
 	protected static $_setFileKeys = array(
 		'File' 				=> CURLOPT_FILE,
-		'Infile' 			=> CURLOPT_INFILE,
+		'InFile' 			=> CURLOPT_INFILE,
 		'StdErr' 			=> CURLOPT_STDERR,
 		'WriteHeader' 		=> CURLOPT_WRITEHEADER);
 		
@@ -183,7 +186,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 			}
 			
 			if(isset(self::$_setFileKeys[$method])) {
-				$key = $this->_setFileKeys[$method];
+				$key = self::$_setFileKeys[$method];
 				$this->_options[$key] = $args[0];
 				
 				return $this;

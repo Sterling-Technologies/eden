@@ -18,6 +18,7 @@ class Eden_Google_Calendar_Event_Create extends Eden_Google_Base {
 	/* Constants
 	-------------------------------*/	
 	const URL_CREATE_EVENT		= 'https://www.googleapis.com/calendar/v3/calendars/%s/events';
+	const URL_QUICK_CREATE_EVENT	= 'https://www.googleapis.com/calendar/v3/calendars/%s/events/quickAdd?text="%s"';
 	
 	/* Public Properties
 	-------------------------------*/
@@ -133,7 +134,7 @@ class Eden_Google_Calendar_Event_Create extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setCalendar($id) {
-		Eden_Google_Error::i()->argument(1, 'int');
+		Eden_Google_Error::i()->argument(1, 'int', 'string');
 		$this->_calendarId = $id;
 		
 		return $this;
@@ -153,6 +154,14 @@ class Eden_Google_Calendar_Event_Create extends Eden_Google_Base {
 			'attendees'		=> $this->_attendees);
 		
 		return $this->_post(sprintf(self::URL_CREATE_EVENT, $this->_calendarId), $query);
+	}
+	
+	public function quickCreate($text) {
+		Eden_Google_Error::i()->argument(1, 'string');
+		
+		$url = sprintf(self::URL_QUICK_CREATE_EVENT, $this->_calendarId, $text);
+		
+		return $this->_post($url, '');
 	}
 			
 	/* Protected Methods

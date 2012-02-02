@@ -37,6 +37,7 @@ class Eden_Google_Oauth extends Eden_Class {
 	protected $_key 		= NULL;
 	protected $_secret 		= NULL;
 	protected $_redirect 	= NULL;
+	protected $_apiKey		= NULL;
 	
 	protected $_online 	= self::ONLINE;
 	protected $_renew 	= self::AUTO;
@@ -50,16 +51,19 @@ class Eden_Google_Oauth extends Eden_Class {
 		return self::_getSingleton(__CLASS__);
 	}
 	
-	public function __construct($key, $secret, $redirect) {
+	public function __construct($key, $secret, $redirect, $apiKey) {
 		//argument test
 		Eden_Google_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
-			->argument(3, 'string');			//Argument 3 must be a string
+			->argument(3, 'string')				//Argument 3 must be a string
+			->argument(4, 'string');			//Argument 4 must be a string
+
 			
 		$this->_key 		= $key; 
 		$this->_secret 		= $secret;
 		$this->_redirect 	= $redirect;
+		$this->_apiKey		= $apiKey;
 	}
 	
 	/* Public Methods
@@ -149,6 +153,17 @@ class Eden_Google_Oauth extends Eden_Class {
 			->setPostFields(http_build_query($query))
 			->setTimeout(60)
 			->getJsonResponse();
+	}
+	
+	/**
+	 * Returns the API KEY 
+	 * 
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
+	public function getApiKey() {
+		return $this->_apiKey;
 	}
 	
 	/* Protected Methods

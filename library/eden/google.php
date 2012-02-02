@@ -52,13 +52,14 @@ class Eden_Google extends Eden_Class {
 	 * @param string
 	 * @return Eden_Google_Oauth
 	 */
-	public function auth($key, $secret, $redirect) {
+	public function auth($key, $secret, $redirect, $apiKey) {
 		Eden_Google_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string')
-			->argument(3, 'string');
+			->argument(3, 'string')
+			->argument(4, 'string');
 			
-		return Eden_Google_Oauth::i($key, $secret, $redirect);
+		return Eden_Google_Oauth::i($key, $secret, $redirect, $apiKey);
 	}
 	
 	/**
