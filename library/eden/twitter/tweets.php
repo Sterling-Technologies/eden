@@ -8,29 +8,41 @@
  */
 
 /**
- *  Eventbrite new or update discount
+ * Twitter tweets
  *
  * @package    Eden
- * @category   eventbrite
- * @author     Christian Blanquera cblanquera@openovate.com
+ * @category   Twitter
+ * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_WHO_RETWEETED				= 'https://api.twitter.com/1/statuses/%s/retweeted_by.json';
-	const URL_GET_WHO_RETWEETED_IDS 	= 'https://api.twitter.com/1/statuses/%d/retweeted_by/ids.json';
-	const URL_GET_RETWEETS 				= 'https://api.twitter.com/1/statuses/retweets/%s.json';
-	const URL_GET_LIST 					= 'https://api.twitter.com/1/statuses/show.json';
-	const URL_REMOVE 					= 'http://api.twitter.com/1/statuses/destroy/%s.json';
-	const URL_RETWEET 					= 'http://api.twitter.com/1/statuses/retweet/%d.json';
-	const URL_UPDATE 					= 'https://api.twitter.com/1/statuses/update.json';
-	const URL_UPDATE_MEDIA 				= 'https://upload.twitter.com/1/statuses/update_with_media.json';
+	const URL_WHO_RETWEETED			= 'https://api.twitter.com/1/statuses/%s/retweeted_by.json';
+	const URL_GET_WHO_RETWEETED_IDS	= 'https://api.twitter.com/1/statuses/%d/retweeted_by/ids.json';
+	const URL_GET_RETWEETS 			= 'https://api.twitter.com/1/statuses/retweets/%s.json';
+	const URL_GET_LIST 				= 'https://api.twitter.com/1/statuses/show.json';
+	const URL_REMOVE 				= 'http://api.twitter.com/1/statuses/destroy/%s.json';
+	const URL_RETWEET 				= 'http://api.twitter.com/1/statuses/retweet/%d.json';
+	const URL_UPDATE 				= 'https://api.twitter.com/1/statuses/update.json';
+	const URL_UPDATE_MEDIA 			= 'https://upload.twitter.com/1/statuses/update_with_media.json';
 
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_query = array();
+	protected $_latitude	= NULL;
+	protected $_longtitude	= NULL;
+	protected $_count		= NULL;
+	protected $_page		= NULL;
+	protected $_reply		= NULL;
+	protected $_place		= NULL;
+	protected $_stringify	= false;
+	protected $_entities	= false;
+	protected $_trim		= false;
+	protected $_display		= false;
+	protected $_wrap		= false;
+	protected $_sensitive	= false;
+	
 	
 	/* Private Properties
 	-------------------------------*/
@@ -43,324 +55,332 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * Set latitude
+	 *
+	 * @param float
+	 * @return this
+	 */
+	public function setLatitude($latitude) {
+		//Argument 1 must be a float
+		Eden_Twitter_Error::i()->argument(1, 'float');
+		
+		$this->_latitude = $latitude;
+		return $this;
+	}
+	
+	/**
+	 * Set longtitude
+	 *
+	 * @param float
+	 * @return this
+	 */
+	public function setLongtitude($longtitude) {
+		//Argument 1 must be a float
+		Eden_Twitter_Error::i()->argument(1, 'float');
+		
+		$this->_longtitude = $longtitude;
+		return $this;
+	}
+	
+	/**
+	 * Set count
+	 *
+	 * @param integer
+	 * @return array
+	 */
+	public function setCount($count) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_count = $count;
+		return $this;
+	} 
+	
+	/**
+	 * Set page
+	 *
+	 * @param integer
+	 * @return array
+	 */
+	public function setPage($page) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_page = $page;
+		return $this;
+	}
+	
+	/**
+	 * Set in reply to status id
+	 *
+	 * @param string
+	 * @return array
+	 */
+	public function setReply($reply) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		$this->_reply = $reply;
+		return $this;
+	}
+	
+	/**
+	 * Set place id
+	 *
+	 * @param string|integer
+	 * @return array
+	 */
+	public function setPlace($place) {
+		//Argument 1 must be a string or integer
+		Eden_Twitter_Error::i()->argument(1, 'string', 'int');
+		
+		$this->_place = $place;
+		return $this;
+	}
+	
+	/**
+	 * Set stringify ids
+	 *
+	 * @return array
+	 */
+	public function setStringify() {
+		$this->_stringify = true;
+		return $this;
+	}
+	
+	/**
+	 * Set include entities
+	 *
+	 * @return array
+	 */
+	public function setEntities() {
+		$this->_entities = true;
+		return $this;
+	}
+	
+	/**
+	 * Set trim user
+	 *
+	 * @return array
+	 */
+	public function setTrim() {
+		$this->_trim = true;
+		return $this;
+	}
+	
+	/**
+	 * Set display coordinates
+	 *
+	 * @return array
+	 */
+	public function setDisplay() {
+		$this->_display = true;
+		return $this;
+	}
+	
+	/**
+	 * Set wrap links
+	 *
+	 * @return array
+	 */
+	public function setWrap() {
+		$this->_wrap = true;
+		return $this;
+	}
+	
+	/**
+	 * Set possibly sensitive
+	 *
+	 * @return array
+	 */
+	public function setSensitive() {
+		$this->_sensitive = true;
+		return $this;
+	}
+	
+	/**
 	 * Show user objects of up to 100 members 
 	 * who retweeted the status. 
 	 *
-	 * @param id is integer.
-	 * @param count is integer.
-	 * @param page is integer
-	 * @return $this
+	 * @param integer
+	 * @return array
 	 */
-	 public function getWhoRetweeted($id, $count = NULL, $page = NULL) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int')						//Argument 1 must be an integer
-			->argument(2, 'int')						//Argument 2 must be an integer
-			->argument(3, 'int');						//Argument 3 must be an integer
-
-		$query = array();
-		//if it is not empty and not up to a maximum of 100
-		if(!is_null($count) && $count <= 100) {
-			//lets put it in query
-			$query['count'] = $count;
-		}
-		//if it is not empty
-		if(!is_null($page)) {
-			//lets put it in query
-			$query['page'] = $count;
-		}
-		$url = sprintf(self::URL_WHO_RETWEETED, $id);
-		return $this->_post($url, $query);
-	 }
-	 /**
-	 * Show user ids of up to 100 users who retweeted the status.   
+	public function getWhoRetweeted($id) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');			
+		
+		//populate fields
+		$query = array(
+			'id' 	=> $id,
+			'count'	=> $this->_count,
+			'page'	=> $this>_page);
+	}
+	
+	/**
+	 * Show user ids of up to 100 users who 
+	 * retweeted the status.   
 	 *
-	 * @param id is integer.
-	 * @param count is integer.
-	 * @param page is integer
-	 * @param stringify is boolean
-	 * @return $this
+	 * @param integer
+	 * @return array
 	 */
-	 public function getWhoRetweetedIds($id, $count = NULL, $page = NULL, $stringify = false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int')						//Argument 1 must be an integer
-			->argument(2, 'int')						//Argument 2 must be an integer
-			->argument(3, 'int')						//Argument 3 must be an integer
-			->argument(4, 'bool');						//Argument 4 must be a boolean
+	public function getWhoRetweetedIds() {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');	
 
-		$query = array();
-		//if it is not empty and not up to a maximum of 100
-		if(!is_null($count) && $count <= 100) {
-			//lets put it in query
-			$query['count'] = $count;
-		}
-		//if it is not empty
-		if(!is_null($page)) {
-			//lets put it in query
-			$query['page'] = $count;
-		}
-		//if stringify
-		if($stringify) {
-
-			$query['stringify_ids'] = 1;
-		}
+		//populate fields
+		$query = array(
+			'id' 			=> $id,
+			'count'			=> $this->_count,
+			'page'			=> $this->_page,
+			'stringify_ids'	=> $this->_stringify);
+		
 		
 		$url = sprintf(self::URL_GET_WHO_RETWEETED_IDS, $id);
 		return $this->_post($url, $query);
-	 }
-	 /**
+	}
+	 
+	/**
 	 * Returns up to 100 of the first retweets of a given tweet.   
 	 *
-	 * @param id is integer
-	 * @param count is integer
-	 * @param trim is boolean
-	 * @param entities is boolean
-	 * @return $this
+	 * @param integer
+	 * @return array
 	 */
-	 public function getRetweets($id, $count = NULL, $trim = false, $entities = false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int')						//Argument 1 must be an integer
-			->argument(2, 'int')						//Argument 2 must be an integer
-			->argument(3, 'bool')						//Argument 3 must be an boolean
-			->argument(4, 'bool');						//Argument 4 must be an boolean
-			
-		$query = array('id' => $id);
-		//if count is not empty and less than equal to 100
-		if(!is_null($count) && $count <= 100) {
-			//Lets put it in query
-			$query['count'] = $count;
-		}
-		//if trim
-		if($trim) {
-			$query['trim_user'] = 1;
-		}
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
+	public function getRetweets($id) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');	
+
+		//populate fields
+		$query = array(
+			'id' 				=> $id,
+			'count'				=> $this->_count,
+			'trim_user'			=> $this->_trim,
+			'include_entities'	=> $this->_entities);
+		
 		$url = sprintf(self::URL_GET_RETWEETS, $id);
 		return $this->_post($url, $query);
-	 }
-	 /**
+	}
+	
+	/**
 	 * Returns a single status, specified by the id parameter below.    
 	 * The status's author will be returned inline.
 	 *
-	 * @param id is integer
-	 * @param trim is boolean
-	 * @param entities is boolean
-	 * @return $this
+	 * @param integer
+	 * @return array
 	 */
-	 public function getDetail($id, $trim = false, $entities = false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int')						//Argument 1 must be an integer
-			->argument(2, 'bool')						//Argument 2 must be an boolean
-			->argument(3, 'bool');						//Argument 3 must be an boolean
-			
-		$query = array('id' => $id);
-		//if trim
-		if($trim) {
-			$query['trim_user'] = 1;
-		}
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
+	 public function getDetail($id) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');	
+
+		//populate fields
+		$query = array(
+			'id' 				=> $id,
+			'trim_user'			=> $this->_trim,
+			'include_entities'	=> $this->_entities);
 
 		return $this->_getResponse(self::URL_GET_LIST, $query);
-	 }
-	 /**
+	}
+	
+	/**
 	 * Destroys the status specified by the required ID parameter. 
 	 * The authenticating user must be the author of the specified  .
 	 * status. Returns the destroyed status if successful.
 	 *
-	 * @param id is integer
-	 * @param trim is boolean
-	 * @param entities is boolean
-	 * @return $this
+	 * @param integer
+	 * @param boolean
+	 * @param boolean
+	 * @return array
 	 */
-	 public function remove($id, $entities = false, $trim = false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int')						//Argument 1 must be an integer
-			->argument(2, 'bool')						//Argument 2 must be an boolean
-			->argument(3, 'bool');						//Argument 3 must be an boolean
-			
-		$query = array();
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
-		//if trim
-		if($trim) {
-			$query['trim_user'] = 1;
-		}
+	public function remove($id) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');	
+
+		//populate fields
+		$query = array(
+			'id' 				=> $id,
+			'trim_user'			=> $this->_trim,
+			'include_entities'	=> $this->_entities);
 
 		$url = sprintf(self::URL_REMOVE, $id);
 		return $this->_post($url,$query);
-	 }
-	 /**
+	}
+	
+	/**
 	 * Retweets a tweet. Returns the original tweet 
 	 * with retweet details embedded
 	 *
-	 * @param id is integer
-	 * @param trim is boolean
-	 * @param entities is boolean
-	 * @return $this
+	 * @param integer
+	 * @return array
 	 */
-	 public function retweet($id, $entities = false, $trim = false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int')						//Argument 1 must be an integer
-			->argument(2, 'bool')						//Argument 2 must be an boolean
-			->argument(3, 'bool');						//Argument 3 must be an boolean
-			
-		$query = array();
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
-		//if trim
-		if($trim) {
-			$query['trim_user'] = 1;
-		}
+	public function retweet($id) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');	
+
+		//populate fields
+		$query = array(
+			'id' 				=> $id,
+			'trim_user'			=> $this->_trim,
+			'include_entities'	=> $this->_entities);
+		
 		$url = sprintf(self::URL_RETWEET, $id);
 		return $this->_post($url, $query);
-	 }
-	 /**
+	}
+	
+	/**
 	 * Updates the authenticating user's status, 
 	 * also known as tweeting.
 	 *
-	 * @param status is integer
-	 * @param reply is string
-	 * @param lat is float
-	 * @param long is float
-	 * @param place is string or integer
-	 * @param display is boolean
-	 * @param trim is boolean
-	 * @param entities is boolean
-	 * @param wrap is boolean
-	 * @return $this
+	 * @param string
+	 * @return array
 	 */
-	 public function update($status, $reply = NULL, $lat = NULL, $long = NULL, $place = NULL, $display = NULL, $trim = FALSE, $entities = FALSE, $wrap = FALSE) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string')						//Argument 1 must be a string
-			->argument(2, 'string')						//Argument 2 must be a string
-			->argument(3, 'float')						//Argument 3 must be a float
-			->argument(4, 'float')						//Argument 4 must be a float
-			->argument(5, 'string', 'int')				//Argument 5 must be an string or integer
-			->argument(6, 'boolean')					//Argument 6 must be an boolean
-			->argument(7, 'boolean')					//Argument 7 must be an boolean
-			->argument(8, 'boolean');					//Argument 8 must be an boolean
-
-			
-		$query = array('status' => $status);
-		//if reply is not empty
-		if(!is_null($reply)) {
-			//lets put it in query
-			$query['in_reply_to_status_id '] = $reply;
-		}
-		//if reply is not empty
-		if(!is_null($lat) && $lat >= -90.0 && $lat <= +90.0) {
-			//lets put it in query
-			$query ['lat'] = $lat;
-		}
-		//if reply is not empty
-		if(!is_null($long) && $long >= -180.0 && $lat <= +180.0) {
-			//lets put it in query
-			$query ['long'] = $long;
-		}
-		//if reply is not empty
-		if(!is_null($place)) {
-			//lets put it in query
-			$query['place_id '] = $place;
-		}
-		//if entities
-		if($display) {
-			$query['display_coordinates'] = 1;
-		}
-		//if trim
-		if($trim) {
-			$query['trim_user'] = 1;
-		}
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
-		//if wrap
-		if($wrap) {
-			$query['wrap_links'] = 1;
-		}
-
+	 public function update($status) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		//populate fields
+		$query = array(
+			'status' 				=> $status,
+			'in_reply_to_status_id'	=> $this->_reply,
+			'lat'					=> $this->_latitude,
+			'long'					=> $this->_longtitude,
+			'place_id'				=> $this->_place,
+			'display_coordinates'	=> $this->_display,
+			'trim_user'				=> $this->_trim,
+			'include_entities'		=> $this->_entities,
+			'wrap_links'			=> $this->_wrap);		
+		
 		return $this->_post(self::URL_UPDATE, $query);
-	 }
-	 /**
+	}
+	
+	/**
 	 * Updates the authenticating user's status, 
 	 * also known as tweeting.
 	 *
-	 * @param status is integer
-	 * @param reply is string
-	 * @param lat is float
-	 * @param long is float
-	 * @param place is string or integer
-	 * @param display is boolean
-	 * @param trim is boolean
-	 * @param entities is boolean
-	 * @param wrap is boolean
-	 * @return $this
+	 * @param string
+	 * @param string
+	 * @return array
 	 */
-	 public function updateMedia($status, $media, $sensitive = NULL, $id = NULL, $lat = NULL, $long = NULL, $place = NULL, $display = NULL) {
+	 public function updateMedia($status, $media) {
 		//Argument Test
 		Eden_Twitter_Error::i()
-			->argument(1, 'string')					//Argument 1 must be a string
-			->argument(2, 'string')					//Argument 2 must be a string
-			->argument(3, 'boolean')				//Argument 3 must be a boolean 
-			->argument(4, 'string')					//Argument 4 must be an string
-			->argument(5, 'boolean')				//Argument 5 must be an boolena
-			->argument(6, 'boolean')				//Argument 6 must be an boolean
-			->argument(7, 'boolean')				//Argument 7 must be an boolean
-			->argument(8, 'boolean');				//Argument 8 must be an boolean
-
-			
-		$query = array('status' => $status, 'media[]' => $media);
-		//if sensitive
-		if($sensitive) {
-			$query['possibly_sensitive'] = 1;
-		}
-		//if reply is not empty
-		if(!is_null($id)) {
-			//lets put it in query
-			$query['in_reply_to_status_id'] = $id;
-		}
-		//if reply is not empty
-		if(!is_null($lat) && $lat >= -90.0 && $lat <= +90.0) {
-			//lets put it in query
-			$query ['lat'] = $lat;
-		}
-		//if reply is not empty
-		if(!is_null($long) && $long >= -180.0 && $lat <= +180.0) {
-			//lets put it in query
-			$query ['long'] = $long;
-		}
-		//if reply is not empty
-		if(!is_null($place)) {
-			//lets put it in query
-			$query['place_id '] = $place;
-		}
-		//if entities
-		if($display) {
-			$query['display_coordinates'] = 1;
-		}
-
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string');	//Argument 2 must be a string
+	
+		//populate fields
+		$query = array(
+			'status' 				=> $status,
+			'media[]'				=> $media,
+			'possibly_sensitive'	=> $this->_sensitive,
+			'in_reply_to_status_id'	=> $this->_reply,
+			'lat'					=> $this->_latitude,
+			'long'					=> $this->_longtitude,
+			'place_id'				=> $this->_place,
+			'display_coordinates'	=> $this->_display);
+		
 		return $this->_getResponse(self::URL_UPDATE_MEDIA, $query);
-	 }
-	 /* Protected Methods
+	}
+	
+	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods
-	-------------------------------*/
-	 
-	 
+	-------------------------------*/	 
 }

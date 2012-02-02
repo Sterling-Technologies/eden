@@ -8,11 +8,11 @@
  */
 
 /**
- *  
+ * Tumblr user
  *
  * @package    Eden
- * @category   tumblr
- * @author     Christian Blanquera cblanquera@openovate.com
+ * @category   Tumblr
+ * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	/* Constants
@@ -31,7 +31,13 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_query = array();
+	protected $_limit	= NULL;
+	protected $_offset	= NULL;
+	protected $_type	= NULL;
+	protected $_since	= NULL;
+	protected $_reblog	= true;
+	protected $_notes	= true;
+	
 	
 	/* Private Properties
 	-------------------------------*/
@@ -43,203 +49,215 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	
 	/* Public Methods
 	-------------------------------*/
+	
+	/**
+	 * Set limit
+	 *
+	 * @param integer
+	 * @return this
+	 */
+	public function setLimit($limit) {
+		//Argument 1 must be an integer
+		Eden_Tumblr_Error::i()->argument(1, 'int');
+		
+		$this->_limit = $limit;
+		return $this;
+	}
+	
+	/**
+	 * Set offset
+	 *
+	 * @param integer
+	 * @return this
+	 */
+	public function setOffset($offset) {
+		//Argument 1 must be an integer
+		Eden_Tumblr_Error::i()->argument(1, 'int');
+		
+		$this->_offset = $offset;
+		return $this;
+	}
+	
+	/**
+	 * Set type
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setType($type) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');
+		
+		$this->_type = $type;
+		return $this;
+	}
+	
+	/**
+	 * Set since
+	 *
+	 * @param integer
+	 * @return this
+	 */
+	public function setSince($since) {
+		//Argument 1 must be an integer
+		Eden_Tumblr_Error::i()->argument(1, 'int');
+		
+		$this->_since = $since;
+		return $this;
+	}
+	
+	/**
+	 * Set reblog
+	 *
+	 * @return this
+	 */
+	public function setReblog() {
+		$this->_reblog = false;
+		return $this;
+	}
+	
+	/**
+	 * Set notes
+	 *
+	 * @return this
+	 */
+	public function setNotes() {
+		$this->_notes = false;
+		return $this;
+	}
+	
 	/**
 	 * Use this method to retrieve the user's account information 
 	 * that matches the OAuth credentials submitted with the request.
 	 *
-	 * @return $this
+	 * @return array
 	 */
-	 public function getList() {
+	public function getList() {
+		
 		$url = sprintf(self::URL_GET_LIST);
 		return $this->_post($url);
-	 }
+	}
+	
 	/**
 	 * Use this method to retrieve the dashboard that matches 
 	 * the OAuth credentials submitted with the request.
 	 *
-	 * @param limit is integer
-	 * @param offset is integer
-	 * @param type is string
-	 * @param since is integer
-	 * @param reblog is boolean
-	 * @param notes is boolean
-	 * @return $this
+	 * @return array
 	 */
-	 public function getUser($limit = NULL, $offset = NULL, $type = NULL, $since = NULL, $reblog = NULL, $notes = NULL) {
-		//Argument Test
-		 Eden_Tumblr_Error::i()
-			->argument(1, 'integer')				//Argument 1 must be a integer
-			->argument(2, 'integer')				//Argument 2 must be a integer
-			->argument(3, 'string')					//Argument 3 must be a string
-			->argument(4, 'integer')				//Argument 4 must be a integer
-			->argument(5, 'boolean')				//Argument 5 must be a boolean
-			->argument(6, 'boolean');				//Argument 6 must be a boolean
-			
-		$query = array();
-		//if it is not empty
-		if(!is_null($limit)) {
-			//lets put it in the query
-			$query['limit'] = $limit;
-		}
-		//if it is not empty
-		if(!is_null($offset)) {
-			//lets put it in the query
-			$query['offset'] = $offset;
-		}
-		//if it is not empty
-		if(!is_null($type)) {
-			//lets put it in the query
-			$query['type'] = $type;
-		}
-		//if it is not empty
-		if(!is_null($since)) {
-			//lets put it in the query
-			$query['since_id'] = $since;
-		}
-		//if it is reblog
-		if($reblog) {
-			$query['reblog_info'] = 0;
-		}
-		//if it is notes
-		if($notes) {
-			$query['notes_info'] = 0;
-		}
+	public function getUser() {
+		//populate fields	
+		$query = array(
+			'limit'			=> $this->_limit,
+			'offset'		=> $this->_offset,
+			'type'			=> $this->_type,
+			'since_id'		=> $this->_since,
+			'reblog_info'	=> $this->_reblog,
+			'notes_info'	=> $this->_notes);
 		
-		return $this->_getResponse(self::URL_GET_USER);
-	 }
+		return $this->_getResponse(self::URL_GET_USER, $query);
+	}
+	
 	/**
 	 * Use this method to retrieve the liked posts that 
 	 * match the OAuth credentials submitted with the request.
 	 *
-	 * @param limit is integer
-	 * @param offset is integer
-	 * @return $this
+	 * @return array
 	 */
-	 public function getLikes($limit = NULL, $offset = NULL) {
-		//Argument Test
-		 Eden_Tumblr_Error::i()
-			->argument(1, 'integer')				//Argument 1 must be a integer
-			->argument(2, 'integer');				//Argument 2 must be a integer
-			
-		$query = array();
-		//if it is not empty
-		if(!is_null($limit)) {
-			//lets put it in the query
-			$query['limit'] = $limit;
-		}
-		//if it is not empty
-		if(!is_null($offset)) {
-			//lets put it in the query
-			$query['offset'] = $offset;
-		}
+	public function getLikes() {
+		//populate fields	
+		$query = array(
+			'limit'			=> $this->_limit,
+			'offset'		=> $this->_offset);
 		
-		return $this->_getResponse(self::URL_GET_LIKES);
-	 }
+		return $this->_getResponse(self::URL_GET_LIKES, $query);
+	}
+	
 	/**
 	 * Use this method to retrieve the blogs followed by the user 
 	 * whose OAuth credentials are submitted with the request.
 	 *
-	 * @param limit is integer
-	 * @param offset is integer
-	 * @return $this
+	 * @return array
 	 */
-	 public function getFollowing($limit = NULL, $offset = NULL) {
-		//Argument Test
-		 Eden_Tumblr_Error::i()
-			->argument(1, 'integer')				//Argument 1 must be a integer
-			->argument(2, 'integer');				//Argument 2 must be a integer
-			
-		$query = array();
-		//if it is not empty
-		if(!is_null($limit)) {
-			//lets put it in the query
-			$query['limit'] = $limit;
-		}
-		//if it is not empty
-		if(!is_null($offset)) {
-			//lets put it in the query
-			$query['offset'] = $offset;
-		}
+	public function getFollowing() {
+		//populate fields	
+		$query = array(
+			'limit'			=> $this->_limit,
+			'offset'		=> $this->_offset);
 		
-		return $this->_getResponse(self::URL_GET_FOLLOWING);
-	 }
+		return $this->_getResponse(self::URL_GET_FOLLOWING, $query);
+	}
+	
 	/**
 	 * Follow a blog 
 	 *
-	 * @param url is string
-	 * @return $this
+	 * @param string
+	 * @return array
 	 */
-	 public function follow($url) {
-		//Argument Test
-		 Eden_Tumblr_Error::i()
-			->argument(1, 'string');			//Argument 1 must be a string
+	public function follow($url) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');			
 			
 		$query = array('url' => $url);
 		
 		$url = sprintf(self::URL_FOLLOW, $url);
-		return $this->_post($url,$query);
-	 }
-	 /**
+		return $this->_post($url, $query);
+	}
+	
+	/**
 	 * Unfollow a blog 
 	 *
-	 * @param url is string
-	 * @return $this
+	 * @param string
+	 * @return array
 	 */
-	 public function unfollow($url) {
-		//Argument Test
-		 Eden_Tumblr_Error::i()
-			->argument(1, 'string');			//Argument 1 must be a string
+	public function unfollow($url) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');			
 			
 		$query = array('url' => $url);
 		
 		$url = sprintf(self::URL_UNFOLLOW, $url);
-		return $this->_post($url,$query);
-	 }
-	 /**
+		return $this->_post($url, $query);
+	}
+	
+	/**
 	 * Like a post 
 	 *
-	 * @param id is integer
-	 * @param reblog is string
-	 * @return $this
+	 * @param integer
+	 * @param string
+	 * @return array
 	 */
-	 public function like($id, $reblog) {
+	public function like($id, $reblog) {
 		//Argument Test
-		 Eden_Tumblr_Error::i()
-			->argument(1, 'integer')		//Argument 1 must be a integer
-			->argument(2, 'string');		//Argument 2 must be a string
+		Eden_Tumblr_Error::i()
+			->argument(1, 'integer')	//Argument 1 must be a integer
+			->argument(2, 'string');	//Argument 2 must be a string
 			
 		$query = array('url' => $url, 'reblog_key' => $reblog);
 		
 		$url = sprintf(self::URL_LIKE, $url);
-		return $this->_post($url,$query);
-	 }
-	 /**
+		return $this->_post($url, $query);
+	}
+	
+	/**
 	 * Unlike a post 
 	 *
-	 * @param id is integer
-	 * @param reblog is string
-	 * @return $this
+	 * @param integer
+	 * @param string
+	 * @return array
 	 */
-	 public function unlike($id, $reblog) {
+	public function unlike($id, $reblog) {
 		//Argument Test
-		 Eden_Tumblr_Error::i()
-			->argument(1, 'integer')		//Argument 1 must be a integer
-			->argument(2, 'string');		//Argument 2 must be a string
+		Eden_Tumblr_Error::i()
+			->argument(1, 'integer')	//Argument 1 must be a integer
+			->argument(2, 'string');	//Argument 2 must be a string
 			
 		$query = array('url' => $url, 'reblog_key' => $reblog);
 		
 		$url = sprintf(self::URL_UNLIKE, $url);
-		return $this->_post($url,$query);
-	 }
+		return $this->_post($url, $query);
+	}
 	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 /* Protected Methods
+	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods
 	-------------------------------*/

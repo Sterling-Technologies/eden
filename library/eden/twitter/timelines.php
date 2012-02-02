@@ -8,11 +8,11 @@
  */
 
 /**
- *  Eventbrite new or update discount
+ * Twitter timelines
  *
  * @package    Eden
- * @category   eventbrite
- * @author     Christian Blanquera cblanquera@openovate.com
+ * @category   Twitter
+ * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	/* Constants
@@ -26,11 +26,22 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	const URL_USER 			= 'https://api.twitter.com/1/statuses/user_timeline.json';
 	const URL_TO_USER 		= 'https://api.twitter.com/1/statuses/retweeted_to_user.json';
 	const URL_BY_USER 		= 'https://api.twitter.com/1/statuses/retweeted_by_user.json';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_query = array();
+	protected $_count		= NULL;
+	protected $_since		= NULL;
+	protected $_max			= NULL;
+	protected $_page		= NULL;
+	protected $_id			= NULL;
+	protected $_name		= NULL;
+	protected $_trim		= false;
+	protected $_include		= false;
+	protected $_entities	= false;
+	protected $_replies		= false;
+	protected $_detail		= false;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -43,571 +54,327 @@ class Eden_Twitter_Timelines extends Eden_Twitter_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * Set count
+	 *
+	 * @param integer
+	 * @return array
+	 */
+	public function setCount($count) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_count = $count;
+		return $this;
+	}
+	
+	/**
+	 * Set since id
+	 *
+	 * @param integer
+	 * @return array
+	 */
+	public function setSince($since) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_since = $since;
+		return $this;
+	}
+	
+	/**
+	 * Set max id
+	 *
+	 * @param integer
+	 * @return array
+	 */
+	public function setMax($max) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_max = $max;
+		return $this;
+	}
+	
+	/**
+	 * Set page
+	 *
+	 * @param integer
+	 * @return array
+	 */
+	public function setPage($page) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_page = $page;
+		return $this;
+	}
+	
+	/**
+	 * Set user id
+	 *
+	 * @param integer
+	 * @return array
+	 */
+	public function setId($id) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_id = $id;
+		return $this;
+	}
+	
+	/**
+	 * Set screen name
+	 *
+	 * @param string
+	 * @return array
+	 */
+	public function setName($name) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		$this->_name = $name;
+		return $this;
+	}
+	
+	/**
+	 * Set trim user
+	 *
+	 * @return array
+	 */
+	public function setTrim() {
+		$this->_trim = true;
+		return $this;
+	}
+	
+	/**
+	 * Set include rts
+	 *
+	 * @return array
+	 */
+	public function setInclude() {
+		$this->_include = true;
+		return $this;
+	}
+	
+	/**
+	 * Set inclde entities
+	 *
+	 * @return array
+	 */
+	public function setEntities() {
+		$this->_entities = true;
+		return $this;
+	}
+	
+	/**
+	 * Set exclude replies
+	 *
+	 * @return array
+	 */
+	public function setReplies() {
+		$this->_replies = true;
+		return $this;
+	}
+	
+	/**
+	 * Set contributors details
+	 *
+	 * @return array
+	 */
+	public function setDetail() {
+		$this->_detail = true;
+		return $this;
+	}
+	
+	/**
 	 * Returns the 20 most recent statuses, including retweets 
 	 * if they exist, posted by the authenticating user and 
 	 * the user's they follow. This is the same timeline seen
 	 * by a user when they login to twitter.com.
 	 *
-	 * @param count is integer
-	 * @param since is integer
-	 * @param max is integer
-	 * @param page is integer
-	 * @param trim is boolean
-	 * @param include is boolean
-	 * @param entities is boolean
-	 * @param replies is boolean
-	 * @param detail is boolean
-	 * @return $this
+	 * @return array
 	 */
-	 public function getTimeline($count = NULL, $since = NULL, $max = NULL, $page = NULL, $trim = false, $include = false, $entities = false, $replies = false, $detail =false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int', 'null')				//Argument 1 must be an integer
-			->argument(2, 'int', 'null')				//Argument 2 must be an integer
-			->argument(3, 'int', 'null')				//Argument 3 must be an integer
-			->argument(4, 'int', 'null')				//Argument 4 must be an integer
-			->argument(5, 'bool')						//Argument 5 must be a boolean
-			->argument(6, 'bool')						//Argument 6 must be a boolean
-			->argument(7, 'bool')						//Argument 7 must be a boolean
-			->argument(8, 'bool')						//Argument 8 must be a boolean
-			->argument(9, 'bool');						//Argument 9 must be a boolean
-			
-		$query = array();
-		//if it is not empty and its less than equal to 100 
-		if(!is_null($count) && $count <= 200) {
-			//lets put it in query
-			$query['count'] = $count;
-		}
-		//if it is not empty 
-		if(!is_null($since)) {
-			//lets put it in query
-			$query['since_id'] = $since;
-		}
-		//if it is not empty and max is not less than count
-		if(!is_null($max) && $$max <= $count) {
-			//lets put it in query
-			$query['$max_id'] = $$max;
-		}
-		//if it is not empty  
-		if(!is_null($page)) {
-			//lets put it in query
-			$query['page'] = $page;
-		}
-		//if trim
-		if($trim) {
-			$query['trim_user'] = 1;
-		}
-		//if include
-		if($include) {
-			$query['include_rts'] = 1;
-		}
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
-		//if replies
-		if($replies) {
-			$query['exclude_replies'] = 1;
-		}
-		//if datails
-		if($detail) {
-			$query['contributor_details'] = 1;
-		}
+	public function getTimeline() {
+		//populate fields
+		$query = array(
+			'count'					=> $this->_count,
+			'since_id'				=> $this->_since,
+			'max_id'				=> $this->_max,
+			'page'					=> $this->_page,
+			'trim_user'				=> $this->_trim,
+			'include_rts'			=> $this->_include,
+			'include_entities'		=> $this->_entities,
+			'exclude_replies'		=> $this->_replies,
+			'contributor_details'	=> $this->_detail);
 		
 		return $this->_getResponse(self::URL_TIMELINE, $query);
-	 }
-	 /**
-	 * Returns the 20 most recent mentions (status containing @username) for the authenticating user 
+	}
+	 
+	/**
+	 * Returns the 20 most recent mentions (status containing @username)
+	 * for the authenticating user 
 	 *
-	 * @param count is integer
-	 * @param since is integer
-	 * @param max is integer
-	 * @param page is integer
-	 * @param trim is boolean
-	 * @param include is boolean
-	 * @param entities is boolean
-	 * @param detail is boolean
-	 * @return $this
+	 * @return array
 	 */
-	 public function getMention($count = NULL, $since = NULL, $max = NULL, $page = NULL, $trim = false, $include = false, $entities = false, $detail =false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int', 'null')				//Argument 1 must be an integer
-			->argument(2, 'int', 'null')				//Argument 2 must be an integer
-			->argument(3, 'int', 'null')				//Argument 3 must be an integer
-			->argument(4, 'int', 'null')				//Argument 4 must be an integer
-			->argument(5, 'bool')						//Argument 5 must be an boolean
-			->argument(6, 'bool')						//Argument 6 must be a boolean
-			->argument(7, 'bool')						//Argument 7 must be a boolean
-			->argument(8, 'bool');						//Argument 8 must be a boolean
-			
-		$query = array();
-		
-		//if it is not empty and 
-		if(!is_null($count) && $count <= 200) {
-			//lets put it in query
-			$query['count'] = $count;
-		}
-		//if it is not empty and 
-		if(!is_null($since)) {
-			//lets put it in query
-			$query['since_id'] = $since;
-		}
-		//if it is not empty and $max is not less than count
-		if(!is_null($max) && $$max <= $count) {
-			//lets put it in query
-			$query['$max_id'] = $$max;
-		}
-		//if it is not empty and 
-		if(!is_null($page)) {
-			//lets put it in query
-			$query['page'] = $page;
-		}
-		//if trim
-		if($trim) {
-			$query['trim_user'] = 1;
-		}
-		//if include
-		if($include) {
-			$query['include_rts'] = 1;
-		}
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
-		//if datails
-		if($detail) {
-			$query['contributor_details'] = 1;
-		}
+	public function getMention() {
+		//populate fields	
+		$query = array(
+			'count'					=> $this->_count,
+			'since_id'				=> $this->_since,
+			'max_id'				=> $this->_max,
+			'page'					=> $this->_page,
+			'trim_user'				=> $this->_trim,
+			'include_rts'			=> $this->_include,
+			'include_entities'		=> $this->_entities,
+			'contributor_details'	=> $this->_detail);
 		
 		return $this->_getResponse(self::URL_MENTION, $query);
-	 }
-	 /**
+	}
+	 
+	/**
 	 * Returns the 20 most recent statuses, including  
-	 * retweets if they exist, from non-protected users.
+	 * retweets if they exist.
 	 *
-	 * @param trim is boolean
-	 * @param entities is boolean
-	 * @return $this
+	 * @return array
 	 */
-	 public function getPublic($trim = false, $entities = false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'bool')						//Argument 1 must be a boolean
-			->argument(2, 'bool');						//Argument 2 must be a boolean
-			
-		$query = array();
-		//if trim
-		if($trim) {
-			$query['trim_user'] = 1;
-		}
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
-
-		return $this->_getResponse(self::URL_PUBLIC, $query);
-	 }
-	  /**
-	 * Returns the 20 most recent retweets posted by the authenticating user.
-	 *
-	 * @param count is integer
-	 * @param since is integer
-	 * @param $max is integer
-	 * @param page is integer
-	 * @param trim is boolean
-	 * @param entities is boolean
-	 * @return $this
-	 */
-	 public function getBy($count = NULL, $since = NULL, $max = NULL, $page = NULL, $trim = false, $entities = false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int', 'null')				//Argument 1 must be an integer
-			->argument(2, 'int', 'null')				//Argument 2 must be an integer
-			->argument(3, 'int', 'null')				//Argument 3 must be an integer
-			->argument(4, 'int', 'null')				//Argument 4 must be an integer
-			->argument(5, 'bool')						//Argument 5 must be an boolean
-			->argument(6, 'bool');						//Argument 6 must be an boolean
-			
-		$query = array();
+	public function getPublic() {
+		//populate fields	
+		$query = array(
+			'trim_user'			=> $this->_trim,
+			'include_entities'	=> $this->_entities);
 		
-		//if it is not empty and 
-		if(!is_null($count) && $count <= 200) {
-			//lets put it in query
-			$query['count'] = $count;
-		}
-		//if it is not empty and 
-		if(!is_null($since)) {
-			//lets put it in query
-			$query['since_id'] = $since;
-		}
-		//if it is not empty and $max is not less than count
-		if(!is_null($max) && $$max <= $count) {
-			//lets put it in query
-			$query['$max_id'] = $$max;
-		}
-		//if it is not empty and 
-		if(!is_null($page)) {
-			//lets put it in query
-			$query['page'] = $page;
-		}
-		//if trim
-		if($trim) {
-			$query['trim_user'] = 1;
-		}
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
+		return $this->_getResponse(self::URL_PUBLIC, $query);
+	}
+	
+	/**
+	 * Returns the 20 most recent retweets posted 
+	 * by the authenticating user.
+	 *
+	 * @return array
+	 */
+	public function getBy() {
+		//populate fields
+		$query = array(
+			'count'				=> $this->_count,
+			'since_id'			=> $this->_since,
+			'max_id'			=> $this->_max,
+			'page'				=> $this->_page,
+			'trim_user'			=> $this->_trim,
+			'include_entities'	=> $this->_entities);
 		
 		return $this->_getResponse(self::URL_BY_ME, $query);
-	 }
-	 /**
-	 * Returns the 20 most recent retweets posted by users the authenticating user follow
+	}
+	
+	/**
+	 * Returns the 20 most recent retweets posted by 
+	 * users the authenticating user follow
 	 *
-	 * @param count is integer
-	 * @param since is integer
-	 * @param $max is integer
-	 * @param page is integer
-	 * @param trim is boolean
-	 * @param entities is boolean
-	 * @return $this
+	 * @return array
 	 */
-	 public function getTo($count = NULL, $since = NULL, $max = NULL, $page = NULL, $trim = false, $entities = false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int', 'null')				//Argument 1 must be an integer
-			->argument(2, 'int', 'null')				//Argument 2 must be an integer
-			->argument(3, 'int', 'null')				//Argument 3 must be an integer
-			->argument(4, 'int', 'null')				//Argument 4 must be an integer
-			->argument(5, 'bool')						//Argument 5 must be a boolean
-			->argument(6, 'bool');						//Argument 6 must be a boolean
-			
-		$query = array();
-		
-		//if it is not empty and 
-		if(!is_null($count) && $count <= 200) {
-			//lets put it in query
-			$query['count'] = $count;
-		}
-		//if it is not empty and 
-		if(!is_null($since)) {
-			//lets put it in query
-			$query['since_id'] = $since;
-		}
-		//if it is not empty and $max is not less than count
-		if(!is_null($max) && $$max <= $count) {
-			//lets put it in query
-			$query['$max_id'] = $$max;
-		}
-		//if it is not empty and 
-		if(!is_null($page)) {
-			//lets put it in query
-			$query['page'] = $page;
-		}
-		//if trim
-		if($trim) {
-			$query['trim_user'] = 1;
-		}
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
+	public function getTo() {
+		//populate fields
+		$query = array(
+			'count'				=> $this->_count,
+			'since_id'			=> $this->_since,
+			'max_id'			=> $this->_max,
+			'page'				=> $this->_page,
+			'trim_user'			=> $this->_trim,
+			'include_entities'	=> $this->_entities);
 		
 		return $this->_getResponse(self::URL_TO_ME, $query);
-	 }
-	 /**
-	 * Returns the 20 most recent tweets of the authenticated user that have been retweeted by others.
+	}
+	
+	/**
+	 * Returns the 20 most recent tweets of the authenticated 
+	 * user that have been retweeted by others.
 	 *
-	 * @param count is integer
-	 * @param since is integer
-	 * @param $max is integer
-	 * @param page is integer
-	 * @param trim is boolean
-	 * @param entities is boolean
-	 * @return $this
+	 * @return array
 	 */
-	 public function getOf($count = NULL, $since = NULL, $max = NULL, $page = NULL, $trim = false, $entities = false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int', 'null')				//Argument 1 must be an integer
-			->argument(2, 'int', 'null')				//Argument 2 must be an integer
-			->argument(3, 'int', 'null')				//Argument 3 must be an integer
-			->argument(4, 'int', 'null')				//Argument 4 must be an integer
-			->argument(5, 'bool')						//Argument 5 must be a boolean
-			->argument(6, 'bool');						//Argument 6 must be a boolean
-			
-		$query = array();
-		
-		//if it is not empty and 
-		if(!is_null($count) && $count <= 200) {
-			//lets put it in query
-			$query['count'] = $count;
-		}
-		//if it is not empty 
-		if(!is_null($since)) {
-			//lets put it in query
-			$query['since_id'] = $since;
-		}
-		//if it is not empty and $max is not less than count
-		if(!is_null($max) && $$max <= $count) {
-			//lets put it in query
-			$query['$max_id'] = $$max;
-		}
-		//if it is not empty and 
-		if(!is_null($page)) {
-			//lets put it in query
-			$query['page'] = $page;
-		}
-		//if trim
-		if($trim) {
-			$query['trim_user'] = 1;
-		}
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
+	 public function getOf() {
+		//populate fields
+		$query = array(
+			'count'				=> $this->_count,
+			'since_id'			=> $this->_since,
+			'max_id'			=> $this->_max,
+			'page'				=> $this->_page,
+			'trim_user'			=> $this->_trim,
+			'include_entities'	=> $this->_entities);
 		
 		return $this->_getResponse(self::URL_OF_ME, $query);
-	 }
-	 /**
+	}
+	
+	/**
 	 * Returns the 20 most recent statuses posted by the 
 	 * authenticating user. It is also possible to request  
 	 * another user's timeline by using the screen_name 
 	 * or user_id parameter
 	 *
-	 * @param id is a integer
-	 * @param name is a string
-	 * @param since is integer
-	 * @param count is integer
-	 * @param $max is integer
-	 * @param page is integer
-	 * @param trim is boolean
-	 * @param include is boolean
-	 * @param entities is boolean
-	 * @param replies is boolean
-	 * @param detail is boolean
-	 * @return $this
+	 * @return array
 	 */
-	 public function getList($id = NULL, $since = NULL, $count = NULL, $max = NULL, $page = NULL, $trim = false, $include = false, $entities = false, $replies = false, $detail =false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int','string', 'null')		//Argument 1 must be an integer
-			->argument(2, 'int', 'null')				//Argument 2 must be an integer
-			->argument(3, 'int', 'null')				//Argument 3 must be an integer
-			->argument(4, 'int', 'null')				//Argument 4 must be a boolean
-			->argument(5, 'int', 'null')				//Argument 5 must be a boolean
-			->argument(6, 'bool')						//Argument 6 must be a boolean
-			->argument(7, 'bool')						//Argument 7 must be a boolean
-			->argument(8, 'bool')						//Argument 8 must be a boolean
-			->argument(9, 'bool')						//Argument 9 must be a boolean
-			->argument(10, 'bool');						//Argument 10 must be a boolean
-			
-		$query = array();
-		//If it is not empty
-		if(!is_null($id)) {
-			
-			if(is_int($id)) {
-				//Lets put it in query
-				$query['user_id'] = $id;
-			}
-			
-			if(is_string($id)) {
-				//Lets put it in query
-				$query['screen_name'] = $id;
-			}	
-		}
-		//if it is not empty 
-		if(!is_null($since)) {
-			//lets put it in query
-			$query['since_id'] = $since;
-				//if it is not empty and 
-		if(!is_null($count) && $count <= 200) {
-			//lets put it in query
-			$query['count'] = $count;
-		}
-		}
-		//if it is not empty and $max is not less than count
-		if(!is_null($max) && $$max <= $count) {
-			//lets put it in query
-			$query['$max_id'] = $$max;
-		}
-		//if it is not empty and 
-		if(!is_null($page)) {
-			//lets put it in query
-			$query['page'] = $page;
-		}
-		//if trim
-		if($trim) {
-			$query['trim_user'] = 1;
-		}
-		//if include
-		if($include) {
-			$query['include_rts'] = 1;
-		}
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
-		//if replies
-		if($replies) {
-			$query['exclude_replies'] = 1;
-		}
-		//if datails
-		if($detail) {
-			$query['contributor_details'] = 1;
-		}
+	public function getList() {
+		//populate fields	
+		$query = array(
+			'user_id'				=> $this->_id,
+			'screen_name'			=> $this->_name,
+			'since_id'				=> $this->_since,
+			'count'					=> $this->_count,
+			'max_id'				=> $this->_max,
+			'page'					=> $this->_page,
+			'trim_user'				=> $this->_trim,
+			'include_rts'			=> $this->_include,
+			'include_entities'		=> $this->_entities,
+			'exclude_replies'		=> $this->_replies,
+			'contributor_details'	=> $this->_detail);
 		
 		return $this->_getResponse(self::URL_USER, $query);
-	 }
-	 /**
+	}
+	
+	/**
 	 * Returns the 20 most recent retweets posted 
 	 * by users the specified user follows.  
 	 *
-	 * @param name is a string
-	 * @param id is a integer or string
-	 * @param since is integer
-	 * @param count is integer
-	 * @param $max is integer
-	 * @param page is integer
-	 * @param trim is boolean
-	 * @param include is boolean
-	 * @param entities is boolean
-	 * @param replies is boolean
-	 * @param detail is boolean
-	 * @return $this
+	 * @return array
 	 */
-	 public function getToUser($name = NULL, $id = NULL, $since = NULL, $count = NULL, $max = NULL, $page = NULL, $trim = false, $entities = false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string', 'null')				//Argument 1 must be a string
-			->argument(2, 'string', 'int', 'null')		//Argument 2 must be a string or integer
-			->argument(3, 'int', 'null')				//Argument 3 must be an integer
-			->argument(4, 'int', 'null')				//Argument 4 must be an integer
-			->argument(5, 'int', 'null')				//Argument 5 must be a boolean
-			->argument(6, 'int', 'null')				//Argument 6 must be a boolean
-			->argument(7, 'bool')						//Argument 7 must be a boolean
-			->argument(8, 'bool')						//Argument 8 must be a boolean
-			->argument(9, 'bool')						//Argument 9 must be a boolean
-			->argument(10, 'bool')						//Argument 10 must be a boolean
-			->argument(11, 'bool');						//Argument 11 must be a boolean
-			
-		$query = array();
-		//If it is not empty
-		if(!is_null($id)) {
-			//Lets put it in query
-			$query['user_id'] = $id;
-		}
-		//IF it is not empty
-		if(!is_null($name)) {
-			//Lets put it in query
-			$query['screen_name'] = $name;
-		}
-		//if it is not empty 
-		if(!is_null($since)) {
-			//lets put it in query
-			$query['since_id'] = $since;
-		}
-		//if it is not empty and 
-		if(!is_null($count) && $count <= 200) {
-			//lets put it in query
-			$query['count'] = $count;
-		}
-		//if it is not empty and $max is not less than count
-		if(!is_null($max) && $$max <= $count) {
-			//lets put it in query
-			$query['$max_id'] = $$max;
-		}
-		//if it is not empty and 
-		if(!is_null($page)) {
-			//lets put it in query
-			$query['page'] = $page;
-		}
-		//if trim
-		if($trim) {
-			$query['trim_user'] = 1;
-		}
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
+	 public function getToUser() {
+		//populate fields	
+		$query = array(
+			'user_id'			=> $this->_id,
+			'screen_name'		=> $this->_name,
+			'since_id'			=> $this->_id,
+			'count'				=> $this->_count,
+			'max_id'			=> $this->_max,
+			'page'				=> $this->_page,
+			'trim_user'			=> $this->_trim,
+			'include_entities'	=> $this->_entities);
+		
 		return $this->_getResponse(self::URL_TO_USER, $query);
-	 }
-	 /**
+	}
+	
+	/**
 	 * Returns the 20 most recent retweets posted by 
 	 * the specified user. The user is specified using 
 	 * the user_id or screen_name parameters  
 	 *
-	 * @param name is a string
-	 * @param id is a integer or string
-	 * @param since is integer
-	 * @param count is integer
-	 * @param $max is integer
-	 * @param page is integer
-	 * @param trim is boolean
-	 * @param include is boolean
-	 * @param entities is boolean
-	 * @param replies is boolean
-	 * @param detail is boolean
-	 * @return $this
+	 * @return array
 	 */
-	 public function getByUser($name = NULL, $id = NULL, $since = NULL, $count = NULL, $max = NULL, $page = NULL, $trim = false, $entities = false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string', 'null')				//Argument 1 must be a string
-			->argument(2, 'string', 'int', 'null')		//Argument 2 must be a string or integer
-			->argument(3, 'int', 'null')				//Argument 3 must be a integer
-			->argument(4, 'int', 'null')				//Argument 4 must be a integer
-			->argument(5, 'int', 'null')				//Argument 5 must be a boolean
-			->argument(6, 'int', 'null')				//Argument 6 must be a boolean
-			->argument(7, 'bool')						//Argument 7 must be a boolean
-			->argument(8, 'bool');						//Argument 8 must be a boolean
-			
-		$query = array();
-		//If it is not empty
-		if(!is_null($id)) {
-			//Lets put it in query
-			$query['user_id'] = $id;
-		}
-		//IF it is not empty
-		if(!is_null($name)) {
-			//Lets put it in query
-			$query['screen_name'] = $name;
-		}
-		//if it is not empty 
-		if(!is_null($since)) {
-			//lets put it in query
-			$query['since_id'] = $since;
-		}
-		//if it is not empty and 
-		if(!is_null($count) && $count <= 200) {
-			//lets put it in query
-			$query['count'] = $count;
-		}
-		//if it is not empty and $max is not less than count
-		if(!is_null($max) && $$max <= $count) {
-			//lets put it in query
-			$query['$max_id'] = $$max;
-		}
-		//if it is not empty and 
-		if(!is_null($page)) {
-			//lets put it in query
-			$query['page'] = $page;
-		}
-		//if trim
-		if($trim) {
-			$query['trim_user'] = 1;
-		}
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
+	public function getByUser() {
+		//populate fields	
+		$query = array(
+			'user_id'			=> $this->_id,
+			'screen_name'		=> $this->_name,
+			'since_id'			=> $this->_id,
+			'count'				=> $this->_count,
+			'max_id'			=> $this->_max,
+			'page'				=> $this->_page,
+			'trim_user'			=> $this->_trim,
+			'include_entities'	=> $this->_entities);
+		
 		return $this->_getResponse(self::URL_BY_USER, $query);
-	 }
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods
 	-------------------------------*/
-
-
 }

@@ -8,13 +8,13 @@
  */
 
 /**
- * Tumblr error
+ * Twitter error
  *
  * @package    Eden
- * @category   Tumblr
+ * @category   Twitter
  * @author     Christian Blanquera cblanquera@openovate.com
  */
-class Eden_Tumblr_Error extends Eden_Error {
+class Eden_Twitter_Error extends Eden_Error {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
