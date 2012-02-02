@@ -123,6 +123,7 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Mail_Smtp');
 	
 	protected $_amazon = array(
+		'Eden_Oauth',
 		'Eden_Oauth_Error',
 		'Eden_Oauth_Base',
 		'Eden_Oauth_Consumer',
@@ -130,6 +131,7 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Amazon_S3');
 		
 	protected $_eventbrite = array(
+		'Eden_Oauth',
 		'Eden_Oauth_Error',
 		'Eden_Oauth_Base',
 		'Eden_Oauth_Consumer',
@@ -157,6 +159,7 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Facebook_Fql');
 		
 	protected $_getsatisfaction = array(
+		'Eden_Oauth',
 		'Eden_Oauth_Error',
 		'Eden_Oauth_Base',
 		'Eden_Oauth_Consumer',
@@ -174,6 +177,7 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Getsatisfaction_Topic');
 	
 	protected $_tumblr = array(
+		'Eden_Oauth',
 		'Eden_Oauth_Error',
 		'Eden_Oauth_Base',
 		'Eden_Oauth_Consumer',
@@ -185,6 +189,7 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Tumblr_User');
 	
 	protected $_twitter = array(
+		'Eden_Oauth',
 		'Eden_Oauth_Error',
 		'Eden_Oauth_Base',
 		'Eden_Oauth_Consumer',
