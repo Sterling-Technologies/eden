@@ -11,7 +11,7 @@
  * Twitter saved searches
  *
  * @package    Eden
- * @category   Twitter
+ * @category   twitter
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Twitter_Saved extends Eden_Twitter_Base {

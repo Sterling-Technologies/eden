@@ -11,7 +11,7 @@
  * Twitter users
  *
  * @package    Eden
- * @category   Twitter
+ * @category   twitter
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Twitter_Users extends Eden_Twitter_Base {

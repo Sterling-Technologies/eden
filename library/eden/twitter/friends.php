@@ -11,7 +11,7 @@
  * Twitter friends and followers
  *
  * @package    Eden
- * @category   Twitter
+ * @category   twitter
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Twitter_Friends extends Eden_Twitter_Base {

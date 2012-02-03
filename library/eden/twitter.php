@@ -16,7 +16,7 @@
  * suggestions, timelines, trends, tweets and users.
  *
  * @package    Eden
- * @category   Twitter
+ * @category   twitter
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Twitter extends Eden_Class {

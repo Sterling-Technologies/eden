@@ -11,7 +11,7 @@
  * Twitter help
  *
  * @package    Eden
- * @category   Twitter
+ * @category   twitter
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Twitter_Help extends Eden_Twitter_Base {

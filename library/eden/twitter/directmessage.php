@@ -11,7 +11,7 @@
  * Twitter direct message
  *
  * @package    Eden
- * @category   Twitter
+ * @category   twitter
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Twitter_Directmessage extends Eden_Twitter_Base {

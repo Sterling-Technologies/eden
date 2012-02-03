@@ -11,7 +11,7 @@
  * Twitter places and geo
  *
  * @package    Eden
- * @category   Twitter
+ * @category   twitter
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Twitter_Geo extends Eden_Twitter_Base {

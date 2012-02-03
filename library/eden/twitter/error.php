@@ -11,7 +11,7 @@
  * Twitter error
  *
  * @package    Eden
- * @category   Twitter
+ * @category   twitter
  * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Twitter_Error extends Eden_Error {

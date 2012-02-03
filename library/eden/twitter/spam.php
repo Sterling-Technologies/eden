@@ -11,7 +11,7 @@
  * Twitter spam reporting
  *
  * @package    Eden
- * @category   Twitter
+ * @category   twitter
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Twitter_Spam extends Eden_Twitter_Base {

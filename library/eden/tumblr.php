@@ -14,7 +14,7 @@
  * developer site: blog and user.
  *
  * @package    Eden
- * @category   Tumblr
+ * @category   tumblr
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Tumblr extends Eden_Class {

@@ -11,7 +11,7 @@
  * Tumblr blog
  *
  * @package    Eden
- * @category   Tumblr
+ * @category   tumblr
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
