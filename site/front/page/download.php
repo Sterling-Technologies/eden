@@ -182,6 +182,7 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Getsatisfaction_Post',
 		'Eden_Getsatisfaction_Product',
 		'Eden_Getsatisfaction_Replies',
+		'Eden_Getsatisfaction_Reply',
 		'Eden_Getsatisfaction_Tag',
 		'Eden_Getsatisfaction_Topic');
 	
