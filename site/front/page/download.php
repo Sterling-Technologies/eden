@@ -10,6 +10,8 @@
 class Front_Page_Download extends Front_Page {
 	/* Constants
 	-------------------------------*/
+	const INFO = 'svn info %s --xml --non-interactive 2>&1';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -359,6 +361,35 @@ class Front_Page_Download extends Front_Page {
 			header('Content-Length: '.strlen($bundle));
 			header('Content-Disposition: attachment; filename="eden.php"');
 			return $bundle;
+		}
+		
+		$post = $this->_request['post']->get(false);
+		
+		if(isset($post['download'])) {
+			
+			//$library = 'http://svn.openovate.com/edenv2/trunk/library';
+			$library = $this->_request['path']['library'];
+			
+			//get the revision
+			exec(sprintf(self::INFO, $library), $info);
+			$info = implode("\n", $info);
+			$info = simplexml_load_string($info);
+			$revision = (string)$info->entry->commit['revision'];
+			
+			//check to see if this zip exists
+			$zip = $this->_request['path']['web'].'/'.$revision.'.tar.gz';
+			$file = $this->File($zip);
+			
+			//if it's not a file
+			$library = $this->_request['path']['library'];
+			if(!$file->isFile()) {
+				exec('cd '.$library.'/..; tar -cvzf '.$zip.' library');
+			}
+			
+			header('Content-Type: text/plain');
+			header('Content-Length: '.$file->getSize());
+			header('Content-Disposition: attachment; filename="eden-v0.2.'.$revision.'.tar.gz"');
+			return $file->getContent();
 		}
 		
 		return $this->_renderPage();

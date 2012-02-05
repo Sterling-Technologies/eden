@@ -26,5 +26,9 @@
 			</div>
 			<input type="submit" class="submit" value="Download" />
         </form>
+		
+		<form method="post">
+			<input name="download" type="submit" class="submit download" value="Download" />
+        </form>
     </div>
 </div>
