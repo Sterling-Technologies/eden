@@ -39,44 +39,82 @@ class Eden_Getsatisfaction_Replies extends Eden_Getsatisfaction_Base {
 	
 	/* Public Methods
 	-------------------------------*/
-	public function setUser($user) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
+	/**
+	 * Sets user URL
+	 * 
+	 * @param int|string
+	 * @return this
+	 */
+	public function searchByUser($user) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_url = sprintf(self::URL_PEOPLE, $user);
 		return $this;
 	}
 	
-	public function setTopic($topic) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
+	/**
+	 * Sets topic URL
+	 *
+	 * @param string|int
+	 * @return this
+	 */
+	public function searchByTopic($topic) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_url = sprintf(self::URL_TOPIC, $topic);
 		return $this;
 	}
 	
-	public function filterBest() {
+	/**
+	 * Filter by best
+	 *
+	 * @return this
+	 */
+	public function filterByBest() {
 		$this->_query['filter'] = 'best';
 		
 		return $this;
 	}
 	
-	public function filterStarPromoted() {
+	/**
+	 * Filter by star promoted
+	 *
+	 * @return this
+	 */
+	public function filterByStarPromoted() {
 		$this->_query['filter'] = 'star_promoted';
 		
 		return $this;
 	}
 	
-	public function filterCompanyPromoted() {
+	/**
+	 * Filter by company promoted
+	 *
+	 * @return this
+	 */
+	public function filterByCompanyPromoted() {
 		$this->_query['filter'] = 'company_promoted';
 		
 		return $this;
 	}
 	
-	public function filterFlatPromoted() {
+	/**
+	 * Filter by flat promoted
+	 *
+	 * @return this
+	 */
+	public function filterByFlatPromoted() {
 		$this->_query['filter'] = 'flat_promoted';
 		
 		return $this;
 	}
 	
+	/**
+	 * Set page
+	 *
+	 * @param int
+	 * @return this
+	 */
 	public function setPage($page = 0) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
@@ -89,7 +127,13 @@ class Eden_Getsatisfaction_Replies extends Eden_Getsatisfaction_Base {
 		return $this;
 	}
 	
-	public function setLimit($limit = 10) {
+	/**
+	 * Set range
+	 *
+	 * @param int
+	 * @return this
+	 */
+	public function setRange($limit = 10) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
 		if($limit < 0) {
@@ -101,39 +145,13 @@ class Eden_Getsatisfaction_Replies extends Eden_Getsatisfaction_Base {
 		return $this;
 	}
 	
-	public function getList() {
-		if(isset($this->_query['status']) && is_array($this->_query['status'])) {
-			$this->_query['status'] = implode(',', $this->_query['status']);
-		}
-		
+	/**
+	 * Returns a list of companies
+	 *
+	 * @return array
+	 */
+	public function getResults() {
 		return $this->_getResponse($this->_url, $this->_query);
-	}
-	
-	public function reply($topic, $content, $face = NULL, $feeling = NULL, $intensity = NULL) {
-		Eden_Getsatisfaction_Error::i()
-			->argument(1, 'string', 'numeric')
-			->argument(2, 'string')
-			->argument(3, 'string', 'null')
-			->argument(4, 'string', 'null')
-			->argument(5, 'int', 'null');
-		
-		$url = sprintf(self::URL_REPLY, $topic);
-		
-		$query = array('content' => $content);
-		
-		if($face && in_array($face, $this->_validFaces)) {
-			$query['emotitag']['face'] = $face;
-		}
-		
-		if($feeling) {
-			$query['emotitag']['feeling'] = $feeling;
-		}
-		
-		if($intensity && $intensity > -1 && $intensity < 4) {
-			$query['emotitag']['intensity'] = $intensity;
-		}
-		
-		return $this->_post($url, array('reply' => $query));
 	}
 	
 	/* Protected Methods

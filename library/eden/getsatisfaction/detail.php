@@ -33,6 +33,12 @@ class Eden_GetSatisfaction_Detail extends Eden_GetSatisfaction_Base {
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Returns topic details
+	 *
+	 * @param string|int
+	 * @return array
+	 */
 	public function getTopic($topic) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		

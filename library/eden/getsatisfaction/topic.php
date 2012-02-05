@@ -42,108 +42,207 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Sets company URL
+	 *
+	 * @param string|int
+	 * @return this
+	 */
 	public function setCompany($company) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_url = sprintf(self::URL_COMPANY, $company);
 		return $this;
 	}
 	
+	/**
+	 * Sets company URL
+	 *
+	 * @param string|int
+	 * @param string|int
+	 * @return this
+	 */
 	public function setCompanyProduct($company, $product) {
 		Eden_Getsatisfaction_Error::i()
-			->argument(1, 'string', 'numeric')
-			->argument(2, 'string', 'numeric');
+			->argument(1, 'string', 'int')
+			->argument(2, 'string', 'int');
 		
 		$this->_url = sprintf(self::URL_COMPANY_PRODUCT, $company, $product);
 		return $this;
 	}
 	
+	/**
+	 * Sets company URL
+	 *
+	 * @param string|int
+	 * @param string|int
+	 * @return this
+	 */
 	public function setCompanyTag($company, $tag) {
 		Eden_Getsatisfaction_Error::i()
-			->argument(1, 'string', 'numeric')
-			->argument(2, 'string', 'numeric');
+			->argument(1, 'string', 'int')
+			->argument(2, 'string', 'int');
 			
 		$this->_url = sprintf(self::URL_COMPANY_TAG, $company, $tag);
 		return $this;
 	}
 	
+	/**
+	 * Sets company URL
+	 *
+	 * @param string|int
+	 * @return this
+	 */
 	public function setProduct($product) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_url = sprintf(self::URL_PRODUCT, $product);
 		return $this;
 	}
 	
+	/**
+	 * Sets company URL
+	 *
+	 * @param string|int
+	 * @return this
+	 */
 	public function setUser($user) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_url = sprintf(self::URL_PEOPLE, $user);
 		return $this;
 	}
 	
+	/**
+	 * Sets company URL
+	 *
+	 * @param string|int
+	 * @return this
+	 */
 	public function setFollowed($user) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_url = sprintf(self::URL_PEOPLE_FOLLOWED, $user);
 		return $this;
 	}
 	
+	/**
+	 * Sort by created
+	 *
+	 * @return this
+	 */
 	public function sortByCreated() {
 		$this->_query['sort'] = 'recently_created';
 		return $this;
 	}
 	
+	/**
+	 * Sort by active
+	 *
+	 * @return this
+	 */
 	public function sortByActive() {
 		$this->_query['sort'] = 'recently_active';
 		return $this;
 	}
 	
+	/**
+	 * Sort by replies
+	 *
+	 * @return this
+	 */
 	public function sortByReplies() {
 		$this->_query['sort'] = 'most_replies';
 		return $this;
 	}
 	
+	/**
+	 * Sort by votes
+	 *
+	 * @return this
+	 */
 	public function sortByVotes() {
 		$this->_query['sort'] = 'most_me_toos';
 		return $this;
 	}
 	
+	/**
+	 * Sort by priority
+	 *
+	 * @return this
+	 */
 	public function sortByPriority() {
 		$this->_query['sort'] = 'priority';
 		return $this;
 	}
 	
+	/**
+	 * Sort by unanswered
+	 *
+	 * @return this
+	 */
 	public function sortByUnanswered() {
 		$this->_query['sort'] = 'answered';
 		return $this;
 	}
 	
+	/**
+	 * Sort by questions
+	 *
+	 * @return this
+	 */
 	public function showQuestions() {
 		$this->_query['style'] = 'question';
 		return $this;
 	}
 	
+	/**
+	 * Sort by problems
+	 *
+	 * @return this
+	 */
 	public function showProblems() {
 		$this->_query['style'] = 'question';
 		return $this;
 	}
 	
+	/**
+	 * Sort by praise
+	 *
+	 * @return this
+	 */
 	public function showPraise() {
 		$this->_query['style'] = 'praise';
 		return $this;
 	}
 	
+	/**
+	 * Sort by ideas
+	 *
+	 * @return this
+	 */
 	public function showIdeas() {
 		$this->_query['style'] = 'idea';
 		return $this;
 	}
 	
+	/**
+	 * Sort by updates
+	 *
+	 * @return this
+	 */
 	public function showUpdates() {
 		$this->_query['style'] = 'update';
 		return $this;
 	}
 	
-	public function filterSince($since) {
+	/**
+	 * Filter by since
+	 *
+	 * @param string|int
+	 * @return this
+	 */
+	public function filterBySince($since) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		if(is_string($since)) {
@@ -155,7 +254,13 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 		return $this;
 	}
 	
-	public function filterUser($user) {
+	/**
+	 * Filter by user
+	 *
+	 * @param string|int
+	 * @return this
+	 */
+	public function filterByUser($user) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_query['user'] = $user;
@@ -163,7 +268,13 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 		return $this;
 	}
 	
-	public function filterCompany($company) {
+	/**
+	 * Filter by company
+	 *
+	 * @param string|int
+	 * @return this
+	 */
+	public function filterByCompany($company) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_query['company'] = $company;
@@ -171,7 +282,13 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 		return $this;
 	}
 	
-	public function filterProduct($product) {
+	/**
+	 * Filter by product
+	 *
+	 * @param string|int|array
+	 * @return this
+	 */
+	public function filterByProduct($product) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int', 'array');
 		
 		if(is_array($product)) {
@@ -183,7 +300,13 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 		return $this;
 	}
 	
-	public function filterTag($tag) {
+	/**
+	 * Filter by tag
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function filterByTag($tag) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'string');
 		
 		$this->_query['tag'] = $tag;
@@ -191,7 +314,13 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 		return $this;
 	}
 	
-	public function filterDefined($defined) {
+	/**
+	 * Filter by defined
+	 *
+	 * @param string|int
+	 * @return this
+	 */
+	public function filterByDefined($defined) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_query['user_defined_code'] = $defined;
@@ -199,7 +328,12 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 		return $this;
 	}
 	
-	public function addStatusNone() {
+	/**
+	 * Filter by no status
+	 *
+	 * @return this
+	 */
+	public function filterByStatusNone() {
 		if(!isset($this->_filter['status']) || !in_array('none', $this->_filter['status'])) {
 			$this->_filter['status'][] = 'none';
 		}
@@ -207,7 +341,12 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 		return $this;
 	}
 	
-	public function addStatusPending() {
+	/**
+	 * Filter by pending status
+	 *
+	 * @return this
+	 */
+	public function filterByStatusPending() {
 		if(!isset($this->_filter['status']) || !in_array('pending', $this->_filter['status'])) {
 			$this->_filter['status'][] = 'pending';
 		}
@@ -215,7 +354,12 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 		return $this;
 	}
 	
-	public function addStatusActive() {
+	/**
+	 * Filter by active status
+	 *
+	 * @return this
+	 */
+	public function filterByStatusActive() {
 		if(!isset($this->_filter['status']) || !in_array('active', $this->_filter['status'])) {
 			$this->_filter['status'][] = 'active';
 		}
@@ -223,7 +367,12 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 		return $this;
 	}
 	
-	public function addStatusComplete() {
+	/**
+	 * Filter by complete status
+	 *
+	 * @return this
+	 */
+	public function filterByStatusComplete() {
 		if(!isset($this->_filter['status']) || !in_array('complete', $this->_filter['status'])) {
 			$this->_filter['status'][] = 'complete';
 		}
@@ -231,7 +380,12 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 		return $this;
 	}
 	
-	public function addStatusRejected() {
+	/**
+	 * Filter by rejected status
+	 *
+	 * @return this
+	 */
+	public function filterByStatusRejected() {
 		if(!isset($this->_filter['status']) || !in_array('rejected', $this->_filter['status'])) {
 			$this->_filter['status'][] = 'rejected';
 		}
@@ -239,6 +393,12 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 		return $this;
 	}
 	
+	/**
+	 * Set page
+	 *
+	 * @param int
+	 * @return this
+	 */
 	public function setPage($page = 0) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
@@ -251,7 +411,13 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 		return $this;
 	}
 	
-	public function setLimit($limit = 10) {
+	/**
+	 * Set range
+	 *
+	 * @param int
+	 * @return this
+	 */
+	public function setRange($limit = 10) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
 		if($limit < 0) {
@@ -263,7 +429,12 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 		return $this;
 	}
 	
-	public function getList() {
+	/**
+	 * Returns a list of companies
+	 *
+	 * @return array
+	 */
+	public function getResults() {
 		if(isset($this->_query['status']) && is_array($this->_query['status'])) {
 			$this->_query['status'] = implode(',', $this->_query['status']);
 		}

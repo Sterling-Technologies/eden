@@ -38,20 +38,38 @@ class Eden_GetSatisfaction_Tag extends Eden_GetSatisfaction_Base {
 	
 	/* Public Methods
 	-------------------------------*/
-	public function setCompany($company) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
+	/**
+	 * Sets company URL
+	 *
+	 * @param string|int
+	 * @return this
+	 */
+	public function searchByCompany($company) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_url = sprintf(self::URL_COMPANY, $company);
 		return $this;
 	}
 	
-	public function setTopic($topic) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
+	/**
+	 * Sets topic URL
+	 *
+	 * @param string|int
+	 * @return this
+	 */
+	public function searchByTopic($topic) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_url = sprintf(self::URL_TOPIC, $topic);
 		return $this;
 	}
 	
+	/**
+	 * Set page
+	 *
+	 * @param int
+	 * @return this
+	 */
 	public function setPage($page = 0) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
@@ -64,7 +82,13 @@ class Eden_GetSatisfaction_Tag extends Eden_GetSatisfaction_Base {
 		return $this;
 	}
 	
-	public function setLimit($limit = 10) {
+	/**
+	 * Set range
+	 *
+	 * @param int
+	 * @return this
+	 */
+	public function setRange($limit = 10) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
 		if($limit < 0) {
@@ -76,11 +100,12 @@ class Eden_GetSatisfaction_Tag extends Eden_GetSatisfaction_Base {
 		return $this;
 	}
 	
-	public function getList() {
-		if(isset($this->_query['status']) && is_array($this->_query['status'])) {
-			$this->_query['status'] = implode(',', $this->_query['status']);
-		}
-		
+	/**
+	 * Returns a list of companies
+	 *
+	 * @return array
+	 */
+	public function getResults() {
 		return $this->_getResponse($this->_url, $this->_query);
 	}
 	

@@ -8,13 +8,13 @@
  */
 
 /**
- * Get Satisfaction Company Methods
+ * Various ways to get a list of companies in Get Satisfaction
  *
  * @package    Eden
  * @category   getsatisfaction
  * @author     Christian Blanquera cblanquera@openovate.com
  */
-class Eden_GetSatisfaction_Company extends Eden_Getsatisfaction_Base {
+class Eden_Getsatisfaction_Company extends Eden_Getsatisfaction_Base {
 	/* Constants
 	-------------------------------*/
 	const URL_LIST		= 'http://api.getsatisfaction.com/companies.json';
@@ -39,28 +39,52 @@ class Eden_GetSatisfaction_Company extends Eden_Getsatisfaction_Base {
 	
 	/* Public Methods
 	-------------------------------*/
-	public function setActivity($company) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
+	/**
+	 * Sets activity URL
+	 * 
+	 * @param int|string
+	 * @return this
+	 */
+	public function searchByActivity($company) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_url = sprintf(self::URL_ACTIVITY, $company);
 		return $this;
 	}
 	
-	public function setUser($user) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
+	/**
+	 * Sets user URL
+	 * 
+	 * @param int|string
+	 * @return this
+	 */
+	public function searchByUser($user) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_url = sprintf(self::URL_PEOPLE, $user);
 		return $this;
 	}
 	
-	public function setProduct($product) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
+	/**
+	 * Set product URL
+	 * 
+	 * @param int|string
+	 * @return this
+	 */
+	public function searchByProduct($product) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$this->_url = sprintf(self::URL_PRODUCT, $product);
 		return $this;
 	}
 	
-	public function setKeyword($keyword) {
+	/**
+	 * Set keyword filter
+	 * 
+	 * @param string
+	 * @return this
+	 */
+	public function filterByKeyword($keyword) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'string');
 		
 		$this->_query['query'] = $keyword;
@@ -68,36 +92,72 @@ class Eden_GetSatisfaction_Company extends Eden_Getsatisfaction_Base {
 		return $this;
 	}
 	
+	/**
+	 * Show public companies
+	 *
+	 * @return this
+	 */
 	public function showPublic() {
 		$this->_query['show'] = 'public';
 		return $this;
 	}
 	
+	/**
+	 * Show visible companies
+	 *
+	 * @return this
+	 */
 	public function showVisible() {
 		$this->_query['show'] = 'not_hidden';
 		return $this;
 	}
 	
+	/**
+	 * Show private companies
+	 *
+	 * @return this
+	 */
 	public function showPrivate() {
 		$this->_query['show'] = 'private';
 		return $this;
 	}
 	
+	/**
+	 * Sort by created
+	 *
+	 * @return this
+	 */
 	public function sortByCreated() {
 		$this->_query['sort'] = 'recently_created';
 		return $this;
 	}
 	
+	/**
+	 * Sort by active
+	 *
+	 * @return this
+	 */
 	public function sortByActive() {
 		$this->_query['sort'] = 'recently_active';
 		return $this;
 	}
 
+	/**
+	 * Sort by letters
+	 *
+	 * @return this
+	 */
 	public function sortByAlphabet() {
 		$this->_query['sort'] = 'alpha';
 		return $this;
 	}
 	
+	/**
+	 * Set page
+	 *
+	 * @param int
+	 * @return this
+	 */
 	public function setPage($page = 0) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
@@ -110,7 +170,13 @@ class Eden_GetSatisfaction_Company extends Eden_Getsatisfaction_Base {
 		return $this;
 	}
 	
-	public function setLimit($limit = 10) {
+	/**
+	 * Set range
+	 *
+	 * @param int
+	 * @return this
+	 */
+	public function setRange($limit = 10) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
 		if($limit < 0) {
@@ -122,11 +188,12 @@ class Eden_GetSatisfaction_Company extends Eden_Getsatisfaction_Base {
 		return $this;
 	}
 	
-	public function getList() {
-		if(isset($this->_query['status']) && is_array($this->_query['status'])) {
-			$this->_query['status'] = implode(',', $this->_query['status']);
-		}
-		
+	/**
+	 * Returns a list of companies
+	 *
+	 * @return array
+	 */
+	public function getResults() {
 		return $this->_getResponse($this->_url, $this->_query);
 	}
 	

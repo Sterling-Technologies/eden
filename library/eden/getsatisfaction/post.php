@@ -33,41 +33,86 @@ class Eden_Getsatisfaction_Post extends Eden_Getsatisfaction_Base {
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Set title
+	 *
+	 * @param string
+	 * @return this
+	 */
 	public function setTitle($title) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string');
 		$this->_query['subject'] = $title;
 		return $this;
 	}
 	
+	/**
+	 * Set topic detail
+	 *
+	 * @param string
+	 * @return this
+	 */
 	public function setDetail($detail) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string');
 		$this->_query['additional_detail'] = $detail;
 		return $this;
 	}
 	
+	/**
+	 * Set topic style to question format
+	 *
+	 * @return this
+	 */
 	public function setQuestion() {
 		$this->_query['style'] = 'question';
 		return $this;
 	}
 	
+	/**
+	 * Set topic style to problem format
+	 *
+	 * @return this
+	 */
 	public function setProblem() {
 		$this->_query['style'] = 'problem';
 		return $this;
 	}
 	
+	/**
+	 * Set topic style to praise format
+	 *
+	 * @return this
+	 */
 	public function setPraise() {
 		$this->_query['style'] = 'praise';
 		return $this;
 	}
 	
+	/**
+	 * Set topic style to idea format
+	 *
+	 * @return this
+	 */
 	public function setIdea() {
 		$this->_query['style'] = 'idea';
 		return $this;
 	}
 	
+	/**
+	 * Set topic style to update format
+	 *
+	 * @return this
+	 */
 	public function setUpdate() {
 		$this->_query['style'] = 'update';
 		return $this;
 	}
 	
+	/**
+	 * Add tags
+	 *
+	 * @param string|array
+	 * @return this
+	 */
 	public function setTags($tags) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'array');
 		
@@ -78,11 +123,22 @@ class Eden_Getsatisfaction_Post extends Eden_Getsatisfaction_Base {
 		$this->_query['keywords'] = $tags;
 	}
 	
-	public function setOverwriteKeywords() {
+	/**
+	 * Overwrite keywords
+	 *
+	 * @return this
+	 */
+	public function overwriteKeywords() {
 		$this->_query['overwrite_keywords'] = 'true';
 		return $this;
 	}
 	
+	/**
+	 * Set products this topic is related to
+	 *
+	 * @param string|array
+	 * @return this
+	 */
 	public function setProducts($products) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'array');
 		
@@ -94,6 +150,12 @@ class Eden_Getsatisfaction_Post extends Eden_Getsatisfaction_Base {
 		return $this;
 	}
 	
+	/**
+	 * Set topic mood
+	 *
+	 * @param string
+	 * @return this
+	 */
 	public function setFeeling($feeling) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'string');
 		
@@ -101,26 +163,52 @@ class Eden_Getsatisfaction_Post extends Eden_Getsatisfaction_Base {
 		return $this;
 	}
 	
+	/**
+	 * Add happy face
+	 *
+	 * @return this
+	 */
 	public function setHappyFace() {
 		$this->_query['emotitag']['face'] = 'happy';
 		return $this;
 	}
 	
+	/**
+	 * Add sad face
+	 *
+	 * @return this
+	 */
 	public function setSadFace() {
 		$this->_query['emotitag']['face'] = 'sad';
 		return $this;
 	}
 	
+	/**
+	 * Add silly face
+	 *
+	 * @return this
+	 */
 	public function setSillyFace() {
 		$this->_query['emotitag']['face'] = 'silly';
 		return $this;
 	}
 	
+	/**
+	 * Add lame face
+	 *
+	 * @return this
+	 */
 	public function setIndifferentFace() {
 		$this->_query['emotitag']['face'] = 'indifferent';
 		return $this;
 	}
 	
+	/**
+	 * Set topic intensity
+	 *
+	 * @param int 0-5
+	 * @return this
+	 */
 	public function setIntensity($intensity) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'int');
 		
@@ -134,15 +222,27 @@ class Eden_Getsatisfaction_Post extends Eden_Getsatisfaction_Base {
 		return $this;
 	}
 	
-	public function add($company) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
+	/**
+	 * Creates the post
+	 *
+	 * @param string|int
+	 * @return array
+	 */
+	public function create($company) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
 		
 		$url = sprintf(Eden_Getsatisfaction_Topic::URL_COMPANY, $company);
 		
 		return $this->_post($url, array('topic' => $this->_query), true);
 	}
 	
-	public function edit($topic) {
+	/**
+	 * Updates the post
+	 *
+	 * @param string|int
+	 * @return array
+	 */
+	public function update($topic) {
 		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'numeric');
 		
 		$url = sprintf(Eden_GetSatisfaction_Detail::URL, $topic);

@@ -52,14 +52,22 @@ class Eden_Getsatisfaction extends Eden_Class {
 	 *
 	 * @param string
 	 * @param string
+	 * @param string
+	 * @param string
 	 * @return Eden_Getsatisfaction_Company
 	 */
-	public function company($key, $secret) {
+	public function company($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string')
-			->argument(1, 'string');
+			->argument(2, 'string')
+			->argument(3, 'string')
+			->argument(4, 'string');
 			
-		return Eden_Getsatisfaction_Company::i($key, $secret);
+		return Eden_Getsatisfaction_Company::i(
+			$consumerKey, 
+			$consumerSecret, 
+			$accessToken, 
+			$accessSecret);
 	}
 	
 	/**
@@ -67,14 +75,22 @@ class Eden_Getsatisfaction extends Eden_Class {
 	 *
 	 * @param string
 	 * @param string
+	 * @param string
+	 * @param string
 	 * @return Eden_Getsatisfaction_Detail
 	 */
-	public function detail($key, $secret) {
+	public function detail($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string')
-			->argument(1, 'string');
+			->argument(2, 'string')
+			->argument(3, 'string')
+			->argument(4, 'string');
 			
-		return Eden_Getsatisfaction_Detail::i($key, $secret);
+		return Eden_Getsatisfaction_Detail::i(
+			$consumerKey, 
+			$consumerSecret, 
+			$accessToken, 
+			$accessSecret);
 	}
 	
 	/**
@@ -82,14 +98,22 @@ class Eden_Getsatisfaction extends Eden_Class {
 	 *
 	 * @param string
 	 * @param string
+	 * @param string
+	 * @param string
 	 * @return Eden_Getsatisfaction_Oauth
 	 */
-	public function oauth($key, $secret) {
+	public function oauth($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string')
-			->argument(1, 'string');
+			->argument(2, 'string')
+			->argument(3, 'string')
+			->argument(4, 'string');
 			
-		return Eden_Getsatisfaction_Oauth::i($key, $secret);
+		return Eden_Getsatisfaction_Oauth::i(
+			$consumerKey, 
+			$consumerSecret, 
+			$accessToken, 
+			$accessSecret);
 	}
 	
 	/**
@@ -97,14 +121,22 @@ class Eden_Getsatisfaction extends Eden_Class {
 	 *
 	 * @param string
 	 * @param string
+	 * @param string
+	 * @param string
 	 * @return Eden_Getsatisfaction_People
 	 */
-	public function people($key, $secret) {
+	public function people($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string')
-			->argument(1, 'string');
+			->argument(2, 'string')
+			->argument(3, 'string')
+			->argument(4, 'string');
 			
-		return Eden_Getsatisfaction_People::i($key, $secret);
+		return Eden_Getsatisfaction_People::i(
+			$consumerKey, 
+			$consumerSecret, 
+			$accessToken, 
+			$accessSecret);
 	}
 	
 	/**
@@ -112,14 +144,45 @@ class Eden_Getsatisfaction extends Eden_Class {
 	 *
 	 * @param string
 	 * @param string
+	 * @param string
+	 * @param string
 	 * @return Eden_Getsatisfaction_Post
 	 */
-	public function post($key, $secret) {
+	public function post($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string')
-			->argument(1, 'string');
+			->argument(2, 'string')
+			->argument(3, 'string')
+			->argument(4, 'string');
 			
-		return Eden_Getsatisfaction_Post::i($key, $secret);
+		return Eden_Getsatisfaction_Post::i(
+			$consumerKey, 
+			$consumerSecret, 
+			$accessToken, 
+			$accessSecret);
+	}
+	
+	/**
+	 * Returns Getsatisfaction reply
+	 *
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @return Eden_Getsatisfaction_Reply
+	 */
+	public function post($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
+		Eden_Getsatisfaction_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string')
+			->argument(3, 'string')
+			->argument(4, 'string');
+			
+		return Eden_Getsatisfaction_Reply::i(
+			$consumerKey, 
+			$consumerSecret, 
+			$accessToken, 
+			$accessSecret);
 	}
 	
 	/**
@@ -127,14 +190,22 @@ class Eden_Getsatisfaction extends Eden_Class {
 	 *
 	 * @param string
 	 * @param string
+	 * @param string
+	 * @param string
 	 * @return Eden_Getsatisfaction_Product
 	 */
-	public function product($key, $secret) {
+	public function product($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string')
-			->argument(1, 'string');
+			->argument(2, 'string')
+			->argument(3, 'string')
+			->argument(4, 'string');
 			
-		return Eden_Getsatisfaction_Product::i($key, $secret);
+		return Eden_Getsatisfaction_Product::i(
+			$consumerKey, 
+			$consumerSecret, 
+			$accessToken, 
+			$accessSecret);
 	}
 	
 	/**
@@ -142,14 +213,22 @@ class Eden_Getsatisfaction extends Eden_Class {
 	 *
 	 * @param string
 	 * @param string
+	 * @param string
+	 * @param string
 	 * @return Eden_Getsatisfaction_Replies
 	 */
-	public function replies($key, $secret) {
+	public function replies($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string')
-			->argument(1, 'string');
+			->argument(2, 'string')
+			->argument(3, 'string')
+			->argument(4, 'string');
 			
-		return Eden_Getsatisfaction_Replies::i($key, $secret);
+		return Eden_Getsatisfaction_Replies::i(
+			$consumerKey, 
+			$consumerSecret, 
+			$accessToken, 
+			$accessSecret);
 	}
 	
 	/**
@@ -157,14 +236,22 @@ class Eden_Getsatisfaction extends Eden_Class {
 	 *
 	 * @param string
 	 * @param string
+	 * @param string
+	 * @param string
 	 * @return Eden_Getsatisfaction_Tag
 	 */
-	public function tag($key, $secret) {
+	public function tag($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string')
-			->argument(1, 'string');
+			->argument(2, 'string')
+			->argument(3, 'string')
+			->argument(4, 'string');
 			
-		return Eden_Getsatisfaction_Tag::i($key, $secret);
+		return Eden_Getsatisfaction_Tag::i(
+			$consumerKey, 
+			$consumerSecret, 
+			$accessToken, 
+			$accessSecret);
 	}
 	
 	/**
@@ -172,14 +259,22 @@ class Eden_Getsatisfaction extends Eden_Class {
 	 *
 	 * @param string
 	 * @param string
+	 * @param string
+	 * @param string
 	 * @return Eden_Getsatisfaction_Topic
 	 */
-	public function topic($key, $secret) {
+	public function topic($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string')
-			->argument(1, 'string');
+			->argument(2, 'string')
+			->argument(3, 'string')
+			->argument(4, 'string');
 			
-		return Eden_Getsatisfaction_Topic::i($key, $secret);
+		return Eden_Getsatisfaction_Topic::i(
+			$consumerKey, 
+			$consumerSecret, 
+			$accessToken, 
+			$accessSecret);
 	}
 	
 	/* Protected Methods
