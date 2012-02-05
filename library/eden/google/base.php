@@ -19,14 +19,15 @@ class Eden_Google_Base extends Eden_Class {
 	-------------------------------*/
 	const ACCESS_TOKEN	= 'access_token';
 	const KEY			= 'key'; 
-	
+	const MAX_RESULTS	= 'maxResults';
 	const FORM_HEADER	= 'application/x-www-form-urlencoded';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_token	= NULL;
+	protected $_token			= NULL;
+	protected $_maxResult		= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -50,16 +51,28 @@ class Eden_Google_Base extends Eden_Class {
 		
 		return $this->_meta;
 	}
+	/**
+	 * Set Maximum results of query
+	 *
+	 * @param int
+	 * @return array
+	 */
+	public function setMaxResult($maxResult) {
+		Eden_Google_Error::i()->argument(1, 'int');
+		$this->_maxResult = $maxResult;
+		
+		return $this;
+	}
 	
 	/* Protected Methods
 	-------------------------------*/
 	protected function _accessKey($array) {
 		foreach($array as $key => $val) {
-			if(is_array($val)) {
+			if(is_array($val)) { //access nested array
 				$array[$key] = $this->_accessKey($val);
 			}
 			
-			if($val == false || $val == NULL || empty($val)) {
+			if($val == false || $val == NULL || empty($val)) { //unset no value
 				unset($array[$key]);
 			}
 			
@@ -71,7 +84,10 @@ class Eden_Google_Base extends Eden_Class {
 	protected function _getResponse($url, array $query = array()) {
 		$query[self::ACCESS_TOKEN] = $this->_token;
 		$query[self::KEY] = Eden_Google_Oauth::i()->getApiKey();
+		$query[self::MAX_RESULTS] = $this->_maxResult;
+		//prevent sending fields with no value
 		$query = $this->_accessKey($query);
+		
 		$url .= '?'.http_build_query($query);
 		
 		return $this->Eden_Curl()
@@ -79,7 +95,7 @@ class Eden_Google_Base extends Eden_Class {
 			->verifyHost(false)
 			->verifyPeer(false)
 			->setTimeout(60)
-			->getJsonResponse();
+			->getResponse();
 	}
 	
 	protected function _post($url, $query = array()) {
@@ -93,12 +109,14 @@ class Eden_Google_Base extends Eden_Class {
 		}
 		
 		if(is_array($query)) {
-			$query = $this->_accessKey($query);
+			$query = $this->_accessKey($query);//prevent sending fields with no value
 			$query = json_encode($query);
 		}
 		
 		$url .= $separator.self::ACCESS_TOKEN.'='.$this->_token;
 		$url .= '&'.self::KEY.'='.Eden_Google_Oauth::i()->getApiKey();
+		$url .= ($this->_maxResult)? '&'.self::MAX_RESULTS.'='.$this->_maxResult: NULL;
+		
 		//set curl
 		$curl = Eden_Curl::i()
 			->verifyHost(false)
@@ -115,7 +133,6 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['url'] 			= $url;
 		$this->_meta['headers'] 		= $headers;
 		$this->_meta['query'] 			= $query;
-		
 		return $response;
 	}
 
@@ -126,12 +143,13 @@ class Eden_Google_Base extends Eden_Class {
 		}
 		
 		if(is_array($query)) {
-			$query = $this->_accessKey($query);
+			$query = $this->_accessKey($query); //prevent sending fields with no value
 			$query = json_encode($query);
 		}
 		
 		$url .= $separator.self::ACCESS_TOKEN.'='.$this->_token;
 		$url .= '&'.self::KEY.'='.Eden_Google_Oauth::i()->getApiKey();
+		$url .= ($this->_maxResult)? '&'.self::MAX_RESULTS.'='.$this->_maxResult: NULL;
 		
 		//set curl
 		$curl = Eden_Curl::i()
@@ -164,6 +182,7 @@ class Eden_Google_Base extends Eden_Class {
 		
 		$url .= $separator.self::ACCESS_TOKEN.'='.$this->_token;
 		$url .= '&'.self::KEY.'='.Eden_Google_Oauth::i()->getApiKey();
+		$url .= ($this->_maxResult)? '&'.self::MAX_RESULTS.'='.$this->_maxResult: NULL;
 		
 		//set curl
 		$curl = Eden_Curl::i()

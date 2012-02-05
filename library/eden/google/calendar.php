@@ -17,32 +17,72 @@
 class Eden_Google_Calendar extends Eden_Google_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_CALENDAR_LIST 			= 'https://www.googleapis.com/calendar/v3/users/%s/calendarList';
-	const URL_CREATE_CALENDAR			= 'https://www.googleapis.com/calendar/v3/calendars';
-	const URL_CLEAR_PRIMARY_CALENDAR	= 'https://www.googleapis.com/calendar/v3/calendars/%s/clear';
-	const URL_CLEAR_SECONDARY_CALENDAR	= 'https://www.googleapis.com/calendar/v3/calendars/%s';
-	const URL_GET_CALENDAR				= 'https://www.googleapis.com/calendar/v3/users/%s/calendarList/%s';
-	const URL_COLORS					= 'https://www.googleapis.com/calendar/v3/colors';
-	const URL_SETTINGS					= 'https://www.googleapis.com/calendar/v3/users/%s/settings';
+	const URL_CALENDAR_LIST 				= 'https://www.googleapis.com/calendar/v3/users/%s/calendarList';
+	const URL_CREATE_CALENDAR				= 'https://www.googleapis.com/calendar/v3/calendars';
+	const URL_CLEAR_PRIMARY_CALENDAR		= 'https://www.googleapis.com/calendar/v3/calendars/%s/clear';
+	const URL_CLEAR_SECONDARY_CALENDAR		= 'https://www.googleapis.com/calendar/v3/calendars/%s';
+	const URL_GET_CALENDAR					= 'https://www.googleapis.com/calendar/v3/users/%s/calendarList/%s';
+	const URL_COLORS						= 'https://www.googleapis.com/calendar/v3/colors';
+	const URL_SETTINGS						= 'https://www.googleapis.com/calendar/v3/users/%s/settings';
 	
-	const DEFAULT_USER					= 'me';
-	const DEFAULT_CALENDAR				= 'primary';
+	const DEFAULT_USER						= 'me';
+	const DEFAULT_CALENDAR					= 'primary';
+	
+	const KIND								= 'kind';
+	const ID								= 'id';
+	const ETAG								= 'etag';
+	const STATUS							= 'status';
+	const HTMLLINK							= 'htmlLink';
+	const CREATED							= 'created';
+	const UPDATED							= 'updated';
+	const SUMMARY							= 'summary';
+	const LOCATION							= 'location';
+	const CREATOR							= 'creator';
+	const ORGANIZER							= 'organizer';
+	const START								= 'start';
+	const END								= 'end';
+	const ICALUID							= 'iCalUID';
+	const SEQUENCE							= 'sequence';
+	const ATTENDEES							= 'attendees';
+	const GUESTSCANINVITEOTHERS				= 'guestsCanInviteOthers';
+	const GUESTSCANSEEOTHERGUESTS			= 'guestsCanSeeOtherGuests';
+	const REMINDER							= 'reminder';
+	const USEDEFAULT						= 'useDefault';
+	const EMAIL								= 'email';
+	const DISPLAYNAME						= 'displayName';
+	const SELF								= 'self';
+	const RESPONSESTATUS					= 'responseStatus';
+	const DATETIME							= 'dateTime';
+	const SCOPE								= 'scope';
+	const TYPE								= 'type';
+	const VALUE								= 'value';
+	const ROLE								= 'role';
+	const TIMEMIN							= 'timeMin';
+	const TIMEMAX							= 'timeMax';
+	const ITEMS								= 'items';
+	const TIMEZONE							= 'timeZone';
+	const DESCRIPTION						= 'description';
+	const COLORID							= 'colorId';
+	const ACCESSROLE						= 'accessRole';
+	const DEFAULTREMINDERS					= 'defaultReminders';
+	const METHOD 							= 'method';
+	const MINUTE							= 'minute';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/ 
-	protected $_calendarId				= NULL;
-	protected $_summary					= NULL;
-	protected $_timeZone				= NULL;
-	protected $_userId					= self::DEFAULT_USER;
-	protected $_settingId				= NULL;
-	protected $_kind					= NULL;
-	protected $_tag						= NULL;
-	protected $_description				= NULL;
-	protected $_colorId					= NULL;
-	protected $_accessRole				= NULL;
-	protected $_reminder				= array();
+	protected $_calendarId					= NULL;
+	protected $_summary						= NULL;
+	protected $_timeZone					= NULL;
+	protected $_userId						= self::DEFAULT_USER;
+	protected $_settingId					= NULL;
+	protected $_kind						= NULL;
+	protected $_tag							= NULL;
+	protected $_description					= NULL;
+	protected $_colorId						= NULL;
+	protected $_accessRole					= NULL;
+	protected $_reminder					= array();
 	
 	/* Private Properties
 	-------------------------------*/
@@ -185,11 +225,12 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 */
 	 public function setReminders($method, $minute) {
 		 Eden_Google_Error::i()
-		 		->argument(1, 'string')
-				->argument(1, 'string');
+			->argument(1, 'string')
+			->argument(1, 'string');
+		
 		 $this->_reminder = array(
-						'mothod'	=> $method,
-						'minuite'	=> $minute);
+						self::METHOD	=> $method,
+						self::MINUTE	=> $minute);
 		 
 		 return $this;
 	 }
@@ -213,6 +254,15 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	}
 	
 	/**
+	 * AccessControl
+	 *
+	 * @return Eden_Google_Calendar_Acl
+	 */
+	public function acl() {
+		return Eden_Google_Calendar_Acl::i($this->_token);
+	}
+	
+	/**
 	 * Returns Create Calendar
 	 *
 	 * @param string|null
@@ -228,7 +278,7 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 			$this->_summary = $summary;
 		}
 		
-		if($timeZone == false) { //get the default time zone
+		if($timeZone == false) { //get default time zone
 			$timeZone = date_default_timezone_get();
 		}
 		
@@ -236,8 +286,8 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 		
 		
 		$query = array(
-			'summary'		=> $this->_summary,
-			'timeZone'		=> $this->_timeZone);
+			self::SUMMARY		=> $this->_summary,
+			self::TIMEZONE		=> $this->_timeZone);
 		
 		return $this->_post(self::URL_CREATE_CALENDAR, $query);
 	}
@@ -245,7 +295,6 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	/**
 	 * delete secodary calendar
 	 *
-	 * 
 	 * @param string|null
 	 * @return array
 	 */
@@ -263,22 +312,22 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	/**
 	 * Update calendar
 	 *
-	 * 
+	 * TODO:fix
 	 * @param string|null
 	 * @return array
 	 */
 	public function update() {
 		$url = sprintf(self::URL_GET_CALENDAR, $this->_userId, $this->_calendarId);
 		$query = array(
-			'kind'				=> $this->_kind,
-			'etag'				=> $this->_tag,
-			'id'				=> $this->_calendarId,
-			'summary'			=> $this->_summary,
-			'descriptio'		=> $this->_description,
-			'timeZone'			=> $this->_timeZone,
-			'colorId'			=> $this->_colorId,
-			'accessRole'		=> $this->_accessRole,
-			'defaultReminders'	=> $this->_reminders);
+			self::KIND				=> $this->_kind,
+			self::ETAG				=> $this->_tag,
+			self::ID				=> $this->_calendarId,
+			self::SUMMARY			=> $this->_summary,
+			self::DESCRIPTION		=> $this->_description,
+			self::TIMEZONEE			=> $this->_timeZone,
+			self::COLORID			=> $this->_colorId,
+			self::ACCESSROLE		=> $this->_accessRole,
+			self::DEFAULTREMINDERS	=> $this->_reminders);
 		
 		return $this->_put($url, $query);
 	}
@@ -292,8 +341,9 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 */
 	public function getCalendar($calendarId = NULL, $userId = NULL) {
 		Eden_Google_Error::i()
-					->argument(1, 'string', 'null')
-					->argument(2, 'string', 'null');
+			->argument(1, 'string', 'null')
+			->argument(2, 'string', 'null');
+		
 		if(!$calendarId) {
 			$calendarId = self::DEFAULT_CALENDAR;
 		}
@@ -317,8 +367,9 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 */
 	public function addToList($calendarId = NULL, $userId = NULL) {
 		Eden_Google_Error::i()
-				->argument(1, 'string', 'null')
-				->argument(1, 'string', 'null');
+			->argument(1, 'string', 'null')
+			->argument(1, 'string', 'null');
+		
 		if($calendarId) {
 			$this->_calendarId = $calendarId;
 		}
@@ -328,7 +379,7 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 		}
 		
 		$url = sprintf(self::URL_CALENDAR_LIST, $this->_userId);
-		$query = array('id' => $this->_calendarId);
+		$query = array(self::ID => $this->_calendarId);
 		
 		return $this->_post($url, $query);
 	}
@@ -361,7 +412,6 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	/**
 	 * Retrieving available colors
 	 *
-	 * TODO: fix Limit Exceeded
 	 * @param string
 	 * @param string
 	 * @return array
@@ -373,7 +423,7 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	/**
 	 * Eden_Google_Calendar_Freebusy
 	 *
-	 * TODO: Test if its working
+	 * TODO: Test if it's working
 	 * @return Eden_Google_Calendar_Freebusy
 	 */
 	public function freeBusyTime() {
@@ -383,8 +433,8 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	/**
 	 * Retrieving settings
 	 *
-	 * @param string|bool
-	 * @param string
+	 * @param string|null
+	 * @param string|null
 	 * @return array
 	 */
 	public function getSettings($settingId = NULL, $userId = NULL) {
@@ -415,31 +465,25 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 * @param string|int
 	 * @return array
 	 */
-	public function getCalendarList($user = self::DEFAULT_USER) {
-		$url = sprintf(self::URL_CALENDAR_LIST, $user);
+	public function getList($user = self::DEFAULT_USER) {
 		//Argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
+		$url = sprintf(self::URL_CALENDAR_LIST, $user);
 		return $this->_getResponse($url);
 	}
 	
 	/**
 	 * clear all events in primary calendar
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function cleanPrimaryCalendar() {
-		$url = sprintf(self::URL_CLEAR_PRIMARY_CALENDAR, self::DEFAULT_CALENDAR);
+	public function clear($calendarId = self::DEFAULT_CALENDAR) {
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_calendarId = $calendarId;
+		$url = sprintf(self::URL_CLEAR_PRIMARY_CALENDAR, $this->_calendarId);
 		
-		return $this->_post($url, array());
-	}
-	
-	/**
-	 * AccessControl
-	 *
-	 * @return Eden_Google_Calendar_Control
-	 */
-	public function accessRule() {
-		return Eden_Google_Calendar_Rule::i($this->_token);
+		return $this->_post($url);
 	}
 	
 	/* Protected Methods

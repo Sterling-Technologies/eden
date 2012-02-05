@@ -12,18 +12,17 @@
  *
  * @package    Eden
  * @category   google
- * @author     Christian Blanquera cblanquera@openovate.com
+ * @author     Clark Galgo cgalgo@openovate.com
  */
-class Eden_Google_Docs extends Eden_Google_Base {
+class Eden_Google_Plus_People extends Eden_Google_Base {
 	/* Constants
 	-------------------------------*/
-	const SCOPE 		= 'https://docs.google.com/feeds/';
-	const DOCS_LIST		= 'https://docs.google.com/feeds/default/private/full';
-	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/ 
+	protected $_userId = NULL;
+	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -38,8 +37,8 @@ class Eden_Google_Docs extends Eden_Google_Base {
 		$this->_token 	= $token;
 	}
 	
-	public function getList() {
-			return $this->_getResponse(self::DOCS_LIST);
+	public function get($userId = NULL) {
+		return $this->_getResponse(Eden_Google_Plus::URL_USER_PROFILE.'/'.Eden_Google_Plus::DEFAULT_USERID, array());
 	}
 	
 	/* Public Methods

@@ -131,7 +131,6 @@ class Eden_Google_Oauth extends Eden_Class {
 	 * Returns the access token 
 	 * 
 	 * @param string
-	 * @param string
 	 * @return string
 	 */
 	public function getAccessToken($code) {
@@ -158,8 +157,6 @@ class Eden_Google_Oauth extends Eden_Class {
 	/**
 	 * Returns the API KEY 
 	 * 
-	 * @param string
-	 * @param string
 	 * @return string
 	 */
 	public function getApiKey() {

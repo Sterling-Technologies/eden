@@ -28,7 +28,8 @@ require_once dirname(__FILE__).'/google/calendar.php';
 class Eden_Google extends Eden_Class {
 	/* Constants
 	-------------------------------*/
-	const CALENDAR_SCOPE = 'https://www.googleapis.com/auth/calendar';
+	const CALENDAR_SCOPE	= 'https://www.googleapis.com/auth/calendar';
+	const PLUS_SCOPE		= 'https://www.googleapis.com/auth/plus.me';
 	
 	/* Public Properties
 	-------------------------------*/
@@ -72,6 +73,30 @@ class Eden_Google extends Eden_Class {
 		Eden_Google_Error::i()->argument(1, 'string');
 			
 		return Eden_Google_Calendar::i($token);
+	}
+	
+	/**
+	 * Returns Google Docs
+	 *
+	 * @param string
+	 * @return Eden_Google_Docs
+	 */
+	public function docs($token) {
+		Eden_Google_Error::i()->argument(1, 'string');
+			
+		return Eden_Google_Docs::i($token);
+	}
+	
+	/**
+	 * Returns Google Plus
+	 *
+	 * @param string
+	 * @return Eden_Google_Docs
+	 */
+	public function plus($token) {
+		Eden_Google_Error::i()->argument(1, 'string');
+			
+		return Eden_Google_Plus::i($token);
 	}
 	
 	/* Protected Methods

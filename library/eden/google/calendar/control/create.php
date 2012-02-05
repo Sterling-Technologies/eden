@@ -8,18 +8,15 @@
  */
 
 /**
- *  Google docs
+ *  Class for adding Event on Google Calendar
  *
  * @package    Eden
  * @category   google
- * @author     Christian Blanquera cblanquera@openovate.com
+ * @author     Clark Galgo cgalgo@openovate.com
  */
-class Eden_Google_Docs extends Eden_Google_Base {
+class Eden_Google_Calendar_Control_Create extends Eden_Google_Base {
 	/* Constants
-	-------------------------------*/
-	const SCOPE 		= 'https://docs.google.com/feeds/';
-	const DOCS_LIST		= 'https://docs.google.com/feeds/default/private/full';
-	
+	-------------------------------*/	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -35,15 +32,18 @@ class Eden_Google_Docs extends Eden_Google_Base {
 	public function __construct($token) {
 		//argument test
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_token 	= $token;
-	}
-	
-	public function getList() {
-			return $this->_getResponse(self::DOCS_LIST);
+		$this->_token 	= $token; 
 	}
 	
 	/* Public Methods
 	-------------------------------*/
+	public function setType($type) {
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_type = $type;
+		
+		return $this;
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods
