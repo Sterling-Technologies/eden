@@ -74,17 +74,6 @@ class Eden_Facebook extends Eden_Class {
 	}
 	
 	/**
-	 * Returns Facebook Post
-	 *
-	 * @param string
-	 * @return Eden_Facebook_Post
-	 */
-	public function post($token) {
-		Eden_Facebook_Error::i()->argument(1, 'string');
-		return Eden_Facebook_Post::i($token);
-	}
-	
-	/**
 	 * Returns Facebook FQL
 	 *
 	 * @param string
@@ -93,6 +82,42 @@ class Eden_Facebook extends Eden_Class {
 	public function fql($token) {
 		Eden_Facebook_Error::i()->argument(1, 'string');
 		return Eden_Facebook_Fql::i($token);
+	}
+	
+	
+	/**
+	 * Returns Facebook Post
+	 *
+	 * @param string
+	 * @param string
+	 * @return Eden_Facebook_Post
+	 */
+	public function post($token, $message) {
+		return Eden_Facebook_Post::i($token, $message);
+	}
+	
+	/**
+	 * Add an event
+	 *
+	 * @param string
+	 * @param string
+	 * @param string|int
+	 * @param string|int
+	 * @return Eden_Facebook_Event
+	 */
+	public function event($token, $name, $start, $end) {
+		return Eden_Facebook_Event::i($token, $name, $start, $end);
+	}
+	
+	/**
+	 * Add a link
+	 *
+	 * @param string
+	 * @param string
+	 * @return Eden_Facebook_Post
+	 */
+	public function link($token, $url) {
+		return Eden_Facebook_Link::i($token, $url);
 	}
 	
 	/**

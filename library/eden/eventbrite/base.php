@@ -29,10 +29,6 @@ class Eden_Eventbrite_Base extends Eden_Class {
 	-------------------------------*/
 	/* Magic
 	-------------------------------*/
-	public static function i() {
-		return self::_getMultiple(__CLASS__);
-	}
-	
 	public function __construct($user, $api) {
 		//argument test
 		Eden_Eventbrite_Error::i()

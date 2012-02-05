@@ -29,7 +29,7 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Route_Function',
 		'Eden_Route',
 		'Eden_When',
-		'Eden_Tool', 
+		'Eden_Debug', 
 		'Eden_Loader',
 		'Eden_Type',
 		'Eden_Type_Abstract',

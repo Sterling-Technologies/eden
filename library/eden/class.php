@@ -10,7 +10,7 @@
 require_once dirname(__FILE__).'/error.php';
 require_once dirname(__FILE__).'/route.php';
 
-require_once dirname(__FILE__).'/tool.php';
+require_once dirname(__FILE__).'/debug.php';
 require_once dirname(__FILE__).'/when.php';
 
 /**
@@ -26,15 +26,13 @@ require_once dirname(__FILE__).'/when.php';
 class Eden_Class {
 	/* Constants
 	-------------------------------*/
-	const INSTANCE = 'multiple';
+	const DEBUG		= 'DEBUG %s:';
+	const INSTANCE 	= 'multiple';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_event 		= NULL;
-	protected $_observers 	= array();
-	
 	/* Private Properties
 	-------------------------------*/
 	private static $_instances 	= array();
@@ -174,36 +172,43 @@ class Eden_Class {
 	/** 
 	 * Force outputs any class property
 	 *
-	 * @param string
+	 * @param string|null
+	 * @param string|null
 	 * @return this
 	 */
-	public function debug($variable = NULL) {
+	public function debug($variable = NULL, $next = NULL) {
 		//we are using tool in all cases
-		$tool 	= Eden_Tool::i();
 		$class 	= get_class($this);
 		
-		//if variale is null
+		//if variable is null
 		if(is_null($variable)) {
 			//output the class
-			$tool
-				->output('DEBUG '.$class.':')
+			Eden_Debug::i()
+				->output(sprintf(self::DEBUG, $class))
 				->output($this);
 				
 			return $this;
 		}
 		
+		//if variable is true
+		if($variable === true) {
+			//return whatever the next response is
+			//or return the next specified variable
+			return Eden_Debug::i()->next($this, $next);
+		}
+		
 		//if variable is not a string
 		if(!is_string($variable)) {
 			//soft output error
-			$tool->output(Eden_Error::DEBUG_NOT_STRING);
+			Eden_Debug::i()->output(Eden_Error::DEBUG_NOT_STRING);
 			return $this;
 		}
 		
 		//if variable is set
 		if(isset($this->$variable)) {
 			//output it
-			$tool
-				->output('DEBUG '.$class.'->'.$variable.':')
+			Eden_Debug::i()
+				->output(sprintf(self::DEBUG, $class.'->'.$variable))
 				->output($this->$variable);
 				
 			return $this;
@@ -214,16 +219,15 @@ class Eden_Class {
 		//if private variable is set
 		if(isset($this->$private)) {
 			//output it
-			$tool
-				->output('DEBUG '.$class.'->'.$private.':')
+			Eden_Debug::i()
+				->output(sprintf(self::DEBUG, $class.'->'.$private))
 				->output($this->$private);
 				
 			return $this;
 		}
 		
 		//soft output error
-		$tool->output(sprintf(Eden_Error::DEBUG_NOT_PROPERTY, 
-			$variable, $clas));
+		Eden_Debug::i()->output(sprintf(Eden_Error::DEBUG_NOT_PROPERTY, $variable, $clas));
 			
 		return $this;
 	}

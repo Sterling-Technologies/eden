@@ -8,21 +8,21 @@
  */
 
 /**
- * Create Facebook post
+ * Create Facebook link
  *
  * @package    Eden
  * @category   facebook
  * @author     Christian Blanquera cblanquera@openovate.com
  */
-class Eden_Facebook_Post extends Eden_Class {
+class Eden_Facebook_Link extends Eden_Class {
 	/* Constants
 	-------------------------------*/	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_id		= 'me';
-	protected $_post	= array();
+	protected $_id 		= 'me';
+	protected $_post 	= array();
 	
 	/* Private Properties
 	-------------------------------*/
@@ -32,40 +32,48 @@ class Eden_Facebook_Post extends Eden_Class {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	public function __construct($token, $message) {
+	public function __construct($token, $url) {
+		//Argument 1 must be a string
 		Eden_Facebook_Error::i()
 			->argument(1, 'string')
-			->argument(2, 'string');	
-			
+			->argument(2, 'url');	
+		
 		$this->_token 	= $token;
-		$this->_message = $message;
+		$this->_post 	= array('url' => $url);
 	}
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Set the profile id
+	 *
+	 * @param int|string
+	 * @return this
+	 */
 	public function setId($id) {
-		Eden_Facebook_Error::i()->argument(1, 'numeric');
+		//Argument 1 must be a string
+		Eden_Facebook_Error::i()->argument(1, 'int', 'string');
 		
 		$this->_id = $id;
 		return $this;
 	}
 	
 	/**
-	 * Sets the title of a post
+	 * Sets the link title
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setTitle($title){
+	public function setName($name){
 		//Argument 1 must be a string
 		Eden_Facebook_Error::i()->argument(1, 'string');
 		
-		$this->_post['title'] = $title;
+		$this->_post['name'] = $name;
 		return $this;
 	}
 	
 	/**
-	 * Sets media description
+	 * Sets description
 	 *
 	 * @param string
 	 * @return this
@@ -79,71 +87,43 @@ class Eden_Facebook_Post extends Eden_Class {
 	}
 	
 	/**
-	 * Sets anicon for this post
+	 * Sets a picture
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setIcon($url){
+	public function setPicture($picture){
 		//Argument 1 must be a string
 		Eden_Facebook_Error::i()->argument(1, 'url');
 		
-		$this->_post['icon'] = $url;
+		$this->_post['picture'] = $picture;
 		return $this;
 	}
 	
 	/**
-	 * sets the link to your post
+	 * Sets a picture caption
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setLink($url) {
+	public function setCaption($caption){
 		//Argument 1 must be a string
-		Eden_Facebook_Error::i()->argument(1, 'url');
+		Eden_Facebook_Error::i()->argument(1, 'string');
 		
-		$this->_post['link'] = $url;
+		$this->_post['caption'] = $caption;
 		return $this;
-	}
-	
-	/**
-	 * sets the picture to your post
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setPicture($url) {
-		//Argument 1 must be a string
-		Eden_Facebook_Error::i()->argument(1, 'url');
-		
-		$this->_post['picture'] = $url;
-		return $this;
-	}
-	
-	/**
-	 * sets the video to your post
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setVideo($url) {
-		//Argument 1 must be a string
-		Eden_Facebook_Error::i()->argument(1, 'url');
-		
-		$this->_post['video'] = $url;
-		return $this;	
 	}
 	
 	/**
 	 * sends the post to facebook
 	 *
-	 * @return this
+	 * @return int
 	 */
 	public function create() {
 		//get the facebook graph url
-		$url = Eden_Facebook_Graph::GRAPH_URL.$this->_id.'/feed';
-		$query = array('access_token' => $this->_token);
-		$url .= '?'.http_build_query($query);
+		$url 		= Eden_Facebook_Graph::GRAPH_URL.$this->_id.'/links';
+		$query 		= array('access_token' => $this->_token);
+		$url 		.= '?'.http_build_query($query);
 		
 		//send it into curl
 		$response = Eden_Curl::i()

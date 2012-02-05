@@ -35,100 +35,172 @@ class Eden_Eventbrite_Payment extends Eden_Eventbrite_Base {
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Set event ID
+	 * 
+	 * @param int
+	 * @return this
+	 */
 	public function setEvent($id) {
 		//Argument 1 must be int
 		Eden_Eventbrite_Error::i()->argument(1, 'int');
 		
-		$query['event_id'] = $id;
+		$this->_query['event_id'] = $id;
 		
 		return $this;
 	}
 	
+	/**
+	 * Accept PayPal
+	 * 
+	 * @return this
+	 */
 	public function acceptPaypal() {
-		$query['accept_paypal'] = 1;
+		$this->_query['accept_paypal'] = 1;
 		
 		return $this;
 	}
 	
+	/**
+	 * Accept PayPal Email
+	 * 
+	 * @param string
+	 * @return this
+	 */
 	public function setPaypalEmail($email) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
-		$query['paypal_email'] = $email;
+		$this->_query['paypal_email'] = $email;
 		
 		return $this;
 	}
 	
+	/**
+	 * Accept Google Checkout
+	 * 
+	 * @return this
+	 */
 	public function acceptGoogle() {
-		$query['accept_google'] = 1;
+		$this->_query['accept_google'] = 1;
 		
 		return $this;
 	}
 	
+	/**
+	 * Set your google merchant ID
+	 * 
+	 * @param string
+	 * @return this
+	 */
 	public function setGoogleMerchantId($id) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
-		$query['google_merchant_id'] = $id;
+		$this->_query['google_merchant_id'] = $id;
 		
 		return $this;
 	}
 	
+	/**
+	 * Set google merchant key
+	 * 
+	 * @param string
+	 * @return this
+	 */
 	public function setGoogleMerchantKey($key) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
-		$query['google_merchant_key'] = $key;
+		$this->_query['google_merchant_key'] = $key;
 		
 		return $this;
 	}
 	
+	/**
+	 * Accept check
+	 * 
+	 * @return this
+	 */
 	public function acceptCheck() {
-		$query['accept_check'] = 1;
+		$this->_query['accept_check'] = 1;
 		
 		return $this;
 	}
 	
-	public function setCheckInstructions($check) {
+	/**
+	 * Set check instructions
+	 * 
+	 * @param string
+	 * @return this
+	 */
+	public function setCheckInstructions($instructions) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
-		$query['insrtructions_check'] = $check;
+		$this->_query['insrtructions_check'] = $instructions;
 		
 		return $this;
 	}
 	
+	/**
+	 * Accept cash
+	 * 
+	 * @return this
+	 */
 	public function acceptCash() {
-		$query['accept_check'] = 1;
+		$this->_query['accept_check'] = 1;
 		
 		return $this;
 	}
 	
-	public function setCashInstructions($check) {
+	/**
+	 * Set cash instructions
+	 * 
+	 * @param string
+	 * @return this
+	 */
+	public function setCashInstructions($instructions) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
-		$query['insrtructions_cash'] = $check;
+		$this->_query['insrtructions_cash'] = $instructions;
 		
 		return $this;
 	}
 	
+	/**
+	 * Accept invoice
+	 * 
+	 * @return this
+	 */
 	public function acceptInovice() {
-		$query['accept_invoice'] = 1;
+		$this->_query['accept_invoice'] = 1;
 		
 		return $this;
 	}
 	
-	public function setInvoiceInstructions($check) {
+	/**
+	 * Set invoice instructions
+	 * 
+	 * @param string
+	 * @return this
+	 */
+	public function setInvoiceInstructions($instructions) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
-		$query['insrtructions_invoice'] = $check;
+		$this->_query['insrtructions_invoice'] = $instructions;
 		
 		return $this;
 	}
 	
-	public function send() {
+	/**
+	 * Send update
+	 * 
+	 * @return array
+	 */
+	public function update() {
 		return $this->_getJsonResponse($url, $this->_query);
 	}
 	

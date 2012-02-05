@@ -304,26 +304,7 @@ class Eden_Error extends Exception {
 		$argument 	= $trace['args'][$index];
 		
 		foreach($types as $i => $type) {
-			$method = 'is_'.$type;
-			if(function_exists($method) && $method($argument)) {
-				return $this;
-			}
-			
-			if(class_exists($type) && $argument instanceof $type) {
-				return $this;
-			}
-			
-			if($type == 'number' && is_numeric($argument)) {
-				return $this;
-			}
-			
-			if($type == 'int' && is_numeric($argument) 
-			&& strpos((string) $argument, '.') === false) {
-				return $this;
-			}
-			
-			if($type == 'float' && is_numeric($argument) 
-			&& strpos((string) $argument, '.') !== false) {
+			if($this->_isValid($type, $argument)) {
 				return $this;
 			}
 		}
@@ -334,20 +315,7 @@ class Eden_Error extends Exception {
 			$method = $trace['class'].'->'.$method;
 		}
 		
-		$type = 'unknown';
-		if(is_string($argument)) {
-			$type = "'".$argument."'";
-		} else if(is_numeric($argument)) {
-			$type = $argument;
-		} else if(is_array($argument)) {
-			$type = 'Array';
-		} else if(is_bool($argument)) {
-			$type = $argument ? 'true' : 'false';
-		} else if(is_object($argument)) {
-			$type = get_class($argument);
-		} else if(is_null($argument)) {
-			$type = 'null';
-		}
+		$type = $this->_getType($argument);
 		
 		$this->setMessage(self::INVALID_ARGUMENT)
 			->addVariable($index + 1)
@@ -388,46 +356,14 @@ class Eden_Error extends Exception {
 		$argument = $args[$index];
 
 		foreach($types as $i => $type) {
-			$method = 'is_'.$type;
-			if(function_exists($method) && $method($argument)) {
-				return $this;
-			}
-			
-			if(class_exists($type) && $argument instanceof $type) {
-				return $this;
-			}
-			
-			if($type == 'number' && is_numeric($argument)) {
-				return $this;
-			}
-			
-			if($type == 'int' && is_numeric($argument) 
-			&& strpos((string) $argument, '.') === false) {
-				return $this;
-			}
-			
-			if($type == 'float' && is_numeric($argument) 
-			&& strpos((string) $argument, '.') !== false) {
+			if($this->_isValid($type, $argument)) {
 				return $this;
 			}
 		}
 		
 		$method = $trace['class'].'->'.$method;
 		
-		$type = 'unknown';
-		if(is_string($argument)) {
-			$type = "'".$argument."'";
-		} else if(is_numeric($argument)) {
-			$type = $argument;
-		} else if(is_array($argument)) {
-			$type = 'Array';
-		} else if(is_bool($argument)) {
-			$type = $argument ? 'true' : 'false';
-		} else if(is_object($argument)) {
-			$type = get_class($argument);
-		} else if(is_null($argument)) {
-			$type = 'null';
-		}
+		$type = $this->_getType($argument);
 		
 		$this->setMessage(self::INVALID_ARGUMENT)
 			->addVariable($index + 1)
@@ -441,6 +377,129 @@ class Eden_Error extends Exception {
 	
 	/* Protected Methods
 	-------------------------------*/
+	protected function _isValid($type, $data) {
+		$type = $this->_getTypeName($type);
+		
+		$method = 'is_'.$type;
+		if(function_exists($method)) {
+			return $method($data);
+		}
+		
+		if(class_exists($type)) {
+			return $data instanceof $type;
+		}
+		
+		switch($type) {
+			case 'number':
+				return is_numeric($data);
+			case 'int':
+				return is_numeric($data) && strpos((string) $data, '.') === false;
+			case 'float':
+				return is_numeric($data) && strpos((string) $data, '.') !== false;
+			case 'file':
+				return is_string($data) && file_exists($data);
+			case 'folder':
+				return is_string($data) && is_dir($data);
+			case 'email':
+				return is_string($data) && $this->_isEmail($data);
+			case 'url':
+				return is_string($data) && $this->_isUrl($data);
+			case 'html':
+				return is_string($data) && $this->_isHtml($data);
+			case 'cc':
+				return (is_string($data) || is_int($data)) && $this->_isCreditCard($data);
+			case 'hex':
+				return is_string($data) && $this->_isHex($data);
+			default: break;
+		}
+		
+		return true;
+	}
+	
+	protected function _isEmail($value) {
+		return preg_match('/^(?:(?:(?:[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]|\x5c(?=[@,"\[\]'.
+		'\x5c\x00-\x20\x7f-\xff]))(?:[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]|(?<=\x5c)[@,"\[\]'.
+		'\x5c\x00-\x20\x7f-\xff]|\x5c(?=[@,"\[\]\x5c\x00-\x20\x7f-\xff])|\.(?=[^\.])){1,62'.
+		'}(?:[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]|(?<=\x5c)[@,"\[\]\x5c\x00-\x20\x7f-\xff])|'.
+		'[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]{1,2})|"(?:[^"]|(?<=\x5c)"){1,62}")@(?:(?!.{64})'.
+		'(?:[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.?|[a-zA-Z0-9]\.?)+\.(?:xn--[a-zA-Z0-9]'.
+		'+|[a-zA-Z]{2,6})|\[(?:[0-1]?\d?\d|2[0-4]\d|25[0-5])(?:\.(?:[0-1]?\d?\d|2[0-4]\d|25'.
+		'[0-5])){3}\])$/', $value);
+	}
+	
+	protected function _isUrl($value) {
+		return preg_match('/^(http|https|ftp):\/\/([A-Z0-9][A-Z0'.
+		'-9_-]*(?:.[A-Z0-9][A-Z0-9_-]*)+):?(d+)?\/?/i', $value);
+	}
+	
+	protected function _isHtml($value) {
+		return preg_match("/<\/?\w+((\s+(\w|\w[\w-]*\w)(\s*=\s*".
+		"(?:\".*?\"|'.*?'|[^'\">\s]+))?)+\s*|\s*)\/?>/i", $value);
+	}
+	
+	protected function _isCreditCard($value) {
+		return preg_match('/^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]'.
+		'{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-'.
+		'5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/', $value);
+	} 
+	
+	protected function _isHex($value) {
+		return preg_match("/^[0-9a-fA-F]{6}$/", $value);
+	}
+	
 	/* Private Methods
 	-------------------------------*/
+	private function _getType($data) {
+		if(is_string($data)) {
+			return "'".$data."'";
+		} 
+		
+		if(is_numeric($data)) {
+			return $data;
+		}
+		
+		if(is_array($data)) {
+			return 'Array';
+		}
+		
+		if(is_bool($data)) {
+			return $data ? 'true' : 'false';
+		}
+		
+		if(is_object($data)) {
+			return get_class($data);
+		}
+		
+		if(is_null($data)) {
+			return 'null';
+		}
+		
+		return 'unknown';
+	}
+	
+	private function _getTypeName($data) {
+		if(is_string($data)) {
+			return $data;
+		} 
+		
+		if(is_numeric($data)) {
+			return 'numeric';
+		}
+		
+		if(is_array($data)) {
+			return 'array';
+		}
+		
+		if(is_bool($data)) {
+			return 'bool';
+		}
+		
+		if(is_object($data)) {
+			return get_class($data);
+		}
+		
+		if(is_null($data)) {
+			return 'null';
+		}
+	}
 }

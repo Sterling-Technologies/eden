@@ -42,7 +42,7 @@ class Eden_When extends Eden_Class implements ArrayAccess, Iterator {
 	
 	public function __call($name, $args) {
 		if($this->_lines > 0 && $this->_increment == $this->_lines) {
-			return $this->endWhen();
+			return $this->_scope;
 		}
 		
 		$this->_increment++;
@@ -51,15 +51,6 @@ class Eden_When extends Eden_Class implements ArrayAccess, Iterator {
 	
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Returns the original class
-	 *
-	 * @param bool
-	 * @return this|Eden_Noop
-	 */
-	public function endWhen() {
-		return $this->_scope;
-	}
 	
 	/**
 	 * Rewinds the position

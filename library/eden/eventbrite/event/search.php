@@ -35,6 +35,12 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Filters by keywords
+	 *
+	 * @param string
+	 * @return this
+	 */
 	public function setKeywords($keywords) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
@@ -44,6 +50,12 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Filters by categories
+	 *
+	 * @param string|array
+	 * @return this
+	 */
 	public function setCategory($category) {
 		//Argument 1 must be a string or array
 		Eden_Eventbrite_Error::i()->argument(1, 'string', 'array');
@@ -57,6 +69,12 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Filters by address
+	 *
+	 * @param string
+	 * @return this
+	 */
 	public function setAddress($address) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
@@ -66,6 +84,12 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Filters by city
+	 *
+	 * @param string
+	 * @return this
+	 */
 	public function setCity($city) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
@@ -75,6 +99,12 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Filters by region
+	 *
+	 * @param string
+	 * @return this
+	 */
 	public function setRegion($region) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
@@ -84,6 +114,12 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Filters by postal/zip code
+	 *
+	 * @param string|int
+	 * @return this
+	 */
 	public function setPostal($postal) {
 		//Argument 1 must be a string or integer
 		Eden_Eventbrite_Error::i()->argument(1, 'string', 'int');
@@ -93,6 +129,12 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Filters by country
+	 *
+	 * @param string
+	 * @return this
+	 */
 	public function setCountry($country) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
@@ -102,6 +144,12 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Filters within a specified area
+	 *
+	 * @param int
+	 * @return this
+	 */
 	public function setWithin($within) {
 		//Argument 1 must be a int
 		Eden_Eventbrite_Error::i()->argument(1, 'int');
@@ -111,6 +159,12 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Filters within an area unit
+	 *
+	 * @param string
+	 * @return this
+	 */
 	public function setWithinUnit($unit) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
@@ -120,6 +174,12 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Filters by latitude
+	 *
+	 * @param float
+	 * @return this
+	 */
 	public function setLatitude($latitude) {
 		//Argument 1 must be a float
 		Eden_Eventbrite_Error::i()->argument(1, 'float');
@@ -129,6 +189,12 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Filters by longitude
+	 *
+	 * @param float
+	 * @return this
+	 */
 	public function setLongitude($longitude) {
 		//Argument 1 must be a float
 		Eden_Eventbrite_Error::i()->argument(1, 'float');
@@ -138,6 +204,18 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Filters by event date. Limit the list of results to a 
+	 * date range, specified by a label or by exact dates. 
+	 * Currently supported labels include: All, Future, 
+	 * Past, Today, Yesterday, Last Week, This Week, 
+	 * Next week, This Month, Next Month and months by 
+	 * name like October. Exact date ranges take the 
+	 * form 2008-04-25 2008-04-27.
+	 *
+	 * @param string
+	 * @return this
+	 */
 	public function setDate($date) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
@@ -147,6 +225,19 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Filters by when the event was created. Limit the 
+	 * list of results to a date range, specified by a 
+	 * label or by exact dates. Currently supported 
+	 * labels include: All, Future, Past, Today, 
+	 * Yesterday, Last Week, This Week, Next week, 
+	 * This Month, Next Month and months by name like 
+	 * October. Exact date ranges take the form 
+	 * 2008-04-25 2008-04-27.
+	 *
+	 * @param string
+	 * @return this
+	 */
 	public function setDateCreated($date) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
@@ -156,6 +247,19 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Filters by when the event was modified. Limit the 
+	 * list of results to a date range, specified by a 
+	 * label or by exact dates. Currently supported 
+	 * labels include: All, Future, Past, Today, 
+	 * Yesterday, Last Week, This Week, Next week, 
+	 * This Month, Next Month and months by name like 
+	 * October. Exact date ranges take the form 
+	 * 2008-04-25 2008-04-27.
+	 *
+	 * @param string
+	 * @return this
+	 */
 	public function setDateModified($date) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
@@ -165,6 +269,12 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Filters by organizer
+	 *
+	 * @param string
+	 * @return this
+	 */
 	public function setOrganizer($organizer) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
@@ -174,6 +284,12 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Set number of results
+	 *
+	 * @param int
+	 * @return this
+	 */
 	public function setMax($max) {
 		//Argument 1 must be a int
 		Eden_Eventbrite_Error::i()->argument(1, 'int');
@@ -187,23 +303,80 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Only return the number of results found
+	 *
+	 * @param string
+	 * @return this
+	 */
 	public function countOnly() {
 		$query['count_only'] = 'true';
 		
 		return $this;
 	}
 	
-	public function sort($column) {
+	/**
+	 * Sort by event id
+	 *
+	 * @return this
+	 */
+	public function sortById() {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
-		if(in_array($column, $this->_validSort)) {
-			$query['sort_by'] = $column;
-		}
+		$query['sort_by'] = 'id';
 		
 		return $this;
 	}
 	
+	/**
+	 * Sort by event date
+	 *
+	 * @return this
+	 */
+	public function sortByDate() {
+		//Argument 1 must be a string
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
+		
+		$query['sort_by'] = 'date';
+		
+		return $this;
+	}
+	
+	/**
+	 * Sort by event name
+	 *
+	 * @return this
+	 */
+	public function sortByName() {
+		//Argument 1 must be a string
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
+		
+		$query['sort_by'] = 'name';
+		
+		return $this;
+	}
+	
+	/**
+	 * Sort by city
+	 *
+	 * @return this
+	 */
+	public function sortByCity() {
+		//Argument 1 must be a string
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
+		
+		$query['sort_by'] = 'city';
+		
+		return $this;
+	}
+	
+	/**
+	 * Set pagination
+	 *
+	 * @param int
+	 * @return this
+	 */
 	public function setPage($page) {
 		//Argument 1 must be a int
 		Eden_Eventbrite_Error::i()->argument(1, 'int');
@@ -213,6 +386,12 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 
+	/**
+	 * Filter by event ids greater than specified
+	 *
+	 * @param int
+	 * @return this
+	 */
 	public function setSince($since) {
 		//Argument 1 must be a int
 		Eden_Eventbrite_Error::i()->argument(1, 'int');
@@ -222,6 +401,12 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Sets a tranking link
+	 *
+	 * @param string
+	 * @return this
+	 */
 	public function setTracking($tracking) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
@@ -231,6 +416,11 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Retrieves response
+	 *
+	 * @return array
+	 */
 	public function send() {
 		return $this->_getJsonResponse(self::URL, $this->_query);
 	}

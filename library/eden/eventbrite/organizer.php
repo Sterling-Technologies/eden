@@ -35,11 +35,18 @@ class Eden_Eventbrite_Event_Organizer extends Eden_Eventbrite_Base {
 	
 	/* Public Methods
 	-------------------------------*/
-	public function add($name, $description = NULL) {
+	/**
+	 * Creates an organizer
+	 * 
+	 * @param string
+	 * @param string|null
+	 * @return array
+	 */
+	public function create($name, $description = NULL) {
 		//Argument Test
 		Eden_Eventbrite_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
-			->argument(2, 'string');			//Argument 2 must be a string
+			->argument(2, 'string', 'null');	//Argument 2 must be a string
 		
 		$query = array(
 			'name' 			=> $name,
@@ -48,12 +55,21 @@ class Eden_Eventbrite_Event_Organizer extends Eden_Eventbrite_Base {
 		return $this->_getJsonResponse(self::URL_NEW, $query);
 	}
 	
+	
+	/**
+	 * Updates an organizer
+	 * 
+	 * @param int
+	 * @param string
+	 * @param string|null
+	 * @return array
+	 */
 	public function update($id, $name, $description = NULL) {
 		//Argument Test
 		Eden_Eventbrite_Error::i()
 			->argument(1, 'int')				//Argument 1 must be an integer
 			->argument(2, 'string')				//Argument 2 must be a string
-			->argument(3, 'string');			//Argument 3 must be a string
+			->argument(3, 'string', 'null');	//Argument 3 must be a string
 		
 		$query = array(
 			'id'			=> $id,
@@ -63,6 +79,12 @@ class Eden_Eventbrite_Event_Organizer extends Eden_Eventbrite_Base {
 		return $this->_getJsonResponse(self::URL_UPDATE, $query);
 	}
 	
+	/**
+	 * Returns all active organizer events
+	 * 
+	 * @param int
+	 * @return array
+	 */
 	public function getEvents($id) {
 		//Argument 1 must be an int
 		Eden_Eventbrite_Error::i()->argument(1, 'int');

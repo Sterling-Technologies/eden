@@ -193,8 +193,7 @@ class Eden extends Eden_Event {
 				->route('Folder', 		'Eden_Folder')
 				->route('Image', 		'Eden_Image')
 				->route('Mysql', 		'Eden_Mysql')
-				->route('Type', 		'Eden_Type')
-				->route('Validation', 	'Eden_Validation');
+				->route('Type', 		'Eden_Type');
 			
 			return $this;
 		}
@@ -221,10 +220,7 @@ class Eden extends Eden_Event {
 		$route = Eden_Route::i()->getMethod();
 		
 		if(is_bool($routes)) {
-			$route->route(NULL, 'output', 'Eden_Tool')
-				->route(NULL, 'uid', 'Eden_Tool')
-				->route(NULL, 'type', 'Eden_Tool');
-			
+			$route->route(NULL, 'output', 'Eden_Debug');
 			return $this;
 		}
 		

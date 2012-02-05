@@ -37,92 +37,120 @@ class Eden_Eventbrite_Venue extends Eden_Eventbrite_Base {
 	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
-	public function add($organizer, $venue, $country, $region, $address1 = NULL, $address2 = NULL, $city = NULL, $postal = NULL) {
+	/**
+	 * Set Address
+	 *
+	 * @param string
+	 * @param string|null
+	 * @return this
+	 */
+	public function setAddress($address, $address2 = NULL) {
+		Eden_Eventbrite_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string', 'null');
+			
+		$this->_query['address'] = $address;
+		
+		if(!is_null($address2)) {
+			$this->_query['address2'] = $address2;
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Set city
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCity($city) {
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
+		$this->_query['city'] = $city;
+		return $this;
+	}
+	
+	/**
+	 * Set postal
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setPostal($code) {
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
+		$this->_query['postal_code'] = $code;
+		return $this;
+	}
+	
+	/**
+	 * Set Country
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCountry($country) {
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
+		$this->_query['country_code'] = $country;
+		return $this;
+	}
+	
+	/**
+	 * Set Region
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setRegion($region) {
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
+		$this->_query['region'] = $region;
+		return $this;
+	}
+	
+	/**
+	 * Creates the venue
+	 *
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @return array
+	 */
+	public function create($organizer, $venue, $country, $region) {
 		//argument test
 		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')					//Argument must be a string
-			->argument(2, 'string')					//Argument msut be a string
-			->argument(3, 'string')					//Argument must be a string
-			->argument(4, 'string')					//Argument must be a string
-			->argument(5, 'string', 'null')			//Argument must be a string or null
-			->argument(6, 'string', 'null')			//Argument must be a string or null
-			->argument(7, 'string', 'null')			//Argument must be a string or null
-			->argument(8, 'string', 'null');		//Argument must be a string or null
+			->argument(1, 'string')		//Argument must be a string
+			->argument(2, 'string')		//Argument msut be a string
+			->argument(3, 'string')		//Argument must be a string
+			->argument(4, 'string');	//Argument must be a string
 			
+		
 		$query = array(
 			'organizer_id'  => $organizer,
 			'venue'			=> $venue,
 			'country'		=> $country_code,
 			'region'		=> $region);
 		
-		//if address1 is not empty
-		if(!is_null($address1)) {
-			//add it to our query
-			$query['adress'] = $address1;
-		}
-		
-		//if address2 is not empty
-		if(!is_null($address2)) {
-			//add it to our query
-			$query['adress_2'] = $address2;
-		}
-		
-		//if city is not empty
-		if(!is_null($city)) {
-			//add it to our query
-			$query['city'] = $city;
-		}
-		
-		//if postal is not empty
-		if(!is_null($postal)) {
-			//add it to our query
-			$query['postal_code'] = $postal;			
-		}
+		$query = array_merge($query, $this->_query);
 		
 		return $this->_getJsonResponse(self::URL_NEW, $query);	
 	}
 	
-	public function update($id, $venue, $address1 = NULL, $address2 = NULL, $city = NULL, $region = NULL, $postal = NULL, $country = NULL){
+	/**
+	 * Updates the venue
+	 *
+	 * @param int
+	 * @param string
+	 * @return array
+	 */
+	public function update($id, $venue) {
 		//argument test
 		Eden_Eventbrite_Error::i()
-			->argument(1, 'int')					//Argument must be a integer
-			->argument(2, 'string')					//Argument must be a string
-			->argument(3, 'string', 'null')			//Argument must be a string or null
-			->argument(4, 'string', 'null')			//Argument must be a string or null
-			->argument(5, 'string', 'null')			//Argument must be a string or null
-			->argument(6, 'string', 'null')			//Argument must be a string or null
-			->argument(7, 'string', 'null');		//Argument must be a string or null
+			->argument(1, 'int')		//Argument must be a integer
+			->argument(2, 'string');	//Argument must be a string
 			
-		$query = array(
-			'id' 	=> $id,
-			'venue' => $venue);
-		//if address1 is not empty
-		if(!is_null($address1)) {
-			//add it to our query
-			$query['adress'] = $address1;
-		}
-		//if address2 is not empty
-		if(!is_null($adress2)) {
-			//add it to our query
-			$query['adress_2'] = $address2;	
-		}
-		//if city is not empty
-		if(!is_null($city)) {
-			//add it to our query
-			$query['city'] = $city;
-		}
-		//if postal is not empty
-		if(!is_null($postal)) {
-			//add it to our query
-			$query['postal_code'] = $postal;	
-		}
+		$query = array('id' => $id, 'venue' => $venue);
+		$query = array_merge($query, $this->_query);
 		
-		//if country is not a empty
-		if(!is_null($country)) {
-			//add it to our query
-			$query['country_code'] = $country;
-		}
-	
 		return $this->getJsonResponse(self::URL_UPDATE, $query);	
 	}
 	

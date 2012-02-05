@@ -26,6 +26,21 @@ class Eden_Facebook_Graph extends Eden_Class {
 	-------------------------------*/
 	protected $_token = NULL;
 	
+	protected $_list = array(
+		'Friends',		'Home',
+		'Feed',			'Likes',
+		'Movies',		'Music',
+		'Books',		'Photos',
+		'Albums',		'Videos',
+		'VideoUploads', 'Events',
+		'Groups',		'Checkins');
+	
+	protected $_search = array(
+		'Posts',		'Users',
+		'Pages',		'Likes',
+		'Places',		'Events',
+		'Groups',		'Checkins');
+	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -38,34 +53,79 @@ class Eden_Facebook_Graph extends Eden_Class {
 		$this->_token = $token;
 	}
 	
+	public function __call($name, $args) {
+		//if the method starts with get
+		if(strpos($name, 'get') === 0 && in_array(substr($name, 3), $this->_list)) {
+			$key = preg_replace("/([A-Z])/", "/$1", $name);
+			//get rid of get
+			$key = strtolower(substr($key, 4));
+			
+			$id = 'me';
+			if(!empty($args)) {
+				$id = array_shift($args);
+			}
+			
+			array_unshift($args, $id, $key);
+			
+			return call_user_func_array(array($this, '_getList'), $args);
+		} else if(strpos($name, 'search') === 0 && in_array(substr($name, 6), $this->_search)) {
+
+			//get rid of get
+			$key = strtolower(substr($name, 6));
+			
+			array_unshift($args, $key);
+			
+			return call_user_func_array(array($this, '_search'), $args);
+		} 
+	}
+	
 	/* Public Methods
 	-------------------------------*/
+	/** 
+	 * Returns the detail of any object
+	 *
+	 * @param string|int
+	 * @param string|null
+	 * @param array
+	 * @param bool
+	 * @return array
+	 */
 	public function getObject($id = 'me', $connection = NULL, array $query = array(), $auth = true) {
+		//Argument test
+		Eden_Facebook_Error::i()
+			->argument(1, 'string', 'int')		//Argument 1 must be a string or int
+			->argument(2, 'string', 'null')		//Argument 2 must be a string or null
+			->argument(3, 'array')				//Argument 3 must be an array
+			->argument(4, 'bool');				//Argument 4 must be a boolean
+		
+		//if we have a connection	
 		if($connection) {
+			//prepend a slash
 			$connection = '/'.$connection;
 		}
 		
+		//for the url
 		$url = self::GRAPH_URL.$id.$connection;
 		
+		//if this requires authentication
 		if($auth) {
-			if(!$this->_token) {
-				Eden_Facebook_Error::i()
-					->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
-					->addVariable($url)
-					->trigger();
-			}
-			
+			//add the token
 			$query['access_token'] = $this->_token;
 		}
 		
+		//if we have a query
 		if(!empty($query)) {
+			//append it to the url
 			$url .= '?'.http_build_query($query);
 		}
 		
+		//call it
 		$object = $this->_call($url);
 		$object = json_decode($object, true);
 		
+		//if there is an error
 		if (isset($object['error'])) {
+			//throw it
 			Eden_Facebook_Error::i()
 				->setMessage(Eden_Facebook_Error::GRAPH_FAILED)
 				->addVariable($url)
@@ -77,417 +137,353 @@ class Eden_Facebook_Graph extends Eden_Class {
 		return $object;
 	}
 	
+	/**
+	 * Returns specific fields of an object
+	 *
+	 * @param string|int
+	 * @param string|array
+	 */
 	public function getFields($id = 'me', $fields) {
+		//Argument test
+		Eden_Facebook_Error::i()
+			->argument(1, 'string', 'int')		//Argument 1 must be a string or int
+			->argument(2, 'string', 'array');	//Argument 2 must be a string or array
+		
+		//if fields is an array	
 		if(is_array($fields)) {
+			//make it into a string
 			$fields = implode(',', $fields);
 		}
 		
+		//call it
 		return $this->getObject($id, NULL, array('fields' => $fields));
 	}
 	
+	/**
+	 * Returns the user info
+	 *
+	 * @return array
+	 */
 	public function getUser() {
 		return $this->getObject('me');
 	}
 	
+	/**
+	 * Returns the user's image
+	 *
+	 * @param string|int
+	 * @param bool
+	 * @return string
+	 */
 	public function getPictureUrl($id = 'me', $token = true) {
+		//Argument test
+		Eden_Facebook_Error::i()
+			->argument(1, 'string', 'int')		//Argument 1 must be a string or int
+			->argument(2, 'bool');				//Argument 2 must be a boolean
+		
+		//for the URL	
 		$url = self::GRAPH_URL.$id.'/picture';
 		
+		//if this needs a token
 		if($token) {
+			//add it
 			$url .= '?access_token='.$this->_token;
 		}
 		
 		return $url;
 	}
 	
+	/**
+	 * Returns the logout URL
+	 *
+	 * @param string
+	 * @return string
+	 */
 	public function getLogoutUrl($redirect) {
+		Eden_Facebook_Error::i()->argument(1, 'url');
 		return sprintf(self::LOGOUT_URL, urlencode($redirect), $this->_token);
 	}
 	
-	public function getFriends($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
-		return $this->_getList($id, 'friends', $start, $range, $since, $until, $dateFormat);
-	}
-	
-	public function getNews($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
-		return $this->_getList($id, 'home', $start, $range, $since, $until, $dateFormat);
-	}
-	
-	public function getWall($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
-		return $this->_getList($id, 'feed', $start, $range, $since, $until, $dateFormat);
-	}
-	
-	public function getLikes($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
-		return $this->_getList($id, 'likes', $start, $range, $since, $until, $dateFormat);
-	}
-	
-	public function getMovies($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
-		return $this->_getList($id, 'movies', $start, $range, $since, $until, $dateFormat);
-	}
-	
-	public function getMusic($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
-		return $this->_getList($id, 'music', $start, $range, $since, $until, $dateFormat);
-	}
-	
-	public function getBooks($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
-		return $this->_getList($id, 'books', $start, $range, $since, $until, $dateFormat);
-	}
-	
+	/**
+	 * Returns user permissions
+	 *
+	 * @param string|int
+	 * @return array
+	 */
 	public function getPermissions($id = 'me') {
+		Eden_Facebook_Error::i()->argument(1, 'string', 'int');
 		$permissions = $this->getObject($id, 'permissions');
 		return $permissions['data'];
 	}
 	
-	public function getPhotos($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
-		return $this->_getList($id, 'photos', $start, $range, $since, $until, $dateFormat);
+	/**
+	 * Returns Facebook Post
+	 *
+	 * @param string
+	 * @return Eden_Facebook_Post
+	 */
+	public function post($message) {
+		return Eden_Facebook_Post::i($this->_token, $message);
 	}
 	
-	public function getAlbums($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
-		return $this->_getList($id, 'albums', $start, $range, $since, $until, $dateFormat);
+	/**
+	 * Add an event
+	 *
+	 * @param string
+	 * @param string|int
+	 * @param string|int
+	 * @return Eden_Facebook_Event
+	 */
+	public function event($name, $start, $end) {
+		return Eden_Facebook_Event::i($this->_token, $name, $start, $end);
 	}
 	
-	public function getVideos($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
-		return $this->_getList($id, 'videos', $start, $range, $since, $until, $dateFormat);
-	}
-	
-	public function getVideoUploads($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
-		return $this->_getList($id, 'videos/uploaded', $start, $range, $since, $until, $dateFormat);
-	}
-	
-	public function getEvents($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
-		return $this->_getList($id, 'events', $start, $range, $since, $until, $dateFormat);
-	}
-	
-	public function getGroups($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
-		return $this->_getList($id, 'groups', $start, $range, $since, $until, $dateFormat);
-	}
-	
-	public function getCheckIns($id = 'me', $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
-		return $this->_getList($id, 'checkins', $start, $range, $since, $until, $dateFormat);
-	}
-	
-	public function searchPosts($query, $fields = NULL) {
-		return $this->_search('post', $query, $fields);
-	}
-	
-	public function searchUsers($query, $fields = NULL) {
-		return $this->_search('user', $query, $fields);
-	}
-	
-	public function searchPages($query, $fields = NULL) {
-		return $this->_search('page', $query, $fields);
-	}
-	
-	public function searchEvents($query, $fields = NULL) {
-		return $this->_search('event', $query, $fields);
-	}
-	
-	public function searchGroups($query, $fields = NULL) {
-		return $this->_search('group', $query, $fields);
-	}
-	
-	public function searchPlaces($query, $fields = NULL) {
-		return $this->_search('place', $query, $fields);
-	}
-	
-	public function searchCheckins($query, $fields = NULL) {
-		return $this->_search('checkin', $query, $fields);
-	}
-	
-	public function addPost($message, $id = 'me', $link = NULL, $picture = NULL, 
-		$video = NULL, $caption = NULL, $linkName = NULL, $linkDescription = NULL) {
-		
-		$url = self::GRAPH_URL.$id.'/feed';
-		
-		if(!$this->_token) {
-			Eden_Facebook_Error::i()
-				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
-				->addVariable($url)
-				->trigger();
-		}
-		
-		$post = array('message' => $message);
-		
-		if($link) {
-			$post['link'] = $link;
-		}
-		
-		if($picture) {
-			$post['picture'] = $picture;
-		}
-		
-		if($video) {
-			$post['source'] = $video;
-		}
-		
-		if($caption) {
-			$post['caption'] = $caption;
-		}
-		
-		if($linkName) {
-			$post['name'] = $linkName;
-		}
-		
-		if($linkDescription) {
-			$post['description'] = $linkDescription;
-		}
-		
-		$query = array('access_token' => $this->_token);
-		
-		if(!empty($query)) {
-			$url .= '?'.http_build_query($query);
-		}
-		
-		$results = json_decode($this->_call($url, $post), true);
-		return $results['id'];
+	/**
+	 * Add a link
+	 *
+	 * @param string
+	 * @return Eden_Facebook_Post
+	 */
+	public function link($url) {
+		return Eden_Facebook_Link::i($this->_token, $url);
 	}
 
+	/**
+	 * Adds a comment to a post
+	 *
+	 * @param int
+	 * @param string
+	 * @return int
+	 */
 	public function addComment($id, $message) {
-		$url = self::GRAPH_URL.$id.'/comments';
+		//Argument test
+		Eden_Facebook_Error::i()
+			->argument(1, 'int')		//Argument 1 must be an integer
+			->argument(2, 'string');	//Argument 2 must be a string
 		
-		if(!$this->_token) {
-			Eden_Facebook_Error::i()
-				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
-				->addVariable($url)
-				->trigger();
-		}
+		//form the URL	
+		$url 		= self::GRAPH_URL.$id.'/comments';
+		$post 		= array('message' => $message);
+		$query 		= array('access_token' => $this->_token);
+		$url 		.= '?'.http_build_query($query);
+		$results 	= json_decode($this->_call($url, $post), true);
 		
-		$post = array('message' => $message);
-		
-		$query = array('access_token' => $this->_token);
-		
-		if(!empty($query)) {
-			$url .= '?'.http_build_query($query);
-		}
-		
-		$results = json_decode($this->_call($url, $post), true);
 		return $results['id'];
 	}
 	
+	/**
+	 * Like an object
+	 *
+	 * @param int|string
+	 * @return array
+	 */
 	public function like($id) {
+		Eden_Facebook_Error::i()->argument(1, 'string', 'int');
 		$url = self::GRAPH_URL.$id.'/likes';
-		
-		if(!$this->_token) {
-			Eden_Facebook_Error::i()
-				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
-				->addVariable($url)
-				->trigger();
-		}
-		
 		$query = array('access_token' => $this->_token);
-		
-		if(!empty($query)) {
-			$url .= '?'.http_build_query($query);
-		}
+		$url .= '?'.http_build_query($query);
 		
 		$this->_call($url);
-		
 		return $this;
 	}
 	
-	public function addNote($id, $subject, $message) {
-		$url = self::GRAPH_URL.$id.'/notes';
+	/**
+	 * Add a note
+	 *
+	 * @param int|string
+	 * @param string
+	 * @param string
+	 * @return int
+	 */
+	public function createNote($id = 'me', $subject, $message) {
+		//Argument test
+		Eden_Facebook_Error::i()
+			->argument(1, 'string', 'int')	//Argument 1 must be a string or integer
+			->argument(2, 'string')			//Argument 2 must be a string
+			->argument(3, 'string');		//Argument 3 must be a string
 		
-		if(!$this->_token) {
-			Eden_Facebook_Error::i()
-				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
-				->addVariable($url)
-				->trigger();
-		}
+		//form the URL	
+		$url 		= self::GRAPH_URL.$id.'/notes';
+		$post 		= array('subject' => $subject, 'message' => $message);
+		$query 		= array('access_token' => $this->_token);
+		$url 		.= '?'.http_build_query($query);
+		$results 	= json_decode($this->_call($url, $post), true);
 		
-		$post = array('subject' => $subject, 'message' => $message);
-		
-		$query = array('access_token' => $this->_token);
-		
-		if(!empty($query)) {
-			$url .= '?'.http_build_query($query);
-		}
-		
-		$results = json_decode($this->_call($url, $post), true);
 		return $results['id'];
 	}
 	
-	public function addEvent($name, $start, $end) {
-		$url = self::GRAPH_URL.$id.'/events';
-		
-		if(!$this->_token) {
-			Eden_Facebook_Error::i()
-				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
-				->addVariable($url)
-				->trigger();
-		}
-		
-		$post = array('name'=>$name,'start_time'=>$start,'end_time'=>$end);
-		
-		$query = array('access_token' => $this->_token);
-		
-		if(!empty($query)) {
-			$url .= '?'.http_build_query($query);
-		}
-		
-		$results = json_decode($this->_call($url, $post), true);
-		return $results['id'];
-	}
-	
+	/**
+	 * Attend an event
+	 *
+	 * @param int
+	 * @return this
+	 */
 	public function attendEvent($id) {
-		$url = self::GRAPH_URL.$id.'/attending';
+		Eden_Facebook_Error::i()->argument(1, 'int');
 		
-		if(!$this->_token) {
-			Eden_Facebook_Error::i()
-				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
-				->addVariable($url)
-				->trigger();
-		}
-		
-		$query = array('access_token' => $this->_token);
-		
-		if(!empty($query)) {
-			$url .= '?'.http_build_query($query);
-		}
+		$url 	= self::GRAPH_URL.$id.'/attending';
+		$query 	= array('access_token' => $this->_token);
+		$url 	.= '?'.http_build_query($query);
 		
 		json_decode($this->_call($url), true);
 		
 		return $this;
 	}
 	
+	/**
+	 * Maybe an event
+	 *
+	 * @param int
+	 * @return this
+	 */
 	public function maybeEvent($id) {
-		$url = self::GRAPH_URL.$id.'/maybe';
+		Eden_Facebook_Error::i()->argument(1, 'int');
 		
-		if(!$this->_token) {
-			Eden_Facebook_Error::i()
-				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
-				->addVariable($url)
-				->trigger();
-		}
-		
-		$query = array('access_token' => $this->_token);
-		
-		if(!empty($query)) {
-			$url .= '?'.http_build_query($query);
-		}
+		$url 	= self::GRAPH_URL.$id.'/maybe';
+		$query 	= array('access_token' => $this->_token);
+		$url 	.= '?'.http_build_query($query);
 		
 		json_decode($this->_call($url), true);
 		
 		return $this;
 	}
 	
+	/**
+	 * Decline an event
+	 *
+	 * @param int
+	 * @return this
+	 */
 	public function declineEvent($id) {
-		$url = self::GRAPH_URL.$id.'/declined';
-		
-		if(!$this->_token) {
-			Eden_Facebook_Error::i()
-				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
-				->addVariable($url)
-				->trigger();
-		}
-		
-		$query = array('access_token' => $this->_token);
-		
-		if(!empty($query)) {
-			$url .= '?'.http_build_query($query);
-		}
+		Eden_Facebook_Error::i()->argument(1, 'int');
+		$url 	= self::GRAPH_URL.$id.'/declined';
+		$query 	= array('access_token' => $this->_token);
+		$url 	.= '?'.http_build_query($query);
 		
 		json_decode($this->_call($url), true);
 		
 		return $this;
 	}
 	
-	public function addLink($id, $url, $message = NULL, $name = NULL, $description = NULL, $picture = NULL, $caption = NULL) {
-		$url = self::GRAPH_URL.$id.'/links';
-		
-		if(!$this->_token) {
-			Eden_Facebook_Error::i()
-				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
-				->addVariable($url)
-				->trigger();
-		}
-		
-		$post = array('url' => $url);
-		
-		if($message) {
-			$post['message'] = $message;
-		}
-		
-		if($name) {
-			$post['name'] = $name;
-		}
-		
-		if($description) {
-			$post['description'] = $description;
-		}
-		
-		if($picture) {
-			$post['picture'] = $picture;
-		}
-		
-		if($caption) {
-			$post['caption'] = $caption;
-		}
-		
-		$query = array('access_token' => $this->_token);
-		
-		if(!empty($query)) {
-			$url .= '?'.http_build_query($query);
-		}
-		
-		$results = json_decode($this->_call($url, $post), true);
-		return $results['id'];
-	}
-	
+	/**
+	 * Add an album
+	 *
+	 * @param string|int
+	 * @param string
+	 * @param string
+	 * @return int
+	 */
 	public function addAlbum($id, $name, $message) {
-		$url = self::GRAPH_URL.$id.'/albums';
+		//Argument test
+		Eden_Facebook_Error::i()
+			->argument(1, 'string', 'int')		//Argument 1 must be a string or integer
+			->argument(2, 'string')				//Argument 2 must be a string
+			->argument(3, 'string');			//Argument 3 must be a string
 		
-		if(!$this->_token) {
-			Eden_Facebook_Error::i()
-				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
-				->addVariable($url)
-				->trigger();
-		}
+		//form the URL
+		$url 		= self::GRAPH_URL.$id.'/albums';
+		$post 		= array('name'=>$name,'message'=>$message);
+		$query 		= array('access_token' => $this->_token);
+		$url 		.= '?'.http_build_query($query);
+		$results 	= json_decode($this->_call($url, $post), true);
 		
-		$post = array('name'=>$name,'message'=>$message);
-		
-		$query = array('access_token' => $this->_token);
-		
-		if(!empty($query)) {
-			$url .= '?'.http_build_query($query);
-		}
-		
-		$results = json_decode($this->_call($url, $post), true);
 		return $results['id'];
 	}
 	
-	public function addPhoto($id, $data) {}
-	
-	public function addCheckin($id, $message, $coordinates, $place, $tags) {
-		$url = self::GRAPH_URL.$id.'/checkins';
+	/**
+	 * Uploads a file of your album
+	 *
+	 * @param int|string
+	 * @param string
+	 * @param string|null
+	 * @return id
+	 */
+	public function uploadPhoto($albumId, $file, $message = NULL) {
+		//Argument test
+		Eden_Facebook_Error::i()
+			->argument(1, 'string', 'int')		//Argument 1 must be a string or integer
+			->argument(2, 'file')				//Argument 2 must be a file
+			->argument(3, 'string', 'null');	//Argument 3 must be a string or null
+			
+		//form the URL
+		$url 		= self::GRAPH_URL.$albumId.'/photos';
+		$post 		= array('source' => '@'.$file);
+		$query 		= array('access_token' => $this->_token);
 		
-		if(!$this->_token) {
-			Eden_Facebook_Error::i()
-				->setMessage(Eden_Facebook_Error::REQUIRES_AUTH)
-				->addVariable($url)
-				->trigger();
-		}
-		
-		$post = array('message' => $message);
-		
+		//if there is a message
 		if($message) {
 			$post['message'] = $message;
 		}
 		
-		if($coordinates) {
-			$post['coordinates'] = $coordinates;
+		$url .= '?'.http_build_query($query);
+		
+		//send it off
+		$results = Eden_Curl::i()
+			->setUrl($url)
+			->setConnectTimeout(10)
+			->setFollowLocation(true)
+			->setTimeout(60)
+			->verifyPeer(false)
+			->setUserAgent(Eden_Facebook_Auth::USER_AGENT)
+			->setHeaders('Expect')
+			->when(!empty($post), 2)
+			->setPost(true)
+			->setPostFields($post)
+			->getJsonResponse();
+		
+		return $results['id'];
+	}
+	
+	/**
+	 * Check into a place
+	 *
+	 * @param string|int
+	 * @param string
+	 * @param float
+	 * @param float
+	 * @param int
+	 * @param string|array
+	 * @return int
+	 */
+	public function checkin($id, $message, $latitude, $longitude, $place, $tags) {
+		//Argument test
+		Eden_Facebook_Error::i()
+			->argument(1, 'string', 'int')		//Argument 1 must be a string or integer
+			->argument(2, 'string')				//Argument 2 must be a string
+			->argument(3, 'float')				//Argument 3 must be a string
+			->argument(4, 'float')				//Argument 4 must be a string
+			->argument(5, 'int')				//Argument 5 must be a string
+			->argument(6, 'string', 'array');	//Argument 6 must be a string
+			
+		$url 	= self::GRAPH_URL.$id.'/checkins';
+		$post 	= array('message' => $message);
+		$query 	= array('access_token' => $this->_token);
+		$url 	.= '?'.http_build_query($query);
+			
+		//if message
+		if($message) {
+			//add it
+			$post['message'] = $message;
 		}
 		
+		//if coords
+		if($latitude && $longitute) {
+			//add it
+			$post['coordinates'] = json_encode(array(
+				'latitude' 	=> $latitude,
+				'longitude' => $longitude));
+		}
+		
+		//if place
 		if($place) {
+			//add it
 			$post['place'] = $place;
 		}
 		
+		//if tags
 		if($tags) {
+			//add it
 			$post['tags'] = $tags;
-		}
-		
-		$query = array('access_token' => $this->_token);
-		
-		if(!empty($query)) {
-			$url .= '?'.http_build_query($query);
 		}
 		
 		$results = json_decode($this->_call($url, $post), true);
@@ -497,9 +493,6 @@ class Eden_Facebook_Graph extends Eden_Class {
 	/* Protected Methods
 	-------------------------------*/
 	protected function _call($url, array $post = array()) {
-		//Argument 1 must be a string
-		Eden_Facebook_Error::i()->argument(1, 'string');
-		
 		return Eden_Curl::i()
 			->setUrl($url)
 			->setConnectTimeout(10)
@@ -515,7 +508,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		
 	}
 	
-	protected function _getList($id, $connection, $start, $range, $since = 0, $until = 0, $dateFormat = NULL) {
+	protected function _getList($id, $connection, $start = 0, $range = 0, $since = 0, $until = 0, $dateFormat = NULL) {
 		$query = array();
 		if($start > 0) {
 			$query['offset'] = $start;
@@ -546,7 +539,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		return $list['data'];
 	}
 	
-	protected function _search($connection, $query, $fields) {
+	protected function _search($connection, $query, $fields = NULL) {
 		$query = array('type' => $connection, 'q' => $query);
 		
 		if(is_array($fields)) {

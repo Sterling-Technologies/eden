@@ -36,6 +36,12 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Set event ID
+	 * 
+	 * @param int
+	 * @return this
+	 */
 	public function setEvent($id) {
 		//Argument 1 must be numeric
 		Eden_Eventbrite_Error::i()->argument(1, 'numeric');
@@ -44,6 +50,12 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Set ticket name
+	 * 
+	 * @param string
+	 * @return this
+	 */
 	public function setName($name) {
 		//Argument 1 must be numeric
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
@@ -52,6 +64,12 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Set price
+	 * 
+	 * @param float
+	 * @return this
+	 */
 	public function setPrice($price) {
 		//Argument 1 must be float
 		Eden_Eventbrite_Error::i()->argument(1, 'float');
@@ -60,6 +78,12 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Set quantity
+	 * 
+	 * @param int
+	 * @return this
+	 */
 	public function setQuantity($quantity) {
 		//Argument 1 must be an integer
 		Eden_Eventbrite_Error::i()->argument(1, 'int');
@@ -68,12 +92,23 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Accept donations
+	 * 
+	 * @return this
+	 */
 	public function setDonation() {
 		$this->_query['is_donation'] = 1;
 		
 		return $this;
 	}
 	
+	/**
+	 * Set the description
+	 * 
+	 * @param string
+	 * @return this
+	 */
 	public function setDescription($description) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
@@ -82,44 +117,65 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Set the start time
+	 *
+	 * @param int|string
+	 * @return this
+	 */
 	public function setStart($start) {
-		//Argument 1 must be an integer or string
-		Eden_Eventbrite_Error::i()->argument(1, 'int', 'string');
-		//if start is a string
+		//Argument 1 must be a string
+		Eden_Eventbrite_Error::i()->argument(1, 'string', 'int');
+		
 		if(is_string($start)) {
-			//then convert it to unixcode
 			$start = strtotime($start);
 		}
-	
+		
 		$start = date('Y-m-d H:i:s', $start);
-		//add it to our query
-		$query['start_sales'] = $start;
+		
+		$this->_query['start_sales'] = $start;
 		
 		return $this;
 	}
 	
+	/**
+	 * Set the end time
+	 *
+	 * @param string|int
+	 * @return this
+	 */
 	public function setEnd($end) {
-		//Argument 1 must be an integer or string
-		Eden_Eventbrite_Error::i()->argument(1, 'int', 'string');
-		//if start is a string
-		if(is_string($start)) {
-			//then convert it to unixcode
+		//Argument 1 must be a string
+		Eden_Eventbrite_Error::i()->argument(1, 'string', 'int');
+		
+		if(is_string($end)) {
 			$end = strtotime($end);
 		}
-	
+		
 		$end = date('Y-m-d H:i:s', $end);
-		//add it to our query
-		$query['end_sales'] = $end;
+		
+		$this->_query['end_sales'] = $end;
 		
 		return $this;
 	}
 	
+	/**
+	 * Include Eventbrite's fee on top of the ticket fee
+	 *
+	 * @return this
+	 */
 	public function setFee() {
 		$this->_query['include_fee'] = 1;
 		
 		return $this;
 	}
 	
+	/**
+	 * Set the minimum number of tickets per order
+	 *
+	 * @param int
+	 * @return this
+	 */
 	public function setMin($quantity) {
 		//Argument 1 must be an integer
 		Eden_Eventbrite_Error::i()->argument(1, 'int');
@@ -131,6 +187,12 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * Set the maximum number of tickets per order
+	 *
+	 * @param int
+	 * @return this
+	 */
 	public function setMax($max) {
 		//Argument 1 must be an integer
 		Eden_Eventbrite_Error::i()->argument(1, 'int');
@@ -143,6 +205,12 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
+	/**
+	 * If true, will hide the ticket type
+	 *
+	 * @param bool
+	 * @return this
+	 */
 	public function setHide($hide) {
 		//Argument 1 must be a boolean
 		Eden_Eventbrite_Error::i()->argument(1, 'bool');
@@ -159,7 +227,12 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 		return $this;
 	}
 	
-	public function add() {
+	/**
+	 * Creates the ticket
+	 *
+	 * @return array
+	 */
+	public function create() {
 		if(!isset($this->_query['event_id'])) {
 			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::EVENT_NOT_SET)->trigger();
 		}
@@ -167,7 +240,6 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 		if(!isset($this->_query['name'])) {
 			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::NAME_NOT_SET)->trigger();
 		}
-		
 		
 		if(!isset($this->_query['price'])) {
 			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::PRICE_NOT_SET)->trigger();
@@ -185,6 +257,12 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 		return $this->_getJsonResponse(self::URL_NEW, $query);
 	}
 	
+	
+	/**
+	 * Updates the ticket
+	 *
+	 * @return array
+	 */
 	public function update() {
 		if(!isset($this->_query['event_id'])) {
 			Eden_Eventbrite_Error::i()->setMessage(Eden_Eventbrite_Error::EVENT_NOT_SET)->trigger();

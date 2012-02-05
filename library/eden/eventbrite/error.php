@@ -48,6 +48,14 @@ class Eden_Eventbrite_Error extends Eden_Error {
 	-------------------------------*/
 	/* Protected Methods
 	-------------------------------*/
+	protected function _isValid($type, $data) {
+		if($type == 'gmt') {
+			return preg_match('/^GMT(\-|\+)[0-9]{2,4}$/', $data); 
+		}
+		
+		return parent::_isValid($type, $data);
+	}
+	
 	/* Private Methods
 	-------------------------------*/
 }

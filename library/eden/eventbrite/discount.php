@@ -36,21 +36,94 @@ class Eden_Eventbrite_Discount extends Eden_Eventbrite_Base {
 	
 	/* Public Methods
 	-------------------------------*/
-	public function add($event, $code, $amount, $percent, $tickets, $quantity, $start, $end) {
-		//Argument Test
-		Eden_Eventbrite_Error::i()
-			->argument(1, 'int')				//Argument 1 must be an integer
-			->argument(2, 'string')				//Argument 2 must be a string
-			->argument(3, 'float')				//Argument 3 must be a float
-			->argument(4, 'float')				//Argument 4 must be a float
-			->argument(5, 'string', 'array')	//Argument 5 must be a string or array
-			->argument(6, 'int')				//Argument 6 must be an array
-			->argument(7, 'string')				//Argument 7 must be a string
-			->argument(8, 'string');			//Argument 8 must be a string
+	/**
+	 * Sets the discount code
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCode($code) {
+		//Argument 1 must be int
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
+		
+		$this->_query['code'] = $code;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets the discount amount
+	 *
+	 * @param float|int
+	 * @return this
+	 */
+	public function setAmount($amount) {
+		//Argument 1 must be int
+		Eden_Eventbrite_Error::i()->argument(1, 'float', 'int');
+		
+		$this->_query['amount_off'] = $amount;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets the discount percent 
+	 *
+	 * @param float|int
+	 * @return this
+	 */
+	public function setPercent($percent) {
+		//Argument 1 must be int
+		Eden_Eventbrite_Error::i()->argument(1, 'int', 'float');
+		
+		$this->_query['percent_off'] = $percent;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set ticket ID or a list of ticket IDs 
+	 *
+	 * @param string|array
+	 * @return this
+	 */
+	public function setTickets($tickets) {
+		//Argument 1 must be int
+		Eden_Eventbrite_Error::i()->argument(1, 'string', 'array');
 		
 		if(is_array($tickets)) {
 			$tickets = implode(',', $tickets);
 		}
+		
+		$this->_query['tickets'] = $tickets;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set quantity 
+	 *
+	 * @param int
+	 * @return this
+	 */
+	public function setQuantity($quantity) {
+		//Argument 1 must be int
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
+		
+		$this->_query['quantity_available'] = $quantity;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set the start time
+	 *
+	 * @param int|string
+	 * @return this
+	 */
+	public function setStart($start) {
+		//Argument 1 must be a string
+		Eden_Eventbrite_Error::i()->argument(1, 'string', 'int');
 		
 		if(is_string($start)) {
 			$start = strtotime($start);
@@ -58,63 +131,60 @@ class Eden_Eventbrite_Discount extends Eden_Eventbrite_Base {
 		
 		$start = date('Y-m-d H:i:s', $start);
 		
+		$this->_query['start_date'] = $start;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set the end time
+	 *
+	 * @param string|int
+	 * @return this
+	 */
+	public function setEnd($end) {
+		//Argument 1 must be a string
+		Eden_Eventbrite_Error::i()->argument(1, 'string', 'int');
+		
 		if(is_string($end)) {
 			$end = strtotime($end);
 		}
 		
 		$end = date('Y-m-d H:i:s', $end);
 		
-		$query = array(
-			'event_id' 				=> $event,
-			'code'					=> $code,
-			'amount_off'			=> $amount,
-			'percent_off'			=> $percent,
-			'tickets'				=> $tickets,
-			'quantity_available'	=> $quantity,
-			'start_date'			=> $start,
-			'end_date'				=> $end);
+		$this->_query['end_date'] = $end;
 		
+		return $this;
+	}
+	
+	/**
+	 * Creates the discount
+	 * 
+	 * @param int the event id
+	 * @return array
+	 */
+	public function create($event) {
+		//Argument 1 must be int
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
+		
+		$query = $this->_query;
+		$query['event_id'] = $event;
 		return $this->_getJsonResponse(self::URL_NEW, $query);
 	}
 	
-	public function update($id, $code, $amount, $percent, $tickets, $quantity, $start, $end) {
-		//Argument Test
-		Eden_Eventbrite_Error::i()
-			->argument(1, 'int')				//Argument 1 must be an integer
-			->argument(2, 'string')				//Argument 2 must be a string
-			->argument(3, 'float')				//Argument 3 must be a float
-			->argument(4, 'float')				//Argument 4 must be a float
-			->argument(5, 'string', 'array')	//Argument 5 must be a string or array
-			->argument(6, 'int')				//Argument 6 must be an array
-			->argument(7, 'string')				//Argument 7 must be a string
-			->argument(8, 'string');			//Argument 8 must be a string
+	
+	/**
+	 * Creates the discount
+	 * 
+	 * @param int the discount id
+	 * @return array
+	 */
+	public function update($id) {
+		//Argument 1 must be int
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
 		
-		if(is_array($tickets)) {
-			$tickets = implode(',', $tickets);
-		}
-		
-		if(is_string($start)) {
-			$start = strtotime($start);
-		}
-		
-		$start = date('Y-m-d H:i:s', $start);
-		
-		if(is_string($end)) {
-			$end = strtotime($end);
-		}
-		
-		$end = date('Y-m-d H:i:s', $end);
-		
-		$query = array(
-			'id' 					=> $id,
-			'code'					=> $code,
-			'amount_off'			=> $amount,
-			'percent_off'			=> $percent,
-			'tickets'				=> $tickets,
-			'quantity_available'	=> $quantity,
-			'start_date'			=> $start,
-			'end_date'				=> $end);
-		
+		$query = $this->_query;
+		$query['id'] = $id;
 		return $this->_getJsonResponse(self::URL_UPDATE, $query);
 	}
 	

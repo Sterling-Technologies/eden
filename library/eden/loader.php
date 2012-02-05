@@ -47,6 +47,18 @@ class Eden_Loader extends Eden_Class {
 		}
 	}
 	
+	public function __call($name, $args) {
+		//if the method name starts with a capital letter
+		//most likely they want a class
+		//since we are in the loader class
+		//we might as well try to load it
+		if(preg_match("/^[A-Z]/", $name)) {
+			$this->load($name);
+		}
+		
+		return parent::__call($name, $args);
+	}
+	
 	/* Public Methods
 	-------------------------------*/
 	/**

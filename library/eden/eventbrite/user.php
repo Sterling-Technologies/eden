@@ -34,6 +34,7 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 	protected static $_validDisplays = array('description', 'venue', 'logo', 'style', 'organizer', 'tickets');
 	
 	protected static $_validStatus = array('live', 'started', 'ended');
+	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -44,28 +45,40 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 	
 	/* Public Methods
 	-------------------------------*/
-	public function getDetail($id = NULL, $email = NULL) {
-		//argument test
-		Eden_Eventbrite_Error::i()
-			->argument(1, 'int', 'null')				//Argument 1 must be a integer or null
-			->argument(2, 'string', 'null');			//Argument 2 must be a string or null		
+	/**
+	 * Returns detail about the user
+	 *
+	 * @param int|string|null
+	 * @return array
+	 */
+	public function getDetail($id = NULL) {
+		//Argument 1 must be a integer, string or null
+		Eden_Eventbrite_Error::i()->argument(1, 'int', 'string', 'null');
 		
 		$query = array();
 		//if it is not empty
-		if(!is_null($id)) {
+		if(is_int($id)) {
 			//lets put it in query
 			$query['user_id'] = $id;	
-		}
-		//if it is not empty		
-		if(!is_null($email)) {
+		//is it a string?
+		} else if(is_string($id)) {
 			//add it to query
-			$query['email']	= $email;
+			$query['email']	= $id;
 		}
 		
 		return $this->_getJsonResponse(self::URL_GET, $query);
 			
 	}
 	
+	/**
+	 * Returns a user's event list
+	 *
+	 * @param string|null
+	 * @param string|array|null
+	 * @param string|null
+	 * @param string|null
+	 * @return array
+	 */
 	public function getEvents($user = NULL, $hide = NULL, $status = NULL, $order = NULL) {
 			//argument test		
 		Eden_Eventbrite_Error::i()
@@ -141,7 +154,13 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 		return $this->_getJsonResponse(self::URL_NEW, $query);										
 	}
 										
-	
+	/**
+	 * Returns a user's oraganizations
+	 *
+	 * @param string
+	 * @param string
+	 * @return array
+	 */
 	public function getOrganizers($user, $pass) {
 		//argument test
 		Eden_Eventbrite_Error::i()
@@ -156,23 +175,31 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 		
 	}
 	
-	public function getTicket(){
+	/**
+	 * Returns a user's ticket history
+	 *
+	 * @return array
+	 */
+	public function getTickets(){
 		return $this->_getJsonResponse(self::URL_LIST_TICKETS);
 	}
 	
-	public function getVenue($user, $pass) {
-		//argument test
-		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')				//Argument 1 must be a string
-			->argument(2, 'string');			//Argument 2 must be a string
-		
-		$query = array(
-			'user'		=> $user,
-			'password'	=> $pass);
-		
-		return $this->_getJsonResponse(self::URL_LIST_VENUES, $query);
+	/**
+	 * Returns a user's venue list they have used before
+	 *
+	 * @return array
+	 */
+	public function getVenues() {
+		return $this->_getJsonResponse(self::URL_LIST_VENUES);
 	}
 	
+	/**
+	 * Create a new user
+	 *
+	 * @param string
+	 * @param string
+	 * @return array
+	 */
 	public function add($user, $pass) {
 		//argument test
 		$error = Eden_Eventbrite_Error::i()
@@ -189,7 +216,14 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 		return $this->_getJsonResponse(self::URL_NEW, $query);
 
 	}
-
+	
+	/**
+	 * Updates the current user
+	 *
+	 * @param string|null
+	 * @param string|null
+	 * @return array
+	 */
 	public function update($email = NULL, $pass = NULL) {
 		//argument test
 		Eden_Eventbrite_Error::i()
