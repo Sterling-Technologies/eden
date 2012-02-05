@@ -12,6 +12,8 @@ require_once dirname(__FILE__).'/facebook/error.php';
 require_once dirname(__FILE__).'/facebook/auth.php';
 require_once dirname(__FILE__).'/facebook/graph.php';
 require_once dirname(__FILE__).'/facebook/post.php';
+require_once dirname(__FILE__).'/facebook/event.php';
+require_once dirname(__FILE__).'/facebook/link.php';
 require_once dirname(__FILE__).'/facebook/select.php';
 require_once dirname(__FILE__).'/facebook/search.php';
 require_once dirname(__FILE__).'/facebook/fql.php';

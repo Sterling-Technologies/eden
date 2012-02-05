@@ -11,8 +11,8 @@ class Front_Block_Log extends Eden_Block {
 	/* Constants
 	-------------------------------*/
 	const REPO_URL 	= 'http://svn.openovate.com/edenv2/trunk/library';
-	const REPO_USER = 'cblanquera';
-	const REPO_PASS = 'gphead';
+	const REPO_USER = 'USER';
+	const REPO_PASS = 'PASS';
 	const REPO_LOG	= 'svn log --username %s --password %s --xml --non-interactive --verbose %s 2>&1';
 	
 	/* Public Properties
@@ -49,18 +49,18 @@ class Front_Block_Log extends Eden_Block {
 	 * @return array
 	 */
 	public function getVariables() {
-		exec(sprintf(self::REPO_LOG, self::REPO_USER, self::REPO_PASS, self::REPO_URL.$this->_path), $log);
-		$log = implode("\n", $log);
-		$log = simplexml_load_string($log);
+		//exec(sprintf(self::REPO_LOG, self::REPO_USER, self::REPO_PASS, self::REPO_URL.$this->_path), $log);
+		//$log = implode("\n", $log);
+		//$log = simplexml_load_string($log);
 		$history = array();
-		foreach($log->logentry as $entry) {
+		/*foreach($log->logentry as $entry) {
 			$history[] = array(
 				'revision'	=> $entry->attributes()->revision,
 				'author' 	=> $entry->author,
 				'date'		=> date('F d, Y g:iA', strtotime($entry->date)),
 				'message' 	=> $entry->msg
 			);
-		}
+		}*/
 		
 		return array('history' => $history);
 	}
