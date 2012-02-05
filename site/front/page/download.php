@@ -54,19 +54,15 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Registry',
 		'Eden_Image',
 		'Eden_Unit',
-		'Eden_Timezone');
+		'Eden_Timezone',
+		//'Eden_Country_Error',
+		//'Eden_Country_Australia',
+		//'Eden_Country_Mexico',
+		//'Eden_Country_Unitedstates',
+		//'Eden_Country_Unitedkingdom',
+		//'Eden_Country',
+		'Eden_Language');
 	
-	protected $_i18n = array(
-		'Eden_Country_Error',
-		'Eden_Country_Australia',
-		'Eden_Country_Mexico',
-		'Eden_Country_Unitedstates',
-		'Eden_Country_Unitedkingdom',
-		'Eden_Country',
-		
-		'Eden_Language'
-	);
-
 	protected $_mysql = array(
 		'Eden_Sql_Error',
 		'Eden_Mysql_Error',

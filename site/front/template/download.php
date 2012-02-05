@@ -24,11 +24,8 @@
 				<label><input type="checkbox" class="checkbox" name="package[]" value="authorizenet" /> Authorize.net</label>
 				<label><input type="checkbox" class="checkbox" name="package[]" value="xend" /> Xend</label>
 			</div>
-			<input type="submit" class="submit" value="Download" />
-        </form>
-		
-		<form method="post">
-			<input name="download" type="submit" class="submit download" value="Download" />
+			<input type="submit" class="submit" value="Download" /> <strong>OR</strong>
+			<input name="download" type="submit" class="submit download" value="Download the Latest Version!" />
         </form>
     </div>
 </div>

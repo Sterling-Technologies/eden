@@ -1,7 +1,7 @@
 <ul>
 	<li>I. <a href="/documentation/start">Quick Start</a></li>
 	<li>
-		II. <strong>The Library</strong>
+		II. <a href="/documentation/library">The Library</a>
 		<ol>
 			<li><a href="/documentation/library/features">Features</a></li>
 			<li><a href="/documentation/library/classes">Writing Classes</a></li>

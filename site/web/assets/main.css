@@ -204,6 +204,7 @@ tr.row-inactive td { color: #999999; }
 	box-shadow: 3px 3px 4px #000;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#000000')";
 	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#000000');
+	margin-top: 40px;
 } 
 
 .page .head { 
