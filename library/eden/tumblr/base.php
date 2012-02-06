@@ -40,7 +40,7 @@ class Eden_Tumblr_Base extends Eden_Oauth_Base {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		$this->_consumerKey 		= $consumerKey; 
+		$this->_consumerKey 	= $consumerKey; 
 		$this->_consumerSecret 	= $consumerSecret; 
 		$this->_accessToken 	= $accessToken; 
 		$this->_accessSecret 	= $accessSecret;
@@ -67,7 +67,7 @@ class Eden_Tumblr_Base extends Eden_Oauth_Base {
 	-------------------------------*/
 	protected function _getResponse($url, array $query = array()) {
 		$rest = Eden_Oauth::i()
-			->getConsumer($url, $this->_requestKey, $this->_consumerSecret)
+			->getConsumer($url, $this->_consumerKey, $this->_consumerSecret)
 			//->setHeaders(self::VERSION_HEADER, self::GDATA_VERSION)
 			->setToken($this->_accessToken, $this->_accessSecret)
 			->setSignatureToHmacSha1();
@@ -84,7 +84,7 @@ class Eden_Tumblr_Base extends Eden_Oauth_Base {
 		$headers[] = Eden_Oauth_Consumer::POST_HEADER;
 		
 		$rest = Eden_Oauth::i()
-			->getConsumer($url, $this->_requestKey, $this->_consumerSecret)
+			->getConsumer($url, $this->_consumerKey, $this->_consumerSecret)
 			->setToken($this->_accessToken, $this->_accessSecret)
 			->setSignatureToHmacSha1();
 		
