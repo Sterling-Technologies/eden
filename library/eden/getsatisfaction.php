@@ -171,7 +171,7 @@ class Eden_Getsatisfaction extends Eden_Class {
 	 * @param string
 	 * @return Eden_Getsatisfaction_Reply
 	 */
-	public function post($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
+	public function reply($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string')
