@@ -55,12 +55,12 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Image',
 		'Eden_Unit',
 		'Eden_Timezone',
-		//'Eden_Country_Error',
-		//'Eden_Country_Australia',
-		//'Eden_Country_Mexico',
-		//'Eden_Country_Unitedstates',
-		//'Eden_Country_Unitedkingdom',
-		//'Eden_Country',
+		'Eden_Country_Error',
+		'Eden_Country_Au',
+		'Eden_Country_Canada',
+		'Eden_Country_Uk',
+		'Eden_Country_Us',
+		'Eden_Country',
 		'Eden_Language');
 	
 	protected $_mysql = array(
