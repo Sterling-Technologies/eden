@@ -7,6 +7,8 @@
  * distributed with this package.
  */
 
+require_once dirname(__FILE__).'/class.php';
+
 /**
  * Abstract definition for common image manipulations per image. 
  * PHP is not limited to creating just HTML output. It can also be 

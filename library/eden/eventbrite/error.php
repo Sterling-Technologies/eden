@@ -11,7 +11,7 @@
  * Eventbrite Errors
  *
  * @package    Eden
- * @category   google
+ * @category   eventbrite
  * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Eventbrite_Error extends Eden_Error {
@@ -29,7 +29,6 @@ class Eden_Eventbrite_Error extends Eden_Error {
 	const CAPACITY_NOT_SET 	= 'You tried to set an event without setting the capacity. Call setCapacity() before send()';
 	const CURRENCY_NOT_SET 	= 'You tried to set an event without setting a currency. Call setCurrency() before send()';
 	const INVALID_PASSWORD	= 'Password must be 4 characters or greater!';
-	
 	
 	/* Public Properties
 	-------------------------------*/

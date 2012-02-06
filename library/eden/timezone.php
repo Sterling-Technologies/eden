@@ -124,7 +124,7 @@ class Eden_Timezone extends Eden_Class {
 	 */
 	public function getUTC($prefix = self::UTC) {
 		Eden_Timezone_Error::i()->argument(1, 'string');
-		list($hour, $minute, $sign) = $this->_getUtcParts($offset);
+		list($hour, $minute, $sign) = $this->_getUtcParts($this->_offset);
 		return $prefix.$sign.$hour.':'.$minute;
 	}
 	
@@ -135,7 +135,7 @@ class Eden_Timezone extends Eden_Class {
 	 */
 	public function getGMT($prefix = self::GMT) {
 		Eden_Timezone_Error::i()->argument(1, 'string');
-		list($hour, $minute, $sign) = $this->_getUtcParts($offset);
+		list($hour, $minute, $sign) = $this->_getUtcParts($this->_offset);
 		return $prefix.$sign.$hour.$minute;
 	}
 	

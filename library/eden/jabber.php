@@ -6,6 +6,8 @@
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
+ 
+require_once dirname(__FILE__).'/class.php';
 
 /**
  * XMPP/Jabber abstract for IM clients. 

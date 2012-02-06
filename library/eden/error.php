@@ -380,15 +380,6 @@ class Eden_Error extends Exception {
 	protected function _isValid($type, $data) {
 		$type = $this->_getTypeName($type);
 		
-		$method = 'is_'.$type;
-		if(function_exists($method)) {
-			return $method($data);
-		}
-		
-		if(class_exists($type)) {
-			return $data instanceof $type;
-		}
-		
 		switch($type) {
 			case 'number':
 				return is_numeric($data);
@@ -411,6 +402,15 @@ class Eden_Error extends Exception {
 			case 'hex':
 				return is_string($data) && $this->_isHex($data);
 			default: break;
+		}
+		
+		$method = 'is_'.$type;
+		if(function_exists($method)) {
+			return $method($data);
+		}
+		
+		if(class_exists($type)) {
+			return $data instanceof $type;
 		}
 		
 		return true;

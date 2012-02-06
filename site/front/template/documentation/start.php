@@ -1,4 +1,3 @@
-<a class="prev" href="/">&laquo; What is Eden?</a>
 <a class="next" href="/documentation/library/features">1. Features &raquo;</a>
 
 <h3>I. Quick Start</h3>
@@ -657,5 +656,4 @@ $collection->save('user', $database);	//save to 'user' table in database
 										//for all rows
 </pre></div>
 
-<a class="prev" href="/">&laquo; What is Eden?</a>
 <a class="next" href="/documentation/library/features">1. Features &raquo;</a>

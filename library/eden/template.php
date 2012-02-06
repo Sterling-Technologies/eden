@@ -102,74 +102,108 @@ class Eden_Template extends Eden_Class {
 			$patterns = array();
 			
 			//handle all the easy values
-			preg_match_all("/{(.*?)}/", $lines[$i], $patterns);
-			if(!empty($patterns[0]) && !empty($patterns[1])) {
-				foreach($patterns[1] as $j => $key) {	
-					$value = isset($this->_data[$key]) ? $this->_data[$key] : '';
-					$lines[$i] = str_replace($patterns[0][$j], $value, $lines[$i]);
-				}
-			}
-			
-			preg_match_all("/<php:(.*?) \/>/", $lines[$i], $patterns);
-			if(!empty($patterns[0]) && !empty($patterns[1])) {
-				foreach($patterns[1] as $j => $key) {
-					if(strpos($key, '<') !== false || strpos($key, '<') !== false) {
-						continue;
-					}
-					
-					$value = isset($this->_data[$key]) ? $this->_data[$key] : '';
-					$lines[$i] = str_replace($patterns[0][$j], $value, $lines[$i]);
-				}
-			}
+			$lines[$i] = $this->_parseSmartyVariable($lines[$i]);
+			$lines[$i] = $this->_parsePHPVariable($lines[$i]);
 			
 			//handle advanced pattern
 			preg_match_all("/<php:(.*?)>/", $lines[$i], $patterns);
-			if(!empty($patterns[0]) && !empty($patterns[1])) {
-				foreach($patterns[1] as $j => $key) {
-					$start = strpos($lines[$i], '<php:'.$key.'>') + strlen('<php:'.$key.'>');
-					$subTemplate = array(substr($lines[$i], $start));
-					$closePattern = str_replace('<php:'.$key.'>', '</php:'.$key.'>', $lines[$i]);
-					
-					if(strpos($lines[$i], $closePattern) !== false) {
-						$end = strpos($lines[$i], '</php:'.$key.'>');
-						if($end != 0) {
-							$subTemplate[] = substr($lines[$i], 0, $end);
-						}
-					}
-					
+			if(empty($patterns[0]) || empty($patterns[1])) {
+				continue;
+			}
+
+			foreach($patterns[1] as $j => $key) {
+				$start = strpos($lines[$i], '<php:'.$key.'>') + strlen('<php:'.$key.'>');
+				$template = substr($lines[$i], $start);			
+				$end = strpos($template, '</php:'.$key.'>');
+				
+				if($end) {
+					$template = substr($template, 0, $end);
+					$lines[$i] = $this->_getSubTemplate($key, $template);
+					continue;
+				}
+				
+				/*unset($lines[$i]);
+				$i++;
+				while($i < $count && strpos($lines[$i], $closePattern) === false) {
+					$subTemplate[] = $lines[$i];
+
 					unset($lines[$i]);
 					$i++;
-					while($i < $count && strpos($lines[$i], $closePattern) === false) {
-						$subTemplate[] = $lines[$i];
-
-						unset($lines[$i]);
-						$i++;
-						
-					}
 					
-					$lines[$i] = array();
-					
-					if(isset($this->_data[$key]) && is_array($this->_data[$key])) {
-						foreach($this->_data[$key] as $value) {
-							if(!is_array($value)) {
-								$value = array($key => $value);
-							}
-							 $lines[$i][] = Eden_Template::i()
-								->set($value)
-								->parseEngine(implode("\n", $subTemplate));
-						}
-					}
-					
-					$lines[$i] = implode("\n", $lines[$i]);	
 				}
+				
+				$lines[$i] = array();
+				
+				if(isset($this->_data[$key]) && is_array($this->_data[$key])) {
+					foreach($this->_data[$key] as $value) {
+						if(!is_array($value)) {
+							$value = array($key => $value);
+						}
+						
+						$lines[$i][] = Eden_Template::i()
+							->set($value)
+							->parseEngine(implode("\n", $subTemplate));
+					}
+				}
+				
+				$lines[$i] = implode("\n", $lines[$i]);	*/
+				
 			}
 		}
+		
 		
 		return implode("\n", $lines);
 	}
 	
 	/* Protected Methods
 	-------------------------------*/
+	protected function _parseSmartyVariable($string) {
+		preg_match_all("/{(.*?)}/", $string, $patterns);
+		if(empty($patterns[0]) || empty($patterns[1])) {
+			return $string;
+		}
+		
+		foreach($patterns[1] as $j => $key) {	
+			$value = isset($this->_data[$key]) ? $this->_data[$key] : '';
+			$string = str_replace($patterns[0][$j], $value, $string);
+		}
+		
+		return $string;
+	}
+	
+	protected function _parsePHPVariable($string) {
+		preg_match_all("/<php:(.*?) \/>/", $string, $patterns);
+		if(empty($patterns[0]) || empty($patterns[1])) {
+			return $string;
+		}
+		
+		foreach($patterns[1] as $j => $key) {
+			if(strpos($key, '<') !== false || strpos($key, '<') !== false) {
+				continue;
+			}
+			
+			$value = isset($this->_data[$key]) ? $this->_data[$key] : '';
+			$string = str_replace($patterns[0][$j], $value, $string);
+		}
+			
+		return $string;
+	}
+	
+	protected function _getSubTemplate($key, $template) {
+		$sub = NULL;
+		foreach($this->_data[$key] as $value) {
+			if(!is_array($value)) {
+				$value = array($key => $value);
+			}
+			
+			$sub .= "\n".Eden_Template::i()
+				->set($value)
+				->parseEngine($template);
+		}
+		
+		return $sub;
+	}
+	
 	/* Private Methods
 	-------------------------------*/
 }
