@@ -180,7 +180,7 @@ class Eden_Jabber extends Eden_Event {
 		$this->connect();
 		while($this->_connection) {
 			set_time_limit(60);
-			$response = $this->_response($this->listen());
+			$response = $this->_response($this->wait());
 			if($response === false) {
 				break;
 			}
@@ -243,8 +243,8 @@ class Eden_Jabber extends Eden_Event {
 		
 		$this->trigger('connected', $this);
 		
-		//start listening
-		$this->_response($this->listen());
+		//start waiting
+		$this->_response($this->wait());
 		
 		return $this;
 	}
@@ -281,7 +281,7 @@ class Eden_Jabber extends Eden_Event {
 	 *
 	 * @return string XML
 	 */
-	public function listen($timeout = 10) {
+	public function wait($timeout = 10) {
 		//if not connected
 		if (!$this->_connection) {
 			//throw exception
@@ -553,7 +553,7 @@ class Eden_Jabber extends Eden_Event {
 					// we already got all info we need
 					$features = $xml['stream:stream'][0]['#'];
 				} else {
-					$features = $this->listen();
+					$features = $this->wait();
 				}
 
 				$second_time = isset($this->_streamId);
@@ -589,14 +589,14 @@ class Eden_Jabber extends Eden_Event {
 					$this->send("<iq type='set' id='bind_1'><bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'>".
 						"<resource>" . htmlspecialchars($this->_resource) . '</resource></bind></iq>');
 						
-					return $this->_response($this->listen());
+					return $this->_response($this->wait());
 				}
 
 				// Let's use TLS if SSL is not enabled and we can actually use it
 				if (!$this->_ssl && $this->_tls && $this->_canSSL() && 
 					isset($xml['stream:features'][0]['#']['starttls'])) {
 					$this->send("<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>\n");
-					return $this->_response($this->listen());
+					return $this->_response($this->wait());
 				}
 
 				// Does the server support SASL authentication?
@@ -634,7 +634,7 @@ class Eden_Jabber extends Eden_Event {
 						Eden_Jabber_Error::i(Eden_Jabber_Error::NO_AUTH_METHOD)->trigger();
 					}
 
-					return $this->_response($this->listen());
+					return $this->_response($this->wait());
 				} 
 				
 				// ok, this is it. bye.
@@ -684,7 +684,7 @@ class Eden_Jabber extends Eden_Event {
 					base64_encode($this->_implodeData($response)) . '</response>');
 				}
 
-				return $this->_response($this->listen());
+				return $this->_response($this->wait());
 
 			case 'failure':
 				$this->_negotiation = self::AUTH_FAILIURE;
@@ -712,7 +712,7 @@ class Eden_Jabber extends Eden_Event {
 				$this->send("<stream:stream to='".$this->_host."' xmlns='jabber:client' ".
 				"xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>\n");
 
-				return $this->_response($this->listen());
+				return $this->_response($this->wait());
 
 			case 'success':
 				// Yay, authentication successful.
@@ -722,7 +722,7 @@ class Eden_Jabber extends Eden_Event {
 				$this->_negotiation = self::AUTH_SUCCESS;
 				
 				// we have to wait for another response
-				return $this->_response($this->listen());
+				return $this->_response($this->wait());
 		}
 		
 		return $this;
@@ -739,7 +739,7 @@ class Eden_Jabber extends Eden_Event {
 					$this->send("<iq to='".$this->_host."' type='set' id='sess_1'>
 						<session xmlns='urn:ietf:params:xml:ns:xmpp-session'/></iq>");
 						
-					return $this->_response($this->listen());
+					return $this->_response($this->wait());
 				}
 
 				return $this;
@@ -752,7 +752,7 @@ class Eden_Jabber extends Eden_Event {
 				htmlspecialchars($this->_user)."</username><password>".htmlspecialchars($this->_pass) . 
 				"</password></query></iq>");
 				
-				return $this->_response($this->listen());
+				return $this->_response($this->wait());
 
 			case 'reg_2':
 				// registration end
