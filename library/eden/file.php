@@ -8,7 +8,6 @@
  */
 
 require_once dirname(__FILE__).'/path.php';
-require_once dirname(__FILE__).'/file/error.php';
 
 /**
  * General available methods for common file 
