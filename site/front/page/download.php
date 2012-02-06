@@ -57,7 +57,7 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Timezone',
 		'Eden_Country_Error',
 		'Eden_Country_Au',
-		'Eden_Country_Canada',
+		'Eden_Country_Ca',
 		'Eden_Country_Uk',
 		'Eden_Country_Us',
 		'Eden_Country',
