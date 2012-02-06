@@ -167,14 +167,14 @@ class Eden_Timezone extends Eden_Class {
 	 *
 	 * @param string
 	 * @param int
-	 * @param string
+	 * @param string|null
 	 * @return array
 	 */
 	public function getUTCDates($format, $interval = 30, $prefix = self::UTC) {
 		Eden_Timezone_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'int')
-			->argument(3, 'string');
+			->argument(3, 'string', 'null');
 			
 		$offsets 	= $this->getOffsetDates($format, $interval);
 		$dates 		= array();
@@ -193,14 +193,14 @@ class Eden_Timezone extends Eden_Class {
 	 *
 	 * @param string
 	 * @param int
-	 * @param string
+	 * @param string|null
 	 * @return array
 	 */
 	public function getGMTDates($format, $interval = 30, $prefix = self::GMT) {
 		Eden_Timezone_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'int')
-			->argument(3, 'string');
+			->argument(3, 'string', 'null');
 			
 		$offsets 	= $this->getOffsetDates($format, $interval);
 		$dates 		= array();

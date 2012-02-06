@@ -131,6 +131,6 @@ class Eden_Block_Search extends Eden_Block {
 	 * @return string
 	 */
 	public function getTemplate() {
-		return realpath(dirname(__FILE__).'/template/search.php');
+		return realpath(dirname(__FILE__).self::$_blockRoot.'/search.phtml');
 	}
 }

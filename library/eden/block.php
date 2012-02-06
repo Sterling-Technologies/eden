@@ -22,8 +22,12 @@ abstract class Eden_Block extends Eden_Class {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
+	protected static $_blockRoot = NULL;
+	
 	/* Private Properties
 	-------------------------------*/
+	private static $_global = array();
+	
 	/* Get
 	-------------------------------*/
 	/* Magic
@@ -40,6 +44,19 @@ abstract class Eden_Block extends Eden_Class {
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * For one file Eden, you can set the default
+	 * location of Eden's template to another location.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setBlockRoot($root) {
+		Eden_Error::i()->argument(1, 'folder');
+		self::$_blockRoot = $root;
+		return $this;
+	}
+	
 	/**
 	 * returns variables used for templating
 	 *
@@ -66,6 +83,15 @@ abstract class Eden_Block extends Eden_Class {
 	
 	/* Protected Methods
 	-------------------------------*/
+	protected function _getGlobal($value) {
+		if(in_array($value, self::$_global)) {
+			return false;
+		}
+		
+		self::$_global[] = $value;
+		return $value;
+	}
+	
 	/* Private Methods
 	-------------------------------*/
 }

@@ -8,19 +8,28 @@
  */
 
 /**
- * Australia
+ * Canada
  *
  * @package    Eden
  * @category   utility
  * @author     Christian Blanquera cblanquera@openovate.com
  */
-class Eden_Country_Australia extends Eden_Class {
+class Eden_Country_Ca extends Eden_Class {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
+	protected static $_territories = array(
+		'BC' => 'British Columbia',				'ON' => 'Ontario', 
+		'NL' => 'Newfoundland and Labrador', 	'NS' => 'Nova Scotia', 
+		'PE' => 'Prince Edward Island', 		'NB' => 'New Brunswick', 
+		'QC' => 'Quebec', 						'MB' => 'Manitoba', 
+		'SK' => 'Saskatchewan', 				'AB' => 'Alberta', 
+		'NT' => 'Northwest Territories',		'NU' => 'Nunavut',
+		'YT' => 'Yukon Territory');
+	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -32,12 +41,12 @@ class Eden_Country_Australia extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns a list of Austrailian territories
+	 * Returns a list of Canadian territories
 	 *
 	 * @return array
 	 */
 	public function getTerritories() {
-		return include(dirname(__FILE__).'/australia/territories.php');
+		return self::$_territories;
 	}
 	
 	/* Protected Methods

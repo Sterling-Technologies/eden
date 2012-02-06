@@ -8,19 +8,25 @@
  */
 
 /**
- * United Kingdom
+ * Australia
  *
  * @package    Eden
  * @category   utility
  * @author     Christian Blanquera cblanquera@openovate.com
  */
-class Eden_Country_Unitedkingdom extends Eden_Class {
+class Eden_Country_Australia extends Eden_Class {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
+	protected static $_territories = array(
+		'Australian Capital Territory',			'New South Wales', 
+		'Northern Territory',					'Queensland',
+		'South Australia',						'Tasmania', 
+		'Victoria',								'Western Australia');
+	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -32,12 +38,12 @@ class Eden_Country_Unitedkingdom extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns a list of counties
+	 * Returns a list of Austrailian territories
 	 *
 	 * @return array
 	 */
-	public function getCounties() {
-		return include(dirname(__FILE__).'/unitedkingdom/counties.php');
+	public function getTerritories() {
+		return self::$_territories;
 	}
 	
 	/* Protected Methods
