@@ -20,6 +20,151 @@ class Front_Page_Download extends Front_Page {
 	protected $_class = 'download';
 	protected $_template = '/download.phtml';
 	
+	/* Private Properties
+	-------------------------------*/
+	/* Get
+	-------------------------------*/
+	public static function i(Eden_Registry $request = NULL) {
+		return self::_getMultiple(__CLASS__, $request);
+	}
+	
+	/* Magic
+	-------------------------------*/
+	/* Public Methods
+	-------------------------------*/
+	public function render() {
+		if (!defined('T_ML_COMMENT')) {
+		   define('T_ML_COMMENT', T_COMMENT);
+		} else {
+		   define('T_DOC_COMMENT', T_ML_COMMENT);
+		}
+		
+		$package = $this->_request['post']['package'];
+		
+		if(!empty($package)) {
+			$classes = $this->_core;
+			foreach($package as $set) {
+				$pack = '_'.$set;
+				if(isset($this->$pack)) {
+					$classes = array_merge($classes, $this->$pack);
+				}
+			}
+			
+			$classes = array_unique($classes);
+			
+			$bundle = '<?php ';
+			foreach($classes as $class) {
+				$bundle .= "/* ".$class." */\n".$this->_getClass($class)."\n";
+			}
+			
+			header('Content-Type: text/plain');
+			header('Content-Length: '.strlen($bundle));
+			header('Content-Disposition: attachment; filename="eden.php"');
+			return $bundle;
+		}
+		
+		$post = $this->_request['post']->get(false);
+		
+			
+		//$library = 'http://svn.openovate.com/edenv2/trunk/library';
+		$library = $this->_request['path']['library'];
+		
+		//get the revision
+		exec(sprintf(self::INFO, $library), $info);
+		$info = implode("\n", $info);
+		$info = simplexml_load_string($info);
+		$revision = (string)$info->entry->commit['revision'];
+		
+		if(isset($post['download'])) {		
+			//check to see if this zip exists
+			$zip = $this->_request['path']['web'].'/'.$revision.'.tar.gz';
+			$file = $this->File($zip);
+			
+			//if it's not a file
+			$library = $this->_request['path']['library'];
+			if(!$file->isFile()) {
+				exec('svn export '.$library.' '.$library.'/../../library;');
+				exec('cd '.$library.'/../..; tar -cvzf '.$zip.' library;');
+				exec('rm -rf '.$library.'/../../../library;');
+			}
+			
+			header('Content-Type: text/plain');
+			header('Content-Length: '.$file->getSize());
+			header('Content-Disposition: attachment; filename="eden-v0.2.'.$revision.'.tar.gz"');
+			return $file->getContent();
+		}
+		
+		$this->_body['version'] = $revision;
+		
+		return $this->_renderPage();
+	}
+	
+	/* Protected Methods
+	-------------------------------*/
+	protected function _getClass($class) {	
+		$path = strtolower('/'.str_replace('_', '/', $class)).'.php';
+		$code = $this->File($this->_request['path']['library'].$path)->getContent();
+			
+		return $this->_getMinify($code);
+	}
+	
+	protected function _getMinify($code) {
+		$tokens = token_get_all($code);
+		
+		$minify = NULL;
+		
+		foreach ($tokens as $token) {
+		   if (is_string($token)) {
+			   // simple 1-character token
+			   $minify .= $token;
+			   continue;
+		   }
+		   
+		   // token array
+		   list($id, $text) = $token;
+	
+		   switch ($id) { 
+			   case T_COMMENT: 
+			   case T_ML_COMMENT: // we've defined this
+			   case T_DOC_COMMENT: // and this
+				   // no action on comments
+				   break;
+			   default:
+				   // anything else -> output "as is"
+				   $minify .= $text;
+				   break;
+		   }
+		}
+		
+		$minify = str_replace('<?php', '', $minify);
+		$minify = str_replace("\n", '', $minify);
+		$minify = preg_replace("/\s\s+/is", ' ', $minify);
+		$minify = preg_replace("/\s*\-\>\s*/is", '->', $minify);
+		$minify = preg_replace("/\s*\=\>\s*/is", '=>', $minify);
+		$minify = preg_replace("/\s*\=\s*/is", '=', $minify);
+		$minify = preg_replace("/\s*\,\s*/is", ',', $minify);
+		$minify = preg_replace("/\s*\{\s*/is", '{', $minify);
+		$minify = preg_replace("/\s*\}\s*/is", '}', $minify);
+		$minify = preg_replace("/\s*\;\s*/is", ';', $minify);
+		$minify = preg_replace("/\s*\.\s*/is", '.', $minify);
+		
+		if(strpos($minify, 'function ') !== false 
+		&& (strpos($minify, 'class ') === false 
+		|| strpos($minify, 'function ') < strpos($minify, 'class '))) {
+			$minify = substr($minify, strpos($minify, 'function '));
+		} else if(strpos($minify, 'abstract ') !== false) {
+			$minify = substr($minify, strpos($minify, 'abstract '));
+		} else if(strpos($minify, 'class ') !== false) {
+			$minify = substr($minify, strpos($minify, 'class '));
+		}
+		
+		return $minify;
+	}
+	
+	/* Private Methods
+	-------------------------------*/
+	/* Large Data
+	-------------------------------*/
 	protected $_core = array(
 		'Eden_Class',
 		'Eden_Error',
@@ -258,206 +403,4 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Authorizenet_Server',
 		'Eden_Authorizenet_Recurring',
 		'Eden_Authorizenet');
-	
-	/* Private Properties
-	-------------------------------*/
-	/* Get
-	-------------------------------*/
-	public static function i(Eden_Registry $request = NULL) {
-		return self::_getMultiple(__CLASS__, $request);
-	}
-	
-	/* Magic
-	-------------------------------*/
-	/* Public Methods
-	-------------------------------*/
-	public function render() {
-		if (!defined('T_ML_COMMENT')) {
-		   define('T_ML_COMMENT', T_COMMENT);
-		} else {
-		   define('T_DOC_COMMENT', T_ML_COMMENT);
-		}
-		
-		$package = $this->_request['post']['package'];
-		
-		if(!empty($package)) {
-			$classes = $this->_core;
-			
-			if($package->inArray('utilities')) {
-				$classes = array_merge($classes, $this->_utilities);
-			}
-			
-			if($package->inArray('mail')) {
-				$classes = array_merge($classes, $this->_mail);
-			}
-			
-			if($package->inArray('mysql')) {
-				$classes = array_merge($classes, $this->_mysql);
-			}
-			
-			if($package->inArray('postgre')) {
-				$classes = array_merge($classes, $this->_postgre);
-			}
-			
-			if($package->inArray('sqlite')) {
-				$classes = array_merge($classes, $this->_sqlite);
-			}
-			
-			if($package->inArray('cache')) {
-				$classes = array_merge($classes, $this->_cache);
-			}
-			
-			if($package->inArray('amazon')) {
-				$classes = array_merge($classes, $this->_amazon);
-			}
-			
-			if($package->inArray('eventbrite')) {
-				$classes = array_merge($classes, $this->_eventbrite);
-			}
-			
-			if($package->inArray('facebook')) {
-				$classes = array_merge($classes, $this->_facebook);
-			}
-			
-			if($package->inArray('getsatisfaction')) {
-				$classes = array_merge($classes, $this->_getsatisfaction);
-			}
-			
-			if($package->inArray('paypal')) {
-				$classes = array_merge($classes, $this->_paypal);
-			}
-			
-			if($package->inArray('xend')) {
-				$classes = array_merge($classes, $this->_xend);
-			}
-			
-			if($package->inArray('jabber')) {
-				$classes = array_merge($classes, $this->_jabber);
-			}
-			
-			if($package->inArray('authorizenet')) {
-				$classes = array_merge($classes, $this->_authorizenet);
-			}
-			
-			if($package->inArray('tumblr')) {
-				$classes = array_merge($classes, $this->_tumblr);
-			}
-			
-			if($package->inArray('twitter')) {
-				$classes = array_merge($classes, $this->_twitter);
-			}
-			
-			$classes = array_unique($classes);
-			
-			$bundle = '<?php ';
-			foreach($classes as $class) {
-				$bundle .= "/* ".$class." */\n".$this->_getClass($class)."\n";
-			}
-			
-			header('Content-Type: text/plain');
-			header('Content-Length: '.strlen($bundle));
-			header('Content-Disposition: attachment; filename="eden.php"');
-			return $bundle;
-		}
-		
-		$post = $this->_request['post']->get(false);
-		
-			
-		//$library = 'http://svn.openovate.com/edenv2/trunk/library';
-		$library = $this->_request['path']['library'];
-		
-		//get the revision
-		exec(sprintf(self::INFO, $library), $info);
-		$info = implode("\n", $info);
-		$info = simplexml_load_string($info);
-		$revision = (string)$info->entry->commit['revision'];
-		
-		if(isset($post['download'])) {		
-			//check to see if this zip exists
-			$zip = $this->_request['path']['web'].'/'.$revision.'.tar.gz';
-			$file = $this->File($zip);
-			
-			//if it's not a file
-			$library = $this->_request['path']['library'];
-			if(!$file->isFile()) {
-				exec('cd '.$library.'/..; svn export library '.$library.'/../../..');
-				exec('cd '.$library.'/../../..; tar -cvzf '.$zip.' library');
-				exec('rm '.$library.'/../../../library');
-			}
-			
-			header('Content-Type: text/plain');
-			header('Content-Length: '.$file->getSize());
-			header('Content-Disposition: attachment; filename="eden-v0.2.'.$revision.'.tar.gz"');
-			return $file->getContent();
-		}
-		
-		$this->_body['version'] = $revision;
-		
-		return $this->_renderPage();
-	}
-	
-	/* Protected Methods
-	-------------------------------*/
-	protected function _getClass($class) {	
-		$path = strtolower('/'.str_replace('_', '/', $class)).'.php';
-		$code = $this->File($this->_request['path']['library'].$path)->getContent();
-			
-		return $this->_getMinify($code);
-	}
-	
-	protected function _getMinify($code) {
-		$tokens = token_get_all($code);
-		
-		$minify = NULL;
-		
-		foreach ($tokens as $token) {
-		   if (is_string($token)) {
-			   // simple 1-character token
-			   $minify .= $token;
-			   continue;
-		   }
-		   
-		   // token array
-		   list($id, $text) = $token;
-	
-		   switch ($id) { 
-			   case T_COMMENT: 
-			   case T_ML_COMMENT: // we've defined this
-			   case T_DOC_COMMENT: // and this
-				   // no action on comments
-				   break;
-			   default:
-				   // anything else -> output "as is"
-				   $minify .= $text;
-				   break;
-		   }
-		}
-		
-		$minify = str_replace('<?php', '', $minify);
-		$minify = str_replace("\n", '', $minify);
-		$minify = preg_replace("/\s\s+/is", ' ', $minify);
-		$minify = preg_replace("/\s*\-\>\s*/is", '->', $minify);
-		$minify = preg_replace("/\s*\=\>\s*/is", '=>', $minify);
-		$minify = preg_replace("/\s*\=\s*/is", '=', $minify);
-		$minify = preg_replace("/\s*\,\s*/is", ',', $minify);
-		$minify = preg_replace("/\s*\{\s*/is", '{', $minify);
-		$minify = preg_replace("/\s*\}\s*/is", '}', $minify);
-		$minify = preg_replace("/\s*\;\s*/is", ';', $minify);
-		$minify = preg_replace("/\s*\.\s*/is", '.', $minify);
-		
-		if(strpos($minify, 'function ') !== false 
-		&& (strpos($minify, 'class ') === false 
-		|| strpos($minify, 'function ') < strpos($minify, 'class '))) {
-			$minify = substr($minify, strpos($minify, 'function '));
-		} else if(strpos($minify, 'abstract ') !== false) {
-			$minify = substr($minify, strpos($minify, 'abstract '));
-		} else if(strpos($minify, 'class ') !== false) {
-			$minify = substr($minify, strpos($minify, 'class '));
-		}
-		
-		return $minify;
-	}
-	
-	/* Private Methods
-	-------------------------------*/
 }
