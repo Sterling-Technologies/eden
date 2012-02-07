@@ -446,6 +446,18 @@ tr.row-inactive td { color: #999999; }
 .download .submit { float: none; }
 .download .two-column-layout { margin-bottom: 20px; }
 .download .two-column-layout .column-1 { width: 75% }
+
+.download .two-column-layout .column-1 form { width: 100%; }
+.download .two-column-layout .column-1 form .submit {
+	float: left; 
+	margin-right: 20px;
+}
+
+.download .two-column-layout .column-1 form a {
+	float: left; 
+	margin-top: 15px;
+}
+
 .download .two-column-layout .column-2 { width: 25% }
 .download .two-column-layout .column-2 h3 { padding-top: 25px;}
 .download .two-column-layout .column-2 form .submit {
