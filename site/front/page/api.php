@@ -16,7 +16,7 @@ class Front_Page_Api extends Front_Page {
 	-------------------------------*/
 	protected $_title = 'Eden - API';
 	protected $_class = 'api';
-	protected $_template = '/api.php';
+	protected $_template = '/api.phtml';
 	
 	/* Private Properties
 	-------------------------------*/

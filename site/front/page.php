@@ -66,7 +66,7 @@ abstract class Front_Page extends Eden_Class {
 	}
 	
 	protected function _renderPage() {
-		$tpl = $this->_request['path']['template'];
+		$page = $this->_request['path']['page'];
 		
 		$messages 	= $this->_request['message'];
 		
@@ -78,11 +78,11 @@ abstract class Front_Page extends Eden_Class {
 		
 		$this->_body['messages'] = $this->_messages;
 		
-		$head = front()->template($tpl.'/_head.php');
-		$body = front()->template($tpl.$this->_template, $this->_body);
-		$foot = front()->template($tpl.'/_foot.php');
+		$head = front()->template($page.'/_head.phtml');
+		$body = front()->template($page.$this->_template, $this->_body);
+		$foot = front()->template($page.'/_foot.phtml');
 		
-		return front()->template($tpl.'/_page.php', array(
+		return front()->template($page.'/_page.phtml', array(
 			'meta' 			=> $this->_meta,
 			'title'			=> $this->_title,
 			'class'			=> $this->_class,

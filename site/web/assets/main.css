@@ -321,6 +321,7 @@ tr.row-inactive td { color: #999999; }
 	font-family: 'Lato', sans-serif;
 	line-height: 24px;
 	margin: 5px 0 10px;
+	font-size: 14px;
 }
 .documentation .two-column-layout .column-2 ul,
 .documentation .two-column-layout .column-2 ol {
@@ -329,15 +330,16 @@ tr.row-inactive td { color: #999999; }
 }
 .documentation .two-column-layout .column-2 li {}
 .documentation .two-column-layout .column-2 .error {
-	border-top: 1px solid salmon;
-	border-bottom: 1px solid salmon;
-	margin: 5px 0;
+	border: 1px solid salmon;
+	border-radius: 10px 10px 10px 10px;
+	margin: 5px; 
+	box-shadow: 2px 2px 2px #999999;
 	padding: 10px;
 	background-color: #FCC;
-	width: 100%;
 	line-height: 30px;
 	font-size: 15px;
 	letter-spacing: 1px;
+	width: 718px;
 }
 .documentation .two-column-layout .column-2 .error .icon {
 	width: 42px;
@@ -347,15 +349,16 @@ tr.row-inactive td { color: #999999; }
 	margin-right: 10px;
 }
 .documentation .two-column-layout .column-2 .tip {
-	border-top: 1px solid #36F;
-	border-bottom: 1px solid #36F;
-	margin: 5px 0;
+	border: 1px solid #36F;
+	border-radius: 10px 10px 10px 10px;
+	margin: 5px; 
+	box-shadow: 2px 2px 2px #999999;
 	padding: 10px;
 	background-color: #D8F6F6;
-	width: 100%;
 	line-height: 30px;
 	font-size: 15px;
 	letter-spacing: 1px;
+	width: 718px;
 }
 .documentation .two-column-layout .column-2 .tip .icon {
 	width: 42px;
@@ -365,15 +368,16 @@ tr.row-inactive td { color: #999999; }
 	margin-right: 10px;
 }
 .documentation .two-column-layout .column-2 .warning {
-	border-top: 1px solid #FC9;
-	border-bottom: 1px solid #FC9;
-	margin: 5px 0;
+	border: 1px solid #FC9;
+	border-radius: 10px 10px 10px 10px;
+	margin: 5px; 
+	box-shadow: 2px 2px 2px #999999;
 	padding: 10px;
 	background-color: #FFC;
-	width: 100%;
 	line-height: 30px;
 	font-size: 15px;
 	letter-spacing: 1px;
+	width: 718px;
 }
 .documentation .two-column-layout .column-2 .warning .icon {
 	width: 42px;
@@ -384,23 +388,27 @@ tr.row-inactive td { color: #999999; }
 }
 .documentation .two-column-layout .column-2 .note { 
 	border: 1px solid #CCC; 
-	margin: 5px 0;
+	margin: 5px; 
+	box-shadow: 2px 2px 2px #999999;
+	border-radius: 10px 10px 10px 10px;
 }
 .documentation .two-column-layout .column-2 .note h5 {
 	background: #FC9;
 	padding: 10px 15px;
 	border-bottom: 1px solid #CCC;
+	border-radius: 10px 10px 0 0;
 }
 .documentation .two-column-layout .column-2 .note span {
 	background: #EFEFEF;
 	display: block;
 	padding: 10px 15px;
+	border-radius: 0 0 10px 10px;
 }
 .documentation .two-column-layout .column-2 sub {
 	display: block;
 	font-family: "Courier New", Courier, monospace;
 	font-size: 17px;
-	margin: 5px 0 0;
+	margin: 20px 10px 0;
 }
 .documentation .two-column-layout .column-2 p sub {
 	display: inline;
@@ -409,24 +417,59 @@ tr.row-inactive td { color: #999999; }
 	margin: 0;
 } 
 .documentation .two-column-layout .column-2 .example { 
-	border-bottom: 1px solid #CCCCCC;
-	border-top: 1px solid #CCCCCC;
-	margin: 0 0 5px; 
+	border: 1px solid #CCCCCC;
+	border-radius: 10px;
+	background-color: #F1F8DB;
+	margin: 0 5px 20px; 
+	box-shadow: 2px 2px 2px #999999;
 }
 
 .documentation .two-column-layout .column-2 .prev { float: left; }
 .documentation .two-column-layout .column-2 .next { float: right; }
 
+.documentation .example .syntaxhighlighter,
+.documentation .example .syntaxhighlighter table .line { background-color: transparent !important; }
+
+.documentation .example .syntaxhighlighter .toolbar { display: none; }
 #disqus_thread {
 	clear: both;
 	padding-top: 20px;
 }
 
 /* Page: Download */
-
+.download label { 
+	float: none; 
+	font-family: 'Lato', sans-serif;
+	font-weight: normal;
+	padding-left: 20px;
+}
+.download .submit { float: none; }
+.download .two-column-layout { margin-bottom: 20px; }
+.download .two-column-layout .column-1 { width: 75% }
+.download .two-column-layout .column-2 { width: 25% }
 .download .two-column-layout .column-2 h3 { padding-top: 25px;}
-.download .two-column-layout .column-2 h4 { margin: 5px 0; }
 .download .two-column-layout .column-2 form .submit {
 	font-weight: bold;
     padding: 5px;
 }
+
+.download .two-column-layout .column-2 .box { 
+	border: 1px solid #CCC; 
+	margin: 5px; 
+	box-shadow: 2px 2px 2px #999999;
+	border-radius: 10px 10px 10px 10px;
+}
+.download .two-column-layout .column-2 .box h4 {
+	background: #FC9;
+	padding: 10px 15px;
+	border-bottom: 1px solid #CCC;
+	border-radius: 10px 10px 0 0;
+}
+.download .two-column-layout .column-2 .box form {
+	background: #EFEFEF;
+	display: block;
+	padding: 10px 15px;
+	line-height: 24px; 
+	border-radius: 0 0 10px 10px;
+}
+

@@ -29,6 +29,7 @@ print front()
 -------------------------------*/
 ->setPaths()
 
+->setPages(array('/documentation' => 'Front_Page_Docs'))
 
 /* Set Timezone
 -------------------------------*/

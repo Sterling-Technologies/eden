@@ -8,31 +8,23 @@
  */
 
 /**
- * Drop down list for timezones
+ * Drop down list
  *
  * @package    Eden
  * @category   site
  * @author     Christian Blanquera cblanquera@openovate.com
  */
-class Eden_Block_Timezones extends Eden_Block {
+class Eden_Block_Select extends Eden_Block {
 	/* Constants
 	-------------------------------*/
-	const GMT 		= 1;
-	const UTC 		= 2;
-	const OFFSET 	= 3;
-	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
 	protected $_attributes	= array();
+	protected $_list		= array();
 	protected $_value 		= NULL;
 	protected $_first		= NULL;
-	
-	protected $_use 		= self::GMT;
-	protected $_format 		= 'F d, Y g:iA';
-	protected $_interval 	= 30;
-	protected $_prefix 		= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -40,6 +32,10 @@ class Eden_Block_Timezones extends Eden_Block {
 	-------------------------------*/
 	public static function i() {
 		return self::_getMultiple(__CLASS__);
+	}
+	
+	public function __construct(array $list) {
+		$this->_list = $list;
 	}
 	
 	/* Public Methods
@@ -90,91 +86,14 @@ class Eden_Block_Timezones extends Eden_Block {
 	}
 	
 	/**
-	 * Sets the date format
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setFormat($format) {
-		Eden_Error::i()->argument(1, 'string');
-		$this->_format = $format;
-		return $this;
-	}
-	
-	/**
-	 * Sets interval of timezones shown
-	 *
-	 * @param int
-	 * @return this
-	 */
-	public function setInterval($interval) {
-		Eden_Error::i()->argument(1, 'int');
-		$this->_interval = $interval;
-		return $this;
-	}
-	
-	/**
-	 * Use offset as the value
-	 *
-	 * @return this
-	 */
-	public function useOffset() {
-		$this->_use = self::OFFSET;
-		return $this;
-	}
-	
-	/**
-	 * Use UTC as the value
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function useUTC($prefix = Eden_Timezone::UTC) {
-		$this->_use = self::UTC;
-		$this->_prefix = $prefix;
-		return $this;
-	}
-	
-	/**
-	 * Use GMT as the value
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function useGMT($prefix = Eden_Timezone::GMT) {
-		$this->_use = self::GMT;
-		$this->_prefix = $prefix;
-		return $this;
-	}
-	
-	/**
 	 * Returns the template variables in key value format
 	 *
 	 * @param array data
 	 * @return array
 	 */
 	public function getVariables() {
-		//get the default time zone
-		//it doesn't really matter which 
-		//zone we choose
-		$timezones = Eden_Timezone::i(date_default_timezone_get());
-		
-		//choose a value format
-		switch($this->_use) {
-			case self::OFFSET:
-				$timezones = $timezones->getOffsetDates($this->_format, $this->_interval);
-				break;
-			case self::UTC:
-				$timezones = $timezones->getUTCDates($this->_format, $this->_interval, $this->_prefix);
-				break;
-			case self::GMT:
-			default:
-				$timezones = $timezones->getGMTDates($this->_format, $this->_interval, $this->_prefix);
-				break;
-		}
-		
 		return array(
-			'list'		=> $timezones,
+			'list'			=> $this->_list,
 			'first'			=> $this->_first,
 			'attributes'	=> $this->_attributes,
 			'value'			=> $this->_value); 

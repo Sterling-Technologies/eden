@@ -113,7 +113,7 @@ class Front extends Eden {
 			'assets'	=> $this->_root.'/web/assets',
 			'cache'		=> $this->_root.'/front/cache',
 			'config'	=> $this->_root.'/front/config',
-			'template'	=> $this->_root.'/front/template');
+			'page'		=> $this->_root.'/front/page');
 		
 		//foreach default path
 		foreach($default as $key => $path) {
@@ -493,7 +493,7 @@ class Front extends Eden {
 			->set('file', $file)
 			->set('line', $line)
 			->set('message', $message)
-			->parsePhp(dirname(__FILE__).'/front/template/error.php');
+			->parsePhp(dirname(__FILE__).'/front/error.phtml');
 	}
 	
 	/* Protected Methods
@@ -513,16 +513,11 @@ class Front extends Eden {
 		
 		$variables 			= array();
 		
-		//fix paths
-		$requestPath = $this->getFormattedPath($requestPath);
-		
 		//if the request path equals /
 		if($requestPath == '/') {
 			//there would be no page variables
 			return array();
 		}
-		
-		$pagePath = $this->getFormattedPath($pagePath);
 		
 		//get the arrays
 		$requestPathArray 	= explode('/', $requestPath);

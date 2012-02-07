@@ -7,7 +7,7 @@
 /**
  * Default logic to output a page
  */
-class Front_Page_Documentation extends Front_Page {
+class Front_Page_Docs extends Front_Page {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
@@ -16,7 +16,7 @@ class Front_Page_Documentation extends Front_Page {
 	-------------------------------*/
 	protected $_title = 'Eden - Documentation';
 	protected $_class = 'documentation';
-	protected $_template = '/documentation.php';
+	protected $_template = '/docs.phtml';
 	
 	/* Private Properties
 	-------------------------------*/
@@ -33,13 +33,13 @@ class Front_Page_Documentation extends Front_Page {
 	public function render() {
 		
 		$content = NULL;
-		$file = $this->_request['request']['string'].'.php';
-		if($file != '/documentation.php') {
-			$template = $this->_request['path']['template'];
-			if(!file_exists($template.$file)) {
-				$file = '/soon.php';
+		$file = $this->_request['request']['string'].'.phtml';
+		if($file != $this->_template) {
+			$page = $this->_request['path']['page'];
+			if(!file_exists($page.$file)) {
+				$file = '/soon.phtml';
 			}
-			$content = front()->template($template.$file);
+			$content = front()->template($page.$file);
 		}
 		$this->_body = array('content' => $content);
 		return $this->_renderPage();

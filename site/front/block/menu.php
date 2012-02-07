@@ -67,7 +67,7 @@ class Front_Block_Menu extends Eden_Block {
 	 * @return string
 	 */
 	public function getTemplate() {
-		return realpath(dirname(__FILE__).'/template/menu.php');
+		return realpath(dirname(__FILE__).'/menu.phtml');
 	}
 	
 	protected function _getContents($path) {

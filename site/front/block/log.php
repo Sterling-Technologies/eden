@@ -72,6 +72,6 @@ class Front_Block_Log extends Eden_Block {
 	 * @return string
 	 */
 	public function getTemplate() {
-		return realpath(dirname(__FILE__).'/template/log.php');
+		return realpath(dirname(__FILE__).'/log.phtml');
 	}
 }

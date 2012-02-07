@@ -18,7 +18,7 @@ class Front_Page_Index extends Front_Page {
 	protected $_body = array();
 	protected $_title = 'Eden';
 	protected $_class = 'documentation';
-	protected $_template = '/index.php';
+	protected $_template = '/index.phtml';
 	protected $_session = false;
 	
 	/* Private Properties

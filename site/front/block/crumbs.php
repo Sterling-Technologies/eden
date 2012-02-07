@@ -65,6 +65,6 @@ class Front_Block_Crumbs extends Eden_Block {
 	 * @return string
 	 */
 	public function getTemplate() {
-		return realpath(dirname(__FILE__).'/template/crumbs.php');
+		return realpath(dirname(__FILE__).'/crumbs.phtml');
 	}
 }
