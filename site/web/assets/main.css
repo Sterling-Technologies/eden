@@ -460,10 +460,6 @@ tr.row-inactive td { color: #999999; }
 
 .download .two-column-layout .column-2 { width: 25% }
 .download .two-column-layout .column-2 h3 { padding-top: 25px;}
-.download .two-column-layout .column-2 form .submit {
-	font-weight: bold;
-    padding: 5px;
-}
 
 .download .two-column-layout .column-2 .box { 
 	border: 1px solid #CCC; 
