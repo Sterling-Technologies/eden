@@ -42,13 +42,19 @@ class Eden_Jabber extends Eden_Event {
     const PRESENCE_DND 			= 'dnd';
     const PRESENCE_XA 			= 'xa';
 	
-    const TYPE_CHAT		 		= 'chat';
-	const TYPE_UNAVAILABLE 		= 'unavailable';
-	const TYPE_ERROR 			= 'error';
-	const TYPE_SUBSCRIBE 		= 'subscribe';
-	const TYPE_SUBSCRIBED 		= 'subscribed';
-	const TYPE_UNSUBSCRIBE 		= 'unsubscribe';
-	const TYPE_UNSUBSCRIBED 	= 'unsubscribed';
+    const PRESENCE_TYPE_PROBE			= 'probe';
+	const PRESENCE_TYPE_UNAVAILABLE 	= 'unavailable';
+	const PRESENCE_TYPE_ERROR 			= 'error';
+	const PRESENCE_TYPE_SUBSCRIBE 		= 'subscribe';
+	const PRESENCE_TYPE_SUBSCRIBED 		= 'subscribed';
+	const PRESENCE_TYPE_UNSUBSCRIBE 	= 'unsubscribe';
+	const PRESENCE_TYPE_UNSUBSCRIBED 	= 'unsubscribed';
+	
+	const MESSAGE_TYPE_CHAT				= 'chat';
+	const MESSAGE_TYPE_ERROR			= 'error';
+	const MESSAGE_TYPE_GROUPCHAT		= 'groupchat';
+	const MESSAGE_TYPE_HEADLINE			= 'headline';
+	const MESSAGE_TYPE_NORMAL			= 'normal';
 	
 	const AUTH_NOOP			= 0;
 	const AUTH_STARTED		= 1;
@@ -57,7 +63,20 @@ class Eden_Jabber extends Eden_Event {
 	const AUTH_PROCEED		= 4;
 	const AUTH_SUCCESS		= 5;
 	
-	const ONLINE = 'Online';
+	const AUTH_TYPE_STREAM		= 'stream:stream';
+	const AUTH_TYPE_FEATURES	= 'stream:features';
+	const AUTH_TYPE_CHALLENGE	= 'challenge';
+	const AUTH_TYPE_FAILURE		= 'failure';
+	const AUTH_TYPE_PROCEED		= 'proceed';
+	const AUTH_TYPE_SUCCESS		= 'success';
+	
+	const QUERY_TYPE_BIND		= 'bind_1';
+	const QUERY_TYPE_SESSION	= 'sess_1';
+	const QUERY_TYPE_REGISTER	= 'reg_1';
+	const QUERY_TYPE_REGISTERED	= 'reg_2';
+	const QUERY_TYPE_UNREGISTER	= 'unreg_1';
+	const QUERY_TYPE_ROSTER		= 'roster_1';
+	const QUERY_TYPE_PUSH		= 'push';
 	
 	/* Public Properties
 	--------------------------------*/
@@ -82,32 +101,44 @@ class Eden_Jabber extends Eden_Event {
 	protected $_resource = NULL;
 	
 	protected static $_presences = array(
+		self::PRESENCE_ONLINE,
+		self::PRESENCE_OFFLINE,
 		self::PRESENCE_DND, 
 		self::PRESENCE_AWAY,  
 		self::PRESENCE_XA);
 	
-	protected static $_types = array(
-		self::TYPE_CHAT,
-		self::TYPE_UNAVAILABLE,
-		self::TYPE_ERROR,
-		self::TYPE_SUBSCRIBE,
-		self::TYPE_SUBSCRIBED,
-		self::TYPE_UNSUBSCRIBE,
-		self::TYPE_UNSUBSCRIBED);
+	protected static $_presenceTypes = array(
+		self::PRESENCE_TYPE_PROBE,
+		self::PRESENCE_TYPE_UNAVAILABLE,
+		self::PRESENCE_TYPE_ERROR,
+		self::PRESENCE_TYPE_SUBSCRIBE,
+		self::PRESENCE_TYPE_SUBSCRIBED,
+		self::PRESENCE_TYPE_UNSUBSCRIBE,
+		self::PRESENCE_TYPE_UNSUBSCRIBED);
+		
+	protected static $_messageTypes = array(
+		self::MESSAGE_TYPE_CHAT,
+		self::MESSAGE_TYPE_ERROR,
+		self::MESSAGE_TYPE_GROUPCHAT,
+		self::MESSAGE_TYPE_HEADLINE,
+		self::MESSAGE_TYPE_NORMAL);
 		
 	protected static $_authentications = array(
-		'stream:stream',
-		'stream:features',
-		'challenge',
-		'failiure',
-		'proceed',
-		'success');
+		self::AUTH_TYPE_STREAM,
+		self::AUTH_TYPE_FEATURES,
+		self::AUTH_TYPE_CHALLENGE,
+		self::AUTH_TYPE_FAILURE,
+		self::AUTH_TYPE_PROCEED,
+		self::AUTH_TYPE_SUCCESS);
 		
 	protected static $_queries = array(
-		'bind_1',	'sess_1',
-		'reg_1',	'reg_2',
-		'unreg_1',	'roster_1',
-		'push');
+		self::QUERY_TYPE_BIND,
+		self::QUERY_TYPE_SESSION,
+		self::QUERY_TYPE_REGISTER,
+		self::QUERY_TYPE_REGISTERED,
+		self::QUERY_TYPE_UNREGISTER,
+		self::QUERY_TYPE_ROSTER,
+		self::QUERY_TYPE_PUSH);
 	
 	/* Private Properties
 	-------------------------------*/
@@ -246,7 +277,7 @@ class Eden_Jabber extends Eden_Event {
 		
 		//send off what a typical jabber server opens with
 		$this->send("<?xml version='1.0' encoding='UTF-8' ?>\n");
-		$this->send("<stream:stream to='".$this->_host."' xmlns='jabber:client'".
+		$this->send("<stream:stream to='".$this->_host."' xmlns='jabber:client' ".
 			"xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>\n");
 		
 		$this->trigger('connected');
@@ -313,10 +344,9 @@ class Eden_Jabber extends Eden_Event {
 		|| $read != '' 
 		|| (substr(rtrim($data), -1) != '>')));
 		
-		$this->trigger('received', $data);
-		
 		//if there is data
 		if ($data != '') {
+			$this->trigger('received', $data);
 			//parse the xml and return
 			return $this->_parseXml($data);
 		} else {
@@ -356,7 +386,7 @@ class Eden_Jabber extends Eden_Event {
 	 * @param string message
 	 * @return this
 	 */
-	public function setOnline($to, $message = NULL) {
+	public function setOnline($to = NULL, $message = NULL) {
 		return $this->setPresence($to, $message, NULL, self::PRESENCE_ONLINE);
 	}
 	
@@ -367,7 +397,7 @@ class Eden_Jabber extends Eden_Event {
 	 * @param string message
 	 * @return this
 	 */
-	public function setOffline($to, $message = NULL) {
+	public function setOffline($to = NULL, $message = NULL) {
 		return $this->setPresence($to, $message, NULL, self::PRESENCE_OFFLINE);
 	}
 	
@@ -378,7 +408,7 @@ class Eden_Jabber extends Eden_Event {
 	 * @param string message
 	 * @return this
 	 */
-	public function setAway($to, $message = NULL) {
+	public function setAway($to = NULL, $message = NULL) {
 		return $this->setPresence($to, $message, NULL, self::PRESENCE_AWAY);
 	}
 	
@@ -389,7 +419,7 @@ class Eden_Jabber extends Eden_Event {
 	 * @param string message
 	 * @return this
 	 */
-	public function setDND($to, $message = NULL) {
+	public function setDND($to = NULL, $message = NULL) {
 		return $this->setPresence($to, $message, NULL, self::PRESENCE_DND);
 	}
 	
@@ -400,7 +430,7 @@ class Eden_Jabber extends Eden_Event {
 	 * @param string message
 	 * @return this
 	 */
-	public function setXA($to, $message = NULL) {
+	public function setXA($to = NULL, $message = NULL) {
 		return $this->setPresence($to, $message, NULL, self::PRESENCE_XA);
 	}
 	
@@ -413,8 +443,17 @@ class Eden_Jabber extends Eden_Event {
 	 * @param string presence title
 	 * @return this
 	 */
-	public function subscribeTo($to, $message = NULL) {
-		return $this->setPresence($to, $message, self::TYPE_SUBSCRIBED);
+	public function subscribeTo($to = NULL, $message = NULL) {
+		return $this->setPresence($to, $message, self::PRESENCE_TYPE_SUBSCRIBE);
+	}
+	
+	/**
+	 * Check to see who is online
+	 *
+	 * @return this
+	 */
+	public function probe($to) {
+		return $this->setPresence($to, NULL, self::PRESENCE_TYPE_PROBE);
 	}
 	
 	/**
@@ -426,18 +465,12 @@ class Eden_Jabber extends Eden_Event {
 	 * @param string presence title
 	 * @return this
 	 */
-	public function setPresence($to, $message = NULL, $type = NULL, $show = NULL) {
+	public function setPresence($to = NULL, $message = NULL, $type = NULL, $show = NULL) {
 		Eden_Jabber_Error::i()
-			->argument(1, 'array', 'string')
+			->argument(1, 'array', 'string', 'null')
 			->argument(2, 'string', 'null')
 			->argument(3, 'string', 'null')
 			->argument(4, 'string', 'null');
-		
-		//if to is a string
-		if (is_string($to)) {
-			//make it into an array
-        	$to = array($to);
-		}
 		
 		//if no JID
 		if (!isset($this->_jabberId)) {
@@ -447,23 +480,39 @@ class Eden_Jabber extends Eden_Event {
 		
 		//fix show
 		$show = strtolower($show);
-		$show = in_array($show, self::$_presences) ? '<show>'. $show .'</show>' : '';
+		$show = in_array($show, self::$_presences) ? '<show>'. $show .'</show>' : NULL;
 		
 		//fix type
-		$type = $type ? ' type="'.$type.'"' : '';
+		$type = in_array($type, self::$_presenceTypes) ? ' type="'.$type.'"' : NULL;
 		
 		//fix from
 		$from = 'from="'.$this->_jabberId.'"';
 		
 		//fix message
-		$message = $message ? '<status>' . htmlspecialchars($message) .'</status>' : '';
+		$message = $message ? '<status>' . htmlspecialchars($message) .'</status>' : NULL;
+		
+		$template = '<presence '.$from.'%s'.$type.' />';
+		if($show || $message) {
+			$template = '<presence '.$from.'%s'.$type.'>'.$show.$message.'</presence>';
+		}
+		
+		if(is_null($to)) {
+			$this->send(sprintf($template, ''));
+			return $this;
+		}
+		
+		//if to is a string
+		if (is_string($to)) {
+			//make it into an array
+        	$to = array($to);
+		}
 		
 		//walk to
 		foreach ($to as $user) {
 			//fix to
-			$to = $user ? 'to="'.$user.'"' : '';
+			$to = $user ? ' to="'.$user.'"' : '';
 			//send prensense to user
-			$this->send('<presence '.$from.' '.$to.$type.'>' . $show . $message . '</presence>');
+			$this->send(sprintf($template, $to));
 		}
 		
 		return $this;
@@ -478,12 +527,12 @@ class Eden_Jabber extends Eden_Event {
 	 * @param string message type
 	 * @return this
 	 */
-	public function to($to, $text, $subject = '', $type = 'chat') {
+	public function to($to, $text, $subject = NULL, $thread = NULL, array $meta = array()) {
 		Eden_Jabber_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string')
 			->argument(3, 'string', 'null')
-			->argument(4, 'string');
+			->argument(4, 'string', 'null');
 			
 		//if no JID
 		if (!isset($this->_jabberId)) {
@@ -491,20 +540,28 @@ class Eden_Jabber extends Eden_Event {
 			Eden_Jabber_Error::i(Eden_Jabber_Error::NO_JID)->trigger();
 		}
 		
-		//if type is not one of the valid types
-		if (!in_array($type, self::$_types)) {
-			//set it to chat
-			$type = self::TYPE_CHAT;
+		if(!$thread) {
+			$thread = uniqid('thread');
 		}
 		
-		//send the message
-		return $this->send("<message from='" . htmlspecialchars($this->_jabberId) . 
-			"' to='" . htmlspecialchars($to) . "' type='".$type."' id='" . uniqid('msg') . "'>
-			<subject>" . htmlspecialchars($subject) . "</subject>
-			<body>" . htmlspecialchars($text) . "</body>
-			</message>");
+		$from = $this->_jabberId;
+		
+		$template = '<message from="%s" to="%s" type="%s" id="%s">'.
+		'<subject>%s</subject><body>%s</body><thread>%s</thread>'.
+		'<active xmlns="http://jabber.org/protocol/chatstates" />'.
+		'</message>';
+		
+		return $this->send(sprintf(
+			$template, 
+			htmlspecialchars($from),
+			htmlspecialchars($to),
+			self::MESSAGE_TYPE_CHAT,
+			uniqid('msg'),
+			htmlspecialchars($subject),
+			htmlspecialchars($text),
+			$thread));	
 	}
-	
+
 	/**
 	 * Requests for roster
 	 * 
@@ -565,7 +622,6 @@ class Eden_Jabber extends Eden_Event {
 	}
 	
 	protected function _response($xml) {
-		
 		//if the xml is not an array
 		//or if it is empty
 		if (!is_array($xml) || !sizeof($xml)) {
@@ -608,20 +664,40 @@ class Eden_Jabber extends Eden_Event {
 		}
 		
 		if($command == 'message') {
+			$from 	= $xml['message'][0]['@']['from'];
+			$to 	= $xml['message'][0]['@']['to'];
+			
 			// we are only interested in content...
 			if (!isset($xml['message'][0]['#']['body'])) {
+				//are they fishing?
+				if($to != $this->_jabberId) {
+					$this->probe($from);
+				}
+				
 				return $this;
 			}
 			
-			$body = $xml['message'][0]['#']['body'][0]['#'];
-			$from = $xml['message'][0]['@']['from'];
+			$body 	= $xml['message'][0]['#']['body'][0]['#'];
+			//sometimes the message received is that they are just fishing for who
+			//will respond we should notify them of our presence
+			//we will let whomever deal with this
+			$fishing = $to != $this->_jabberId;
 			
 			$subject = NULL;
 			if (isset($xml['message'][0]['#']['subject'])) {
 				$subject = $xml['message'][0]['#']['subject'][0]['#'];
 			}
 			
-			$this->trigger('message', $from, $body, $subject);
+			$thread = NULL;
+			if (isset($xml['message'][0]['#']['thread'])) {
+				$thread = $xml['message'][0]['#']['thread'][0]['#'];
+			}
+			
+			$meta = array(
+				'fishing' 	=> $fishing,
+				'intended'	=> $to);
+			
+			$this->trigger('message', $from, $body, $subject, $thread, $meta);
 			
 			return $this;
 		}
@@ -630,7 +706,7 @@ class Eden_Jabber extends Eden_Event {
 	protected function _authenticate($command, $xml) {
 		//response switch
 		switch ($command) {
-			case 'stream:stream':
+			case self::AUTH_TYPE_STREAM:
 				// Connection initialized (or after authentication). Not much to do here...
 				if (isset($xml['stream:stream'][0]['#']['stream:features'])) {
 					// we already got all info we need
@@ -663,7 +739,7 @@ class Eden_Jabber extends Eden_Event {
 				
 				break;
 
-			case 'stream:features':
+			case self::AUTH_TYPE_FEATURES:
 				// Resource binding after successful authentication
 				if ($this->_negotiation == self::AUTH_SUCCESS) {
 					// session required?
@@ -676,7 +752,7 @@ class Eden_Jabber extends Eden_Event {
 				}
 
 				// Let's use TLS if SSL is not enabled and we can actually use it
-				if (!$this->_ssl && $this->_tls && $this->_canSSL() && 
+				if (!$this->_ssl && $this->_tls && $this->_canUseSSL() && 
 					isset($xml['stream:features'][0]['#']['starttls'])) {
 					$this->send("<starttls xmlns='urn:ietf:params:xml:ns:xmpp-tls'/>\n");
 					return $this->_response($this->wait());
@@ -727,7 +803,7 @@ class Eden_Jabber extends Eden_Event {
 				Eden_Jabber_Error::i(Eden_Jabber_Error::NO_SASL)->trigger();
 				break;
 
-			case 'challenge':
+			case self::AUTH_TYPE_CHALLENGE:
 				// continue with authentication...a challenge literally -_-
 				$this->_negotiation = self::AUTH_CHALLENGE;
 				$decoded = base64_decode($xml['challenge'][0]['#']);
@@ -769,7 +845,7 @@ class Eden_Jabber extends Eden_Event {
 
 				return $this->_response($this->wait());
 
-			case 'failure':
+			case self::AUTH_TYPE_FAILURE:
 				$this->_negotiation = self::AUTH_FAILIURE;
 				$this->trigger('failiure');
 				//disconnect
@@ -777,7 +853,7 @@ class Eden_Jabber extends Eden_Event {
 				//throw an exception
 				Eden_Jabber_Error::i(Eden_Jabber_Error::SERVER_FAILED)->trigger();
 
-			case 'proceed':
+			case self::AUTH_TYPE_PROCEED:
 				// continue switching to TLS
 				$meta = stream_get_meta_data($this->_connection);
 				socket_set_blocking($this->_connection, 1);
@@ -797,7 +873,7 @@ class Eden_Jabber extends Eden_Event {
 
 				return $this->_response($this->wait());
 
-			case 'success':
+			case self::AUTH_TYPE_SUCCESS:
 				// Yay, authentication successful.
 				$this->send("<stream:stream to='".$this->_host."' xmlns='jabber:client' ".
 				"xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>\n");
@@ -814,7 +890,7 @@ class Eden_Jabber extends Eden_Event {
 	protected function _query($command, $xml) {
 		// multiple possibilities here
 		switch ($command) {
-			case 'bind_1':
+			case self::QUERY_TYPE_BIND:
 				$this->_jabberId = $xml['iq'][0]['#']['bind'][0]['#']['jid'][0]['#'];
 				$this->trigger('loggedin');
 				// and (maybe) yet another request to be able to send messages *finally*
@@ -827,17 +903,18 @@ class Eden_Jabber extends Eden_Event {
 
 				return $this;
 
-			case 'sess_1':
+			case self::QUERY_TYPE_SESSION:
+				$this->trigger('session');
 				return $this;
 
-			case 'reg_1':
+			case self::QUERY_TYPE_REGISTER:
 				$this->send("<iq type='set' id='reg_2'><query xmlns='jabber:iq:register'><username>" . 
 				htmlspecialchars($this->_user)."</username><password>".htmlspecialchars($this->_pass) . 
 				"</password></query></iq>");
 				
 				return $this->_response($this->wait());
 
-			case 'reg_2':
+			case self::QUERY_TYPE_REGISTERED:
 				// registration end
 				if (isset($xml['iq'][0]['#']['error'])) {
 					//'Warning: Registration failed.'
@@ -848,11 +925,11 @@ class Eden_Jabber extends Eden_Event {
 				
 				return $this;
 
-			case 'unreg_1':
+			case self::QUERY_TYPE_UNREGISTER:
 				$this->trigger('unregistered');
 				return $this;
 			
-			case 'roster_1':
+			case self::QUERY_TYPE_ROSTER:
 				if (!isset($xml['iq'][0]['#']['query'][0]['#']['item'])) {
 					//'Warning: No Roster Returned.'
 					return $this;
