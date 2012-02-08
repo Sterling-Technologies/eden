@@ -76,6 +76,10 @@ class Front_Block_Menu extends Eden_Block {
 		$folder		= $this->Folder($library.$path);
 		$files		= $folder->getFiles();
 		$folders	= $folder->getFolders();
+		
+		sort($files);
+		sort($folders);
+		
 		return array('folders' => $folders, 'files' => $files);
 	}
 }
