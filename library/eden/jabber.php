@@ -39,15 +39,16 @@ class Eden_Jabber extends Eden_Event {
 	const PRESENCE_ONLINE		= 'online';
 	const PRESENCE_OFFLINE		= 'offline';
     const PRESENCE_AWAY 		= 'away';
-    const PRESENCE_CHAT 		= 'chat';
     const PRESENCE_DND 			= 'dnd';
     const PRESENCE_XA 			= 'xa';
 	
-	const TYPE_CHAT 	= 'chat';
-	const TYPE_NORMAL 	= 'normal';
-	const TYPE_ERROR 	= 'error';
-	const TYPE_GROUP 	= 'groupchat';
-	const TYPE_HEADLINE = 'headline';
+    const TYPE_CHAT		 		= 'chat';
+	const TYPE_UNAVAILABLE 		= 'unavailable';
+	const TYPE_ERROR 			= 'error';
+	const TYPE_SUBSCRIBE 		= 'subscribe';
+	const TYPE_SUBSCRIBED 		= 'subscribed';
+	const TYPE_UNSUBSCRIBE 		= 'unsubscribe';
+	const TYPE_UNSUBSCRIBED 	= 'unsubscribed';
 	
 	const AUTH_NOOP			= 0;
 	const AUTH_STARTED		= 1;
@@ -82,16 +83,17 @@ class Eden_Jabber extends Eden_Event {
 	
 	protected static $_presences = array(
 		self::PRESENCE_DND, 
-		self::PRESENCE_AWAY, 
-		self::PRESENCE_CHAT, 
+		self::PRESENCE_AWAY,  
 		self::PRESENCE_XA);
 	
 	protected static $_types = array(
 		self::TYPE_CHAT,
-		self::TYPE_NORMAL,
+		self::TYPE_UNAVAILABLE,
 		self::TYPE_ERROR,
-		self::TYPE_GROUP,
-		self::TYPE_HEADLINE);
+		self::TYPE_SUBSCRIBE,
+		self::TYPE_SUBSCRIBED,
+		self::TYPE_UNSUBSCRIBE,
+		self::TYPE_UNSUBSCRIBED);
 		
 	protected static $_authentications = array(
 		'stream:stream',
@@ -112,7 +114,7 @@ class Eden_Jabber extends Eden_Event {
 	/* Get
 	-------------------------------*/
 	/* Magic
-	--------------------------------*/
+	-------------------------------*/
 	public function __construct($host, $port, $user, $pass, $ssl = false, $tls = true) {
 		Eden_Jabber_Error::i()
 			->argument(1, 'string')
@@ -224,12 +226,12 @@ class Eden_Jabber extends Eden_Event {
 		
 		//try to open a connection
 		try {
-			$this->_connection = fsockopen($host, $port, $errorno, $errorstr, $timeout);
+			$this->_connection = fsockopen($host, $this->_port, $errorno, $errorstr, $timeout);
 		} catch(_Exception $e) {
 			//throw an exception
 			Eden_Jabber_Error::i()->setMessage(Eden_Jabber_Error::CONNECTION_FAILED)
 				->addVariable($host)
-				->addVariable($port)
+				->addVariable($this->_port)
 				->trigger();
 		}
 		
@@ -241,7 +243,7 @@ class Eden_Jabber extends Eden_Event {
 		$this->send("<stream:stream to='".$this->_host."' xmlns='jabber:client'".
 			"xmlns:stream='http://etherx.jabber.org/streams' version='1.0'>\n");
 		
-		$this->trigger('connected', $this);
+		$this->trigger('connected');
 		
 		//start waiting
 		$this->_response($this->wait());
@@ -255,24 +257,26 @@ class Eden_Jabber extends Eden_Event {
 	 * @return this
 	 */
 	public function disconnect() {
-		//if its connected
-		if ($this->_connection) {
-			// disconnect gracefully
-			if (isset($this->_presence)) {
-				$this->setPresence(self::PRESENCE_OFFLINE, self::PRESENCE_OFFLINE, NULL, 'unavailable');
-			}
-			
-			//close the stream
-			$this->send('</stream:stream>');
-			
-			//close the connection
-			return fclose($this->_connection);
-			
-			$this->_connection = NULL;
-			
-			$this->trigger('disconnected', $this);
+		//if its not connected
+		if (!$this->_connection) {
+			return $this;
 		}
 		
+		// disconnect gracefully
+		if (isset($this->_presence)) {
+			$this->setPresence(self::PRESENCE_OFFLINE, self::PRESENCE_OFFLINE, NULL, 'unavailable');
+		}
+		
+		//close the stream
+		$this->send('</stream:stream>');
+		
+		//close the connection
+		fclose($this->_connection);
+		
+		$this->_connection = NULL;
+		
+		$this->trigger('disconnected');
+	
 		return $this;
 	}
 	
@@ -303,6 +307,8 @@ class Eden_Jabber extends Eden_Event {
 		|| $read != '' 
 		|| (substr(rtrim($data), -1) != '>')));
 		
+		$this->trigger('received', $data);
+		
 		//if there is data
 		if ($data != '') {
 			//parse the xml and return
@@ -329,26 +335,96 @@ class Eden_Jabber extends Eden_Event {
 		//clean the XML
 		$xml = trim($xml);
 		
+		$this->trigger('sent', $xml);
+		
 		//send the XML off
-		fwrite($this->connection, $xml);
+		fwrite($this->_connection, $xml);
 		
 		return $this;
 	}
 	
 	/**
-	 * Set the presence of a user
+	 * Set the presence to online
 	 * 
-	 * @param string presence title
-	 * @param string message
 	 * @param string|array to
-	 * @param bool type
+	 * @param string message
 	 * @return this
 	 */
-	public function setPresence($show = NULL, $message = NULL, $to = NULL, $type = NULL) {
+	public function setOnline($to, $message = NULL) {
+		return $this->setPresence($to, $message, NULL, self::PRESENCE_ONLINE);
+	}
+	
+	/**
+	 * Set the presence to offline
+	 * 
+	 * @param string|array to
+	 * @param string message
+	 * @return this
+	 */
+	public function setOffline($to, $message = NULL) {
+		return $this->setPresence($to, $message, NULL, self::PRESENCE_OFFLINE);
+	}
+	
+	/**
+	 * Set the presence to away
+	 * 
+	 * @param string|array to
+	 * @param string message
+	 * @return this
+	 */
+	public function setAway($to, $message = NULL) {
+		return $this->setPresence($to, $message, NULL, self::PRESENCE_AWAY);
+	}
+	
+	/**
+	 * Set the presence to DND
+	 * 
+	 * @param string|array to
+	 * @param string message
+	 * @return this
+	 */
+	public function setDND($to, $message = NULL) {
+		return $this->setPresence($to, $message, NULL, self::PRESENCE_DND);
+	}
+	
+	/**
+	 * Set the presence to XA ?
+	 * 
+	 * @param string|array to
+	 * @param string message
+	 * @return this
+	 */
+	public function setXA($to, $message = NULL) {
+		return $this->setPresence($to, $message, NULL, self::PRESENCE_XA);
+	}
+	
+	/**
+	 * Set the presence of a user
+	 * 
+	 * @param string|array to
+	 * @param string message
+	 * @param string type
+	 * @param string presence title
+	 * @return this
+	 */
+	public function subscribeTo($to, $message = NULL) {
+		return $this->setPresence($to, $message, self::TYPE_SUBSCRIBED);
+	}
+	
+	/**
+	 * Set the presence of a user
+	 * 
+	 * @param string|array to
+	 * @param string message
+	 * @param string type
+	 * @param string presence title
+	 * @return this
+	 */
+	public function setPresence($to, $message = NULL, $type = NULL, $show = NULL) {
 		Eden_Jabber_Error::i()
-			->argument(1, 'string', 'null')
+			->argument(1, 'array', 'string')
 			->argument(2, 'string', 'null')
-			->argument(3, 'array', 'string', 'null')
+			->argument(3, 'string', 'null')
 			->argument(4, 'string', 'null');
 		
 		//if to is a string
@@ -483,6 +559,7 @@ class Eden_Jabber extends Eden_Event {
 	}
 	
 	protected function _response($xml) {
+		
 		//if the xml is not an array
 		//or if it is empty
 		if (!is_array($xml) || !sizeof($xml)) {
@@ -538,7 +615,7 @@ class Eden_Jabber extends Eden_Event {
 				$subject = $xml['message'][0]['#']['subject'][0]['#'];
 			}
 			
-			$this->trigger('message', $this, $from, $body, $subject);
+			$this->trigger('message', $from, $body, $subject);
 			
 			return $this;
 		}
@@ -574,7 +651,7 @@ class Eden_Jabber extends Eden_Event {
 				$this->_negotiation = self::AUTH_STARTED;
 				
 				// go on with authentication?
-				if (isset($features['stream:features'][0]['#']['bind']) || $this->_negotiation == self::AUTH_PROCEED) {
+				if (isset($features['stream:features'][0]['#']['mechanisms']) || $this->_negotiation == self::AUTH_PROCEED) {
 					return $this->_response($features);
 				}
 				
@@ -600,7 +677,7 @@ class Eden_Jabber extends Eden_Event {
 				}
 
 				// Does the server support SASL authentication?
-
+				
 				// I hope so, because we do (and no other method).
 				if (isset($xml['stream:features'][0]['#']['mechanisms'][0]['@']['xmlns']) && 
 					$xml['stream:features'][0]['#']['mechanisms'][0]['@']['xmlns'] == 'urn:ietf:params:xml:ns:xmpp-sasl') {
@@ -688,7 +765,7 @@ class Eden_Jabber extends Eden_Event {
 
 			case 'failure':
 				$this->_negotiation = self::AUTH_FAILIURE;
-				$this->trigger('failiure', $this);
+				$this->trigger('failiure');
 				//disconnect
 				$this->disconnect();
 				//throw an exception
@@ -733,7 +810,7 @@ class Eden_Jabber extends Eden_Event {
 		switch ($command) {
 			case 'bind_1':
 				$this->_jabberId = $xml['iq'][0]['#']['bind'][0]['#']['jid'][0]['#'];
-				$this->trigger('loggedin', $this);
+				$this->trigger('loggedin');
 				// and (maybe) yet another request to be able to send messages *finally*
 				if ($this->_session) {
 					$this->send("<iq to='".$this->_host."' type='set' id='sess_1'>
@@ -761,12 +838,12 @@ class Eden_Jabber extends Eden_Event {
 					return $this;
 				}
 				
-				$this->trigger('registered', $this);
+				$this->trigger('registered');
 				
 				return $this;
 
 			case 'unreg_1':
-				$this->trigger('unregistered', $this);
+				$this->trigger('unregistered');
 				return $this;
 			
 			case 'roster_1':
@@ -782,7 +859,7 @@ class Eden_Jabber extends Eden_Event {
 					$roster[$jid] = $subscription;
 				}
 				
-				$this->trigger('roster', $this, $roster);
+				$this->trigger('roster', $roster);
 				break;
 			
 			case 'push':
@@ -807,7 +884,7 @@ class Eden_Jabber extends Eden_Event {
 						$attributes['jid']);
 				}
 				
-				$this->trigger('subscribe', $this, $attributes['ask'], $attributes['jid']);
+				$this->trigger('subscribe', $attributes['ask'], $attributes['jid']);
 				break;
 			//'Notice: Received unexpected IQ.'
 			default: break;

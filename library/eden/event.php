@@ -172,7 +172,7 @@ class Eden_Event extends Eden_Class {
 		$event = array_shift($args);
 		
 		//as a courtesy lets shift in the object
-		array_unshift($args, $this);
+		array_unshift($args, $this, $event);
 		
 		//for each observer
 		foreach($this->_observers as $observer) {

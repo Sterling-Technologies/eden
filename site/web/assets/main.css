@@ -391,6 +391,7 @@ tr.row-inactive td { color: #999999; }
 	margin: 5px; 
 	box-shadow: 2px 2px 2px #999999;
 	border-radius: 10px 10px 10px 10px;
+	background: #EFEFEF;
 }
 .documentation .two-column-layout .column-2 .note h5 {
 	background: #FC9;
@@ -399,7 +400,6 @@ tr.row-inactive td { color: #999999; }
 	border-radius: 10px 10px 0 0;
 }
 .documentation .two-column-layout .column-2 .note span {
-	background: #EFEFEF;
 	display: block;
 	padding: 10px 15px;
 	border-radius: 0 0 10px 10px;

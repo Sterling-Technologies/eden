@@ -16,15 +16,15 @@
 
 <sub>Figure 1. Our Hello World Example</sub>
 <div class="example"><pre class="brush: php;">
-eden('tool')->output('Hello World'); //--> Hello World
+eden('debug')->output('Hello World'); //--> Hello World
 
 /* vs */
 
-$tool = new Eden_Tool();
-$tool->output('Hello World'); //--> Hello World
+$debug = new Eden_Debug();
+$debug->output('Hello World'); //--> Hello World
 </pre></div>
 
-<p>In the example above, we called a class named <sub>Eden_Tool</sub> and printed out a string in one line. Using PHP normally, you would need to perform this in two lines <em>(following common coding standards)</em> and declare a variable. If this were a static method we could get it down to one line, but static methods does not solve for classes needing initial arguments.</p>
+<p>In the example above, we called a class named <sub>Eden_Debug</sub> and printed out a string in one line. Using PHP normally, you would need to perform this in two lines <em>(following common coding standards)</em> and declare a variable. If this were a static method we could get it down to one line, but static methods does not solve for classes needing initial arguments.</p>
 
 <h4>Chainability</h4>
 <p>The next example demonstrates passing initial arguments in a class and printing the results after various method calls.</p> 

@@ -1,4 +1,4 @@
-<a class="next" href="/docs/library/features">1. Features &raquo;</a>
+<a class="next" href="/docs/library">II. The Library &raquo;</a>
 
 <h3>I. Quick Start</h3>
 
@@ -9,7 +9,7 @@
 <sub>Paste this Code Snippet!</sub>
 <div class="example"><pre class="brush: php;">
 include('eden.php');
-eden('tool')->output('Hello World'); //--> Hello World
+eden('debug')->output('Hello World'); //--> Hello World
 </pre></div>
 
 <p>If you look at <sub>test.php</sub> in your browser you'll see something along the lines of <strong>&quot;Hello World&quot;</strong>. This means you are ready to build a website! As easy as it is to install, head over to the section called <a href="/docs/library/features">1. Features</a> to find out what you can do with <strong>Eden</strong>!</p>
@@ -272,39 +272,6 @@ $template->set('name', 'value');			//set template variable 'name' to 'value'
 $template->parseString('he is name');		//replaces all instances of each template variable with their respective value
 $template->parsePHP('/to/template.php');	//makes all template variables as php variables given the PHP template file
 $template->parseEngine(/to/template.tpl);	//looks smarty type variables and replaces with template variables (can loop)
-</pre></div>
-
-<sub>Validation</sub>
-<div class="example"><pre class="brush: php;">
-$validation = eden('validation', 'something');		//instantiate
-
-$validation->isEmail();						// Returns true if email
-$validation->isUrl();						// Returns true if URL
-$validation->isHtml();						// Returns true if HTML
-$validation->isShortName();					// Returns true if short name
-$validation->startsWithLetter();			// Returns true if starts with letter
-
-$validation->greaterThan(4);				// Returns true if number length &gt; 4
-$validation->greaterThanEqualTo(4);			// Returns true if number length &gt;= 4
-$validation->lessThan(4);					// Returns true if number length &lt; 4
-$validation->lessThanEqualTo(4);			// Returns true if number length &lt;= 4 
-
-$validation->lengthGreaterThan(4);			// Returns true if string length &gt; 4
-$validation->lengthGreaterThanEqualTo(4);	// Returns true if string length &gt;= 4
-$validation->lengthLessThan(4);				// Returns true if string length &lt; 4 
-$validation->lengthLessThanEqualTo(4);		// Returns true if string length &lt;= 4
-$validation->wordCountEquals(4);			// Returns true if word count &gt; 4  
-$validation->wordCountGreaterThan(4);		// Returns true if word count &gt;= 4 
-$validation->wordCountGreaterThanEqualTo(4);	// Returns true if 
-$validation->wordCountLessThan(4);			// Returns true if word count &lt; 4
-$validation->wordCountLessThanEqualTo(4);	// Returns true if word count &lt;= 4
-
-$validate = array(
-	array('method' => 'wordCountEquals', 'not equal'),
-	array('method' => 'startsWithLetter', 'no letter'),
-	array('method' => 'isEmail', 'not email'));
-	
-$validation->getErrors($validate);			//returns error messages if any return false
 </pre></div>
 
 <sub>Path (Extends Strings [above])</sub>
