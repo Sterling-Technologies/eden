@@ -527,7 +527,7 @@ class Eden_Jabber extends Eden_Event {
 	 * @param string message type
 	 * @return this
 	 */
-	public function to($to, $text, $subject = NULL, $thread = NULL, array $meta = array()) {
+	public function to($to, $text, $subject = NULL, $thread = NULL) {
 		Eden_Jabber_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string')
@@ -540,11 +540,23 @@ class Eden_Jabber extends Eden_Event {
 			Eden_Jabber_Error::i(Eden_Jabber_Error::NO_JID)->trigger();
 		}
 		
-		if(!$thread) {
-			$thread = uniqid('thread');
-		}
 		
 		$from = $this->_jabberId;
+		
+		if(!$thread) {
+			$template = '<message from="%s" to="%s" type="%s" id="%s">'.
+			'<subject>%s</subject><body>%s</body></message>';
+			
+			return $this->send(sprintf(
+				$template, 
+				htmlspecialchars($from),
+				htmlspecialchars($to),
+				self::MESSAGE_TYPE_NORMAL,
+				uniqid('msg'),
+				htmlspecialchars($subject),
+				htmlspecialchars($text)));	
+		}
+		
 		
 		$template = '<message from="%s" to="%s" type="%s" id="%s">'.
 		'<subject>%s</subject><body>%s</body><thread>%s</thread>'.
@@ -664,19 +676,13 @@ class Eden_Jabber extends Eden_Event {
 		}
 		
 		if($command == 'message') {
-			$from 	= $xml['message'][0]['@']['from'];
-			$to 	= $xml['message'][0]['@']['to'];
-			
 			// we are only interested in content...
 			if (!isset($xml['message'][0]['#']['body'])) {
-				//are they fishing?
-				if($to != $this->_jabberId) {
-					$this->probe($from);
-				}
-				
 				return $this;
 			}
 			
+			$from 	= $xml['message'][0]['@']['from'];
+			$to 	= $xml['message'][0]['@']['to'];
 			$body 	= $xml['message'][0]['#']['body'][0]['#'];
 			//sometimes the message received is that they are just fishing for who
 			//will respond we should notify them of our presence
@@ -693,11 +699,7 @@ class Eden_Jabber extends Eden_Event {
 				$thread = $xml['message'][0]['#']['thread'][0]['#'];
 			}
 			
-			$meta = array(
-				'fishing' 	=> $fishing,
-				'intended'	=> $to);
-			
-			$this->trigger('message', $from, $body, $subject, $thread, $meta);
+			$this->trigger('message', $from, $body, $subject, $thread, $fishing);
 			
 			return $this;
 		}
