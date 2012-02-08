@@ -128,9 +128,15 @@ class Eden_Jabber extends Eden_Event {
 		$this->_port = $port;
 		$this->_user = $user;
 		$this->_pass = $pass;
+		$this->_domain = $host;
 		
 		$this->_ssl = $ssl && $this->_canUseSSL();
 		$this->_tls = $tls && $this->_canUseTLS();
+		
+		
+		if(strpos($user, '@') !== false) {
+			list($this->_user, $this->_domain) = explode('@', $user);
+		}
 		
 		// Change port if we use SSL
 		if ($this->_port == 5222 && $this->_ssl) {
@@ -699,7 +705,7 @@ class Eden_Jabber extends Eden_Event {
 						$this->send("<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='DIGEST-MD5'/>");
 					} else if (in_array('PLAIN', $methods) && ($this->_ssl || $this->_negotiation == self::AUTH_PROCEED)) {
 						$this->send("<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='PLAIN'>"
-							. base64_encode(chr(0) . $this->_user . '@' . $this->_host . chr(0) . $this->_pass) .
+							. base64_encode(chr(0) . $this->_user . '@' . $this->_domain . chr(0) . $this->_pass) .
 							'</auth>');
 					} else if (in_array('ANONYMOUS', $methods)) {
 						$this->send("<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='ANONYMOUS'/>");
@@ -871,7 +877,7 @@ class Eden_Jabber extends Eden_Event {
 				$attributes = $xml['iq'][0]['#']['query'][0]['#']['item'][0]['@'];
 				
 				if($attributes['ask'] == 'subscribe'
-				 && strpos($this->_user.'@'.$this->_host, $attributes['jid']) === false) {
+				 && strpos($this->_user.'@'.$this->_domain, $attributes['jid']) === false) {
 					$this->setPresence(
 						self::PRESENCE_CHAT, 
 						self::ONLINE, 
