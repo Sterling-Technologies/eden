@@ -157,22 +157,10 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 	/**
 	 * Returns a user's oraganizations
 	 *
-	 * @param string
-	 * @param string
 	 * @return array
 	 */
-	public function getOrganizers($user, $pass) {
-		//argument test
-		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')					//Argument 1 must be a string
-			->argument(2, 'string');				//Argument 2 must be  a string
-		
-		$query = array(
-			'user' 		=> $user,
-			'password' 	=> $pass);
-		
-		return $this->_getJsonResponse(self::URL_LIST_ORGANIZERS, $query);
-		
+	public function getOrganizers() {
+		return $this->_getJsonResponse(self::URL_LIST_ORGANIZERS);
 	}
 	
 	/**
