@@ -118,16 +118,16 @@ class Eden_Eventbrite_Venue extends Eden_Eventbrite_Base {
 	public function create($organizer, $venue, $country, $region) {
 		//argument test
 		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')		//Argument must be a string
-			->argument(2, 'string')		//Argument msut be a string
-			->argument(3, 'string')		//Argument must be a string
-			->argument(4, 'string');	//Argument must be a string
+			->argument(1, 'string', 'int')	//Argument must be a string
+			->argument(2, 'string')			//Argument msut be a string
+			->argument(3, 'string')			//Argument must be a string
+			->argument(4, 'string');		//Argument must be a string
 			
 		
 		$query = array(
 			'organizer_id'  => $organizer,
 			'venue'			=> $venue,
-			'country'		=> $country_code,
+			'country'		=> $country,
 			'region'		=> $region);
 		
 		$query = array_merge($query, $this->_query);
