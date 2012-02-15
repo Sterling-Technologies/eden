@@ -14,7 +14,7 @@
  * @category   eventbrite
  * @author     Christian Blanquera cblanquera@openovate.com
  */
-class Eden_Eventbrite_Event_Organizer extends Eden_Eventbrite_Base {
+class Eden_Eventbrite_Organizer extends Eden_Eventbrite_Base {
 	/* Constants
 	-------------------------------*/
 	const URL_NEW 		= 'https://www.eventbrite.com/json/organizer_new';
