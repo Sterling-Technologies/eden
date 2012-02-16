@@ -213,7 +213,7 @@ class Eden_Facebook_Event extends Eden_Class {
 		}
 		
 		//get the facebook graph url
-		$url = Eden_Facebook_Graph::GRAPH_URL.$this->_id.'/event';
+		$url = Eden_Facebook_Graph::GRAPH_URL.$this->_id.'/events';
 		$query = array('access_token' => $this->_token);
 		$url .= '?'.http_build_query($query);
 		

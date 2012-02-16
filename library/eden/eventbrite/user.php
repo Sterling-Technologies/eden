@@ -151,7 +151,7 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 			$query['asc_or_desc'] = 'desc'; 
 		}
 									
-		return $this->_getJsonResponse(self::URL_NEW, $query);										
+		return $this->_getJsonResponse(self::URL_LIST_EVENTS, $query);										
 	}
 										
 	/**
