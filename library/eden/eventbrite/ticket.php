@@ -37,6 +37,20 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * Set Ticket ID
+	 *
+	 * @param int
+	 * @return this
+	 */
+	 public function setId($ticketId) {
+		 //Argument 1 must be numeric
+		Eden_Eventbrite_Error::i()->argument(1, 'numeric');
+		$this->_query['id'] = $ticketId;
+		
+		return $this;
+	 }
+	 
+	/**
 	 * Set event ID
 	 * 
 	 * @param int
@@ -72,7 +86,7 @@ class Eden_Eventbrite_Ticket extends Eden_Eventbrite_Base {
 	 */
 	public function setPrice($price) {
 		//Argument 1 must be float
-		Eden_Eventbrite_Error::i()->argument(1, 'float');
+		Eden_Eventbrite_Error::i()->argument(1, 'float', 'int');
 		$this->_query['price'] = $price;
 		
 		return $this;
