@@ -178,14 +178,14 @@ class Eden_Sql_Collection extends Eden_Collection {
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function update($table = NULL, Eden_Sql_Database $database = NULL) {
+	public function update($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
 		//for each row
 		foreach($this->_list as $i => $row) {
 			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
 				continue;
 			}
 			
-			$row->update($table, $database);
+			$row->update($table, $database, $primary);
 		}
 		
 		return $this;
@@ -198,14 +198,14 @@ class Eden_Sql_Collection extends Eden_Collection {
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function save($table = NULL, Eden_Sql_Database $database = NULL) {
+	public function save($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
 		//for each row
 		foreach($this->_list as $i => $row) {
 			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
 				continue;
 			}
 			
-			$row->save($table, $database);
+			$row->save($table, $database, $primary);
 		}
 		
 		return $this;
@@ -218,7 +218,7 @@ class Eden_Sql_Collection extends Eden_Collection {
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function remove($table = NULL, Eden_Sql_Database $database = NULL) {
+	public function remove($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
 		//for each row
 		foreach($this->_list as $i => $row) {
 			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
@@ -226,7 +226,7 @@ class Eden_Sql_Collection extends Eden_Collection {
 			}
 			
 			//let the row handle this
-			$row->remove($table, $database);
+			$row->remove($table, $database, $primary);
 		}
 		
 		return $this;

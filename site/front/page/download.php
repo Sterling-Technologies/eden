@@ -199,6 +199,8 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Registry',
 		'Eden_Image',
 		'Eden_Unit',
+		'Eden_Timezone_Error',
+		'Eden_Timezone_Validation',
 		'Eden_Timezone',
 		'Eden_Country_Error',
 		'Eden_Country_Au',

@@ -69,6 +69,18 @@ class Eden_Sqlite extends Eden_Sql_Database {
 	}
 	
 	/**
+	 * Returns the select query builder
+	 *
+	 * @return Eden_Sql_Select
+	 */ 
+	public function select($select = 'ROWID,*') {
+		//Argument 1 must be a string or array
+		Eden_Sqlite_Error::i()->argument(1, 'string', 'array');
+		
+		return Eden_Sql_Select::i($select);
+	}
+	
+	/**
 	 * Returns the alter query builder
 	 *
 	 * @return Eden_Sql_Alter

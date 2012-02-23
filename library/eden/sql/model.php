@@ -161,7 +161,7 @@ class Eden_Sql_Model extends Eden_Model {
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function update($table = NULL, Eden_Sql_Database $database = NULL) {
+	public function update($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
 		//Argument 1 must be a string
 		$error = Eden_Sql_Error::i()->argument(1, 'string', 'null');
 		
@@ -196,9 +196,17 @@ class Eden_Sql_Model extends Eden_Model {
 		//from here it means that this table has primary 
 		//columns and all primary values are set
 		
+		if(is_null($primary)) {
+			$primary = $meta[self::PRIMARY];
+		}
+		
+		if(is_string($primary)) {
+			$primary = array($primary);
+		}
+		
 		$filter = array();
 		//for each primary key
-		foreach($meta[self::PRIMARY] as $column) {
+		foreach($primary as $column) {
 			//add the condition to the filter
 			$filter[] = array($column.'=%s', $data[$column]);
 		}
@@ -216,7 +224,7 @@ class Eden_Sql_Model extends Eden_Model {
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function save($table = NULL, Eden_Sql_Database $database = NULL) {
+	public function save($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
 		//Argument 1 must be a string
 		$error = Eden_Sql_Error::i()->argument(1, 'string', 'null');
 		
@@ -243,17 +251,26 @@ class Eden_Sql_Model extends Eden_Model {
 		
 		//get the meta data, the valid column values and whether is primary is set
 		$meta 			= $this->_getMeta($table, $database);
-		$primarySet 	= $this->_isPrimarySet($meta[self::PRIMARY]);	
+		
+		if(is_null($primary)) {
+			$primary = $meta[self::PRIMARY];
+		}
+		
+		if(is_string($primary)) {
+			$primary = array($primary);
+		}
+		
+		$primarySet 	= $this->_isPrimarySet($primary);	
 		
 		//update original data
 		$this->_original = $this->_data;
 		
 		//if no primary meta or primary values are not set
-		if(empty($meta[self::PRIMARY]) || !$primarySet) {
+		if(empty($primary) || !$primarySet) {
 			return $this->insert($table, $database);
 		}
 		
-		return $this->update($table, $database);
+		return $this->update($table, $database, $primary);
 	}
 	
 	/**
@@ -263,7 +280,7 @@ class Eden_Sql_Model extends Eden_Model {
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function remove($table = NULL, Eden_Sql_Database $database = NULL) {
+	public function remove($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
 		//Argument 1 must be a string
 		$error = Eden_Sql_Error::i()->argument(1, 'string', 'null');
 		
@@ -292,9 +309,17 @@ class Eden_Sql_Model extends Eden_Model {
 		$meta = $this->_getMeta($table, $database);
 		$data = $this->_getValidColumns(array_keys($meta[self::COLUMNS]));
 		
+		if(is_null($primary)) {
+			$primary = $meta[self::PRIMARY];
+		}
+		
+		if(is_string($primary)) {
+			$primary = array($primary);
+		}
+		
 		$filter = array();
 		//for each primary key
-		foreach($meta[self::PRIMARY] as $column) {
+		foreach($primary as $column) {
 			//if the primary is not set
 			if(!isset($data[$column])) {
 				//we can't do a remove
