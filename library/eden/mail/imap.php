@@ -505,7 +505,7 @@ class Eden_Mail_Imap extends Eden_Class {
         
 		if (!$this->_socket) {
 			//throw exception
-			Eden_Mail_Error::get()
+			Eden_Mail_Error::i()
 				->setMessage(Eden_Mail_Error::SERVER_ERROR)
 				->addVariable($host.':'.$this->_port)
 				->trigger();
@@ -514,7 +514,7 @@ class Eden_Mail_Imap extends Eden_Class {
         if (strpos($this->_getLine(), '* OK') === false) {
 			$this->disconnect();
             //throw exception
-			Eden_Mail_Error::get()
+			Eden_Mail_Error::i()
 				->setMessage(Eden_Mail_Error::SERVER_ERROR)
 				->addVariable($host.':'.$this->_port)
 				->trigger();
@@ -525,7 +525,7 @@ class Eden_Mail_Imap extends Eden_Class {
             if (!stream_socket_enable_crypto($this->_socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
 				$this->disconnect();
             	//throw exception
-				Eden_Mail_Error::get()
+				Eden_Mail_Error::i()
 				->setMessage(Eden_Mail_Error::TLS_ERROR)
 				->addVariable($host.':'.$this->_port)
 				->trigger();
@@ -545,7 +545,7 @@ class Eden_Mail_Imap extends Eden_Class {
 		if(strpos(implode(' ', $result), 'OK') === false) {
 			$this->disconnect();
 			//throw exception
-			Eden_Mail_Error::get(Eden_Mail_Error::LOGIN_ERROR)->trigger();
+			Eden_Mail_Error::i(Eden_Mail_Error::LOGIN_ERROR)->trigger();
 		}
 		
 		return $this;
