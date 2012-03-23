@@ -68,11 +68,11 @@ class Eden_Google_Base extends Eden_Class {
 	-------------------------------*/
 	protected function _accessKey($array) {
 		foreach($array as $key => $val) {
-			if(is_array($val)) { //access nested array
+			if(is_array($val)) {
 				$array[$key] = $this->_accessKey($val);
 			}
 			
-			if($val == false || $val == NULL || empty($val)) { //unset no value
+			if($val == false || $val == NULL || empty($val)) {
 				unset($array[$key]);
 			}
 			
