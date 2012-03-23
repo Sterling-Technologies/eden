@@ -99,6 +99,17 @@ class Eden_Google extends Eden_Class {
 		return Eden_Google_Plus::i($token);
 	}
 	
+	/**
+	 * Returns Google Shopping
+	 *
+	 * @param string
+	 * @return Eden_Google_Shopping
+	 */
+	public function shopping($key) {
+		Eden_Google_Error::i()->argument(1, 'string');
+		
+		return Eden_Google_Shopping::i($key);
+	}
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods
