@@ -452,12 +452,6 @@ class Eden_Xend_Shipment extends Eden_Xend_Base {
 	 * return array
 	 */
 	public function getResponse() {
-		//if it is in test mode
-		if($this->_test) {
-			$this->_url		= self::TEST_SHIPMENT_WSDL;
-			$this->_header	= self::TEST_HEADER;
-		}
-		
 		// initialize SOAP client
 		$client = new SoapClient($this->_url, array());
 		$funcs = $client->__getFunctions();
@@ -525,11 +519,6 @@ class Eden_Xend_Shipment extends Eden_Xend_Base {
 	 */
 	public function getDetail() {
 		$exceptionFlag = false;
-		//if it is in test mode
-		if($this->_test) {
-			$this->_url		= self::TEST_SHIPMENT_WSDL;
-			$this->_header	= self::TEST_HEADER;
-		}
 		
 		// initialize SOAP client
 		$client	= new SoapClient($this->_url, array());

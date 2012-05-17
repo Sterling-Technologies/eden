@@ -89,12 +89,6 @@ class Eden_Xend_Booking extends Eden_Xend_Base{
 	 * return array
 	 */
 	public function getResponse() {
-		//if it is in test mode
-		if($this->_test) {	
-			$this->_url		= self::TEST_BOOKING_WSDL;
-			$this->_header	= self::TEST_HEADER;
-		} 
-		
 		// initialize SOAP client
 		$client	= new SoapClient($this->_url, array());
 		$funcs	= $client->__getFunctions();
