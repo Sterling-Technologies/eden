@@ -27,7 +27,7 @@ class Eden_Paypal_Base extends Eden_Class {
 	/* Protected Properties
 	-------------------------------*/
 	protected $_meta		= array();
-	protected $_url			= NULL;
+	protected $_paypalUrl	= NULL;
 	protected $_user		= NULL;
 	protected $_password	= NULL;
 	protected $_signature	= NULL;
@@ -45,9 +45,9 @@ class Eden_Paypal_Base extends Eden_Class {
 		$this->_signature	= $signature;
 		$this->_certificate	= $certificate;
 		
-		$this->_url	= self::TEST_URL;
+		$this->_paypalUrl	= self::TEST_URL;
 		if($live) {
-			$this->_url = self::LIVE_URL;
+			$this->_paypalUrl = self::LIVE_URL;
 		}
 	}
 	
@@ -75,12 +75,12 @@ class Eden_Paypal_Base extends Eden_Class {
 			'USER'		=> $this->_user,
 			'PWD'		=> $this->_password,
 			'SIGNATURE' => $this->_signature);
-	
+		
 		//generate URL-encoded query string to build our NVP string
 		$query = http_build_query($query + $default);
   	
   		$curl = $this->Eden_Curl()
-			->setUrl($this->_url)
+			->setUrl($this->_paypalUrl)
 			->setVerbose(true)
 			->setCaInfo($this->_certificate)
 			->setPost(true)
