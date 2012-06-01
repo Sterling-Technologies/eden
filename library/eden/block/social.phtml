@@ -1,0 +1,5 @@
+<div class="wp-this-badges fix">
+	<?php foreach($buttons as $button):?>
+	<div class="badge badge-<?php print $button['layout']; ?> <?php print $button['button']; ?> <?php print $button['button']; ?>-<?php print $button['layout']; ?>"><a class="count" href="<?php isset($button) && $button['url'] == NULL ? $url : $button['url']; ?>">0</a></div>
+	<?php endforeach; ?>
+</div>
