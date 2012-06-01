@@ -308,7 +308,7 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 				return $this->_getCallback();
 			}
 			//redirect to paypal with token
-			header('Location: '. sprintf(self::LIVE_URL, urlencode($this->_token)) );
+			header('Location: '. sprintf('https://www.paypal.com/webscr?cmd=_express-checkout&token=%s', urlencode($this->_token)) );
 			
 			//if token is exist and not empty
 			if($this->_token) {
