@@ -8,27 +8,26 @@
  */
 
 /**
- * Zappos Product
+ * Zappos review
  *
  * @package    Eden
- * @category   product
+ * @category   review
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
-class Eden_Zappos_Product extends Eden_Zappos_Base {
+class Eden_Zappos_Review extends Eden_Zappos_Base {
 	/* Constants
 	-------------------------------*/
-	const SKU		= 'id';
-	const UPC		= 'upc';
-	const STOCK_ID	= 'stockId';
+	const START_ID		= 'startId';
+	const START_DATE	= 'startDate';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_upc			= NULL;
-	protected $_stockId		= NULL;
-	protected $_sku			= NULL;
-	protected $_style		= NULL;
+	protected $_productId	= NULL;
+	protected $_page		= NULL;
+	protected $_startId		= NULL;
+	protected $_startDate	= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -41,88 +40,75 @@ class Eden_Zappos_Product extends Eden_Zappos_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set SKU or product id
+	 * set product id
 	 *
 	 * @param string|int
 	 * @return this
 	 */
-	public function setSKU($sku) {
-		//Argument 1 must be a string or integer
+	public function setProductId($productId) {
+		//Argument 1 must be a string or int
 		Eden_Zappos_Error::i()->argument(1, 'string', 'int');
-		
-		$this->_sku = $sku;
+	
+		$this->_productId = $productId;
 		return $this;
 	}
 	
 	/**
-	 * Set UPC
+	 * set page
 	 *
 	 * @param string|int
 	 * @return this
 	 */
-	public function setUPC($upc) {
-		//Argument 1 must be a string or integer
+	public function setPage($page) {
+		//Argument 1 must be a string or int
 		Eden_Zappos_Error::i()->argument(1, 'string', 'int');
-		
-		$this->_upc = $upc;
+	
+		$this->_page = $page;
 		return $this;
 	}
 	
 	/**
-	 * Set stock id
+	 * set start id
 	 *
 	 * @param string|int
 	 * @return this
 	 */
-	public function setStockId($stockId) {
-		//Argument 1 must be a string or integer
+	public function setStartId($startId) {
+		//Argument 1 must be a string or int
 		Eden_Zappos_Error::i()->argument(1, 'string', 'int');
-		
-		$this->_stockId = $stockId;
+	
+		$this->_startId = $startId;
 		return $this;
 	}
 	
 	/**
-	 * Include style in the results
+	 * set start Date
 	 *
 	 * @param string|int
 	 * @return this
 	 */
-	public function includeStyle() {
-		
-		$this->_style = '["styles"]';
+	public function setStartDate($startDate) {
+		//Argument 1 must be a string or int
+		Eden_Zappos_Error::i()->argument(1, 'string', 'int');
+	
+		$this->_startDate = $startDate;
 		return $this;
 	}
 	
 	/**
-	 * Include specific style in the results
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function includeSpecific($style) {
-		//Argument 1 must be a string
-		Eden_Zappos_Error::i()->argument(1, 'string');
-		
-		$this->_style = '["'.$style.'"]';
-		return $this;
-	}
-	
-	/**
-	 * Search Image
+	 * Search Brand
 	 *
 	 * @return this
 	 */
 	public function getResponse() {
 		//populate fields
 		$query = array(
-			self::SKU		=> $this->_sku,
-			self::INCLUDE	=> $this->_style,
-			self::UPC		=> $this->_upc,
-			self::STOCK_ID	=> $this->_stockId);
+			self::PRODUCT_ID	=> $this->_productId,
+			self::PAGE			=> $this->_page,
+			self::START_ID		=> $this->_startId,
+			self::START_DATE	=> $this->_startDate);
 		
-		return $this->_getResponse(self::URL_PRODUCT, $query);
-	
+		return $this->_getResponse(self::URL_REVIEW, $query);
 	}
 	/* Protected Methods
 	-------------------------------*/

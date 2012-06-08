@@ -17,6 +17,8 @@
 class Eden_Zappos_Image extends Eden_Zappos_Base {
 	/* Constants
 	-------------------------------*/
+	const RECIPE		= 'recipe';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -167,11 +169,11 @@ class Eden_Zappos_Image extends Eden_Zappos_Base {
 	public function getResponse() {
 		//populate fields
 		$query = array(
-			'productId'	=> $this->_productId,
-			'styleId'	=> $this->_styleId,
-			'includes'	=> $this->_include,
-			'type'		=> $this->_imageType,
-			'recipe'	=> $this->_imageRecipe);
+			self::PRODUCT_ID	=> $this->_productId,
+			self::STYLE_ID		=> $this->_styleId,
+			self::INCLUDE		=> $this->_include,
+			self::TYPE			=> $this->_imageType,
+			self::RECIPE		=> $this->_imageRecipe);
 		
 		return $this->_getResponse(self::URL_IMAGE, $query);
 	

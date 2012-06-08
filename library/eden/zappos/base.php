@@ -17,10 +17,26 @@
 class Eden_Zappos_Base extends Eden_Oauth_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_SEARCH	= 'http://api.zappos.com/Search';
-	const URL_IMAGE		= 'http://api.zappos.com/Image';
-	const URL_PRODUCT	= 'http://api.zappos.com/Product';
+	const URL_SEARCH		= 'http://api.zappos.com/Search';
+	const URL_IMAGE			= 'http://api.zappos.com/Image';
+	const URL_PRODUCT		= 'http://api.zappos.com/Product';
+	const URL_STATISTICS	= 'http://api.zappos.com/Statistics';
+	const URL_BRAND			= 'http://api.zappos.com/Brand/';
+	const URL_REVIEW		= 'http://api.zappos.com/Review';
+	const URL_AUTOCOMPLETE	= 'http://api.zappos.com/AutoComplete';
+	const URL_VALUE			= 'http://api.zappos.com/CoreValue/';
+	const URL_SIMILARITY	= 'http://api.zappos.com/Search/Similarity';
 	
+	const KEY				= 'key';
+	const TERM				= 'term';
+	const PRODUCT_ID		= 'productId';
+	const INCLUDE			= 'includes';
+	const PAGE				= 'page';
+	const LIMIT				= 'limit';
+	const STYLE_ID			= 'styleId';
+	const TYPE				= 'type';
+	const FILTER			= 'filters';
+		
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -49,8 +65,7 @@ class Eden_Zappos_Base extends Eden_Oauth_Base {
 		Eden_Zappos_Error::i()->argument(1, 'string');
 		
 		//Our request parameters
-		$default = array(
-			'key' => $this->_apiKey);
+		$default = array(self::KEY => $this->_apiKey);
 		
 		//generate URL-encoded query string to build our NVP string
 		$query = http_build_query($query + $default);

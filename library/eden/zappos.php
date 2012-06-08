@@ -8,10 +8,11 @@
  */
 
 /**
- * Xend API factory. This is a factory class with 
- * methods that will load up different Xend classes.
+ * Zappos API factory. This is a factory class with 
+ * methods that will load up different Zappos classes.
  * Xend classes are organized as described on their 
- * developer site: booking, rate, shipment and tracking service. 
+ * developer site: search, image, product, statistics
+ * brand, review, core values, autocomplete and similarity. 
  *
  * @package    Eden
  * @category   Zappos
@@ -37,7 +38,7 @@ class Eden_Zappos extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns 
+	 * Returns Zappos search results
 	 *
 	 * @param *string api key
 	 * @return Eden_Zappos_Search
@@ -47,7 +48,7 @@ class Eden_Zappos extends Eden_Class {
 	}
 	
 	/**
-	 * Returns 
+	 * Returns Zappos images
 	 *
 	 * @param *string api key
 	 * @return Eden_Zappos_Search
@@ -57,14 +58,75 @@ class Eden_Zappos extends Eden_Class {
 	}
 	
 	/**
-	 * Returns 
+	 * Returns Zappos products
 	 *
 	 * @param *string api key
-	 * @return Eden_Zappos_Search
+	 * @return Eden_Zappos_Product
 	 */
 	public function getProduct($apiKey) {
 		return Eden_Zappos_Product::i($apiKey);
 	}
+	
+	/**
+	 * Returns Zappos statistics
+	 *
+	 * @param *string api key
+	 * @return Eden_Zappos_Product
+	 */
+	public function getStatistics($apiKey) {
+		return Eden_Zappos_Product::i($apiKey);
+	}
+		
+	/**
+	 * Returns Zappos brand
+	 *
+	 * @param *string api key
+	 * @return Eden_Zappos_Brand
+	 */
+	public function getBrand($apiKey) {
+		return Eden_Zappos_Brand::i($apiKey);
+	}
+	
+	/**
+	 * Returns Zappos review
+	 *
+	 * @param *string api key
+	 * @return Eden_Zappos_Review
+	 */
+	public function getReview($apiKey) {
+		return Eden_Zappos_Review::i($apiKey);
+	}
+	
+	/**
+	 * Returns Zappos Auto complete
+	 *
+	 * @param *string api key
+	 * @return Eden_Zappos_AutoComplete
+	 */
+	public function autoComplete($apiKey) {
+		return Eden_Zappos_AutoComplete::i($apiKey);
+	}
+	
+	/**
+	 * Returns Zappos core values
+	 *
+	 * @param *string api key
+	 * @return Eden_Zappos_AutoComplete
+	 */
+	public function getCoreValues($apiKey) {
+		return Eden_Zappos_Values::i($apiKey);
+	}
+	
+	/**
+	 * Returns Zappos similarity
+	 *
+	 * @param *string api key
+	 * @return Eden_Zappos_Similarity
+	 */
+	public function getSimilarity($apiKey) {
+		return Eden_Zappos_Similarity::i($apiKey);
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods
