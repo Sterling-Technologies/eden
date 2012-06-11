@@ -405,4 +405,17 @@ class Front_Page_Download extends Front_Page {
 		'Eden_Authorizenet_Server',
 		'Eden_Authorizenet_Recurring',
 		'Eden_Authorizenet');
+	
+	protected $_zappos = array(
+		'Eden_Zappos_Error',
+		'Eden_Zappos_Base',
+		'Eden_Zappos_Search',
+		'Eden_Zappos_Image',
+		'Eden_Zappos_Product',
+		'Eden_Zappos_Statistics',
+		'Eden_Zappos_Review',
+		'Eden_Zappos_Autocomplete',
+		'Eden_Zappos_Brand',
+		'Eden_Zappos_Values',
+		'Eden_Zappos_Similarity');
 }
