@@ -77,9 +77,6 @@ class Eden_Zappos_Base extends Eden_Oauth_Base {
 			
 		$results = $curl->getQueryResponse();
 	
-		//front()->output($results);
-		//echo count($results);
-		//exit;
 		foreach($results as $key => $value) {
 			
 			if(!is_array($value)) {
