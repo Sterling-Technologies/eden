@@ -171,7 +171,7 @@ class Eden_Zappos_Image extends Eden_Zappos_Base {
 		$query = array(
 			self::PRODUCT_ID	=> $this->_productId,
 			self::STYLE_ID		=> $this->_styleId,
-			self::INCLUDE		=> $this->_include,
+			self::INCLUDES		=> $this->_include,
 			self::TYPE			=> $this->_imageType,
 			self::RECIPE		=> $this->_imageRecipe);
 		

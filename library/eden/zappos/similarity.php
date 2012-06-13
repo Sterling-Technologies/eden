@@ -102,7 +102,7 @@ class Eden_Zappos_Similarity extends Eden_Zappos_Base {
 		//populate fields
 		$query = array(
 			self::TYPE 		=> $this->_type,
-			self::LIMIT		=> $this->_limits,
+			self::LIMITS	=> $this->_limits,
 			self::STYLE_ID	=> $this->_styleId,
 			self::EMPHASIS	=> $this->_emphasis);
 		

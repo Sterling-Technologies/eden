@@ -117,7 +117,7 @@ class Eden_Zappos_Product extends Eden_Zappos_Base {
 		//populate fields
 		$query = array(
 			self::SKU		=> $this->_sku,
-			self::INCLUDE	=> $this->_style,
+			self::INCLUDES	=> $this->_style,
 			self::UPC		=> $this->_upc,
 			self::STOCK_ID	=> $this->_stockId);
 		

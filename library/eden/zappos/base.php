@@ -30,9 +30,9 @@ class Eden_Zappos_Base extends Eden_Oauth_Base {
 	const KEY				= 'key';
 	const TERM				= 'term';
 	const PRODUCT_ID		= 'productId';
-	const INCLUDE			= 'includes';
+	const INCLUDES			= 'includes';
 	const PAGE				= 'page';
-	const LIMIT				= 'limit';
+	const LIMITS			= 'limit';
 	const STYLE_ID			= 'styleId';
 	const TYPE				= 'type';
 	const FILTER			= 'filters';
@@ -76,8 +76,15 @@ class Eden_Zappos_Base extends Eden_Oauth_Base {
 			->setHeader(false);
 			
 		$results = $curl->getQueryResponse();
-		
+	
+		//front()->output($results);
+		//echo count($results);
+		//exit;
 		foreach($results as $key => $value) {
+			
+			if(!is_array($value)) {
+				return $value;
+			}
 			
 			if(!empty($value) && isset($value)) {
 		

@@ -325,11 +325,11 @@ class Eden_Zappos_Search extends Eden_Zappos_Base {
 		$query = array(
 			self::TERM			=> $this->_terms,
 			self::LIMIT			=> $this->_limits,
-			self::LIST			=> $this->_list,
+			self::LISTS			=> $this->_list,
 			self::SORT			=> $this->_sort,
 			self::EXCLUDES		=> $this->_exclude,
 			self::PAGE			=> $this->_page,
-			self::INCLUDE		=> $this->_include,
+			self::INCLUDES		=> $this->_include,
 			self::EXPRESSION	=> $this->_expression,
 			self::FILTER		=> $this->_filter);
 		
