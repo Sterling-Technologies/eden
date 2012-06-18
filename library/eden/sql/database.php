@@ -184,10 +184,19 @@ abstract class Eden_Sql_Database extends Eden_Event {
 	 *
 	 * @return Eden_Sql_Search
 	 */
-	public function search() {
-		return Eden_Sql_Search::i($this)
+	public function search($table = NULL) {
+		//Argument 1 must be a string or null
+		Eden_Sql_Error::i()->argument(1, 'string', 'null');
+		
+		$search = Eden_Sql_Search::i($this)
 			->setCollection($this->_collection)
 			->setModel($this->_model);
+		
+		if($table) {
+			$search->setTable($table);
+		}
+		
+		return $search;
 	}
 	
 	/**
@@ -279,7 +288,11 @@ abstract class Eden_Sql_Database extends Eden_Event {
 			foreach($filters as $i => $filter) {
 				//array('post_id=%s AND post_title IN %s', 123, array('asd'));
 				$format = array_shift($filter);
-				$filter = $this->bind($filter);
+				
+				foreach($filter as $j => $value) {
+					$filter[$j] = $this->bind($value);
+				}
+				
 				$filters[$i] = vsprintf($format, $filter);
 			}
 		}
