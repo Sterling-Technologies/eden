@@ -143,6 +143,13 @@ class Eden_Amazon_Ecs extends Eden_Class {
 		return $this;
 	}
 	
+	public function setPage($page = 1) {
+		Eden_Amazon_Error::i()->argument(1, 'int');
+		$this->_params['ItemPage'] = $page;
+		
+		return $this;
+	}
+	
 	public function getResponse() {
 		$this->_params['AWSAccessKeyId'] = $this->_publicKey;
 		
