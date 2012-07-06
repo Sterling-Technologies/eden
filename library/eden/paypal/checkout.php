@@ -17,7 +17,7 @@
 class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 	/* Constants
 	-------------------------------*/
-	const TEST_URL		= 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=%s';
+	const TEST_URL_A		= 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=%s';
 	const LIVE_URL		= 'https://www.paypal.com/webscr?cmd=_express-checkout&token=%s';
 	
 	const SET_METHOD		= 'SetExpressCheckout';
@@ -285,40 +285,51 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 			->argument(2, 'string');	//Argument 2 must be a string
 		
 		$query = array(
-			self::RETURN_URL 		=> $return,
-			self::CANCEL_URL 		=> $cancel,
-			self::TOTAL_AMOUNT		=> $this->_amount,			//amount of item
-			self::SHIPPING_AMOUNT	=> $this->_shippingAmount,	//amount of shipping
-			self::CURRENCY			=> $this->_currency,		//currency code
-			self::ITEM_AMOUNT		=> $this->_itemAmount,		//item amount is shippingAmount minus amount
-			self::ITEM_NAME			=> $this->_itemName,		//name of item
-			self::ITEM_DESCRIPTION	=> $this->_itemDescription,	//description of item
-			self::ITEM_AMOUNT2		=> $this->_itemAmount,		//item amount is shipping minus amount
-			self::QUANTITY			=> $this->_quantity);		//quantity of item
+			'PAYMENTREQUEST_0_PAYMENTACTION'	=> 'Authorization',
+			self::TOTAL_AMOUNT					=> $this->_amount,			//amount of item
+			self::RETURN_URL 					=> $return,
+			self::CANCEL_URL 					=> $cancel,					
+			self::SHIPPING_AMOUNT				=> $this->_shippingAmount,	//amount of shipping
+			self::CURRENCY						=> $this->_currency,		//currency code
+			self::ITEM_AMOUNT					=> $this->_itemAmount,		//item amount is shippingAmount minus amount
+			self::ITEM_NAME						=> $this->_itemName,		//name of item
+			self::ITEM_DESCRIPTION				=> $this->_itemDescription,	//description of item
+			self::ITEM_AMOUNT2					=> $this->_itemAmount,		//item amount is shipping minus amount
+			self::QUANTITY						=> $this->_quantity,);		//quantity of item
 		
 		//call request method set express checkout
-		$response = $this->_request(self::SET_METHOD, $query);
-		
+		$this->_url = self::TEST_URL;
+		$response = $this->_request(self::SET_METHOD, $query, false);
 		//if parameters are success
 		if(isset($response[self::ACK]) && $response[self::ACK] == self::SUCCESS) {
 			//fetch token
-			$this->_token = $response[self::TOKEN];
 			//if callback is true
 			if($this->_callBack) {
+				$this->_token = $response[self::TOKEN];
 				return $this->_getCallback();
-			}
-			//redirect to paypal with token
-			header('Location: '. sprintf('https://www.paypal.com/webscr?cmd=_express-checkout&token=%s', urlencode($this->_token)) );
-			
-			//if token is exist and not empty
-			if($this->_token) {
-				return $this->_getTransactionId();
 			}
 		}
 		
 		return $response;
 	}
 	
+	public function setToken($token, $redirect = false) {
+		$this->_token = $token;
+		if($redirect == true){
+			header('Location: '. sprintf(self::TEST_URL_A, urlencode($this->_token)) );
+			return;
+		}
+		
+		return $this;
+	}
+	
+	public function getTransactionId() {
+		if(!$this->_token) {
+			return NULL;
+		}
+		
+		return $this->_getTransactionId();
+	}
 	/**
 	 * Confirms whether a postal address and postal 
 	 * code match those of the specified PayPal 
