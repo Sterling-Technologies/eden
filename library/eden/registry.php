@@ -213,6 +213,24 @@ class Eden_Registry extends Eden_Type_Array {
 		return $array;
 	}
 	
+	/**
+	 * returns data using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+	public function offsetGet($offset) {
+        if(!isset($this->_data[$offset])) {
+			return NULL;
+		}
+		
+		if($this->_data[$offset] instanceof Eden_Registry) {
+			return $this->_data[$offset]->getArray();
+		}
+		
+		return $this->_data[$offset];
+    }
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

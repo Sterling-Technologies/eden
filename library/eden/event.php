@@ -43,38 +43,30 @@ class Eden_Event extends Eden_Class {
      * when an event has been triggered
      *
      * @param *string
-	 * @param *string|object
-	 * @param string|null
+	 * @param *string|object|callable
+	 * @param string|null|bool
 	 * @param bool
      * @return this
      */
-    public function listen($event, $instance, $method = NULL, $important = true) {
-		Eden_Event_Error::i()
-			->argument(1, 'string')					//argument 1 must be string
-			->argument(2, 'object', 'string')		//argument 2 must be object or string
-			->argument(3, 'null', 'string', 'bool')	//argument 3 must be string or null
-			->argument(4, 'bool');					//argument 4 must be boolean
-		
-		//get the instance unique id
-		$id = is_object($instance) ? spl_object_hash($instance) : false;
+    public function listen($event, $instance, $method = NULL, $important = false) {
+		$error = Eden_Event_Error::i()
+			->argument(1, 'string')							//argument 1 must be string
+			->argument(2, 'object', 'string', 'callable')	//argument 2 must be object, string or callable
+			->argument(3, 'null', 'string', 'bool')			//argument 3 must be string or null
+			->argument(4, 'bool');							//argument 4 must be boolean
 		
 		//if method is bool
 		if(is_bool($method)) {
-			//this was meant to be impoertant
-			$important = $method;
-		} 
-		
-		//if the method is string
-		if(is_string($method)) {
-			//set up a class call
-			$method = array($instance, $method);
-		} else {
-			//instance must be a function call
-			$method = $instance;
+			//this was meant to be important
+			$important 	= $method;
+			$method 	= NULL;
 		}
 		
+		$id 		= $this->_getId($instance, $method);
+		$callable 	= $this->_getCallable($instance, $method);
+		
 		//set up the observer
-		$observer = array($event, $id, $method);
+		$observer = array($event, $id, $callable);
 		
 		//if this is important
 		if($important) {
@@ -91,54 +83,45 @@ class Eden_Event extends Eden_Class {
     /**
      * Stops listening to an event
      *
-     * @param object
+	 * @param string|null
+     * @param object|null
 	 * @param string|null
      * @return this
      */
-    public function unlisten($event, $instance, $method = NULL) {
+    public function unlisten($event, $instance = NULL, $method = NULL) {
 		Eden_Event_Error::i()
-			->argument(1, 'string', 'null')		//argument 1 must be string or null
-			->argument(2, 'object', 'string')	//argument 2 must be instance
-			->argument(3, 'string', 'null');	//argument 3 must be string or null
-			
-		$id 	= false;
-		$class 	= $instance;
+			->argument(1, 'string', 'null')				//argument 1 must be string or null
+			->argument(2, 'object', 'string', 'null')	//argument 2 must be instance or null
+			->argument(3, 'string', 'null');			//argument 3 must be string or null
 		
-		//if instance is an object
-		if(is_object($instance)) {
-			//set the id
-			$id 	= spl_object_hash($instance);
-			//get the class name
-			$class 	= get_class($instance);
+		//if there is no event and no instance
+		if(is_null($event) && is_null($instance)) {
+			//it means that they want to remove everything
+			$this->_observers = array();
+			return $this;
 		}
 		
+		$id = $this->_getId($instance, $method);
+		
+		//if we could not determine the id
+		if($id === false) {
+			//do nothing
+			return false;
+		}
 		
 		//for each observer
         foreach($this->_observers as $i => $observer) {
-			//if there is an event and event is not being listened to
+			//if there is an event and is not being listened to
 			if(!is_null($event) && $event != $observer[0]) {
 				//skip it
 				continue;
 			}
 			
-			//if id is not equal to observer
-			if($id != $observer[1]) {
-				//skip it
+			if($id == $observer[1] && is_array($observer[2]) && $method != $observer[2][1]) {
 				continue;
 			}
 			
-			//if this is a class call
-			if(is_array($observer[2])) {
-				//instance is a string and instance equals class
-				if(is_string($observer[2][0]) && $observer[2][0] != $class) {
-					//skip it
-					continue;
-				}
-				
-				//instance either equals class or is an object
-			//observer is a function call
-			} else if($observer[2] != $class) {
-				//skip it
+			if($id != $observer[1]) {
 				continue;
 			}
 			
@@ -188,6 +171,42 @@ class Eden_Event extends Eden_Class {
 	
 	/* Protected Methods
 	-------------------------------*/
+	protected function _getId($instance, $method = NULL) {
+		if(is_object($instance)) {
+			return spl_object_hash($instance);
+		}
+		
+		if(is_string($instance) && is_string($method)) {
+			return $instance.'::'.$method;
+		}
+		
+		if(is_string($instance)) {
+			return $instance;
+		}
+		
+		return false;
+	}
+	
+	protected function _getCallable($instance, $method = NULL) {
+		if(class_exists('Closure') && $instance instanceof Closure) {
+			return $instance;
+		}
+		
+		if(is_object($instance)) {
+			return array($instance, $method);
+		}
+		
+		if(is_string($instance) && is_string($method)) {
+			return $instance.'::'.$method;
+		} 
+		
+		if(is_string($instance)) {
+			return $instance;
+		}
+		
+		return NULL;
+	}
+	
 	/* Private Methods
 	-------------------------------*/
 }
@@ -198,6 +217,8 @@ class Eden_Event extends Eden_Class {
 class Eden_Event_Error extends Eden_Error {
 	/* Constants
 	-------------------------------*/
+	const NO_METHOD = 'Instance %s was passed but, no callable method was passed in listen().';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties

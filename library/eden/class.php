@@ -27,7 +27,7 @@ class Eden_Class {
 	/* Constants
 	-------------------------------*/
 	const DEBUG		= 'DEBUG %s:';
-	const INSTANCE 	= 'multiple';
+	const INSTANCE 	= 0;
 	
 	/* Public Properties
 	-------------------------------*/
@@ -37,10 +37,16 @@ class Eden_Class {
 	-------------------------------*/
 	private static $_instances 	= array();
 	
-	/* Get
-	-------------------------------*/
 	/* Magic
 	-------------------------------*/
+	public static function i() {
+		if(static::INSTANCE === 1) {
+			return self::_getSingleton();
+		}
+		
+		return self::_getMultiple();
+	}
+	
 	public function __toString() {
 		return get_class($this);
 	}
@@ -234,7 +240,11 @@ class Eden_Class {
 	
 	/* Protected Methods
 	-------------------------------*/
-	protected static function _getSingleton($class) {
+	protected static function _getSingleton($class = NULL) {
+		if(is_null($class) && function_exists('get_called_class')) {
+			$class = get_called_class();
+		}
+		
 		$class = Eden_Route::i()->getClass()->getRoute($class);
 		
 		if(!isset(self::$_instances[$class])) {
@@ -244,7 +254,11 @@ class Eden_Class {
 		return self::$_instances[$class];
 	}
 	
-	protected static function _getMultiple($class) {
+	protected static function _getMultiple($class = NULL) {
+		if(is_null($class) && function_exists('get_called_class')) {
+			$class = get_called_class();
+		}
+		
 		$class = Eden_Route::i()->getClass()->getRoute($class);		
 		return self::_getInstance($class);
 	}

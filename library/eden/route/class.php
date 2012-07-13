@@ -159,9 +159,7 @@ class Eden_Route_Class extends Eden_Class {
 				->getDeclaringClass()
 				->getName();
 				
-			if(strtolower($declared) == strtolower($route)) {	
-				return Eden_Route_Method::i()->callStatic($class, 'i', $args);
-			}
+			return Eden_Route_Method::i()->callStatic($class, 'i', $args);
 		}
 		
 		return $reflect->newInstanceArgs($args);
