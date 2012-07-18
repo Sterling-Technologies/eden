@@ -445,7 +445,7 @@ class Eden_Jabber extends Eden_Event {
 	 */
 	public function subscribeTo($to = NULL, $message = NULL) {
 		$this->send(sprintf('<iq type="set" id="set1"><query xmlns='.
-		'"jabber:iq:roster"><item jid="%s" /></query></iq>', $to);
+		'"jabber:iq:roster"><item jid="%s" /></query></iq>', $to));
 					
 		return $this->setPresence($to, $message, self::PRESENCE_TYPE_SUBSCRIBE);
 	}

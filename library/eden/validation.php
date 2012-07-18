@@ -29,7 +29,7 @@ class Eden_Validation extends Eden_Class {
 	-------------------------------*/
 	/* Magic
 	-------------------------------*/
-	public static function i($value) {
+	public static function i() {
 		return self::_getMultiple(__CLASS__);
 	}
 	

@@ -17,7 +17,7 @@
 class Eden_Zappos_Search extends Eden_Zappos_Base {
 	/* Constants
 	-------------------------------*/
-	const LIST			= 'list';
+	const ITEMS			= 'list';
 	const SORT			= 'sort';
 	const EXCLUDE		= 'excludes';
 	const EXPRESSION	= 'filterExpression';
@@ -325,7 +325,7 @@ class Eden_Zappos_Search extends Eden_Zappos_Base {
 		$query = array(
 			self::TERM			=> $this->_terms,
 			self::LIMIT			=> $this->_limits,
-			self::LISTS			=> $this->_list,
+			self::ITEMS			=> $this->_list,
 			self::SORT			=> $this->_sort,
 			self::EXCLUDES		=> $this->_exclude,
 			self::PAGE			=> $this->_page,
