@@ -30,7 +30,7 @@ class Eden_Authorizenet_Recurring extends Eden_Authorizenet_Base {
 	const DATE				= 'startDate';
 	const TOTAL				= 'totalOccurrences';
 	const TRIAL				= 'trialOccurrences';
-	const AMOUNT			= 'amount'
+	const AMOUNT			= 'amount';
 	const TRIAL_AMOUNT		= 'trialAmount';
 	const PAYMENT			= 'payment';
 	const BANK				= 'bankAccount';
@@ -757,7 +757,7 @@ class Eden_Authorizenet_Recurring extends Eden_Authorizenet_Base {
 					$creditCard->addChild(self::EXPIRATION,	$this->_expirationDate);
 				//Populate billing parameters
 				$billTo = $subscription->addChild(self::BILLING);
-					$billTo->addChild((self::FIRST_NAME,	$this->_firstName);
+					$billTo->addChild(self::FIRST_NAME,	$this->_firstName);
 					$billTo->addChild(self::LAST_NAME,		$this->_lastName);
 					$billTo->addChild(self::COMPANY,		$this->_company);
 					$billTo->addChild(self::ADDRESS,		$this->_address);
