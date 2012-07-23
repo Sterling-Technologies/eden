@@ -19,7 +19,7 @@ class Eden_Paypal_Base extends Eden_Class {
 	-------------------------------*/
 	const VERSION		= '84.0';
 	const TEST_URL		= 'https://api-3t.sandbox.paypal.com/nvp';
-	const LIVE_URL		= 'https://secure.authorize.net/gateway/transact.dll';
+	const LIVE_URL		= 'https://api-3t.paypal.com/nvp';
     const SANDBOX_URL	= 'https://test.authorize.net/gateway/transact.dll';
 	
 	/* Public Properties
@@ -46,8 +46,10 @@ class Eden_Paypal_Base extends Eden_Class {
 		$this->_certificate	= $certificate;
 		
 		$this->_url	= self::TEST_URL;
+		$this->_baseUrl = self::TEST_URL;
 		if($live) {
 			$this->_url = self::LIVE_URL;
+			$this->_baseUrl = self::LIVE_URL;
 		}
 	}
 	
@@ -80,7 +82,7 @@ class Eden_Paypal_Base extends Eden_Class {
 		$query = http_build_query($query + $default);
 		
 		$curl = $this->Eden_Curl()
-			->setUrl($this->_url)
+			->setUrl($this->_baseUrl)
 			->setVerbose(true)
 			->setCaInfo($this->_certificate)
 			->setPost(true)

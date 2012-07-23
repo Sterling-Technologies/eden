@@ -18,7 +18,7 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 	/* Constants
 	-------------------------------*/
 	const TEST_URL_A		= 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=%s';
-	const LIVE_URL		= 'https://www.paypal.com/webscr?cmd=_express-checkout&token=%s';
+	const LIVE_URL			= 'https://www.paypal.com/webscr?cmd=_express-checkout&token=%s';
 	
 	const SET_METHOD		= 'SetExpressCheckout';
 	const GET_METHOD		= 'GetExpressCheckout';
@@ -298,7 +298,6 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 			self::QUANTITY						=> $this->_quantity,);		//quantity of item
 		
 		//call request method set express checkout
-		$this->_url = self::TEST_URL;
 		$response = $this->_request(self::SET_METHOD, $query, false);
 		//if parameters are success
 		if(isset($response[self::ACK]) && $response[self::ACK] == self::SUCCESS) {
@@ -316,7 +315,7 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 	public function setToken($token, $redirect = false) {
 		$this->_token = $token;
 		if($redirect == true){
-			header('Location: '. sprintf(self::TEST_URL_A, urlencode($this->_token)) );
+			header('Location: '. sprintf($this->_url, urlencode($this->_token)) );
 			return;
 		}
 		
