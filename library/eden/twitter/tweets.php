@@ -36,12 +36,12 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	protected $_page		= NULL;
 	protected $_reply		= NULL;
 	protected $_place		= NULL;
-	protected $_stringify	= false;
-	protected $_entities	= false;
-	protected $_trim		= false;
-	protected $_display		= false;
-	protected $_wrap		= false;
-	protected $_sensitive	= false;
+	protected $_stringify	= NULL;
+	protected $_entities	= NULL;
+	protected $_trim		= NULL;
+	protected $_display		= NULL;
+	protected $_wrap		= NULL;
+	protected $_sensitive	= NULL;
 	
 	
 	/* Private Properties

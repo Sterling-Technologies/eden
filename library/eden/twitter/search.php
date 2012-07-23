@@ -34,8 +34,8 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	protected $_rpp			= NULL;
 	protected $_until		= NULL;
 	protected $_since		= NULL;		
-	protected $_show		= false;
-	protected $_entities	= false;
+	protected $_show		= NULL;
+	protected $_entities	= NULL;
 	
 	/* Private Properties
 	-------------------------------*/

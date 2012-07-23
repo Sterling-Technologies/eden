@@ -52,10 +52,10 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 	protected $_cursor		= NULL;
 	protected $_mode		= NULL;
 	protected $_description	= NULL;
-	protected $_entities	= false;
-	protected $_rts			= false;
-	protected $_filter		= false;
-	protected $_status		= false;
+	protected $_entities	= NULL;
+	protected $_rts			= NULL;
+	protected $_filter		= NULL;
+	protected $_status		= NULL;
 	
 	/* Private Properties
 	-------------------------------*/

@@ -28,9 +28,9 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_entities	= false;
-	protected $_status		= false;
-	protected $_use			= false;
+	protected $_entities	= NULL;
+	protected $_status		= NULL;
+	protected $_use			= NULL;
 	protected $_name		= NULL;
 	protected $_url			= NULL;
 	protected $_location	= NULL;

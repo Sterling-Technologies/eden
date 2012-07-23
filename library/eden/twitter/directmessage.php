@@ -27,9 +27,9 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_entities	= false;
-	protected $_skip		= false;
-	protected $_wrap		= false;
+	protected $_entities	= NULL;
+	protected $_skip		= NULL;
+	protected $_wrap		= NULL;
 	protected $_since		= NULL;
 	protected $_max			= NULL;
 	protected $_count		= NULL;

@@ -33,8 +33,8 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	protected $_size		= NULL;
 	protected $_page		= NULL;
 	protected $_perpage		= NULL;
-	protected $_entities	= false;
-	protected $_status		= false;
+	protected $_entities	= NULL;
+	protected $_status		= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
