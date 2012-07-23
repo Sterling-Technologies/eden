@@ -71,11 +71,11 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 				$array[$key] = $this->_accessKey($val);
 			}
 			//if value is null
-			if($val == NULL || empty($val)) {
+			if(is_null($val) || empty($val)) {
 				unset($array[$key]);
-			} else if($val == false) {
+			} else if($val === false) {
 				$array[$key] = 0;
-			} else if($val == true) {			
+			} else if($val === true) {			
 				$array[$key] = 1;
 			}
 			
