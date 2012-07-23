@@ -184,6 +184,166 @@ class Eden_Sql_Search extends Eden_Class {
 	 * @param string[,string..]
 	 * @return this
 	 */
+	public function innerJoinOn($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::INNER, $table, $where, false);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Inner Join Using
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function innerJoinUsing($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::INNER, $table, $where, true);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Left Join On
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function leftJoinOn($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::LEFT, $table, $where, false);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Left Join Using
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function leftJoinUsing($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::LEFT, $table, $where, true);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Right Join On
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function rightJoinOn($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::RIGHT, $table, $where, false);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Right Join Using
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function rightJoinUsing($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::RIGHT, $table, $where, true);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Outer Join On
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function outerJoinOn($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::OUTER, $table, $where, false);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Outer Join USing
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function outerJoinUsing($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::OUTER, $table, $where, true);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Inner Join On
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
 	public function addInnerJoinOn($table, $where) {
 		Eden_Sql_Error::i()
 			->argument(1, 'string')
