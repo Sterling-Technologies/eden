@@ -361,9 +361,9 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @param *string 
 	 * @param *string 
-	 * @return Eden_Twitter_Timelines
+	 * @return Eden_Twitter_Timeline
 	 */
-	public function timelines($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
+	public function timeline($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -371,7 +371,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Timelines::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Timeline::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
