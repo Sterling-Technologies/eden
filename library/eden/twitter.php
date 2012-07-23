@@ -6,6 +6,30 @@
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
+ 
+require_once dirname(__FILE__).'/curl.php';
+require_once dirname(__FILE__).'/twitter/accounts.php';
+require_once dirname(__FILE__).'/twitter/base.php';
+require_once dirname(__FILE__).'/twitter/block.php';
+require_once dirname(__FILE__).'/twitter/directmessage.php';
+require_once dirname(__FILE__).'/twitter/error.php';
+require_once dirname(__FILE__).'/twitter/favorites.php';
+require_once dirname(__FILE__).'/twitter/friends.php';
+require_once dirname(__FILE__).'/twitter/geo.php';
+require_once dirname(__FILE__).'/twitter/help.php';
+require_once dirname(__FILE__).'/twitter/legal.php';
+require_once dirname(__FILE__).'/twitter/list.php';
+require_once dirname(__FILE__).'/twitter/localtrends.php';
+require_once dirname(__FILE__).'/twitter/notification.php';
+require_once dirname(__FILE__).'/twitter/oauth.php';
+require_once dirname(__FILE__).'/twitter/saved.php';
+require_once dirname(__FILE__).'/twitter/search.php';
+require_once dirname(__FILE__).'/twitter/spam.php';
+require_once dirname(__FILE__).'/twitter/suggestions.php';
+require_once dirname(__FILE__).'/twitter/timeline.php';
+require_once dirname(__FILE__).'/twitter/trends.php';
+require_once dirname(__FILE__).'/twitter/tweets.php';
+require_once dirname(__FILE__).'/twitter/users.php';
 
 /**
  * Twitter API factory. This is a factory class with 
