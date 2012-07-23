@@ -48,7 +48,7 @@ class Eden_Paypal extends Eden_Class {
 	 * @param string|null API certificate file
 	 * @return Eden_Paypal_Checkout
 	 */
-	public function checkout($user, $password, $signature, $certificate = NULL) {
+	public function checkout($user, $password, $signature, $certificate = NULL, $live = false) {
 		Eden_Paypal_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string')
@@ -59,7 +59,7 @@ class Eden_Paypal extends Eden_Class {
 			$certificate = dirname(__FILE__).self::PEM;
 		}
 		
-		return Eden_Paypal_Checkout::i($user, $password, $signature, $certificate);
+		return Eden_Paypal_Checkout::i($user, $password, $signature, $certificate, $live);
 	}
 	
 	/**
