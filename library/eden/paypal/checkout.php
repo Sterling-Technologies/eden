@@ -17,7 +17,7 @@
 class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 	/* Constants
 	-------------------------------*/
-	const TEST_URL_A		= 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=%s';
+	const TEST_URL_CHECKOUT		= 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=%s';
 	const LIVE_URL			= 'https://www.paypal.com/webscr?cmd=_express-checkout&token=%s';
 	
 	const SET_METHOD		= 'SetExpressCheckout';
@@ -88,7 +88,7 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 	public function __construct($user, $password, $signature, $certificate, $live = false) {
 		parent::__construct($user, $password, $signature, $certificate, $live);
 		
-		$this->_url	= self::TEST_URL;
+		$this->_url	= self::TEST_URL_CHECKOUT;
 		if($live) {
 			$this->_url = self::LIVE_URL;
 		}

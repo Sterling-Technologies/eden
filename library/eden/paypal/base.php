@@ -43,7 +43,7 @@ class Eden_Paypal_Base extends Eden_Class {
 		$this->_user		= $user;
 		$this->_password	= $password;
 		$this->_signature	= $signature;
-		$this->_certificate	= $certificate;
+		$this->_certificate	= $certificate; 
 		
 		$this->_url	= self::TEST_URL;
 		$this->_baseUrl = self::TEST_URL;
