@@ -21,8 +21,8 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 	const LIVE_URL			= 'https://www.paypal.com/webscr?cmd=_express-checkout&token=%s';
 	
 	const SET_METHOD		= 'SetExpressCheckout';
-	const GET_METHOD		= 'GetExpressCheckout';
-	const DO_METHOD			= 'DoExpressCheckout';
+	const GET_METHOD		= 'GetExpressCheckoutDetails';
+	const DO_METHOD			= 'DoExpressCheckoutPayment';
 	const DO_ADDRESS_VERIFY	= 'AddressVerify';
 	const CALL_BACK			= 'Callback';
 	const GET_BALANCE		= 'GetBalance';
