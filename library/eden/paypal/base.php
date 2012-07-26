@@ -80,7 +80,7 @@ class Eden_Paypal_Base extends Eden_Class {
 		
 		//generate URL-encoded query string to build our NVP string
 		$query = http_build_query($query + $default);
-		echo $this->_baseUrl;
+		echo $this->_baseUrl.' -> '.$method;
 		$curl = $this->Eden_Curl()
 			->setUrl($this->_baseUrl)
 			->setVerbose(true)
