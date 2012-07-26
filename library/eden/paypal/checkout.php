@@ -286,7 +286,7 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 		
 		$query = array(
 			'PAYMENTREQUEST_0_PAYMENTACTION'	=> 'Authorization',
-			self::TOTAL_AMOUNT					=> $this->_amount,			//amount of item
+			self::TOTAL_AMOUNT					=> $this->_amount,	//amount of item
 			self::RETURN_URL 					=> $return,
 			self::CANCEL_URL 					=> $cancel,					
 			self::SHIPPING_AMOUNT				=> $this->_shippingAmount,	//amount of shipping
@@ -322,7 +322,8 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 		return $this;
 	}
 	
-	public function getTransactionId() {
+	public function getTransactionId($payerId) {
+		$this->_payer = $payerId;
 		if(!$this->_token) {
 			return NULL;
 		}
@@ -426,7 +427,7 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 			return $response[self::TRANSACTION_ID];
 		}
 		
-		return array();
+		return $response;
 	}
 	
 	/* Private Methods
