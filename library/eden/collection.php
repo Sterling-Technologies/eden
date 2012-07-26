@@ -36,10 +36,6 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	public function __construct(array $data = array()) {
-		$this->set($data);
-	}
-	
 	public function __call($name, $args) {
 		//if the method starts with get
 		if(strpos($name, 'get') === 0) {
@@ -81,6 +77,10 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 		}
 	}
 	
+	public function __construct(array $data = array()) {
+		$this->set($data);
+	}
+		
 	public function __set($name, $value) {
 		//set all rows with this column and value
 		foreach($this->_list as $i => $row) {
@@ -96,39 +96,6 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Sets default model
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setModel($model) {
-		$error = Eden_Collection_Error::i()->argument(1, 'string');
-		
-		if(!is_subclass_of($model, 'Eden_Model')) {
-			$error->setMessage(Eden_Collection_Error::NOT_SUB_MODEL)
-				->addVariable($model)
-				->trigger();
-		}
-		
-		$this->_model = $model;
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets data
-	 *
-	 * @return this
-	 */
-	public function set(array $data = array()) {
-		foreach($data as $row) {
-			$this->add($row);
-		}
-		
-		return $this;
-	}
-	
 	/**
 	 * Adds a row to the collection
 	 *
@@ -174,6 +141,15 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 		return $this;
 	}
 	
+	/**
+	 * returns size using the Countable interface
+	 *
+	 * @return string
+	 */
+	public function count() {
+		return count($this->_list);
+	}
+	
 	public function cut($index = self::LAST) {
 		//Argument 1 must be a string or integer
 		Eden_Collection_Error::i()->argument(1, 'string', 'int');
@@ -201,6 +177,16 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	}
 	
 	/**
+	 * Returns the current item
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+    public function current() {
+        return current($this->_list);
+    }
+	
+	/**
 	 * Returns the row array
 	 *
 	 * @param bool
@@ -221,26 +207,6 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	}
 	
 	/**
-	 * Rewinds the position
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-	public function rewind() {
-        reset($this->_list);
-    }
-
-	/**
-	 * Returns the current item
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-    public function current() {
-        return current($this->_list);
-    }
-
-	/**
 	 * Returns th current position
 	 * For Iterator interface
 	 *
@@ -249,7 +215,7 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
     public function key() {
         return key($this->_list);
     }
-
+	
 	/**
 	 * Increases the position
 	 * For Iterator interface
@@ -259,15 +225,25 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
     public function next() {
         next($this->_list);
     }
-
+	
 	/**
-	 * Validates whether if the index is set
-	 * For Iterator interface
+	 * isset using the ArrayAccess interface
 	 *
-	 * @return void
+	 * @param number
+	 * @return bool
 	 */
-    public function valid() {
-        return isset($this->_list[key($this->_list)]);
+    public function offsetExists($offset) {
+        return isset($this->_list[$offset]);
+    }
+	
+	/**
+	 * returns data using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+	public function offsetGet($offset) {
+        return isset($this->_list[$offset]) ? $this->_list[$offset] : NULL;
     }
 	
 	/**
@@ -295,16 +271,6 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
     }
 	
 	/**
-	 * isset using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-    public function offsetExists($offset) {
-        return isset($this->_list[$offset]);
-    }
-    
-	/**
 	 * unsets using the ArrayAccess interface
 	 *
 	 * @param number
@@ -315,15 +281,15 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 			->cut($offset)
 			->get();
     }
-    
+	
 	/**
-	 * returns data using the ArrayAccess interface
+	 * Rewinds the position
+	 * For Iterator interface
 	 *
-	 * @param number
-	 * @return bool
+	 * @return void
 	 */
-	public function offsetGet($offset) {
-        return isset($this->_list[$offset]) ? $this->_list[$offset] : NULL;
+	public function rewind() {
+        reset($this->_list);
     }
 	
 	/**
@@ -334,6 +300,39 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	public function serialize() {
         return $this->__toString();
     }
+	
+	/**
+	 * Sets data
+	 *
+	 * @return this
+	 */
+	public function set(array $data = array()) {
+		foreach($data as $row) {
+			$this->add($row);
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets default model
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setModel($model) {
+		$error = Eden_Collection_Error::i()->argument(1, 'string');
+		
+		if(!is_subclass_of($model, 'Eden_Model')) {
+			$error->setMessage(Eden_Collection_Error::NOT_SUB_MODEL)
+				->addVariable($model)
+				->trigger();
+		}
+		
+		$this->_model = $model;
+		
+		return $this;
+	}
 	
 	/**
 	 * sets data using the Serializable interface
@@ -347,13 +346,14 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
     }
 	
 	/**
-	 * returns size using the Countable interface
+	 * Validates whether if the index is set
+	 * For Iterator interface
 	 *
-	 * @return string
+	 * @return void
 	 */
-	public function count() {
-		return count($this->_list);
-	}
+    public function valid() {
+        return isset($this->_list[key($this->_list)]);
+    }
 	
 	/* Protected Methods
 	-------------------------------*/

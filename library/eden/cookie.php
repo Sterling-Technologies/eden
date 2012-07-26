@@ -34,6 +34,138 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * Removes all cookies.
+	 *
+	 * @return Eden_Cookie
+	 */
+	public function clear() {
+		foreach($_COOKIE as $key => $value) {
+			$this->remove($key);
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Returns the current item
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+    public function current() {
+		return current($_COOKIE);
+    }
+	
+	/**
+	 * Returns data
+	 *
+	 * @param string|null
+	 * @return mixed
+	 */
+	public function get($key = NULL) {
+		Eden_Cookie_Error::i()->argument(1, 'string', 'null');
+		
+		if(is_null($key)) {
+			return $_COOKIE;
+		}
+		
+		if(isset($_COOKIE[$key])) {
+			return $_COOKIE[$key];
+		}
+		
+		return NULL;
+	}
+	
+	/**
+	 * Returns th current position
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+    public function key() {
+		return key($_COOKIE);
+    }
+	
+	/**
+	 * Increases the position
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+    public function next() {
+		next($_COOKIE);
+    }
+	
+	/**
+	 * isset using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+    public function offsetExists($offset) {
+        return isset($_COOKIE[$offset]);
+    }
+	
+	/**
+	 * returns data using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+	public function offsetGet($offset) {
+        return isset($_COOKIE[$offset]) ? $_COOKIE[$offset] : NULL;
+    }
+	
+	/**
+	 * Sets data using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @param mixed
+	 * @return void
+	 */
+	public function offsetSet($offset, $value) {
+       $this->set($offset, $value, strtotime('+10 years'));
+    }
+	
+	/**
+	 * unsets using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+	public function offsetUnset($offset) {
+        $this->remove($offset);
+    }
+	
+	/**
+	 * Removes a cookie.
+	 *
+	 * @param *string cookie name
+	 * @return Eden_Cookie
+	 */
+	public function remove($name) {
+		Eden_Cookie_Error::i()->argument(1, 'string');
+		
+		$this->set($name, NULL, time() - 3600);
+		
+		if(isset($_COOKIE[$name])) {
+			unset($_COOKIE[$name]);
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Rewinds the position
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+	public function rewind() {
+		reset($_COOKIE);
+    }
+	
+	/**
 	 * Sets a cookie.
 	 *
 	 * @param *string cookie name
@@ -61,20 +193,6 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	}
 	
 	/**
-	 * Sets a secure cookie.
-	 *
-	 * @param *string cookie name
-	 * @param variable the data
-	 * @param int expiration
-	 * @param string path to make the cookie available
-	 * @param string|null the domain
-	 * @return this
-	 */
-	public function setSecure($key, $data = NULL, $expires = 0, $path = NULL, $domain = NULL) {
-		return $this->set($key, $data, $expires, $path, $domain, true, false);
-	}
-	
-	/**
 	 * Sets a set of cookies.
 	 *
 	 * @param *array the data in key value format
@@ -92,6 +210,20 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	}
 	
 	/**
+	 * Sets a secure cookie.
+	 *
+	 * @param *string cookie name
+	 * @param variable the data
+	 * @param int expiration
+	 * @param string path to make the cookie available
+	 * @param string|null the domain
+	 * @return this
+	 */
+	public function setSecure($key, $data = NULL, $expires = 0, $path = NULL, $domain = NULL) {
+		return $this->set($key, $data, $expires, $path, $domain, true, false);
+	}
+		
+	/**
 	 * Sets a set of secure cookies.
 	 *
 	 * @param *array the data in key value format
@@ -106,97 +238,6 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 	}
 	
 	/**
-	 * Returns data
-	 *
-	 * @param string|null
-	 * @return mixed
-	 */
-	public function get($key = NULL) {
-		Eden_Cookie_Error::i()->argument(1, 'string', 'null');
-		
-		if(is_null($key)) {
-			return $_COOKIE;
-		}
-		
-		if(isset($_COOKIE[$key])) {
-			return $_COOKIE[$key];
-		}
-		
-		return NULL;
-	}
-	
-	/**
-	 * Removes a cookie.
-	 *
-	 * @param *string cookie name
-	 * @return Eden_Cookie
-	 */
-	public function remove($name) {
-		Eden_Cookie_Error::i()->argument(1, 'string');
-		
-		$this->set($name, NULL, time() - 3600);
-		
-		if(isset($_COOKIE[$name])) {
-			unset($_COOKIE[$name]);
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Removes all cookies.
-	 *
-	 * @return Eden_Cookie
-	 */
-	public function clear() {
-		foreach($_COOKIE as $key => $value) {
-			$this->remove($key);
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Rewinds the position
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-	public function rewind() {
-		reset($_COOKIE);
-    }
-
-	/**
-	 * Returns the current item
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-    public function current() {
-		return current($_COOKIE);
-    }
-
-	/**
-	 * Returns th current position
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-    public function key() {
-		return key($_COOKIE);
-    }
-
-	/**
-	 * Increases the position
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-    public function next() {
-		next($_COOKIE);
-    }
-
-	/**
 	 * Validates whether if the index is set
 	 * For Iterator interface
 	 *
@@ -206,47 +247,6 @@ class Eden_Cookie extends Eden_Class implements ArrayAccess, Iterator {
 		return isset($_COOKIE[$this->key()]);
    }
    
-   /**
-	 * Sets data using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @param mixed
-	 * @return void
-	 */
-	public function offsetSet($offset, $value) {
-       $this->set($offset, $value, strtotime('+10 years'));
-    }
-	
-	/**
-	 * isset using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-    public function offsetExists($offset) {
-        return isset($_COOKIE[$offset]);
-    }
-    
-	/**
-	 * unsets using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-	public function offsetUnset($offset) {
-        $this->remove($offset);
-    }
-    
-	/**
-	 * returns data using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-	public function offsetGet($offset) {
-        return isset($_COOKIE[$offset]) ? $_COOKIE[$offset] : NULL;
-    }
-	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

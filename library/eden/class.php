@@ -47,10 +47,6 @@ class Eden_Class {
 		return self::_getMultiple();
 	}
 	
-	public function __toString() {
-		return get_class($this);
-	}
-	
 	public function __call($name, $args) {
 		//if the method name starts with a capital letter
 		//most likely they want a class
@@ -110,42 +106,12 @@ class Eden_Class {
 		}
 	}
 	
-	/* Public Methods
-	-------------------------------*/
-	/**
-	 * Creates a class route for this class.
-	 * 
-	 * @param *string the class route name
-	 * @return Eden_Class
-	 */
-	public function routeThis($route) {
-		//argument 1 must be a string
-		Eden_Error::i()->argument(1, 'string');
-		
-		if(func_num_args() == 1) {
-			//when someone calls a class call this instead
-			Eden_Route::i()->getClass()->route($route, $this);
-			return $this;
-		}
-		
-		//argument 2 must be a string
-		Eden_Error::i()->argument(2, 'string', 'object');
-		
-		$args = func_get_args();
-		
-		$source = array_shift($args);
-		$class 	= array_shift($args);
-		$destination = NULL;
-		
-		if(count($args)) {
-			$destination = array_shift($args);
-		}
-		
-		//when someone calls a method here call something ele instead
-		Eden_Route::i()->getMethod()->route($this, $source, $class, $destination);
-		return $this;
+	public function __toString() {
+		return get_class($this);
 	}
 	
+	/* Public Methods
+	-------------------------------*/
 	/**
 	 * Calls a method in this class and allows 
 	 * argumetns to be passed as an array
@@ -159,20 +125,6 @@ class Eden_Class {
 		Eden_Error::i()->argument(1,'string');
 		
 		return Eden_Route::i()->getMethod($this, $method, $args);
-	}
-	
-	/**
-	 * Invokes When if conditional is false
-	 *
-	 * @param bool
-	 * @return this|Eden_Noop
-	 */
-	public function when($isTrue, $lines = 0) {
-		if($isTrue) {
-			return $this;
-		}
-		
-		return Eden_When::i($this, $lines);
 	}
 	
 	/** 
@@ -238,8 +190,65 @@ class Eden_Class {
 		return $this;
 	}
 	
+	/**
+	 * Creates a class route for this class.
+	 * 
+	 * @param *string the class route name
+	 * @return Eden_Class
+	 */
+	public function routeThis($route) {
+		//argument 1 must be a string
+		Eden_Error::i()->argument(1, 'string');
+		
+		if(func_num_args() == 1) {
+			//when someone calls a class call this instead
+			Eden_Route::i()->getClass()->route($route, $this);
+			return $this;
+		}
+		
+		//argument 2 must be a string
+		Eden_Error::i()->argument(2, 'string', 'object');
+		
+		$args = func_get_args();
+		
+		$source = array_shift($args);
+		$class 	= array_shift($args);
+		$destination = NULL;
+		
+		if(count($args)) {
+			$destination = array_shift($args);
+		}
+		
+		//when someone calls a method here call something ele instead
+		Eden_Route::i()->getMethod()->route($this, $source, $class, $destination);
+		return $this;
+	}
+	
+	/**
+	 * Invokes When if conditional is false
+	 *
+	 * @param bool
+	 * @return this|Eden_Noop
+	 */
+	public function when($isTrue, $lines = 0) {
+		if($isTrue) {
+			return $this;
+		}
+		
+		return Eden_When::i($this, $lines);
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
+	protected static function _getMultiple($class = NULL) {
+		if(is_null($class) && function_exists('get_called_class')) {
+			$class = get_called_class();
+		}
+		
+		$class = Eden_Route::i()->getClass()->getRoute($class);		
+		return self::_getInstance($class);
+	}
+	
 	protected static function _getSingleton($class = NULL) {
 		if(is_null($class) && function_exists('get_called_class')) {
 			$class = get_called_class();
@@ -253,16 +262,7 @@ class Eden_Class {
 		
 		return self::$_instances[$class];
 	}
-	
-	protected static function _getMultiple($class = NULL) {
-		if(is_null($class) && function_exists('get_called_class')) {
-			$class = get_called_class();
-		}
 		
-		$class = Eden_Route::i()->getClass()->getRoute($class);		
-		return self::_getInstance($class);
-	}
-	
 	/* Private Methods
 	-------------------------------*/
 	private static function _getInstance($class) {

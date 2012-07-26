@@ -207,89 +207,55 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Sets CURLOPT_SSL_VERIFYHOST
+	 * Send the curl off and returns the results
+	 * parsed as DOMDocument
 	 *
-	 * @param bool
-	 * @return this
+	 * @return DOMDOcument
 	 */
-	public function verifyHost($on = true) {
-		Eden_Curl_Error::i()->argument(1, 'bool');
-		$this->options[CURLOPT_SSL_VERIFYHOST] = $on ? 1 : 2;
-		return $this;
+	public function getDomDocumentResponse() {
+		$this->_meta['response'] = $this->getResponse();
+		$xml = new DOMDocument();
+		$xml->loadXML($this->_meta['response']);
+		return $xml;
 	}
 	
 	/**
-	 * Sets CURLOPT_SSL_VERIFYPEER
+	 * Send the curl off and returns the results
+	 * parsed as JSON
 	 *
-	 * @param bool
-	 * @return this
+	 * @return array
 	 */
-	public function verifyPeer($on = true) {
+	public function getJsonResponse($assoc = true) {
+		$this->_meta['response'] = $this->getResponse();
 		Eden_Curl_Error::i()->argument(1, 'bool');
-		$this->options[CURLOPT_SSL_VERIFYPEER] = $on;
-		return $this;
+		return json_decode($this->_meta['response'], $assoc);
 	}
 	
 	/**
-	 * Sets url parameter
+	 * Returns the meta of the last call
 	 *
-	 * @param array|string
-	 * @return this
+	 * @return array
 	 */
-	public function setUrlParameter($key, $value = NULL) {
-		Eden_Curl_Error::i()
-			->argument(1, 'array', 'string')
-			->argument(2, 'scalar');
+	public function getMeta($key = NULL) {
+		Eden_Curl_Error::i()->argument(1, 'string', 'null');
 		
-		if(is_array($key)) {
-			$this->_param = $key;
-			return $this;
+		if(isset($this->_meta[$key])) {
+			return $this->_meta[$key];
 		}
 		
-		$this->_param[$key] = $value;
+		return $this->_meta;
 	}
 	
 	/**
-	 * Sets request headers
+	 * Send the curl off and returns the results
+	 * parsed as url query
 	 *
-	 * @param array|string
-	 * @return this
+	 * @return array
 	 */
-	public function setHeaders($key, $value = NULL) {
-		Eden_Curl_Error::i()
-			->argument(1, 'array', 'string')
-			->argument(2, 'scalar','null');
-		
-		if(is_array($key)) {
-			$this->_headers = $key;
-			return $this;
-		}
-		
-		$this->_headers[] = $key.': '.$value;
-		return $this;
-	}
-	
-	/**
-	 * Send the curl off 
-	 *
-	 * @return this
-	 */
-	public function send() {
-		$curl = curl_init();
-		
-		$this->_addParameters()->_addHeaders();
-		curl_setopt_array($curl, $this->_options);
-		curl_exec($curl);
-		
-		$this->_meta = array(
-			'info' 			=> curl_getinfo($curl, CURLINFO_HTTP_CODE),
-			'error_message'	=> curl_errno($curl),
-			'error_code'	=> curl_error($curl));
-		
-		curl_close($curl);
-		unset($curl);
-		
-		return $this;
+	public function getQueryResponse() {
+		$this->_meta['response'] = $this->getResponse();
+		parse_str($this->_meta['response'], $response);
+		return $response;
 	}
 	
 	/**
@@ -319,30 +285,6 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	
 	/**
 	 * Send the curl off and returns the results
-	 * parsed as JSON
-	 *
-	 * @return array
-	 */
-	public function getJsonResponse($assoc = true) {
-		$this->_meta['response'] = $this->getResponse();
-		Eden_Curl_Error::i()->argument(1, 'bool');
-		return json_decode($this->_meta['response'], $assoc);
-	}
-	
-	/**
-	 * Send the curl off and returns the results
-	 * parsed as url query
-	 *
-	 * @return array
-	 */
-	public function getQueryResponse() {
-		$this->_meta['response'] = $this->getResponse();
-		parse_str($this->_meta['response'], $response);
-		return $response;
-	}
-	
-	/**
-	 * Send the curl off and returns the results
 	 * parsed as SimpleXml
 	 *
 	 * @return SimpleXmlElement
@@ -353,32 +295,24 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	}
 	
 	/**
-	 * Send the curl off and returns the results
-	 * parsed as DOMDocument
+	 * isset using the ArrayAccess interface
 	 *
-	 * @return DOMDOcument
+	 * @param number
+	 * @return bool
 	 */
-	public function getDomDocumentResponse() {
-		$this->_meta['response'] = $this->getResponse();
-		$xml = new DOMDocument();
-		$xml->loadXML($this->_meta['response']);
-		return $xml;
-	}
+    public function offsetExists($offset) {
+        return isset($this->_option[$offset]);
+    }
 	
 	/**
-	 * Returns the meta of the last call
+	 * returns data using the ArrayAccess interface
 	 *
-	 * @return array
+	 * @param number
+	 * @return bool
 	 */
-	public function getMeta($key = NULL) {
-		Eden_Curl_Error::i()->argument(1, 'string', 'null');
-		
-		if(isset($this->_meta[$key])) {
-			return $this->_meta[$key];
-		}
-		
-		return $this->_meta;
-	}
+	public function offsetGet($offset) {
+        return isset($this->_option[$offset]) ? $this->_option[$offset] : NULL;
+    }
 	
 	/**
 	 * Sets data using the ArrayAccess interface
@@ -422,16 +356,6 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
     }
 	
 	/**
-	 * isset using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-    public function offsetExists($offset) {
-        return isset($this->_option[$offset]);
-    }
-    
-	/**
 	 * unsets using the ArrayAccess interface
 	 *
 	 * @param number
@@ -440,19 +364,104 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	public function offsetUnset($offset) {
         unset($this->_option[$offset]);
     }
-    
+	
 	/**
-	 * returns data using the ArrayAccess interface
+	 * Send the curl off 
 	 *
-	 * @param number
-	 * @return bool
+	 * @return this
 	 */
-	public function offsetGet($offset) {
-        return isset($this->_option[$offset]) ? $this->_option[$offset] : NULL;
-    }
+	public function send() {
+		$curl = curl_init();
+		
+		$this->_addParameters()->_addHeaders();
+		curl_setopt_array($curl, $this->_options);
+		curl_exec($curl);
+		
+		$this->_meta = array(
+			'info' 			=> curl_getinfo($curl, CURLINFO_HTTP_CODE),
+			'error_message'	=> curl_errno($curl),
+			'error_code'	=> curl_error($curl));
+		
+		curl_close($curl);
+		unset($curl);
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets request headers
+	 *
+	 * @param array|string
+	 * @return this
+	 */
+	public function setHeaders($key, $value = NULL) {
+		Eden_Curl_Error::i()
+			->argument(1, 'array', 'string')
+			->argument(2, 'scalar','null');
+		
+		if(is_array($key)) {
+			$this->_headers = $key;
+			return $this;
+		}
+		
+		$this->_headers[] = $key.': '.$value;
+		return $this;
+	}
+	
+	/**
+	 * Sets url parameter
+	 *
+	 * @param array|string
+	 * @return this
+	 */
+	public function setUrlParameter($key, $value = NULL) {
+		Eden_Curl_Error::i()
+			->argument(1, 'array', 'string')
+			->argument(2, 'scalar');
+		
+		if(is_array($key)) {
+			$this->_param = $key;
+			return $this;
+		}
+		
+		$this->_param[$key] = $value;
+	}
+	
+	/**
+	 * Sets CURLOPT_SSL_VERIFYHOST
+	 *
+	 * @param bool
+	 * @return this
+	 */
+	public function verifyHost($on = true) {
+		Eden_Curl_Error::i()->argument(1, 'bool');
+		$this->options[CURLOPT_SSL_VERIFYHOST] = $on ? 1 : 2;
+		return $this;
+	}
+	
+	/**
+	 * Sets CURLOPT_SSL_VERIFYPEER
+	 *
+	 * @param bool
+	 * @return this
+	 */
+	public function verifyPeer($on = true) {
+		Eden_Curl_Error::i()->argument(1, 'bool');
+		$this->options[CURLOPT_SSL_VERIFYPEER] = $on;
+		return $this;
+	}
 	
 	/* Protected Methods
 	-------------------------------*/
+	protected function _addHeaders() {
+		if(empty($this->_headers)) {
+			return $this;
+		}
+		
+		$this->_options[CURLOPT_HTTPHEADER] = $this->_headers;
+		return $this;
+	}
+	
 	protected function _addParameters() {
 		if(empty($this->_params)) {
 			return $this;
@@ -478,15 +487,6 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 		//append the parameters
 		$this->_options[CURLOPT_URL] .= $params;
 		
-		return $this;
-	}
-	
-	protected function _addHeaders() {
-		if(empty($this->_headers)) {
-			return $this;
-		}
-		
-		$this->_options[CURLOPT_HTTPHEADER] = $this->_headers;
 		return $this;
 	}
 	

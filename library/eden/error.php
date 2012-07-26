@@ -70,157 +70,6 @@ class Eden_Error extends Exception {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Sets message
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setMessage($message) {
-		$this->message = $message;
-		return $this;
-	}
-	
-	/**
-	 * Sets what index the trace should start at
-	 *
-	 * @return this
-	 */
-	public function setTraceOffset($offset) {
-		$this->_offset = $offset;
-		return $this;
-	}
-	
-	/**
-	 * Returns the trace offset; where we should start the trace
-	 *
-	 * @return this
-	 */
-	public function getTraceOffset() {
-		return $this->_offset;
-	}
-	
-	/**
-	 * Sets exception level
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setLevel($level) {
-		$this->_level = $level;
-		return $this;
-	}
-	
-	/**
-	 * Sets exception level to WARNING
-	 *
-	 * @return this
-	 */
-	public function setLevelWarning() {
-		return $this->setLevel(self::WARNING);
-	}
-	
-	/**
-	 * Sets exception level to ERROR
-	 *
-	 * @return this
-	 */
-	public function setLevelError() {
-		return $this->setLevel(self::WARNING);
-	}
-	
-	/**
-	 * Sets exception level to DEBUG
-	 *
-	 * @return this
-	 */
-	public function setLevelDebug() {
-		return $this->setLevel(self::DEBUG);
-	}
-	
-	/**
-	 * Sets exception level to INFORMATION
-	 *
-	 * @return this
-	 */
-	public function setLevelInformation() {
-		return $this->setLevel(self::INFORMATION);
-	}
-	
-	/**
-	 * Returns the exception level
-	 *
-	 * @return string
-	 */
-	public function getLevel() {
-		return $this->_level;
-	}
-	
-	/**
-	 * Sets exception type
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setType($type) {
-		$this->_type = $type;
-		return $this;
-	}
-	
-	/**
-	 * Sets exception type to ARGUMENT
-	 *
-	 * @return this
-	 */
-	public function setTypeArgument() {
-		return $this->setType(self::ARGUMENT);
-	}
-	
-	/**
-	 * Sets exception type to LOGIC
-	 *
-	 * @return this
-	 */
-	public function setTypeLogic() {
-		return $this->setType(self::CRITICAL);
-	}
-	
-	/**
-	 * Sets exception type to GENERAL
-	 *
-	 * @return this
-	 */
-	public function setTypeGeneral() {
-		return $this->setType(self::GENERAL);
-	}
-	
-	/**
-	 * Sets exception type to CRITICAL
-	 *
-	 * @return this
-	 */
-	public function setTypeCritical() {
-		return $this->setType(self::CRITICAL);
-	}
-	
-	/**
-	 * Returns the exception type
-	 *
-	 * @return string
-	 */
-	public function getType() {
-		return $this->_type;
-	}
-	
-	/**
-	 * REturns the class or method that caught this
-	 *
-	 * @return string
-	 */
-	public function getReporter() {
-		return $this->_reporter;
-	}
-	
-	/**
 	 * Adds parameters used in the message
 	 *
 	 * @return this
@@ -228,53 +77,6 @@ class Eden_Error extends Exception {
 	public function addVariable($variable) {
 		$this->_variables[] = $variable;
 		return $this;
-	}
-	
-	/**
-	 * Returns variables
-	 *
-	 * @return array
-	 */
-	public function getVariables() {
-		return $this->_variables;
-	}
-	
-	/**
-	 * Returns raw trace
-	 *
-	 * @return array
-	 */
-	public function getRawTrace() {
-		return $this->_trace;
-	}
-	
-	/**
-	 * Combines parameters with message and throws it
-	 *
-	 * @return void
-	 */
-	public function trigger() {
-		$this->_trace = debug_backtrace();
-		
-		$this->_reporter = get_class($this);
-		if(isset($this->_trace[$this->_offset]['class'])) {
-			$this->_reporter = $this->_trace[$this->_offset]['class'];
-		}
-		
-		if(isset($this->_trace[$this->_offset]['file'])) {
-			$this->file = $this->_trace[$this->_offset]['file'];
-		}
-		
-		if(isset($this->_trace[$this->_offset]['line'])) {
-			$this->line = $this->_trace[$this->_offset]['line'];
-		}
-		
-		if(!empty($this->_variables)) {
-			$this->message = vsprintf($this->message, $this->_variables);
-			$this->_variables = array();
-		}
-		
-		throw $this;
 	}
 	
 	/**
@@ -328,6 +130,204 @@ class Eden_Error extends Exception {
 	}
 	
 	/**
+	 * Returns the exception level
+	 *
+	 * @return string
+	 */
+	public function getLevel() {
+		return $this->_level;
+	}
+	
+	/**
+	 * Returns raw trace
+	 *
+	 * @return array
+	 */
+	public function getRawTrace() {
+		return $this->_trace;
+	}
+	
+	/**
+	 * REturns the class or method that caught this
+	 *
+	 * @return string
+	 */
+	public function getReporter() {
+		return $this->_reporter;
+	}
+	
+	/**
+	 * Returns the trace offset; where we should start the trace
+	 *
+	 * @return this
+	 */
+	public function getTraceOffset() {
+		return $this->_offset;
+	}
+	
+	/**
+	 * Returns the exception type
+	 *
+	 * @return string
+	 */
+	public function getType() {
+		return $this->_type;
+	}
+	
+	/**
+	 * Returns variables
+	 *
+	 * @return array
+	 */
+	public function getVariables() {
+		return $this->_variables;
+	}
+	
+	/**
+	 * Sets exception level
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setLevel($level) {
+		$this->_level = $level;
+		return $this;
+	}
+	
+	/**
+	 * Sets exception level to DEBUG
+	 *
+	 * @return this
+	 */
+	public function setLevelDebug() {
+		return $this->setLevel(self::DEBUG);
+	}
+	
+	/**
+	 * Sets exception level to ERROR
+	 *
+	 * @return this
+	 */
+	public function setLevelError() {
+		return $this->setLevel(self::WARNING);
+	}
+	
+	/**
+	 * Sets exception level to INFORMATION
+	 *
+	 * @return this
+	 */
+	public function setLevelInformation() {
+		return $this->setLevel(self::INFORMATION);
+	}
+	
+	/**
+	 * Sets exception level to WARNING
+	 *
+	 * @return this
+	 */
+	public function setLevelWarning() {
+		return $this->setLevel(self::WARNING);
+	}
+	
+	/**
+	 * Sets message
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setMessage($message) {
+		$this->message = $message;
+		return $this;
+	}
+	
+	/**
+	 * Sets what index the trace should start at
+	 *
+	 * @return this
+	 */
+	public function setTraceOffset($offset) {
+		$this->_offset = $offset;
+		return $this;
+	}
+	
+	/**
+	 * Sets exception type
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setType($type) {
+		$this->_type = $type;
+		return $this;
+	}
+	
+	/**
+	 * Sets exception type to ARGUMENT
+	 *
+	 * @return this
+	 */
+	public function setTypeArgument() {
+		return $this->setType(self::ARGUMENT);
+	}
+	
+	/**
+	 * Sets exception type to CRITICAL
+	 *
+	 * @return this
+	 */
+	public function setTypeCritical() {
+		return $this->setType(self::CRITICAL);
+	}
+	
+	/**
+	 * Sets exception type to GENERAL
+	 *
+	 * @return this
+	 */
+	public function setTypeGeneral() {
+		return $this->setType(self::GENERAL);
+	}
+	
+	/**
+	 * Sets exception type to LOGIC
+	 *
+	 * @return this
+	 */
+	public function setTypeLogic() {
+		return $this->setType(self::CRITICAL);
+	}
+	
+	/**
+	 * Combines parameters with message and throws it
+	 *
+	 * @return void
+	 */
+	public function trigger() {
+		$this->_trace = debug_backtrace();
+		
+		$this->_reporter = get_class($this);
+		if(isset($this->_trace[$this->_offset]['class'])) {
+			$this->_reporter = $this->_trace[$this->_offset]['class'];
+		}
+		
+		if(isset($this->_trace[$this->_offset]['file'])) {
+			$this->file = $this->_trace[$this->_offset]['file'];
+		}
+		
+		if(isset($this->_trace[$this->_offset]['line'])) {
+			$this->line = $this->_trace[$this->_offset]['line'];
+		}
+		
+		if(!empty($this->_variables)) {
+			$this->message = vsprintf($this->message, $this->_variables);
+			$this->_variables = array();
+		}
+		
+		throw $this;
+	}
+	
+	/**
 	 * Tests virtual arguments for valid data types
 	 *
 	 * @param *int
@@ -377,6 +377,37 @@ class Eden_Error extends Exception {
 	
 	/* Protected Methods
 	-------------------------------*/
+	protected function _isCreditCard($value) {
+		return preg_match('/^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]'.
+		'{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-'.
+		'5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/', $value);
+	}
+	
+	protected function _isEmail($value) {
+		return preg_match('/^(?:(?:(?:[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]|\x5c(?=[@,"\[\]'.
+		'\x5c\x00-\x20\x7f-\xff]))(?:[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]|(?<=\x5c)[@,"\[\]'.
+		'\x5c\x00-\x20\x7f-\xff]|\x5c(?=[@,"\[\]\x5c\x00-\x20\x7f-\xff])|\.(?=[^\.])){1,62'.
+		'}(?:[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]|(?<=\x5c)[@,"\[\]\x5c\x00-\x20\x7f-\xff])|'.
+		'[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]{1,2})|"(?:[^"]|(?<=\x5c)"){1,62}")@(?:(?!.{64})'.
+		'(?:[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.?|[a-zA-Z0-9]\.?)+\.(?:xn--[a-zA-Z0-9]'.
+		'+|[a-zA-Z]{2,6})|\[(?:[0-1]?\d?\d|2[0-4]\d|25[0-5])(?:\.(?:[0-1]?\d?\d|2[0-4]\d|25'.
+		'[0-5])){3}\])$/', $value);
+	}
+	
+	protected function _isHex($value) {
+		return preg_match("/^[0-9a-fA-F]{6}$/", $value);
+	}
+	
+	protected function _isHtml($value) {
+		return preg_match("/<\/?\w+((\s+(\w|\w[\w-]*\w)(\s*=\s*".
+		"(?:\".*?\"|'.*?'|[^'\">\s]+))?)+\s*|\s*)\/?>/i", $value);
+	}
+	
+	protected function _isUrl($value) {
+		return preg_match('/^(http|https|ftp):\/\/([A-Z0-9][A-Z0'.
+		'-9_-]*(?:.[A-Z0-9][A-Z0-9_-]*)+):?(d+)?\/?/i', $value);
+	}
+	
 	protected function _isValid($type, $data) {
 		$type = $this->_getTypeName($type);
 		
@@ -414,37 +445,6 @@ class Eden_Error extends Exception {
 		}
 		
 		return true;
-	}
-	
-	protected function _isEmail($value) {
-		return preg_match('/^(?:(?:(?:[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]|\x5c(?=[@,"\[\]'.
-		'\x5c\x00-\x20\x7f-\xff]))(?:[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]|(?<=\x5c)[@,"\[\]'.
-		'\x5c\x00-\x20\x7f-\xff]|\x5c(?=[@,"\[\]\x5c\x00-\x20\x7f-\xff])|\.(?=[^\.])){1,62'.
-		'}(?:[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]|(?<=\x5c)[@,"\[\]\x5c\x00-\x20\x7f-\xff])|'.
-		'[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]{1,2})|"(?:[^"]|(?<=\x5c)"){1,62}")@(?:(?!.{64})'.
-		'(?:[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.?|[a-zA-Z0-9]\.?)+\.(?:xn--[a-zA-Z0-9]'.
-		'+|[a-zA-Z]{2,6})|\[(?:[0-1]?\d?\d|2[0-4]\d|25[0-5])(?:\.(?:[0-1]?\d?\d|2[0-4]\d|25'.
-		'[0-5])){3}\])$/', $value);
-	}
-	
-	protected function _isUrl($value) {
-		return preg_match('/^(http|https|ftp):\/\/([A-Z0-9][A-Z0'.
-		'-9_-]*(?:.[A-Z0-9][A-Z0-9_-]*)+):?(d+)?\/?/i', $value);
-	}
-	
-	protected function _isHtml($value) {
-		return preg_match("/<\/?\w+((\s+(\w|\w[\w-]*\w)(\s*=\s*".
-		"(?:\".*?\"|'.*?'|[^'\">\s]+))?)+\s*|\s*)\/?>/i", $value);
-	}
-	
-	protected function _isCreditCard($value) {
-		return preg_match('/^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]'.
-		'{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-'.
-		'5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/', $value);
-	} 
-	
-	protected function _isHex($value) {
-		return preg_match("/^[0-9a-fA-F]{6}$/", $value);
 	}
 	
 	/* Private Methods
