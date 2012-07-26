@@ -102,37 +102,22 @@ class Eden_Registry extends Eden_Type_Array {
 	}
 	
 	/**
-	 * Creates the name space given the space
-	 * and sets the value to that name space
+	 * Returns the raw array recursively
 	 *
-	 * @return Eden_Registry
+	 * @return array
 	 */
-	public function set($value) {
-		$args = func_get_args();
-		
-		if(count($args) < 2) {
-			return $this;
-		}
-		
-		$key = array_shift($args);
-		
-		if(count($args) == 1) {
-			if(is_array($args[0])) {
-				$args[0] = self::i($args[0]);
+	public function getArray($modified = true) {
+		$array = array();
+		foreach($this->_data as $key => $data) {
+			if($data instanceof Eden_Registry) {
+				$array[$key] = $data->getArray($modified);
+				continue;
 			}
 			
-			$this->_data[$key] = $args[0];
-			
-			return $this;
+			$array[$key] = $data;
 		}
 		
-		if(!isset($this->_data[$key]) || !($this->_data[$key] instanceof Eden_Registry)) {
-			$this->_data[$key] = self::i();
-		}
-		
-		call_user_func_array(array($this->_data[$key], __FUNCTION__), $args);
-		
-		return $this;
+		return $array;
 	}
 	
 	/**
@@ -165,6 +150,24 @@ class Eden_Registry extends Eden_Type_Array {
 	}
 	
 	/**
+	 * returns data using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+	public function offsetGet($offset) {
+        if(!isset($this->_data[$offset])) {
+			return NULL;
+		}
+		
+		if($this->_data[$offset] instanceof Eden_Registry) {
+			return $this->_data[$offset]->getArray();
+		}
+		
+		return $this->_data[$offset];
+    }
+	
+	/**
 	 * Removes a key and everything associated with it
 	 * 
 	 * @return Eden_Registry
@@ -195,41 +198,38 @@ class Eden_Registry extends Eden_Type_Array {
 	}
 	
 	/**
-	 * Returns the raw array recursively
+	 * Creates the name space given the space
+	 * and sets the value to that name space
 	 *
-	 * @return array
+	 * @return Eden_Registry
 	 */
-	public function getArray($modified = true) {
-		$array = array();
-		foreach($this->_data as $key => $data) {
-			if($data instanceof Eden_Registry) {
-				$array[$key] = $data->getArray($modified);
-				continue;
+	public function set($value) {
+		$args = func_get_args();
+		
+		if(count($args) < 2) {
+			return $this;
+		}
+		
+		$key = array_shift($args);
+		
+		if(count($args) == 1) {
+			if(is_array($args[0])) {
+				$args[0] = self::i($args[0]);
 			}
 			
-			$array[$key] = $data;
+			$this->_data[$key] = $args[0];
+			
+			return $this;
 		}
 		
-		return $array;
+		if(!isset($this->_data[$key]) || !($this->_data[$key] instanceof Eden_Registry)) {
+			$this->_data[$key] = self::i();
+		}
+		
+		call_user_func_array(array($this->_data[$key], __FUNCTION__), $args);
+		
+		return $this;
 	}
-	
-	/**
-	 * returns data using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-	public function offsetGet($offset) {
-        if(!isset($this->_data[$offset])) {
-			return NULL;
-		}
-		
-		if($this->_data[$offset] instanceof Eden_Registry) {
-			return $this->_data[$offset]->getArray();
-		}
-		
-		return $this->_data[$offset];
-    }
 	
 	/* Protected Methods
 	-------------------------------*/

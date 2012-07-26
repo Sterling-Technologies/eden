@@ -79,7 +79,44 @@ class Eden_Event extends Eden_Class {
 		$this->_observers[] = $observer;
 		return $this;
     }
-
+	
+	/**
+     * Notify all observers of that a specific 
+	 * event has happened
+     *
+	 * @param string
+	 * @param [mixed]
+     * @return this
+     */
+    public function trigger($event = NULL) {
+		//argument 1 must be string
+		Eden_Event_Error::i()->argument(1, 'string', 'null');
+		
+		if(is_null($event)) {
+			$trace = debug_backtrace();
+			$event = $trace[1]['function'];
+		}
+		
+		//get the arguments
+		$args = func_get_args();
+		//shift out the event
+		$event = array_shift($args);
+		
+		//as a courtesy lets shift in the object
+		array_unshift($args, $this, $event);
+		
+		//for each observer
+		foreach($this->_observers as $observer) {
+			//if this is the same event, call the method, if the method returns false
+			if($event == $observer[0] && call_user_func_array($observer[2], $args) === false) {
+				//break out of the loop
+				break;
+			}
+        }
+		
+		return $this;
+    }
+	
     /**
      * Stops listening to an event
      *
@@ -131,62 +168,9 @@ class Eden_Event extends Eden_Class {
 		
 		return $this;
     }
-	
-	/**
-     * Notify all observers of that a specific 
-	 * event has happened
-     *
-	 * @param string
-	 * @param [mixed]
-     * @return this
-     */
-    public function trigger($event = NULL) {
-		//argument 1 must be string
-		Eden_Event_Error::i()->argument(1, 'string', 'null');
-		
-		if(is_null($event)) {
-			$trace = debug_backtrace();
-			$event = $trace[1]['function'];
-		}
-		
-		//get the arguments
-		$args = func_get_args();
-		//shift out the event
-		$event = array_shift($args);
-		
-		//as a courtesy lets shift in the object
-		array_unshift($args, $this, $event);
-		
-		//for each observer
-		foreach($this->_observers as $observer) {
-			//if this is the same event, call the method, if the method returns false
-			if($event == $observer[0] && call_user_func_array($observer[2], $args) === false) {
-				//break out of the loop
-				break;
-			}
-        }
-		
-		return $this;
-    }
-	
+
 	/* Protected Methods
 	-------------------------------*/
-	protected function _getId($instance, $method = NULL) {
-		if(is_object($instance)) {
-			return spl_object_hash($instance);
-		}
-		
-		if(is_string($instance) && is_string($method)) {
-			return $instance.'::'.$method;
-		}
-		
-		if(is_string($instance)) {
-			return $instance;
-		}
-		
-		return false;
-	}
-	
 	protected function _getCallable($instance, $method = NULL) {
 		if(class_exists('Closure') && $instance instanceof Closure) {
 			return $instance;
@@ -205,6 +189,22 @@ class Eden_Event extends Eden_Class {
 		}
 		
 		return NULL;
+	}
+	
+	protected function _getId($instance, $method = NULL) {
+		if(is_object($instance)) {
+			return spl_object_hash($instance);
+		}
+		
+		if(is_string($instance) && is_string($method)) {
+			return $instance.'::'.$method;
+		}
+		
+		if(is_string($instance)) {
+			return $instance;
+		}
+		
+		return false;
 	}
 	
 	/* Private Methods

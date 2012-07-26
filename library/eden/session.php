@@ -45,53 +45,34 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Starts a session
+	 * Removes all session data
 	 *
 	 * @return bool
 	 */
-	public function start() {
-		if(!session_id()) {
-			self::$_session = session_start();
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Starts a session
-	 *
-	 * @return Eden_SessionServer
-	 */
-	public function stop() {
-		self::$_session = false;
-		session_write_close();
-		return $this;
-	}
-	
-	/**
-	 * Sets data
-	 *
-	 * @param array|string
-	 * @param mixed
-	 * @return this
-	 */
-	public function set($data, $value = NULL) {
-		$error = Eden_Session_Error::i()->argument(1, 'array', 'string');
-		
+	public function clear() {
 		if(!self::$_session) {
-			$error->setMessage(Eden_Session_Error::ERROR_ERROR_NOT_STARTED)->trigger();
+			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
-		if(is_array($data)) {
-			$_SESSION = $data;
-			return $this;
-		}
-		
-		$_SESSION[$data] = $value;
+		$_SESSION = array();
 		
 		return $this;
 	}
 	
+	/**
+	 * Returns the current item
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+    public function current() {
+		if(!self::$_session) {
+			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
+		}
+		
+        return current($_SESSION);
+    }
+
 	/**
 	 * Returns data
 	 *
@@ -130,81 +111,6 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 	}
 	
 	/**
-	 * Sets the session ID
-	 *
-	 * @param *int
-	 * @return int
-	 */
-	public function setId($sid) {
-		$error = Eden_Session_Error::i()->argument(1, 'numeric');
-		
-		if(!self::$_session) {
-			$error->setMessage(Eden_Session_Error::ERROR_ERROR_NOT_STARTED)->trigger();
-		}
-		
-		return session_id((int) $sid);
-	}
-	
-	/**
-	 * Removes a session.
-	 *
-	 * @param *string session name
-	 * @return this
-	 */
-	public function remove($name) {
-		Eden_Session_Error::i()->argument(1, 'string');
-		
-		if(isset($_SESSION[$name])) {
-			unset($_SESSION[$name]);
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Removes all session data
-	 *
-	 * @return bool
-	 */
-	public function clear() {
-		if(!self::$_session) {
-			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
-		}
-		
-		$_SESSION = array();
-		
-		return $this;
-	}
-	
-	/**
-	 * Rewinds the position
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-	public function rewind() {
-		if(!self::$_session) {
-			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
-		}
-		
-        reset($_SESSION);
-    }
-
-	/**
-	 * Returns the current item
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-    public function current() {
-		if(!self::$_session) {
-			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
-		}
-		
-        return current($_SESSION);
-    }
-
-	/**
 	 * Returns th current position
 	 * For Iterator interface
 	 *
@@ -233,18 +139,32 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
     }
 
 	/**
-	 * Validates whether if the index is set
-	 * For Iterator interface
+	 * isset using the ArrayAccess interface
 	 *
-	 * @return void
+	 * @param number
+	 * @return bool
 	 */
-    public function valid() {
+    public function offsetExists($offset) {
 		if(!self::$_session) {
 			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
-        return isset($_SESSION[$this->key()]);
-   }
+        return isset($_SESSION[$offset]);
+    }
+    
+	/**
+	 * returns data using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+	public function offsetGet($offset) {
+		if(!self::$_session) {
+			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
+		}
+		
+        return isset($_SESSION[$offset]) ? $_SESSION[$offset] : NULL;
+    }
 	
 	/**
 	 * Sets data using the ArrayAccess interface
@@ -266,20 +186,6 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
     }
 	
 	/**
-	 * isset using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-    public function offsetExists($offset) {
-		if(!self::$_session) {
-			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
-		}
-		
-        return isset($_SESSION[$offset]);
-    }
-    
-	/**
 	 * unsets using the ArrayAccess interface
 	 *
 	 * @param number
@@ -292,21 +198,114 @@ class Eden_Session extends Eden_Class implements ArrayAccess, Iterator {
 		
         unset($_SESSION[$offset]);
     }
-    
+
 	/**
-	 * returns data using the ArrayAccess interface
+	 * Removes a session.
 	 *
-	 * @param number
-	 * @return bool
+	 * @param *string session name
+	 * @return this
 	 */
-	public function offsetGet($offset) {
+	public function remove($name) {
+		Eden_Session_Error::i()->argument(1, 'string');
+		
+		if(isset($_SESSION[$name])) {
+			unset($_SESSION[$name]);
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Rewinds the position
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+	public function rewind() {
 		if(!self::$_session) {
 			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
 		}
 		
-        return isset($_SESSION[$offset]) ? $_SESSION[$offset] : NULL;
+        reset($_SESSION);
     }
+
+	/**
+	 * Sets data
+	 *
+	 * @param array|string
+	 * @param mixed
+	 * @return this
+	 */
+	public function set($data, $value = NULL) {
+		$error = Eden_Session_Error::i()->argument(1, 'array', 'string');
+		
+		if(!self::$_session) {
+			$error->setMessage(Eden_Session_Error::ERROR_ERROR_NOT_STARTED)->trigger();
+		}
+		
+		if(is_array($data)) {
+			$_SESSION = $data;
+			return $this;
+		}
+		
+		$_SESSION[$data] = $value;
+		
+		return $this;
+	}
 	
+	/**
+	 * Sets the session ID
+	 *
+	 * @param *int
+	 * @return int
+	 */
+	public function setId($sid) {
+		$error = Eden_Session_Error::i()->argument(1, 'numeric');
+		
+		if(!self::$_session) {
+			$error->setMessage(Eden_Session_Error::ERROR_ERROR_NOT_STARTED)->trigger();
+		}
+		
+		return session_id((int) $sid);
+	}
+	/**
+	 * Starts a session
+	 *
+	 * @return bool
+	 */
+	public function start() {
+		if(!session_id()) {
+			self::$_session = session_start();
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Starts a session
+	 *
+	 * @return Eden_SessionServer
+	 */
+	public function stop() {
+		self::$_session = false;
+		session_write_close();
+		return $this;
+	}
+	
+	/**
+	 * Validates whether if the index is set
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+    public function valid() {
+		if(!self::$_session) {
+			Eden_Session_Error::i(Eden_Session_Error::ERROR_NOT_STARTED)->trigger();
+		}
+		
+        return isset($_SESSION[$this->key()]);
+   }
+	    
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

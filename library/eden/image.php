@@ -106,7 +106,74 @@ class Eden_Image extends Eden_Class {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/			
+	/**
+	 * Applies the selective blur filter. Blurs the image
+	 *
+	 * @return Eden_Image_Model
+	 */
+	public function blur() {
+		//apply filter
+		imagefilter($this->_resource, IMG_FILTER_SELECTIVE_BLUR);
+		
+		return $this;
+	}
+	
+	/**
+	 * Applies the brightness filter. Changes the brightness of the image.
+	 *
+	 * @param *number level
+	 * @return Eden_Image_Model
+	 */
+	public function brightness($level) {
+		//Argument 1 must be a number
+		Eden_Image_Error::i()->argument(1, 'numeric');
+		
+		//apply filter
+		imagefilter($this->_resource, IMG_FILTER_BRIGHTNESS, $level);
+		
+		return $this;
+	}
+		
+	/**
+	 * Applies the colorize filter. Like greyscale except you can specify the color.
+	 *
+	 * @param *number red
+	 * @param *number blue
+	 * @param *number green
+	 * @param number alpha
+	 * @return Eden_Image_Model
+	 */
+	public function colorize($red, $blue, $green, $alpha = 0) {
+		//argument test
+		Eden_Image_Error::i()
+			->argument(1, 'numeric')	//Argument 1 must be a number
+			->argument(2, 'numeric')	//Argument 2 must be a number
+			->argument(3, 'numeric')	//Argument 3 must be a number
+			->argument(4, 'numeric');	//Argument 4 must be a number
+		
+		//apply filter
+		imagefilter($this->_resource, IMG_FILTER_COLORIZE, $red, $blue, $green, $alpha);
+		
+		return $this;
+	}
+		
+	/**
+	 * Applies the contrast filter. Changes the contrast of the image. 
+	 *
+	 * @param *number level
+	 * @return Eden_Image_Model
+	 */
+	public function contrast($level) {
+		//Argument 1 must be a number
+		Eden_Image_Error::i()->argument(1, 'numeric');
+		
+		//apply filter
+		imagefilter($this->_resource, IMG_FILTER_CONTRAST, $level);
+		
+		return $this;
+	}
+
 	/**
 	 * Crops the image
 	 *
@@ -236,54 +303,124 @@ class Eden_Image extends Eden_Class {
 		
 		return $this;
 	}
-	
+
 	/**
-	 * Scales the image. If width or height is set 
-	 * to NULL a width or height will be auto determined based on the 
-	 * aspect ratio
+	 * Applies the edgedetect filter. Uses edge detection to highlight the edges in the image. 
 	 *
-	 * @param int|null the width; if null will use the original width
-	 * @param int|null the height; if null will use the original height
 	 * @return Eden_Image_Model
 	 */
-	public function scale($width = NULL, $height = NULL) {
-		//argument test
-		Eden_Image_Error::i()
-			->argument(1, 'numeric', 'null')	//Argument 1 must be a number or null
-			->argument(2, 'numeric', 'null');	//Argument 2 must be a number or null
+	public function edgedetect() {
+		//apply filter
+		imagefilter($this->_resource, IMG_FILTER_EDGEDETECT);
+		
+		return $this;
+	}
+	
+	/**
+	 * Applies the emboss filter. Embosses the image. 
+	 *
+	 * @return Eden_Image_Model
+	 */
+	public function emboss() {
+		//apply filter
+		imagefilter($this->_resource, IMG_FILTER_EMBOSS);
+		
+		return $this;
+	}
+	
+	/**
+	 * Applies the gaussian blur filter. Blurs the image using the Gaussian method. 
+	 *
+	 * @return Eden_Image_Model
+	 */
+	public function gaussianBlur() {
+		//apply filter
+		imagefilter($this->_resource, IMG_FILTER_GAUSSIAN_BLUR);
+		
+		return $this;
+	}
+	
+	/**
+	 * Returns the size of the image
+	 *
+	 * @return array
+	 */
+	public function getDimensions() {
+		return array(imagesx($this->_resource), imagesy($this->_resource));
+	}
+	
+	/**
+	 * Returns the resource for custom editing
+	 *
+	 * @return [RESOURCE]
+	 */
+	public function getResource() {
+		return $this->_resource;
+	}
+		
+	/**
+	 * Applies the greyscale filter. Converts the image into grayscale. 
+	 *
+	 * @return Eden_Image_Model
+	 */
+	public function greyscale() {
+		//apply filter
+		imagefilter($this->_resource, IMG_FILTER_GRAYSCALE);
+		
+		return $this;
+	}
+	
+	/**
+	 * Inverts the image.
+	 *
+	 * @param bool if true invert vertical; if false invert horizontal
+	 * @return Eden_Image_Model
+	 */
+	public function invert($vertical = false) {
+		//Argument 1 must be a boolean
+		Eden_Image_Error::i()->argument(1, 'bool');
 		
 		//get the source width and height
 		$orgWidth = imagesx($this->_resource);
 		$orgHeight = imagesy($this->_resource);
 		
-		//set the width if none is defined
-		if(is_null($width)) {
-			$width = $orgWidth;
+		$invert = imagecreatetruecolor($orgWidth, $orgHeight);
+		
+		if($vertical) {
+			imagecopyresampled($invert, $this->_resource, 0, 0, 0, ($orgHeight-1), $orgWidth, $orgHeight, $orgWidth, 0-$orgHeight);
+		} else {
+			imagecopyresampled($invert, $this->_resource, 0, 0, ($orgWidth-1), 0, $orgWidth, $orgHeight, 0-$orgWidth, $orgHeight);
 		}
-		
-		//set the height if none is defined
-		if(is_null($height)) {
-			$height = $orgHeight;
-		}
-		
-		//if the width and height are the same as the originals
-		if($width == $orgWidth && $height == $orgHeight) {
-			//there's no need to process
-			return $this;
-		}
-		
-		//if we are here then we do need to crop
-		//create the new resource with the width and height
-		$scale = imagecreatetruecolor($width, $height);
-		
-		//render the image
-		imagecopyresampled($scale, $this->_resource, 0, 0, 0, 0, $width, $height, $orgWidth, $orgHeight);
 		
 		//destroy the original resource
 		imagedestroy($this->_resource);
 		
 		//assign the new resource
-		$this->_resource = $scale;
+		$this->_resource = $invert;
+		
+		return $this;
+	}
+	
+	/**
+	 * Applies the mean removal filter. Uses mean removal to achieve a "sketchy" effect. 
+	 *
+	 * @return Eden_Image_Model
+	 */
+	public function meanRemoval() {
+		//apply filter
+		imagefilter($this->_resource, IMG_FILTER_MEAN_REMOVAL);
+		
+		return $this;
+	}
+	
+	/**
+	 * Applies the greyscale filter. Reverses all colors of the image. 
+	 *
+	 * @return Eden_Image_Model
+	 */
+	public function negative() {
+		//apply filter
+		imagefilter($this->_resource, IMG_FILTER_NEGATE);
 		
 		return $this;
 	}
@@ -378,171 +515,59 @@ class Eden_Image extends Eden_Class {
 	}
 	
 	/**
-	 * Inverts the image.
+	 * Scales the image. If width or height is set 
+	 * to NULL a width or height will be auto determined based on the 
+	 * aspect ratio
 	 *
-	 * @param bool if true invert vertical; if false invert horizontal
+	 * @param int|null the width; if null will use the original width
+	 * @param int|null the height; if null will use the original height
 	 * @return Eden_Image_Model
 	 */
-	public function invert($vertical = false) {
-		//Argument 1 must be a boolean
-		Eden_Image_Error::i()->argument(1, 'bool');
+	public function scale($width = NULL, $height = NULL) {
+		//argument test
+		Eden_Image_Error::i()
+			->argument(1, 'numeric', 'null')	//Argument 1 must be a number or null
+			->argument(2, 'numeric', 'null');	//Argument 2 must be a number or null
 		
 		//get the source width and height
 		$orgWidth = imagesx($this->_resource);
 		$orgHeight = imagesy($this->_resource);
 		
-		$invert = imagecreatetruecolor($orgWidth, $orgHeight);
-		
-		if($vertical) {
-			imagecopyresampled($invert, $this->_resource, 0, 0, 0, ($orgHeight-1), $orgWidth, $orgHeight, $orgWidth, 0-$orgHeight);
-		} else {
-			imagecopyresampled($invert, $this->_resource, 0, 0, ($orgWidth-1), 0, $orgWidth, $orgHeight, 0-$orgWidth, $orgHeight);
+		//set the width if none is defined
+		if(is_null($width)) {
+			$width = $orgWidth;
 		}
+		
+		//set the height if none is defined
+		if(is_null($height)) {
+			$height = $orgHeight;
+		}
+		
+		//if the width and height are the same as the originals
+		if($width == $orgWidth && $height == $orgHeight) {
+			//there's no need to process
+			return $this;
+		}
+		
+		//if we are here then we do need to crop
+		//create the new resource with the width and height
+		$scale = imagecreatetruecolor($width, $height);
+		
+		//render the image
+		imagecopyresampled($scale, $this->_resource, 0, 0, 0, 0, $width, $height, $orgWidth, $orgHeight);
 		
 		//destroy the original resource
 		imagedestroy($this->_resource);
 		
 		//assign the new resource
-		$this->_resource = $invert;
+		$this->_resource = $scale;
 		
 		return $this;
 	}
 	
-	/**
-	 * Applies the greyscale filter. Converts the image into grayscale. 
-	 *
-	 * @return Eden_Image_Model
-	 */
-	public function greyscale() {
-		//apply filter
-		imagefilter($this->_resource, IMG_FILTER_GRAYSCALE);
-		
-		return $this;
-	}
-	
-	/**
-	 * Applies the greyscale filter. Reverses all colors of the image. 
-	 *
-	 * @return Eden_Image_Model
-	 */
-	public function negative() {
-		//apply filter
-		imagefilter($this->_resource, IMG_FILTER_NEGATE);
-		
-		return $this;
-	}
-	
-	/**
-	 * Applies the brightness filter. Changes the brightness of the image.
-	 *
-	 * @param *number level
-	 * @return Eden_Image_Model
-	 */
-	public function brightness($level) {
-		//Argument 1 must be a number
-		Eden_Image_Error::i()->argument(1, 'numeric');
-		
-		//apply filter
-		imagefilter($this->_resource, IMG_FILTER_BRIGHTNESS, $level);
-		
-		return $this;
-	}
-	
-	/**
-	 * Applies the contrast filter. Changes the contrast of the image. 
-	 *
-	 * @param *number level
-	 * @return Eden_Image_Model
-	 */
-	public function contrast($level) {
-		//Argument 1 must be a number
-		Eden_Image_Error::i()->argument(1, 'numeric');
-		
-		//apply filter
-		imagefilter($this->_resource, IMG_FILTER_CONTRAST, $level);
-		
-		return $this;
-	}
-	
-	/**
-	 * Applies the colorize filter. Like greyscale except you can specify the color.
-	 *
-	 * @param *number red
-	 * @param *number blue
-	 * @param *number green
-	 * @param number alpha
-	 * @return Eden_Image_Model
-	 */
-	public function colorize($red, $blue, $green, $alpha = 0) {
-		//argument test
-		Eden_Image_Error::i()
-			->argument(1, 'numeric')	//Argument 1 must be a number
-			->argument(2, 'numeric')	//Argument 2 must be a number
-			->argument(3, 'numeric')	//Argument 3 must be a number
-			->argument(4, 'numeric');	//Argument 4 must be a number
-		
-		//apply filter
-		imagefilter($this->_resource, IMG_FILTER_COLORIZE, $red, $blue, $green, $alpha);
-		
-		return $this;
-	}
-	
-	/**
-	 * Applies the edgedetect filter. Uses edge detection to highlight the edges in the image. 
-	 *
-	 * @return Eden_Image_Model
-	 */
-	public function edgedetect() {
-		//apply filter
-		imagefilter($this->_resource, IMG_FILTER_EDGEDETECT);
-		
-		return $this;
-	}
-	
-	/**
-	 * Applies the emboss filter. Embosses the image. 
-	 *
-	 * @return Eden_Image_Model
-	 */
-	public function emboss() {
-		//apply filter
-		imagefilter($this->_resource, IMG_FILTER_EMBOSS);
-		
-		return $this;
-	}
-	
-	/**
-	 * Applies the gaussian blur filter. Blurs the image using the Gaussian method. 
-	 *
-	 * @return Eden_Image_Model
-	 */
-	public function gaussianBlur() {
-		//apply filter
-		imagefilter($this->_resource, IMG_FILTER_GAUSSIAN_BLUR);
-		
-		return $this;
-	}
-	
-	/**
-	 * Applies the selective blur filter. Blurs the image
-	 *
-	 * @return Eden_Image_Model
-	 */
-	public function blur() {
-		//apply filter
-		imagefilter($this->_resource, IMG_FILTER_SELECTIVE_BLUR);
-		
-		return $this;
-	}
-	
-	/**
-	 * Applies the mean removal filter. Uses mean removal to achieve a "sketchy" effect. 
-	 *
-	 * @return Eden_Image_Model
-	 */
-	public function meanRemoval() {
-		//apply filter
-		imagefilter($this->_resource, IMG_FILTER_MEAN_REMOVAL);
+	public function setTransparency() {
+		imagealphablending( $this->_resource, false );
+		imagesavealpha( $this->_resource, true );
 		
 		return $this;
 	}
@@ -561,31 +586,6 @@ class Eden_Image extends Eden_Class {
 		imagefilter($this->_resource, IMG_FILTER_SMOOTH, $level);
 		
 		return $this;
-	}
-	
-	public function setTransparency() {
-		imagealphablending( $this->_resource, false );
-		imagesavealpha( $this->_resource, true );
-		
-		return $this;
-	}
-	
-	/**
-	 * Returns the size of the image
-	 *
-	 * @return array
-	 */
-	public function getDimensions() {
-		return array(imagesx($this->_resource), imagesy($this->_resource));
-	}
-	
-	/**
-	 * Returns the resource for custom editing
-	 *
-	 * @return [RESOURCE]
-	 */
-	public function getResource() {
-		return $this->_resource;
 	}
 	
 	/**
@@ -637,6 +637,11 @@ class Eden_Image extends Eden_Class {
 	
 	/* Protected Methods
 	-------------------------------*/
+	protected function _getHeightAspectRatio($sourceWidth, $sourceHeight, $destinationWidth) {
+		$ratio = $destinationWidth / $sourceWidth;
+		return  $sourceHeight * $ratio;
+	}
+	
 	protected function _getResource($data, $path) {
 		//if the GD Library is not installed
 		if(!function_exists('gd_info')) {
@@ -702,11 +707,6 @@ class Eden_Image extends Eden_Class {
 	protected function _getWidthAspectRatio($sourceWidth, $sourceHeight, $destinationHeight) {
 		$ratio = $destinationHeight / $sourceHeight;
 		return  $sourceWidth * $ratio;
-	}
-	
-	protected function _getHeightAspectRatio($sourceWidth, $sourceHeight, $destinationWidth) {
-		$ratio = $destinationWidth / $sourceWidth;
-		return  $sourceHeight * $ratio;
 	}
 	
 	/* Private Methods

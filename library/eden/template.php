@@ -34,25 +34,22 @@ class Eden_Template extends Eden_Class {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
 	/**
-	 * Sets template variables
+	 * For PHP templates, this will transform the given document to an actual page or partial
 	 *
-	 * @param array|string
-	 * @param mixed
-	 * @return this
+	 * @param *string template file
+	 * @return string
 	 */
-	public function set($data, $value = NULL) {
-		Eden_Template_Error::i()->argument(0, 'array', 'string');
+	public function parsePhp($____file) {
+		Eden_Template_Error::i()->argument(0, $____file, 'string');
 		
-		if(is_array($data)) {
-			$this->_data = $data;
-			return $this;
-		}
-		
-		$this->_data[$data] = $value;
-		
-		return $this;
+		extract($this->_data, EXTR_SKIP); 	// Extract the values to a local namespace
+		ob_start();							// Start output buffering
+		include $____file;					// Include the template file
+		$____contents = ob_get_contents();	// Get the contents of the buffer
+		ob_end_clean();						// End buffering and discard
+		return $____contents;				// Return the contents
 	}
 	
 	/**
@@ -71,20 +68,23 @@ class Eden_Template extends Eden_Class {
 	}
 	
 	/**
-	 * For PHP templates, this will transform the given document to an actual page or partial
+	 * Sets template variables
 	 *
-	 * @param *string template file
-	 * @return string
+	 * @param array|string
+	 * @param mixed
+	 * @return this
 	 */
-	public function parsePhp($____file) {
-		Eden_Template_Error::i()->argument(0, $____file, 'string');
+	public function set($data, $value = NULL) {
+		Eden_Template_Error::i()->argument(0, 'array', 'string');
 		
-		extract($this->_data, EXTR_SKIP); 	// Extract the values to a local namespace
-		ob_start();							// Start output buffering
-		include $____file;					// Include the template file
-		$____contents = ob_get_contents();	// Get the contents of the buffer
-		ob_end_clean();						// End buffering and discard
-		return $____contents;				// Return the contents
+		if(is_array($data)) {
+			$this->_data = $data;
+			return $this;
+		}
+		
+		$this->_data[$data] = $value;
+		
+		return $this;
 	}
 	
 	/* Protected Methods

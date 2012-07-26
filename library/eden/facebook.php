@@ -65,40 +65,6 @@ class Eden_Facebook extends Eden_Class {
 	}
 	
 	/**
-	 * Returns Facebook Graph
-	 *
-	 * @param string
-	 * @return Eden_Facebook_Graph
-	 */
-	public function graph($token) {
-		Eden_Facebook_Error::i()->argument(1, 'string');
-		return Eden_Facebook_Graph::i($token);
-	}
-	
-	/**
-	 * Returns Facebook FQL
-	 *
-	 * @param string
-	 * @return Eden_Facebook_Fql
-	 */
-	public function fql($token) {
-		Eden_Facebook_Error::i()->argument(1, 'string');
-		return Eden_Facebook_Fql::i($token);
-	}
-	
-	
-	/**
-	 * Returns Facebook Post
-	 *
-	 * @param string
-	 * @param string
-	 * @return Eden_Facebook_Post
-	 */
-	public function post($token, $message) {
-		return Eden_Facebook_Post::i($token, $message);
-	}
-	
-	/**
 	 * Add an event
 	 *
 	 * @param string
@@ -110,7 +76,29 @@ class Eden_Facebook extends Eden_Class {
 	public function event($token, $name, $start, $end) {
 		return Eden_Facebook_Event::i($token, $name, $start, $end);
 	}
-	
+
+	/**
+	 * Returns Facebook FQL
+	 *
+	 * @param string
+	 * @return Eden_Facebook_Fql
+	 */
+	public function fql($token) {
+		Eden_Facebook_Error::i()->argument(1, 'string');
+		return Eden_Facebook_Fql::i($token);
+	}
+
+	/**
+	 * Returns Facebook Graph
+	 *
+	 * @param string
+	 * @return Eden_Facebook_Graph
+	 */
+	public function graph($token) {
+		Eden_Facebook_Error::i()->argument(1, 'string');
+		return Eden_Facebook_Graph::i($token);
+	}
+			
 	/**
 	 * Add a link
 	 *
@@ -121,7 +109,18 @@ class Eden_Facebook extends Eden_Class {
 	public function link($token, $url) {
 		return Eden_Facebook_Link::i($token, $url);
 	}
-	
+		
+	/**
+	 * Returns Facebook Post
+	 *
+	 * @param string
+	 * @param string
+	 * @return Eden_Facebook_Post
+	 */
+	public function post($token, $message) {
+		return Eden_Facebook_Post::i($token, $message);
+	}
+
 	/**
 	 * Returns an RSS feed to a public id
 	 *

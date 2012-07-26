@@ -61,23 +61,7 @@ class Eden_Twitter extends Eden_Class {
 	/* Magic
 	-------------------------------*/
 	/* Public Methods
-	-------------------------------*/
-	/**
-	 * Returns twitter oauth method
-	 *
-	 * @param *string 
-	 * @param *string 
-	 * @return Eden_Twitter_Oauth
-	 */
-	public function auth($key, $secret) {
-		//Argument test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string');	//Argument 2 must be a string
-		
-		return Eden_Twitter_Oauth::i($key, $secret);
-	}
-	
+	-------------------------------*/	
 	/**
 	 * Returns twitter account method
 	 *
@@ -96,6 +80,22 @@ class Eden_Twitter extends Eden_Class {
 			->argument(4, 'string');	//Argument 4 must be a string
 		
 		return Eden_Twitter_Accounts::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
+	}
+	
+	/**
+	 * Returns twitter oauth method
+	 *
+	 * @param *string 
+	 * @param *string 
+	 * @return Eden_Twitter_Oauth
+	 */
+	public function auth($key, $secret) {
+		//Argument test
+		Eden_Twitter_Error::i()
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string');	//Argument 2 must be a string
+		
+		return Eden_Twitter_Oauth::i($key, $secret);
 	}
 	
 	/**

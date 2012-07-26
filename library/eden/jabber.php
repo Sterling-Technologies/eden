@@ -176,57 +176,7 @@ class Eden_Jabber extends Eden_Event {
 	}
 	
 	/* Public Methods
-	--------------------------------*/
-	/**
-	 * Defines a resource name.
-	 * This is usuall your app name.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setResource($name) {
-		Eden_Jabber_Error::i()->argument(1, 'string');
-		$this->_resource = $name;
-		return $this;
-	}
-	
-	/**
-	 * Returns Meta Data
-	 *
-	 * @return array
-	 */
-	public function getMeta() {
-		return array(
-			'host' 			=> $this->_host,
-			'port' 			=> $this->_port,
-			'user' 			=> $this->_user,
-			'ssl' 			=> $this->_ssl,
-			'tls' 			=> $this->_tls,
-			'negotiation' 	=> $this->_negotiation,
-			'connection' 	=> $this->_connection,
-			'jabberId' 		=> $this->_jabberId,
-			'streamId' 		=> $this->_streamId,
-			'presence' 		=> $this->_presence,
-			'session' 		=> $this->_session);
-	}
-	
-	/**
-	 * Generic start up
-	 *
-	 * @return this
-	 */
-	public function start() {
-		$this->connect();
-		while($this->_connection) {
-			set_time_limit(60);
-			$response = $this->_response($this->wait());
-			if($response === false) {
-				break;
-			}
-		}		
-		return $this->disconnect();
-	}
-	
+	--------------------------------*/	
 	/**
 	 * Connects to the remote server
 	 *
@@ -287,7 +237,7 @@ class Eden_Jabber extends Eden_Event {
 		
 		return $this;
 	}
-
+	
 	/**
 	 * Disconnects from the server
 	 *
@@ -316,43 +266,34 @@ class Eden_Jabber extends Eden_Event {
 	
 		return $this;
 	}
-	
+		
 	/**
-	 * Listens for imcoming data
+	 * Returns Meta Data
 	 *
-	 * @return string XML
+	 * @return array
 	 */
-	public function wait($timeout = 10) {
-		//if not connected
-		if (!$this->_connection) {
-			//throw exception
-			Eden_Jabber_Error::i(Eden_Jabber_Error::NOT_CONNECTED)->trigger();
-		}
+	public function getMeta() {
+		return array(
+			'host' 			=> $this->_host,
+			'port' 			=> $this->_port,
+			'user' 			=> $this->_user,
+			'ssl' 			=> $this->_ssl,
+			'tls' 			=> $this->_tls,
+			'negotiation' 	=> $this->_negotiation,
+			'connection' 	=> $this->_connection,
+			'jabberId' 		=> $this->_jabberId,
+			'streamId' 		=> $this->_streamId,
+			'presence' 		=> $this->_presence,
+			'session' 		=> $this->_session);
+	}
 		
-		$start = time();
-		$data = '';
-		
-		do {
-			//get the incoming data
-			$read = trim(fread($this->_connection, 4096));
-			//append it to the buffer
-			$data .= $read;
-		//keep going till timeout or connection was terminated or data is complete (denoted by > )
-		} while (time() <= $start + $timeout 
-		&& !feof($this->_connection) 
-		&& ($data == '' 
-		|| $read != '' 
-		|| (substr(rtrim($data), -1) != '>')));
-		
-		//if there is data
-		if ($data != '') {
-			$this->trigger('received', $data);
-			//parse the xml and return
-			return $this->_parseXml($data);
-		} else {
-			//return nothing
-			return NULL;
-		}
+	/**
+	 * Check to see who is online
+	 *
+	 * @return this
+	 */
+	public function probe($to) {
+		return $this->setPresence($to, NULL, self::PRESENCE_TYPE_PROBE);
 	}
 	
 	/**
@@ -378,29 +319,7 @@ class Eden_Jabber extends Eden_Event {
 		
 		return $this;
 	}
-	
-	/**
-	 * Set the presence to online
-	 * 
-	 * @param string|array to
-	 * @param string message
-	 * @return this
-	 */
-	public function setOnline($to = NULL, $message = NULL) {
-		return $this->setPresence($to, $message, NULL, self::PRESENCE_ONLINE);
-	}
-	
-	/**
-	 * Set the presence to offline
-	 * 
-	 * @param string|array to
-	 * @param string message
-	 * @return this
-	 */
-	public function setOffline($to = NULL, $message = NULL) {
-		return $this->setPresence($to, $message, NULL, self::PRESENCE_OFFLINE);
-	}
-	
+		
 	/**
 	 * Set the presence to away
 	 * 
@@ -424,39 +343,25 @@ class Eden_Jabber extends Eden_Event {
 	}
 	
 	/**
-	 * Set the presence to XA ?
+	 * Set the presence to offline
 	 * 
 	 * @param string|array to
 	 * @param string message
 	 * @return this
 	 */
-	public function setXA($to = NULL, $message = NULL) {
-		return $this->setPresence($to, $message, NULL, self::PRESENCE_XA);
+	public function setOffline($to = NULL, $message = NULL) {
+		return $this->setPresence($to, $message, NULL, self::PRESENCE_OFFLINE);
 	}
-	
+
 	/**
-	 * Set the presence of a user
+	 * Set the presence to online
 	 * 
 	 * @param string|array to
 	 * @param string message
-	 * @param string type
-	 * @param string presence title
 	 * @return this
 	 */
-	public function subscribeTo($to = NULL, $message = NULL) {
-		$this->send(sprintf('<iq type="set" id="set1"><query xmlns='.
-		'"jabber:iq:roster"><item jid="%s" /></query></iq>', $to));
-					
-		return $this->setPresence($to, $message, self::PRESENCE_TYPE_SUBSCRIBE);
-	}
-	
-	/**
-	 * Check to see who is online
-	 *
-	 * @return this
-	 */
-	public function probe($to) {
-		return $this->setPresence($to, NULL, self::PRESENCE_TYPE_PROBE);
+	public function setOnline($to = NULL, $message = NULL) {
+		return $this->setPresence($to, $message, NULL, self::PRESENCE_ONLINE);
 	}
 	
 	/**
@@ -522,6 +427,74 @@ class Eden_Jabber extends Eden_Event {
 	}
 	
 	/**
+	 * Defines a resource name.
+	 * This is usuall your app name.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setResource($name) {
+		Eden_Jabber_Error::i()->argument(1, 'string');
+		$this->_resource = $name;
+		return $this;
+	}
+
+	/**
+	 * Requests for roster
+	 * 
+	 * @param string message
+	 * @return this
+	 */
+	public function getRoster() {
+		$this->send('<iq from="'.$this->_jabberId.'" type="get" id="roster_1"><query xmlns="jabber:iq:roster"/></iq> ');
+		return $this;
+	}
+
+	/**
+	 * Set the presence to XA ?
+	 * 
+	 * @param string|array to
+	 * @param string message
+	 * @return this
+	 */
+	public function setXA($to = NULL, $message = NULL) {
+		return $this->setPresence($to, $message, NULL, self::PRESENCE_XA);
+	}
+	
+	/**
+	 * Generic start up
+	 *
+	 * @return this
+	 */
+	public function start() {
+		$this->connect();
+		while($this->_connection) {
+			set_time_limit(60);
+			$response = $this->_response($this->wait());
+			if($response === false) {
+				break;
+			}
+		}		
+		return $this->disconnect();
+	}
+
+	/**
+	 * Set the presence of a user
+	 * 
+	 * @param string|array to
+	 * @param string message
+	 * @param string type
+	 * @param string presence title
+	 * @return this
+	 */
+	public function subscribeTo($to = NULL, $message = NULL) {
+		$this->send(sprintf('<iq type="set" id="set1"><query xmlns='.
+		'"jabber:iq:roster"><item jid="%s" /></query></iq>', $to));
+					
+		return $this->setPresence($to, $message, self::PRESENCE_TYPE_SUBSCRIBE);
+	}
+	
+	/**
 	 * Sends a message to a user
 	 * 
 	 * @param string to whom to send to
@@ -578,136 +551,45 @@ class Eden_Jabber extends Eden_Event {
 	}
 
 	/**
-	 * Requests for roster
-	 * 
-	 * @param string message
-	 * @return this
+	 * Listens for imcoming data
+	 *
+	 * @return string XML
 	 */
-	public function getRoster() {
-		$this->send('<iq from="'.$this->_jabberId.'" type="get" id="roster_1"><query xmlns="jabber:iq:roster"/></iq> ');
-		return $this;
+	public function wait($timeout = 10) {
+		//if not connected
+		if (!$this->_connection) {
+			//throw exception
+			Eden_Jabber_Error::i(Eden_Jabber_Error::NOT_CONNECTED)->trigger();
+		}
+		
+		$start = time();
+		$data = '';
+		
+		do {
+			//get the incoming data
+			$read = trim(fread($this->_connection, 4096));
+			//append it to the buffer
+			$data .= $read;
+		//keep going till timeout or connection was terminated or data is complete (denoted by > )
+		} while (time() <= $start + $timeout 
+		&& !feof($this->_connection) 
+		&& ($data == '' 
+		|| $read != '' 
+		|| (substr(rtrim($data), -1) != '>')));
+		
+		//if there is data
+		if ($data != '') {
+			$this->trigger('received', $data);
+			//parse the xml and return
+			return $this->_parseXml($data);
+		} else {
+			//return nothing
+			return NULL;
+		}
 	}
-	
+		
 	/* Protected Methods
-	--------------------------------*/
-	protected function _canUseSSL() {
-		return @extension_loaded('openssl');
-	}
-	
-	protected function _canUseTLS() {
-		return @extension_loaded('openssl') 
-		&& function_exists('stream_socket_enable_crypto') 
-		&& function_exists('stream_get_meta_data') 
-		&& function_exists('socket_set_blocking') 
-		&& function_exists('stream_get_wrappers');
-	}
-	
-	protected function _parseXml($data, $skip_white = 1, $encoding = 'UTF-8') {
-		$data = trim($data);
-		
-		//if the data does not start with an XML header
-		if (substr($data, 0, 5) != '<?xml') {
-			// modify the data
-			$data = '<root>'. $data . '</root>';
-		}
- 		
-		$vals = $index = $array = array();
-		
-		//parse xml to an array
-		$parser = xml_parser_create($encoding);
-		xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
-		xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, $skip_white);
-		xml_parse_into_struct($parser, $data, $vals, $index);
-		xml_parser_free($parser);
-
-		$i = 0;
-		//get the tag name
-		$tagname = $vals[$i]['tag'];
-		
-		$array[$tagname][0]['@'] = (isset($vals[$i]['attributes'])) ? $vals[$i]['attributes'] : array();
-		$array[$tagname][0]['#'] = $this->_getDepth($vals, $i);
-		
-		//if the data does not start with an XML header
-		if (substr($data, 0, 5) != '<?xml') {
-			//get the root
-			$array = $array['root'][0]['#'];
-		}
-		
-		return $array;
-	}
-	
-	protected function _response($xml) {
-		//if the xml is not an array
-		//or if it is empty
-		if (!is_array($xml) || !sizeof($xml)) {
-			//do nothing
-			return $this;
-		}
-
-		// did we get multiple elements? do one after another
-		// array('message' => ..., 'presence' => ...)
-		if (sizeof($xml) > 1) {
-			foreach ($xml as $key => $value) {
-				$this->_response(array($key => $value));
-			}
-			
-			return $this;
-		// or even multiple elements of the same type?
-		// array('message' => array(0 => ..., 1 => ...))
-		} else if (sizeof(reset($xml)) > 1) {
-			foreach (reset($xml) as $value) {
-				$this->_response(array(key($xml) => array(0 => $value)));
-			}
-			return $this;
-		}
-		
-		$command = key($xml);
-		
-		if(in_array($command, self::$_authentications)) {
-			return $this->_authenticate($command, $xml);
-		}
-		
-		if($command == 'iq') {
-			// we are not interested in IQs we did not expect
-			if (!isset($xml['iq'][0]['@']['id'])) {
-				return $this;
-			}
-			
-			$command = $xml['iq'][0]['@']['id'];
-			
-			return $this->_query($command, $xml);
-		}
-		
-		if($command == 'message') {
-			// we are only interested in content...
-			if (!isset($xml['message'][0]['#']['body'])) {
-				return $this;
-			}
-			
-			$from 	= $xml['message'][0]['@']['from'];
-			$to 	= $xml['message'][0]['@']['to'];
-			$body 	= $xml['message'][0]['#']['body'][0]['#'];
-			//sometimes the message received is that they are just fishing for who
-			//will respond we should notify them of our presence
-			//we will let whomever deal with this
-			$fishing = $to != $this->_jabberId;
-			
-			$subject = NULL;
-			if (isset($xml['message'][0]['#']['subject'])) {
-				$subject = $xml['message'][0]['#']['subject'][0]['#'];
-			}
-			
-			$thread = NULL;
-			if (isset($xml['message'][0]['#']['thread'])) {
-				$thread = $xml['message'][0]['#']['thread'][0]['#'];
-			}
-			
-			$this->trigger('message', $from, $body, $subject, $thread, $fishing);
-			
-			return $this;
-		}
-	}
-	
+	--------------------------------*/	
 	protected function _authenticate($command, $xml) {
 		//response switch
 		switch ($command) {
@@ -892,6 +774,93 @@ class Eden_Jabber extends Eden_Event {
 		return $this;
 	}
 	
+	protected function _canUseSSL() {
+		return @extension_loaded('openssl');
+	}
+	
+	protected function _canUseTLS() {
+		return @extension_loaded('openssl') 
+		&& function_exists('stream_socket_enable_crypto') 
+		&& function_exists('stream_get_meta_data') 
+		&& function_exists('socket_set_blocking') 
+		&& function_exists('stream_get_wrappers');
+	}
+	
+	protected function _encryptPass($data) {
+		// let's me think about <challenge> again...
+		foreach (array('realm', 'cnonce', 'digest-uri') as $key) {
+			if (!isset($data[$key])) {
+				$data[$key] = '';
+			}
+		}
+
+		$pack = md5($this->_user . ':' . $data['realm'] . ':' . $this->_pass);
+
+		if (isset($data['authzid'])) {
+			$a1 = pack('H32', $pack)  . sprintf(':%s:%s:%s', $data['nonce'], $data['cnonce'], $data['authzid']);
+		} else {
+			$a1 = pack('H32', $pack)  . sprintf(':%s:%s', $data['nonce'], $data['cnonce']);
+		}
+
+		// should be: qop = auth
+		$a2 = 'AUTHENTICATE:'. $data['digest-uri'];
+
+		return md5(sprintf('%s:%s:%s:%s:%s:%s', md5($a1), $data['nonce'], $data['nc'], $data['cnonce'], $data['qop'], md5($a2)));
+	}
+	
+	protected function _getDepth($vals, &$i) {
+		$children = array();
+
+		if (isset($vals[$i]['value'])) {
+			array_push($children, $vals[$i]['value']);
+		}
+
+		while (++$i < sizeof($vals)) {
+			switch ($vals[$i]['type']) {
+				case 'open':
+					$tagname = (isset($vals[$i]['tag'])) ? $vals[$i]['tag'] : '';
+					$size = (isset($children[$tagname])) ? sizeof($children[$tagname]) : 0;
+
+					if (isset($vals[$i]['attributes'])) {
+						$children[$tagname][$size]['@'] = $vals[$i]['attributes'];
+					}
+
+					$children[$tagname][$size]['#'] = $this->_getDepth($vals, $i);
+
+					break;
+
+				case 'cdata':
+					array_push($children, $vals[$i]['value']);
+					break;
+
+				case 'complete':
+					$tagname = $vals[$i]['tag'];
+					$size = (isset($children[$tagname])) ? sizeof($children[$tagname]) : 0;
+					$children[$tagname][$size]['#'] = (isset($vals[$i]['value'])) ? $vals[$i]['value'] : array();
+
+					if (isset($vals[$i]['attributes'])) {
+						$children[$tagname][$size]['@'] = $vals[$i]['attributes'];
+					}
+
+					break;
+
+				case 'close':
+					return $children;
+					break;
+			}
+		}
+
+		return $children;
+	}
+	
+	protected function _implodeData($data) {
+		$return = array();
+		foreach ($data as $key => $value) {
+			$return[] = $key . '="' . $value . '"';
+		}
+		return implode(',', $return);
+	}
+	
 	protected function _query($command, $xml) {
 		// multiple possibilities here
 		switch ($command) {
@@ -981,74 +950,7 @@ class Eden_Jabber extends Eden_Event {
 		
 		return $this;
 	}
-	
-	protected function _getDepth($vals, &$i) {
-		$children = array();
-
-		if (isset($vals[$i]['value'])) {
-			array_push($children, $vals[$i]['value']);
-		}
-
-		while (++$i < sizeof($vals)) {
-			switch ($vals[$i]['type']) {
-				case 'open':
-					$tagname = (isset($vals[$i]['tag'])) ? $vals[$i]['tag'] : '';
-					$size = (isset($children[$tagname])) ? sizeof($children[$tagname]) : 0;
-
-					if (isset($vals[$i]['attributes'])) {
-						$children[$tagname][$size]['@'] = $vals[$i]['attributes'];
-					}
-
-					$children[$tagname][$size]['#'] = $this->_getDepth($vals, $i);
-
-					break;
-
-				case 'cdata':
-					array_push($children, $vals[$i]['value']);
-					break;
-
-				case 'complete':
-					$tagname = $vals[$i]['tag'];
-					$size = (isset($children[$tagname])) ? sizeof($children[$tagname]) : 0;
-					$children[$tagname][$size]['#'] = (isset($vals[$i]['value'])) ? $vals[$i]['value'] : array();
-
-					if (isset($vals[$i]['attributes'])) {
-						$children[$tagname][$size]['@'] = $vals[$i]['attributes'];
-					}
-
-					break;
-
-				case 'close':
-					return $children;
-					break;
-			}
-		}
-
-		return $children;
-	}
-	
-	protected function _encryptPass($data) {
-		// let's me think about <challenge> again...
-		foreach (array('realm', 'cnonce', 'digest-uri') as $key) {
-			if (!isset($data[$key])) {
-				$data[$key] = '';
-			}
-		}
-
-		$pack = md5($this->_user . ':' . $data['realm'] . ':' . $this->_pass);
-
-		if (isset($data['authzid'])) {
-			$a1 = pack('H32', $pack)  . sprintf(':%s:%s:%s', $data['nonce'], $data['cnonce'], $data['authzid']);
-		} else {
-			$a1 = pack('H32', $pack)  . sprintf(':%s:%s', $data['nonce'], $data['cnonce']);
-		}
-
-		// should be: qop = auth
-		$a2 = 'AUTHENTICATE:'. $data['digest-uri'];
-
-		return md5(sprintf('%s:%s:%s:%s:%s:%s', md5($a1), $data['nonce'], $data['nc'], $data['cnonce'], $data['qop'], md5($a2)));
-	}
-	
+			
 	protected function _parseData($data) {
 		$data = explode(',', $data);
 		$pairs = array();
@@ -1070,14 +972,112 @@ class Eden_Jabber extends Eden_Event {
 		return $pairs;
 	}
 	
-	protected function _implodeData($data) {
-		$return = array();
-		foreach ($data as $key => $value) {
-			$return[] = $key . '="' . $value . '"';
+	protected function _parseXml($data, $skip_white = 1, $encoding = 'UTF-8') {
+		$data = trim($data);
+		
+		//if the data does not start with an XML header
+		if (substr($data, 0, 5) != '<?xml') {
+			// modify the data
+			$data = '<root>'. $data . '</root>';
 		}
-		return implode(',', $return);
+ 		
+		$vals = $index = $array = array();
+		
+		//parse xml to an array
+		$parser = xml_parser_create($encoding);
+		xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
+		xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, $skip_white);
+		xml_parse_into_struct($parser, $data, $vals, $index);
+		xml_parser_free($parser);
+
+		$i = 0;
+		//get the tag name
+		$tagname = $vals[$i]['tag'];
+		
+		$array[$tagname][0]['@'] = (isset($vals[$i]['attributes'])) ? $vals[$i]['attributes'] : array();
+		$array[$tagname][0]['#'] = $this->_getDepth($vals, $i);
+		
+		//if the data does not start with an XML header
+		if (substr($data, 0, 5) != '<?xml') {
+			//get the root
+			$array = $array['root'][0]['#'];
+		}
+		
+		return $array;
 	}
 	
+	protected function _response($xml) {
+		//if the xml is not an array
+		//or if it is empty
+		if (!is_array($xml) || !sizeof($xml)) {
+			//do nothing
+			return $this;
+		}
+
+		// did we get multiple elements? do one after another
+		// array('message' => ..., 'presence' => ...)
+		if (sizeof($xml) > 1) {
+			foreach ($xml as $key => $value) {
+				$this->_response(array($key => $value));
+			}
+			
+			return $this;
+		// or even multiple elements of the same type?
+		// array('message' => array(0 => ..., 1 => ...))
+		} else if (sizeof(reset($xml)) > 1) {
+			foreach (reset($xml) as $value) {
+				$this->_response(array(key($xml) => array(0 => $value)));
+			}
+			return $this;
+		}
+		
+		$command = key($xml);
+		
+		if(in_array($command, self::$_authentications)) {
+			return $this->_authenticate($command, $xml);
+		}
+		
+		if($command == 'iq') {
+			// we are not interested in IQs we did not expect
+			if (!isset($xml['iq'][0]['@']['id'])) {
+				return $this;
+			}
+			
+			$command = $xml['iq'][0]['@']['id'];
+			
+			return $this->_query($command, $xml);
+		}
+		
+		if($command == 'message') {
+			// we are only interested in content...
+			if (!isset($xml['message'][0]['#']['body'])) {
+				return $this;
+			}
+			
+			$from 	= $xml['message'][0]['@']['from'];
+			$to 	= $xml['message'][0]['@']['to'];
+			$body 	= $xml['message'][0]['#']['body'][0]['#'];
+			//sometimes the message received is that they are just fishing for who
+			//will respond we should notify them of our presence
+			//we will let whomever deal with this
+			$fishing = $to != $this->_jabberId;
+			
+			$subject = NULL;
+			if (isset($xml['message'][0]['#']['subject'])) {
+				$subject = $xml['message'][0]['#']['subject'][0]['#'];
+			}
+			
+			$thread = NULL;
+			if (isset($xml['message'][0]['#']['thread'])) {
+				$thread = $xml['message'][0]['#']['thread'][0]['#'];
+			}
+			
+			$this->trigger('message', $from, $body, $subject, $thread, $fishing);
+			
+			return $this;
+		}
+	}	
+		
 	/* Private Methods
 	-------------------------------*/
 }

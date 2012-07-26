@@ -111,6 +111,36 @@ class Eden_Eventbrite extends Eden_Class {
 	}
 	
 	/**
+	 * Returns Eventbrite Search
+	 *
+	 * @param string
+	 * @param string
+	 * @return Eden_Eventbrite_Venue
+	 */
+	public function search($user, $api) {
+		Eden_Eventbrite_Error::i()
+			->argument(1, 'string')
+			->argument(1, 'string');
+			
+		return Eden_Eventbrite_Event_Search::i($user, $api);
+	}
+	
+	/**
+	 * Returns Eventbrite Set
+	 *
+	 * @param string
+	 * @param string
+	 * @return Eden_Eventbrite_Venue
+	 */
+	public function set($user, $api) {
+		Eden_Eventbrite_Error::i()
+			->argument(1, 'string')
+			->argument(1, 'string');
+			
+		return Eden_Eventbrite_Event_Set::i($user, $api);
+	}
+	
+	/**
 	 * Returns Eventbrite Ticket
 	 *
 	 * @param string
@@ -153,36 +183,6 @@ class Eden_Eventbrite extends Eden_Class {
 			->argument(1, 'string');
 			
 		return Eden_Eventbrite_Venue::i($user, $api);
-	}
-	
-	/**
-	 * Returns Eventbrite Search
-	 *
-	 * @param string
-	 * @param string
-	 * @return Eden_Eventbrite_Venue
-	 */
-	public function search($user, $api) {
-		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')
-			->argument(1, 'string');
-			
-		return Eden_Eventbrite_Event_Search::i($user, $api);
-	}
-	
-	/**
-	 * Returns Eventbrite Set
-	 *
-	 * @param string
-	 * @param string
-	 * @return Eden_Eventbrite_Venue
-	 */
-	public function set($user, $api) {
-		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')
-			->argument(1, 'string');
-			
-		return Eden_Eventbrite_Event_Set::i($user, $api);
 	}
 	
 	/* Protected Methods

@@ -59,16 +59,6 @@ class Eden_Route extends Eden_Class {
 		return $route->callArray($class, $args);
 	}
 	
-	public function getMethod($class = NULL, $method = NULL, array $args = array()) {
-		$route = Eden_Route_Method::i();
-		
-		if(is_null($class) || is_null($method)) {
-			return $route;
-		}
-		
-		return $route->call($class, $method, $args);
-	}
-	
 	public function getFunction($function = NULL, array $args = array()) {
 		$route = Eden_Route_Function::i();
 		
@@ -77,6 +67,16 @@ class Eden_Route extends Eden_Class {
 		}
 		
 		return $route->callArray($function, $args);
+	}
+	
+	public function getMethod($class = NULL, $method = NULL, array $args = array()) {
+		$route = Eden_Route_Method::i();
+		
+		if(is_null($class) || is_null($method)) {
+			return $route;
+		}
+		
+		return $route->call($class, $method, $args);
 	}
 	
 	/* Protected Methods
