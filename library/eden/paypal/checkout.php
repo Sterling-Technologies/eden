@@ -422,12 +422,8 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 		//call request method do express checckout
 		$response = $this->_request(self::DO_METHOD, $query);
 		
-		// If payment successful
-		if(isset($response[self::ACK]) && $response[self::ACK] == self::SUCCESS) { 
+		// If payment successful\
 			// Fetch the transaction ID 
-			return $response[self::TRANSACTION_ID];
-		}
-		
 		return $response;
 	}
 	
