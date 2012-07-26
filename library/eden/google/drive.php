@@ -8,15 +8,15 @@
  */
 
 /**
- * Google Calendar API Factory
+ * Google Drive API factory
  *
  * @package    Eden
  * @category   google
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
-class Eden_Google_Calendar extends Eden_Google_Base {
+class Eden_Google_Drive extends Eden_Google_Base {
 	/* Constants
-	-------------------------------*/
+	-------------------------------*/ 
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -34,91 +34,103 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 		Eden_Google_Error::i()->argument(1, 'string');
 		$this->_token = $token; 
 	}
-
+	
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns Google Event
+	 * Returns Google Drive About
 	 *
-	 * @return Eden_Google_Calendar_Event
+	 * @return Eden_Google_Drive_About
 	 */
-	public function event() {
+	public function about() {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 			
-		return Eden_Google_Calendar_Event::i($this->_token);
+		return Eden_Google_Drive_About::i($this->_token);
 	}
 	
 	/**
-	 * Returns Google List
+	 * Returns Google Drive Apps
 	 *
-	 * @return Eden_Google_Calendar_List
+	 * @return Eden_Google_Drive_Apps
 	 */
-	public function lists() {
+	public function apps() {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 			
-		return Eden_Google_Calendar_List::i($this->_token);
+		return Eden_Google_Drive_Apps::i($this->_token);
 	}
 	
 	/**
-	 * Returns Google Calendars
+	 * Returns Google Drive Changes
 	 *
-	 * @return Eden_Google_Calendar_Calendars
+	 * @return Eden_Google_Drive_Changes
 	 */
-	public function calendars() {
+	public function changes() {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 			
-		return Eden_Google_Calendar_Calendars::i($this->_token);
+		return Eden_Google_Drive_Changes::i($this->_token);
 	}
 	
 	/**
-	 * Returns Google acl
+	 * Returns Google Drive Children
 	 *
-	 * @return Eden_Google_Calendar_acl
+	 * @return Eden_Google_Drive_Children
 	 */
-	public function acl() {
+	public function children() {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 			
-		return Eden_Google_Calendar_Acl::i($this->_token);
+		return Eden_Google_Drive_Children::i($this->_token);
 	}
 	
 	/**
-	 * Returns Google color
+	 * Returns Google Drive Files
 	 *
-	 * @return Eden_Google_Calendar_color
+	 * @return Eden_Google_Drive_Files
 	 */
-	public function color() {
-		//argument 1 must be a string 
-		Eden_Google_Error::i()->argument(1, 'string');
-			
-		return Eden_Google_Calendar_Color::i($this->_token);
-	}
-	
-	/**
-	 * Returns Google freebusy
-	 *
-	 * @return Eden_Google_Calendar_freebusy
-	 */
-	public function freebusy() {
+	public function files() {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 			
-		return Eden_Google_Calendar_Freebusy::i($this->_token);
+		return Eden_Google_Drive_Files::i($this->_token);
 	}
 	
 	/**
-	 * Returns Google setting
+	 * Returns Google Drive parent
 	 *
-	 * @return Eden_Google_Calendar_Settings
+	 * @return Eden_Google_Drive_Parent
 	 */
-	public function settings() {
+	public function parents() {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 			
-		return Eden_Google_Calendar_Settings::i($this->_token);
+		return Eden_Google_Drive_Parent::i($this->_token);
+	}
+	
+	/**
+	 * Returns Google Drive Permissions
+	 *
+	 * @return Eden_Google_Drive_Permissions
+	 */
+	public function permissions($token) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+			
+		return Eden_Google_Drive_Permissions::i($this->_token);
+	}
+	
+	/**
+	 * Returns Google Drive Revisions
+	 *
+	 * @return Eden_Google_Drive_Revisions
+	 */
+	public function revisions() {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+			
+		return Eden_Google_Drive_Revisions::i($this->_token);
 	}
 	
 	/* Protected Methods
