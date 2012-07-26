@@ -418,7 +418,7 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 		   self::TOTAL_AMOUNT	=> $this->_amount, 		// Same amount as in the original request
 		   self::CURRENCY		=> $this->_currency); 	// Same currency as the original request
 		
-		front()->output($query);
+		front()->output($checkoutDetails);
 		//call request method do express checckout
 		$response = $this->_request(self::DO_METHOD, $query);
 		
