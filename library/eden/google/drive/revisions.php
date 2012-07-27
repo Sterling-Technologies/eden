@@ -61,6 +61,94 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * Removes a revision
+	 *
+	 * @return array
+	 */
+	public function delete() {
+		
+		return $this->_delete(sprintf(self::URL_REVISIONS_GET, $this->_fileId, $this->_revisionId));
+	}
+	
+	/**
+	 * Lists a file's revisions
+	 *
+	 * @return array
+	 */
+	public function getList() {
+		
+		return $this->_getResponse(sprintf(self::URL_REVISIONS_LIST, $this->_fileId));
+	}
+	
+	/**
+	 * Gets a specific revision
+	 *
+	 * @return array
+	 */
+	public function getSpecific() {
+		
+		return $this->_getResponse(sprintf(self::URL_REVISIONS_GET, $this->_fileId, $this->_revisionId));
+	}
+	
+	/**
+	 * Updates a revision. This method supports patch semantics
+	 *
+	 * @return array
+	 */
+	public function patch() {
+		//populate fields
+		$query = array(
+			self::KIND				=> $this->_kind,
+			self::ETAG				=> $this->_etag,
+			self::ID				=> $this->_id,	
+			self::SELF_LINK			=> $this->_selfLink,
+			self::MIME_TYPE			=> $this->_mimeType,
+			self::MODIFIED_DATE		=> $this->_modifiedDate,
+			self::PINNED			=> $this->_pinned,
+			self::PUBLISHED			=> $this->_published,
+			self::PUBLISHED_LINK	=> $this->_publishedLink,
+			self::PUBLISHED_AUTO	=> $this->_publishAuto,
+			self::OUTSIDE_DOMAIN	=> $this->_publishedOutsideDomain,
+			self::DOWNLOAD_URL		=> $this->_downloadUrl,
+			self::EXPORT_LINK		=> $this->_exportLinks,
+			self::LAST_MODIFY		=> $this->_lastModifyingUserName,
+			self::ORIGINAL_FILENAME	=> $this->_originalFilename,
+			self::MD5_CHECKSUM		=> $this->_md5Checksum,
+			self::FILESIZE			=> $this->_fileSize);
+		
+		return $this->_patch(sprintf(self::URL_PERMISSIONS_GET, $this->_fileId, $this->_revisionId), $query);
+	}
+	
+	/**
+	 * Short term download URL for the file. 
+	 * This will only be populated on files with content stored in Drive.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setDownloadUrl($downloadUrl) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_downloadUrl = $downloadUrl;
+		
+		return $this;
+	}
+	
+	/**
+	 * Links for exporting Google Docs to specific formats.
+	 *
+	 * @param string|object
+	 * @return this
+	 */
+	public function setExportLinks($exportLinks) {
+		//argument 1 must be a string or object
+		Eden_Google_Error::i()->argument(1, 'string', 'object');
+		$this->_exportLinks = $exportLinks;
+		
+		return $this;
+	}
+	
+	/**
 	 * The ID of the file. 
 	 *
 	 * @param string
@@ -75,29 +163,16 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 	}
 	
 	/**
-	 * The ID of the revision. 
+	 * The size of the revision in bytes. This will only be 
+	 * populated on files with content stored in Drive.
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setRevisionId($revisionId) {
+	public function setFileSize($fileSize) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_revisionId = $revisionId;
-		
-		return $this;
-	}
-	
-	/**
-	 * This is always drive#childReference.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setKind($kind) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_kind = $kind;
+		$this->_fileSize = $fileSize;
 		
 		return $this;
 	}
@@ -117,15 +192,44 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 	}
 	
 	/**
-	 * A link back to this reference.
+	 * This is always drive#childReference.
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setSelfLink($selfLink) {
+	public function setKind($kind) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_selfLink = $selfLink;
+		$this->_kind = $kind;
+		
+		return $this;
+	}
+	
+	/**
+	 * Name of the last user to modify this revision.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setLastModifyingUserName($lastModifyingUserName) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_lastModifyingUserName = $lastModifyingUserName;
+		
+		return $this;
+	}
+	
+	/**
+	 * An MD5 checksum for the content of this revision. 
+	 * This will only be populated on files with content stored in Drive.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setMd5Checksum($md5Checksum) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_md5Checksum = $md5Checksum;
 		
 		return $this;
 	}
@@ -164,6 +268,21 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 	}
 	
 	/**
+	 * The original filename when this revision was created. 
+	 * This will only be populated on files with content stored in Drive.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setOriginalFilename($originalFilename) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_originalFilename = $originalFilename;
+		
+		return $this;
+	}
+	
+	/**
 	 * Whether this revision is pinned to prevent automatic purging. 
 	 * This will only be populated on files with content stored in Drive.
 	 *
@@ -171,17 +290,6 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 	 */
 	public function setPinned() {
 		$this->_pinned = true;
-		
-		return $this;
-	}
-	
-	/**
-	 * Whether this revision is published. This is only populated for Google Docs.
-	 *
-	 * @return this
-	 */
-	public function setPublished() {
-		$this->_published = true;
 		
 		return $this;
 	}
@@ -195,16 +303,15 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 		$this->_publishAuto = true;
 		
 		return $this;
-	}
-	
+	}	
 	
 	/**
-	 * Whether this revision is published outside the domain.
+	 * Whether this revision is published. This is only populated for Google Docs.
 	 *
 	 * @return this
 	 */
-	public function setPublishedOutsideDomain() {
-		$this->_publishedOutsideDomain = true;
+	public function setPublished() {
+		$this->_published = true;
 		
 		return $this;
 	}
@@ -224,121 +331,42 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Short term download URL for the file. 
-	 * This will only be populated on files with content stored in Drive.
+	 * Whether this revision is published outside the domain.
+	 *
+	 * @return this
+	 */
+	public function setPublishedOutsideDomain() {
+		$this->_publishedOutsideDomain = true;
+		
+		return $this;
+	}
+	
+	/**
+	 * The ID of the revision. 
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setDownloadUrl($downloadUrl) {
+	public function setRevisionId($revisionId) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_downloadUrl = $downloadUrl;
+		$this->_revisionId = $revisionId;
 		
 		return $this;
 	}
 	
 	/**
-	 * Links for exporting Google Docs to specific formats.
-	 *
-	 * @param string|object
-	 * @return this
-	 */
-	public function setExportLinks($exportLinks) {
-		//argument 1 must be a string or object
-		Eden_Google_Error::i()->argument(1, 'string', 'object');
-		$this->_exportLinks = $exportLinks;
-		
-		return $this;
-	}
-	
-	/**
-	 * Name of the last user to modify this revision.
+	 * A link back to this reference.
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setLastModifyingUserName($lastModifyingUserName) {
+	public function setSelfLink($selfLink) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_lastModifyingUserName = $lastModifyingUserName;
+		$this->_selfLink = $selfLink;
 		
 		return $this;
-	}
-	
-	/**
-	 * The original filename when this revision was created. 
-	 * This will only be populated on files with content stored in Drive.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setOriginalFilename($originalFilename) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_originalFilename = $originalFilename;
-		
-		return $this;
-	}
-	
-	/**
-	 * An MD5 checksum for the content of this revision. 
-	 * This will only be populated on files with content stored in Drive.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setMd5Checksum($md5Checksum) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_md5Checksum = $md5Checksum;
-		
-		return $this;
-	}
-	
-	/**
-	 * The size of the revision in bytes. This will only be 
-	 * populated on files with content stored in Drive.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setFileSize($fileSize) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_fileSize = $fileSize;
-		
-		return $this;
-	}
-	
-	/**
-	 * Lists a file's revisions
-	 *
-	 * @return array
-	 */
-	public function getList() {
-		
-		return $this->_getResponse(sprintf(self::URL_REVISIONS_LIST, $this->_fileId));
-	}
-	
-	/**
-	 * Gets a specific revision
-	 *
-	 * @return array
-	 */
-	public function getSpecific() {
-		
-		return $this->_getResponse(sprintf(self::URL_REVISIONS_GET, $this->_fileId, $this->_revisionId));
-	}
-	
-	/**
-	 * Removes a revision
-	 *
-	 * @return array
-	 */
-	public function delete() {
-		
-		return $this->_delete(sprintf(self::URL_REVISIONS_GET, $this->_fileId, $this->_revisionId));
 	}
 	
 	/**
@@ -368,35 +396,6 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 			self::FILESIZE			=> $this->_fileSize);
 		
 		return $this->_put(sprintf(self::URL_PERMISSIONS_GET, $this->_fileId, $this->_revisionId), $query);
-	}
-	
-	/**
-	 * Updates a revision. This method supports patch semantics
-	 *
-	 * @return array
-	 */
-	public function patch() {
-		//populate fields
-		$query = array(
-			self::KIND				=> $this->_kind,
-			self::ETAG				=> $this->_etag,
-			self::ID				=> $this->_id,	
-			self::SELF_LINK			=> $this->_selfLink,
-			self::MIME_TYPE			=> $this->_mimeType,
-			self::MODIFIED_DATE		=> $this->_modifiedDate,
-			self::PINNED			=> $this->_pinned,
-			self::PUBLISHED			=> $this->_published,
-			self::PUBLISHED_LINK	=> $this->_publishedLink,
-			self::PUBLISHED_AUTO	=> $this->_publishAuto,
-			self::OUTSIDE_DOMAIN	=> $this->_publishedOutsideDomain,
-			self::DOWNLOAD_URL		=> $this->_downloadUrl,
-			self::EXPORT_LINK		=> $this->_exportLinks,
-			self::LAST_MODIFY		=> $this->_lastModifyingUserName,
-			self::ORIGINAL_FILENAME	=> $this->_originalFilename,
-			self::MD5_CHECKSUM		=> $this->_md5Checksum,
-			self::FILESIZE			=> $this->_fileSize);
-		
-		return $this->_patch(sprintf(self::URL_PERMISSIONS_GET, $this->_fileId, $this->_revisionId), $query);
 	}
 	
 	/* Protected Methods

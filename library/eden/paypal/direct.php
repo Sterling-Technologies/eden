@@ -76,213 +76,6 @@ class Eden_Paypal_Direct extends Eden_Paypal_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set credit card type  
-	 *
-	 * @param string		Credit card type
-	 * @return this
-	 */
-	public function setCardType($cardType) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_cardType = $cardType;
-		return $this;
-	}
-	
-	/**
-	 * Set credit card number  
-	 *
-	 * @param string		Credit card number
-	 * @return this
-	 */
-	public function setCardNumber($cardNumber) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_cardNumber = $cardNumber;
-		return $this;
-	}
-	
-	/**
-	 * Set credit card expiration date 
-	 *
-	 * @param string		Credit card expiration date
-	 * @return this
-	 */
-	public function setExpirationDate($expirationDate) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_expirationDate = $expirationDate;
-		return $this;
-	}
-	
-	/**
-	 * Set Card Verification Value  
-	 *
-	 * @param string		3 - digit cvv number
-	 * @return this
-	 */
-	public function setCvv2($cvv2) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_cvv2 = $cvv2;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder first name 
-	 *
-	 * @param string		First name
-	 * @return this
-	 */
-	public function setFirstName($firstName) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_firstName = $firstName;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder last name  
-	 *
-	 * @param string		Last name
-	 * @return this
-	 */
-	public function setLastName($lastName) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_lastName = $lastName;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder email address 
-	 *
-	 * @param string		Email address
-	 * @return this
-	 */
-	public function setEmail($email) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_email = $email;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder country code  
-	 *
-	 * @param string		Country Code
-	 * @return this
-	 */
-	public function setCountryCode($countryCode) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_countryCode = $countryCode;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder state  
-	 *
-	 * @param string		State
-	 * @return this
-	 */
-	public function setState($state) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_state = $state;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder city  
-	 *
-	 * @param string		City
-	 * @return this
-	 */
-	public function setCity($city) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_city = $city;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder street  
-	 *
-	 * @param string		Street
-	 * @return this
-	 */
-	public function setStreet($street) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_street = $street;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder zip code 
-	 *
-	 * @param string		Zip code
-	 * @return this
-	 */
-	public function setZip($zip) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_zip = $zip;
-		return $this;
-	}
-	
-	/**
-	 * Set item amount  
-	 *
-	 * @param integer or float		Item amount
-	 * @return this
-	 */
-	public function setAmount($amount) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_amount = $amount;
-		return $this;
-	}
-	
-	/**
-	 * Set currency code 
-	 *
-	 * @param string		Currency code
-	 * @return this
-	 */
-	public function setCurrency($currency) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_currency = $currency;
-		return $this;
-	}
-	
-	/**
-	 * Issue a credit to a card not referenced 
-	 * by the original transaction.
-	 *
-	 * @return this
-	 */
-	public function setNonReferencedCredit() {
-		$this->_setNonReferencedCredit = 'true';
-		return $this;
-	}
-	
-	/**
 	 * Process a credit card direct payment 
 	 *
 	 * @return string
@@ -319,23 +112,215 @@ class Eden_Paypal_Direct extends Eden_Paypal_Base {
 		return $this->_setDirectPayment($query);
 	}
 	
-	/* Protected Methods
-	-------------------------------*/
-	protected function _setNonReferencedCredit($query) {
-		//Argument 1 must be an array
-		Eden_Paypal_Error::i()->argument(1, 'array');	
+	/**
+	 * Set item amount  
+	 *
+	 * @param integer or float		Item amount
+	 * @return this
+	 */
+	public function setAmount($amount) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'int', 'float');	
 		
-		//call request method
-		$response = $this->_request(self::NON_REFERENCED_CREDIT, $query);
-		//if parameters are success
-		if(isset($response[self::ACK]) && $response[self::ACK] == self::SUCCESS) {
-		   // Get the transaction ID 
-		   return $response[self::TRANSACTION_ID];	   
-		} 
-		
-		return $response;		
+		$this->_amount = $amount;
+		return $this;
 	}
 	
+	/**
+	 * Set credit card number  
+	 *
+	 * @param string		Credit card number
+	 * @return this
+	 */
+	public function setCardNumber($cardNumber) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_cardNumber = $cardNumber;
+		return $this;
+	}
+	
+	/**
+	 * Set credit card type  
+	 *
+	 * @param string		Credit card type
+	 * @return this
+	 */
+	public function setCardType($cardType) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_cardType = $cardType;
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder city  
+	 *
+	 * @param string		City
+	 * @return this
+	 */
+	public function setCity($city) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_city = $city;
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder country code  
+	 *
+	 * @param string		Country Code
+	 * @return this
+	 */
+	public function setCountryCode($countryCode) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_countryCode = $countryCode;
+		return $this;
+	}
+	
+	/**
+	 * Set currency code 
+	 *
+	 * @param string		Currency code
+	 * @return this
+	 */
+	public function setCurrency($currency) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_currency = $currency;
+		return $this;
+	}
+	
+	/**
+	 * Set Card Verification Value  
+	 *
+	 * @param string		3 - digit cvv number
+	 * @return this
+	 */
+	public function setCvv2($cvv2) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_cvv2 = $cvv2;
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder email address 
+	 *
+	 * @param string		Email address
+	 * @return this
+	 */
+	public function setEmail($email) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_email = $email;
+		return $this;
+	}
+	
+	/**
+	 * Set credit card expiration date 
+	 *
+	 * @param string		Credit card expiration date
+	 * @return this
+	 */
+	public function setExpirationDate($expirationDate) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_expirationDate = $expirationDate;
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder first name 
+	 *
+	 * @param string		First name
+	 * @return this
+	 */
+	public function setFirstName($firstName) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_firstName = $firstName;
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder last name  
+	 *
+	 * @param string		Last name
+	 * @return this
+	 */
+	public function setLastName($lastName) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_lastName = $lastName;
+		return $this;
+	}
+	
+	/**
+	 * Issue a credit to a card not referenced 
+	 * by the original transaction.
+	 *
+	 * @return this
+	 */
+	public function setNonReferencedCredit() {
+		$this->_setNonReferencedCredit = 'true';
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder state  
+	 *
+	 * @param string		State
+	 * @return this
+	 */
+	public function setState($state) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_state = $state;
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder street  
+	 *
+	 * @param string		Street
+	 * @return this
+	 */
+	public function setStreet($street) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_street = $street;
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder zip code 
+	 *
+	 * @param string		Zip code
+	 * @return this
+	 */
+	public function setZip($zip) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_zip = $zip;
+		return $this;
+	}
+	
+	/* Protected Methods
+	-------------------------------*/
 	protected function _setDirectPayment($query) {
 		//Argument 1 must be an array
 		Eden_Paypal_Error::i()->argument(1, 'array');	
@@ -349,6 +334,21 @@ class Eden_Paypal_Direct extends Eden_Paypal_Base {
 		} 
 		
 		return $response;	
+	}
+	
+	protected function _setNonReferencedCredit($query) {
+		//Argument 1 must be an array
+		Eden_Paypal_Error::i()->argument(1, 'array');	
+		
+		//call request method
+		$response = $this->_request(self::NON_REFERENCED_CREDIT, $query);
+		//if parameters are success
+		if(isset($response[self::ACK]) && $response[self::ACK] == self::SUCCESS) {
+		   // Get the transaction ID 
+		   return $response[self::TRANSACTION_ID];	   
+		} 
+		
+		return $response;		
 	}
 	
 	/* Private Methods

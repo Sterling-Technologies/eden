@@ -44,98 +44,22 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set query string
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setQueryString($queryString) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_queryString = $queryString;
-		
-		return $this;
-	}
-	
-	/**
 	 * Set page token
 	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setPageToken($pageToken) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_pageToken = $pageToken;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set Activity Id
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setActivityId($id) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_activityId = $id;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set Activity Id
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setUserId($userId) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userId = $userId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set Activity Id
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setCollection($collection) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_collection = $collection;
-		
-		return $this;
-	}
-	
-	/**
-	 * Returns activity that matches the queryString
-	 *
-	 * @param string|null
 	 * @param string|null
 	 * @return array
 	 */
-	public function search($queryString = NULL, $pageToken = NULL) {
-		Eden_Google_Error::i()
-			->argument(1, 'string', 'null')
-			->argument(2, 'string', 'null');
-		
-		if($queryString) {
-			$this->_queryString = $queryString;
-		}
-		
-		if($pageToken) {
-			$this->_pageToken = $pageToken;
-		}
-		
-		$url = Eden_Google_Plus::URL_ACTIVITY;
-		$query = array();
-		$query[Eden_Google_Plus::QUERY] = urlencode($this->_queryString);
-		$query[Eden_Google_Plus::PAGE_TOKEN] = ($this->_pageToken) ? $this->_pageToken : NULL;
-		
-		return $this->_getResponse($url, $query);
-	}
-	
+	 public function get($activityId = NULL) {
+		 Eden_Google_Error::i()->argument(1, 'string', 'null');
+		 if($activityId) {
+			$this->_activityId = $activityId;
+		 }
+		 
+		 $url = sprintf(Eden_Google_Plus::URL_ACTIVITY, $this->_activityId);
+		 
+		 return $this->_getResponse($url);
+	 }
+	 
 	/**
 	 * Get activity list of user
 	 *
@@ -169,22 +93,98 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	 }
 	
 	/**
-	 * Set page token
+	 * Returns activity that matches the queryString
 	 *
+	 * @param string|null
 	 * @param string|null
 	 * @return array
 	 */
-	 public function get($activityId = NULL) {
-		 Eden_Google_Error::i()->argument(1, 'string', 'null');
-		 if($activityId) {
-			$this->_activityId = $activityId;
-		 }
-		 
-		 $url = sprintf(Eden_Google_Plus::URL_ACTIVITY, $this->_activityId);
-		 
-		 return $this->_getResponse($url);
-	 }
-	 
+	public function search($queryString = NULL, $pageToken = NULL) {
+		Eden_Google_Error::i()
+			->argument(1, 'string', 'null')
+			->argument(2, 'string', 'null');
+		
+		if($queryString) {
+			$this->_queryString = $queryString;
+		}
+		
+		if($pageToken) {
+			$this->_pageToken = $pageToken;
+		}
+		
+		$url = Eden_Google_Plus::URL_ACTIVITY;
+		$query = array();
+		$query[Eden_Google_Plus::QUERY] = urlencode($this->_queryString);
+		$query[Eden_Google_Plus::PAGE_TOKEN] = ($this->_pageToken) ? $this->_pageToken : NULL;
+		
+		return $this->_getResponse($url, $query);
+	}
+	
+	/**
+	 * Set Activity Id
+	 *
+	 * @param string
+	 * @return array
+	 */
+	public function setActivityId($id) {
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_activityId = $id;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set Activity Id
+	 *
+	 * @param string
+	 * @return array
+	 */
+	public function setCollection($collection) {
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_collection = $collection;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set page token
+	 *
+	 * @param string
+	 * @return array
+	 */
+	public function setPageToken($pageToken) {
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_pageToken = $pageToken;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set query string
+	 *
+	 * @param string
+	 * @return array
+	 */
+	public function setQueryString($queryString) {
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_queryString = $queryString;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set Activity Id
+	 *
+	 * @param string
+	 * @return array
+	 */
+	public function setUserId($userId) {
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_userId = $userId;
+		
+		return $this;
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

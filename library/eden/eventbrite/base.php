@@ -63,11 +63,6 @@ class Eden_Eventbrite_Base extends Eden_Class {
 		return json_decode($response, true);
 	}
 	
-	protected function _getXmlResponse($url, array $query = array()) {
-		$response = $this->_getResponse($url, $query);
-		return simplexml_load_string($response);
-	}
-	
 	protected function _getResponse($url, array $query = array()) {
 		$headers = array();
 		$headers[] = 'Content-Type: application/json';
@@ -112,6 +107,11 @@ class Eden_Eventbrite_Base extends Eden_Class {
 		$this->_meta['query'] 			= $query;
 		
 		return $response;
+	}
+	
+	protected function _getXmlResponse($url, array $query = array()) {
+		$response = $this->_getResponse($url, $query);
+		return simplexml_load_string($response);
 	}
 	
 	/* Private Methods

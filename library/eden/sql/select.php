@@ -45,28 +45,6 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Select clause
-	 *
-	 * @param string select
-	 * @return this
-	 * @notes loads select phrase into registry
-	 */
-	public function select($select = '*') {
-		//Argument 1 must be a string or array
-		Eden_Sql_Error::i()->argument(1, 'string', 'array');
-		
-		//if select is an array
-		if(is_array($select)) {
-			//transform into a string
-			$select = implode(', ', $select);
-		}
-		
-		$this->_select = $select;
-		
-		return $this;
-	}
-	
-	/**
 	 * From clause
 	 *
 	 * @param string from
@@ -79,6 +57,66 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 		
 		$this->_from = $from;
 		return $this;
+	}
+	
+	/**
+	 * Returns the string version of the query 
+	 *
+	 * @param  bool
+	 * @return string
+	 * @notes returns the query based on the registry
+	 */
+	public function getQuery() {
+		$joins = empty($this->_joins) ? '' : implode(' ', $this->_joins);
+		$where = empty($this->_where) ? '' : 'WHERE '.implode(' AND ', $this->_where);
+		$sort = empty($this->_sortBy) ? '' : 'ORDER BY '.implode(', ', $this->_sortBy);
+		$limit = is_null($this->_page) ? '' : 'LIMIT ' . $this->_page .',' .$this->_length;
+		$group = empty($this->_group) ? '' : 'GROUP BY ' . implode(', ', $this->_group);
+		
+		$query = sprintf(
+			'SELECT %s FROM %s %s %s %s %s %s;',
+			$this->_select, $this->_from, $joins,
+			$where, $group, $sort, $limit);
+		
+		return str_replace('  ', ' ', $query);
+	}
+	
+	/**
+	 * Group by clause
+	 *
+	 * @param string group
+	 * @return this
+	 * @notes adds broup by functionality
+	 */
+	public function groupBy($group) {
+		 //Argument 1 must be a string or array
+		 Eden_Sql_Error::i()->argument(1, 'string', 'array');	
+			
+		if(is_string($group)) {
+			$group = array($group); 
+		}
+		
+		$this->_group = $group; 
+		return $this;
+	}
+	
+	/**
+	 * Inner join clause
+	 *
+	 * @param string table
+	 * @param string where
+	 * @param bool on
+	 * @return this
+	 * @notes loads inner join phrase into registry
+	 */
+	public function innerJoin($table, $where, $using = true) {
+		//argument test
+		Eden_Sql_Error::i()
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string') 	//Argument 2 must be a string
+			->argument(3, 'bool'); 		//Argument 3 must be a boolean
+		
+		return $this->join('INNER', $table, $where, $using);
 	}
 	
 	/**
@@ -107,22 +145,42 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	}
 	
 	/**
-	 * Inner join clause
+	 * Left join clause
 	 *
 	 * @param string table
 	 * @param string where
 	 * @param bool on
 	 * @return this
-	 * @notes loads inner join phrase into registry
+	 * @notes loads left join phrase into registry
 	 */
-	public function innerJoin($table, $where, $using = true) {
+	public function leftJoin($table, $where, $using = true) {
 		//argument test
 		Eden_Sql_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string') 	//Argument 2 must be a string
 			->argument(3, 'bool'); 		//Argument 3 must be a boolean
 		
-		return $this->join('INNER', $table, $where, $using);
+		return $this->join('LEFT', $table, $where, $using);
+	}
+	
+	/**
+	 * Limit clause
+	 *
+	 * @param string|int page
+	 * @param string|int length
+	 * @return this
+	 * @notes loads page and length into registry
+	 */
+	public function limit($page, $length) {
+		//argument test
+		Eden_Sql_Error::i()
+			->argument(1, 'numeric')	//Argument 1 must be a number
+			->argument(2, 'numeric');	//Argument 2 must be a number
+		
+		$this->_page = $page;
+		$this->_length = $length; 
+
+		return $this;
 	}
 	
 	/**
@@ -145,25 +203,6 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	}
 	
 	/**
-	 * Left join clause
-	 *
-	 * @param string table
-	 * @param string where
-	 * @param bool on
-	 * @return this
-	 * @notes loads left join phrase into registry
-	 */
-	public function leftJoin($table, $where, $using = true) {
-		//argument test
-		Eden_Sql_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string') 	//Argument 2 must be a string
-			->argument(3, 'bool'); 		//Argument 3 must be a boolean
-		
-		return $this->join('LEFT', $table, $where, $using);
-	}
-	
-	/**
 	 * Right join clause
 	 *
 	 * @param string table
@@ -183,21 +222,23 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	}
 	
 	/**
-	 * Where clause
+	 * Select clause
 	 *
-	 * @param array|string where
-	 * @return	this
-	 * @notes loads a where phrase into registry
+	 * @param string select
+	 * @return this
+	 * @notes loads select phrase into registry
 	 */
-	public function where($where) {
+	public function select($select = '*') {
 		//Argument 1 must be a string or array
 		Eden_Sql_Error::i()->argument(1, 'string', 'array');
 		
-		if(is_string($where)) {
-			$where = array($where);
+		//if select is an array
+		if(is_array($select)) {
+			//transform into a string
+			$select = implode(', ', $select);
 		}
 		
-		$this->_where = array_merge($this->_where, $where); 
+		$this->_select = $select;
 		
 		return $this;
 	}
@@ -222,64 +263,23 @@ class Eden_Sql_Select extends Eden_Sql_Query {
 	}
 	
 	/**
-	 * Group by clause
+	 * Where clause
 	 *
-	 * @param string group
-	 * @return this
-	 * @notes adds broup by functionality
+	 * @param array|string where
+	 * @return	this
+	 * @notes loads a where phrase into registry
 	 */
-	public function groupBy($group) {
-		 //Argument 1 must be a string or array
-		 Eden_Sql_Error::i()->argument(1, 'string', 'array');	
-			
-		if(is_string($group)) {
-			$group = array($group); 
+	public function where($where) {
+		//Argument 1 must be a string or array
+		Eden_Sql_Error::i()->argument(1, 'string', 'array');
+		
+		if(is_string($where)) {
+			$where = array($where);
 		}
 		
-		$this->_group = $group; 
+		$this->_where = array_merge($this->_where, $where); 
+		
 		return $this;
-	}
-	
-	/**
-	 * Limit clause
-	 *
-	 * @param string|int page
-	 * @param string|int length
-	 * @return this
-	 * @notes loads page and length into registry
-	 */
-	public function limit($page, $length) {
-		//argument test
-		Eden_Sql_Error::i()
-			->argument(1, 'numeric')	//Argument 1 must be a number
-			->argument(2, 'numeric');	//Argument 2 must be a number
-		
-		$this->_page = $page;
-		$this->_length = $length; 
-
-		return $this;
-	}
-	
-	/**
-	 * Returns the string version of the query 
-	 *
-	 * @param  bool
-	 * @return string
-	 * @notes returns the query based on the registry
-	 */
-	public function getQuery() {
-		$joins = empty($this->_joins) ? '' : implode(' ', $this->_joins);
-		$where = empty($this->_where) ? '' : 'WHERE '.implode(' AND ', $this->_where);
-		$sort = empty($this->_sortBy) ? '' : 'ORDER BY '.implode(', ', $this->_sortBy);
-		$limit = is_null($this->_page) ? '' : 'LIMIT ' . $this->_page .',' .$this->_length;
-		$group = empty($this->_group) ? '' : 'GROUP BY ' . implode(', ', $this->_group);
-		
-		$query = sprintf(
-			'SELECT %s FROM %s %s %s %s %s %s;',
-			$this->_select, $this->_from, $joins,
-			$where, $group, $sort, $limit);
-		
-		return str_replace('  ', ' ', $query);
 	}
 	
 	/* Protected Methods

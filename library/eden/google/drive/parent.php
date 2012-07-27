@@ -49,73 +49,13 @@ class Eden_Google_Drive_Parent extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * The ID of the file. 
+	 * Removes a parent from a file.
 	 *
-	 * @param string
-	 * @return this
+	 * @return array
 	 */
-	public function setFileId($fileId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_fileId = $fileId;
+	public function delete() {
 		
-		return $this;
-	}
-	
-	/**
-	 * The ID of the parent. 
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setParentId($parentId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_parentId = $parentId;
-		
-		return $this;
-	}
-	
-	/**
-	 * This is always drive#childReference.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setKind($kind) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_kind = $kind;
-		
-		return $this;
-	}
-	
-	/**
-	 * The ID of the child.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setId($id) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_id = $id;
-		
-		return $this;
-	}
-	
-	/**
-	 * A link back to this reference.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setSelfLink($selfLink) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_selfLink = $selfLink;
-		
-		return $this;
+		return $this->_delete(sprintf(self::URL_PARENT_GET, $this->_fileId, $this->_parentId));
 	}
 	
 	/**
@@ -133,12 +73,15 @@ class Eden_Google_Drive_Parent extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Whether or not the parent is the root folder.
+	 * The ID of the file. 
 	 *
+	 * @param string
 	 * @return this
 	 */
-	public function setIsRoot() {
-		$this->_isRoot = true;
+	public function setFileId($fileId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_fileId = $fileId;
 		
 		return $this;
 	}
@@ -164,16 +107,6 @@ class Eden_Google_Drive_Parent extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Removes a parent from a file.
-	 *
-	 * @return array
-	 */
-	public function delete() {
-		
-		return $this->_delete(sprintf(self::URL_PARENT_GET, $this->_fileId, $this->_parentId));
-	}
-	
-	/**
 	 * Adds a parent folder for a file.
 	 *
 	 * @return array
@@ -190,6 +123,73 @@ class Eden_Google_Drive_Parent extends Eden_Google_Base {
 		return $this->_post(sprintf(self::URL_PARENT_LIST, $this->_fileId), $query);
 	}
 	 
+	/**
+	 * The ID of the child.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setId($id) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_id = $id;
+		
+		return $this;
+	}
+	
+	/**
+	 * Whether or not the parent is the root folder.
+	 *
+	 * @return this
+	 */
+	public function setIsRoot() {
+		$this->_isRoot = true;
+		
+		return $this;
+	}
+	
+	/**
+	 * This is always drive#childReference.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setKind($kind) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_kind = $kind;
+		
+		return $this;
+	}
+	
+	/**
+	 * The ID of the parent. 
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setParentId($parentId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_parentId = $parentId;
+		
+		return $this;
+	}
+	
+	/**
+	 * A link back to this reference.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setSelfLink($selfLink) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_selfLink = $selfLink;
+		
+		return $this;
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

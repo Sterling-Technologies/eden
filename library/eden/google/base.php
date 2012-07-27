@@ -121,19 +121,6 @@ class Eden_Google_Base extends Eden_Class {
 	}
 	
 	/**
-	 * Set Maximum results of query
-	 *
-	 * @param int
-	 * @return array
-	 */
-	public function setMaxResult($maxResult) {
-		Eden_Google_Error::i()->argument(1, 'int');
-		$this->_maxResult = $maxResult;
-		
-		return $this;
-	}
-	
-	/**
 	 * Check if the response is xml
 	 *
 	 * @param string
@@ -146,6 +133,19 @@ class Eden_Google_Base extends Eden_Class {
 		$errors = libxml_get_errors();
 	
 		return empty( $errors );
+	}
+	
+	/**
+	 * Set Maximum results of query
+	 *
+	 * @param int
+	 * @return array
+	 */
+	public function setMaxResult($maxResult) {
+		Eden_Google_Error::i()->argument(1, 'int');
+		$this->_maxResult = $maxResult;
+		
+		return $this;
 	}
 	
 	public function setXmlHeaders($developerId) {
@@ -174,6 +174,59 @@ class Eden_Google_Base extends Eden_Class {
 		
 		return $array;
 	}
+	
+	protected function _customPost($url, array $query = array()) {
+		//add access token to query
+		$query[self::ACCESS_TOKEN] = $this->_token;
+		//if query is an array
+		if(is_array($query)) {
+			//prevent sending fields with no value
+			$query = $this->_accessKey($query); 
+			//covent query to string
+			$query = http_build_query($query);
+		}
+		//combine url and query
+		$url = $url.'?'.$query;
+		//set curl
+		$curl = Eden_Curl::i()
+			->verifyHost(false)
+			->verifyPeer(false)
+			->setUrl($url)
+			->setPost(true)
+			->setPostFields($query)
+			->setHeaders($this->_headers);
+		
+		//get the response
+		$response = $curl->getJsonResponse();
+		
+		$this->_meta 					= $curl->getMeta();
+		$this->_meta['url'] 			= $url;
+		$this->_meta['headers'] 		= $this->_headers;
+		$this->_meta['query'] 			= $query;
+		
+		return $response;
+	}
+	
+	protected function _delete($url) {		
+		//add access token to the url
+		$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token;
+		//set curl
+		$curl = Eden_Curl::i()
+			->verifyHost(false)
+			->verifyPeer(false)
+			->setUrl($url)
+			->setHeaders($this->_headers)
+			->setCustomRequest('DELETE');
+			
+		//get the response
+		$response = $curl->getJsonResponse();
+		
+		$this->_meta 					= $curl->getMeta();
+		$this->_meta['url'] 			= $url;
+		$this->_meta['headers'] 		= $this->_headers;
+		
+		return $response;
+	}
 		
 	protected function _getResponse($url, array $query = array()) {
 		//if needed, add access token to query
@@ -201,6 +254,34 @@ class Eden_Google_Base extends Eden_Class {
 			//else it is in json format, covert it to array
 			$response = json_decode($response, true);
 		}
+		
+		return $response;
+	}
+	
+	protected function _patch($url, array $query = array()) {
+		//add access token to query
+		$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token;
+		//prevent sending fields with no value
+		$query = $this->_accessKey($query);
+		//json encode query
+		$query = json_encode($query);
+		//set curl
+		$curl = Eden_Curl::i()
+			->verifyHost(false)
+			->verifyPeer(false)
+			->setUrl($url)
+			->setPost(true)
+			->setPostFields($query)
+			->setHeaders($this->_headers)
+			->setCustomRequest('PATCH');
+		
+		//get the response
+		$response = $curl->getJsonResponse();
+		
+		$this->_meta 					= $curl->getMeta();
+		$this->_meta['url'] 			= $url;
+		$this->_meta['headers'] 		= $this->_headers;
+		$this->_meta['query'] 			= $query;
 		
 		return $response;
 	}
@@ -271,55 +352,6 @@ class Eden_Google_Base extends Eden_Class {
 		return $response;
 	}
 	
-	protected function _patch($url, array $query = array()) {
-		//add access token to query
-		$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token;
-		//prevent sending fields with no value
-		$query = $this->_accessKey($query);
-		//json encode query
-		$query = json_encode($query);
-		//set curl
-		$curl = Eden_Curl::i()
-			->verifyHost(false)
-			->verifyPeer(false)
-			->setUrl($url)
-			->setPost(true)
-			->setPostFields($query)
-			->setHeaders($this->_headers)
-			->setCustomRequest('PATCH');
-		
-		//get the response
-		$response = $curl->getJsonResponse();
-		
-		$this->_meta 					= $curl->getMeta();
-		$this->_meta['url'] 			= $url;
-		$this->_meta['headers'] 		= $this->_headers;
-		$this->_meta['query'] 			= $query;
-		
-		return $response;
-	}
-	
-	protected function _delete($url) {		
-		//add access token to the url
-		$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token;
-		//set curl
-		$curl = Eden_Curl::i()
-			->verifyHost(false)
-			->verifyPeer(false)
-			->setUrl($url)
-			->setHeaders($this->_headers)
-			->setCustomRequest('DELETE');
-			
-		//get the response
-		$response = $curl->getJsonResponse();
-		
-		$this->_meta 					= $curl->getMeta();
-		$this->_meta['url'] 			= $url;
-		$this->_meta['headers'] 		= $this->_headers;
-		
-		return $response;
-	}
-	
 	protected function _put($url, array $query = array()) {
 		//if query is an array
 		if(is_array($query)) {
@@ -346,38 +378,6 @@ class Eden_Google_Base extends Eden_Class {
 			->setInFile($fh)
 			->setInFileSize(strlen($query));
 			
-		//get the response
-		$response = $curl->getJsonResponse();
-		
-		$this->_meta 					= $curl->getMeta();
-		$this->_meta['url'] 			= $url;
-		$this->_meta['headers'] 		= $this->_headers;
-		$this->_meta['query'] 			= $query;
-		
-		return $response;
-	}
-
-	protected function _customPost($url, array $query = array()) {
-		//add access token to query
-		$query[self::ACCESS_TOKEN] = $this->_token;
-		//if query is an array
-		if(is_array($query)) {
-			//prevent sending fields with no value
-			$query = $this->_accessKey($query); 
-			//covent query to string
-			$query = http_build_query($query);
-		}
-		//combine url and query
-		$url = $url.'?'.$query;
-		//set curl
-		$curl = Eden_Curl::i()
-			->verifyHost(false)
-			->verifyPeer(false)
-			->setUrl($url)
-			->setPost(true)
-			->setPostFields($query)
-			->setHeaders($this->_headers);
-		
 		//get the response
 		$response = $curl->getJsonResponse();
 		

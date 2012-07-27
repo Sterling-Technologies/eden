@@ -36,29 +36,17 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	}
 
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
 	/**
-	 * Returns Google Event
+	 * Returns Google acl
 	 *
-	 * @return Eden_Google_Calendar_Event
+	 * @return Eden_Google_Calendar_acl
 	 */
-	public function event() {
+	public function acl() {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 			
-		return Eden_Google_Calendar_Event::i($this->_token);
-	}
-	
-	/**
-	 * Returns Google List
-	 *
-	 * @return Eden_Google_Calendar_List
-	 */
-	public function lists() {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-			
-		return Eden_Google_Calendar_List::i($this->_token);
+		return Eden_Google_Calendar_Acl::i($this->_token);
 	}
 	
 	/**
@@ -74,18 +62,6 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Returns Google acl
-	 *
-	 * @return Eden_Google_Calendar_acl
-	 */
-	public function acl() {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-			
-		return Eden_Google_Calendar_Acl::i($this->_token);
-	}
-	
-	/**
 	 * Returns Google color
 	 *
 	 * @return Eden_Google_Calendar_color
@@ -98,6 +74,18 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	}
 	
 	/**
+	 * Returns Google Event
+	 *
+	 * @return Eden_Google_Calendar_Event
+	 */
+	public function event() {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+			
+		return Eden_Google_Calendar_Event::i($this->_token);
+	}
+	
+	/**
 	 * Returns Google freebusy
 	 *
 	 * @return Eden_Google_Calendar_freebusy
@@ -107,6 +95,18 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 		Eden_Google_Error::i()->argument(1, 'string');
 			
 		return Eden_Google_Calendar_Freebusy::i($this->_token);
+	}
+	
+	/**
+	 * Returns Google List
+	 *
+	 * @return Eden_Google_Calendar_List
+	 */
+	public function lists() {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+			
+		return Eden_Google_Calendar_List::i($this->_token);
 	}
 	
 	/**

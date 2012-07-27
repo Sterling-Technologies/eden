@@ -32,7 +32,25 @@ class Eden_Getsatisfaction_Reply extends Eden_Getsatisfaction_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
+	/**
+	 * Creates the post
+	 *
+	 * @param string|int
+	 * @param string
+	 * @return array
+	 */
+	public function create($topic, $content) {
+		Eden_Getsatisfaction_Error::i()
+			->argument(1, 'string', 'int')
+			->argument(2, 'string');
+		
+		$url 	= sprintf(Eden_Getsatisfaction_Replies::URL_REPLY, $topic);
+		$query 	= array('content' => $content);
+		
+		return $this->_post($url, array('reply' => $this->_query), true);
+	}
+	
 	/**
 	 * Set topic mood
 	 *
@@ -53,26 +71,6 @@ class Eden_Getsatisfaction_Reply extends Eden_Getsatisfaction_Base {
 	 */
 	public function setHappyFace() {
 		$this->_query['emotitag']['face'] = 'happy';
-		return $this;
-	}
-	
-	/**
-	 * Add sad face
-	 *
-	 * @return this
-	 */
-	public function setSadFace() {
-		$this->_query['emotitag']['face'] = 'sad';
-		return $this;
-	}
-	
-	/**
-	 * Add silly face
-	 *
-	 * @return this
-	 */
-	public function setSillyFace() {
-		$this->_query['emotitag']['face'] = 'silly';
 		return $this;
 	}
 	
@@ -106,21 +104,23 @@ class Eden_Getsatisfaction_Reply extends Eden_Getsatisfaction_Base {
 	}
 	
 	/**
-	 * Creates the post
+	 * Add sad face
 	 *
-	 * @param string|int
-	 * @param string
-	 * @return array
+	 * @return this
 	 */
-	public function create($topic, $content) {
-		Eden_Getsatisfaction_Error::i()
-			->argument(1, 'string', 'int')
-			->argument(2, 'string');
-		
-		$url 	= sprintf(Eden_Getsatisfaction_Replies::URL_REPLY, $topic);
-		$query 	= array('content' => $content);
-		
-		return $this->_post($url, array('reply' => $this->_query), true);
+	public function setSadFace() {
+		$this->_query['emotitag']['face'] = 'sad';
+		return $this;
+	}
+	
+	/**
+	 * Add silly face
+	 *
+	 * @return this
+	 */
+	public function setSillyFace() {
+		$this->_query['emotitag']['face'] = 'silly';
+		return $this;
 	}
 	
 	/* Protected Methods

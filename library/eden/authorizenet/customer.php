@@ -139,590 +139,57 @@ class Eden_Authorizenet_Customer extends Eden_Authorizenet_Base {
 	
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Set shipping in profile transaction 
-	 *
-	 * @return this
-	 */
-	public function setShipping() {
-		$this->_shipping = true;
-		return $this;
-	}
 	
 	/**
-	 * Set use profile  
+	 * Create a new customer payment profile for 
+	 * an existing customer profile. 
 	 *
-	 * @return this
+	 * @return array
 	 */
-	public function setProfile() {
-		$this->_useProfile	= true;
-		return $this;
-	}
-	
-	/**
-	 * Set customer type to business 
-	 *
-	 * @return this
-	 */
-	public function setToBusiness() {
-		$this->_customerType = self::BUSINESS;
-		return $this;
-	}
-	
-	/**
-	 * Set transaction type to check 
-	 *
-	 * @return this
-	 */
-	public function setToCheck() {
-		$this->_type = self::CHECK;
-		return $this;
-	}
-	
-	/**
-	 * Enable recurring billing 
-	 *
-	 * @return this
-	 */
-	public function setRecurringBilling() {
-		$this->_recurringBilling = TRUE;
-		return $this;
-	}
-	
-	/**
-	 * Enable Tax Exemption 
-	 *
-	 * @return this
-	 */
-	public function setTaxExemption() {
-		$this->_taxExempt = TRUE;
-		return $this;
-	}
-	
-	/**
-	 * Set profile transaction to capture only
-	 *
-	 * @return this
-	 */
-	public function setCaptureOnly() {
-		$this->_profileType = self::CAPTURE_ONLY;
-		return $this;
-	}
-	
-	/**
-	 * Set profile transaction to authorize only
-	 *
-	 * @return this
-	 */
-	public function setAuthorizeOnly() {
-		$this->_profileType = self::AUTH_ONLY;
-		return $this;
-	}
-	
-	/**
-	 * Set profile id
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setProfileId($id) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+	public function createPaymentProfile() {
 		
-		$this->_customerProfileId = $id;
-		return $this;
-	}
-	
-	/**
-	 * Set payment profile id
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setPaymentId($id) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+        $this->_constructXml(self::CREATE_PAYMENT_PROFILE);
 		
-		$this->_customerPaymentProfileId = $id;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping address id
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingId($id) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		$this->_xml->addChild(self::PROFILE_ID,	$this->_customerProfileId);
 		
-		$this->_customerShippingAddressId = $id;
-		return $this;
-	}
-	
-	/**
-	 * Set description
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setDescription($description) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		$paymentProfile = $this->_xml->addChild(self::PAYMENT_PROFILE);
+			$paymentProfiles->addChild(self::CUSTOMER_TYPE,	$this->_customerType);
+		//Populate billing parameters	
+		$billTo = $paymentProfile->addChild(self::BILLING);
+			$billTo->addChild(self::FIRST_NAME,		$this->_billToFirstName);
+			$billTo->addChild(self::LAST_NAME,		$this->_billToLastName);
+			$billTo->addChild(self::COMPANY,		$this->_billToCompany);
+			$billTo->addChild(self::ADDRESS,		$this->_billToAddress);
+			$billTo->addChild(self::CITY,			$this->_billToCity);
+			$billTo->addChild(self::STATE,			$this->_billToState);
+			$billTo->addChild(self::ZIP,			$this->_billToZip);
+			$billTo->addChild(self::COUNTRY,		$this->_billToCountry);
+			$billTo->addChild(self::PHONE_NUMBER,	$this->_billToPhoneNumber);
+			$billTo->addChild(self::FAX_NUMBER,		$this->_billToFaxNumber);
+		$payment = $paymentProfiles->addChild(self::PAYMENT);
 		
-		$this->_description = $description;
-		return $this;
+		//If it is in credit transaction
+		if ($this->_type === self::CREDIT) {
+			 //Populate credit parameters
+			$creditCard = $payment->addChild(self::CREDIT_CARD);
+				$creditCard->addChild(self::CARD_NUMBER,		$this->_cardNumber);
+				$creditCard->addChild(self::EXPIRATION,			$this->_expirationDate);
+				
+		//If it is in check transaction
+		} else if ($this->_type === self::CHECK) {
+			//Populate bank parameters
+			$bankAccount = $payment->addChild(self::BANK_ACCOUNT);
+				$bankAccount->addChild(self::ACCOUNT_TYPE,		$this->_accountType);
+				$bankAccount->addChild(self::ACCOUNT_NAME,		$this->_nameOnAccount);
+				$bankAccount->addChild(self::E_CHECK,			$this->_echeckType);
+				$bankAccount->addChild(self::BANK_NAME, 		$this->_bankName);
+				$bankAccount->addChild(self::ROUTING_NUMBER,	$this->_routingNumber);
+				$bankAccount->addChild(self::ACCOUNT_NUMBER,	$this->_accountNumber);		 
+		 }
+		$this->_xml->addChild(self::VALIDATION,	$this->_validationMode);
+			
+		return $this->_process($this->_xml->asXML());
 	}
-	
-	/**
-	 * Set billing email
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBillingEmail($email) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_email = $email;
-		return $this;
-	}
-	
-	/**
-	 * Set billing first name
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBillingFirstName($firstName) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->__billToFirstName = $firstName;
-		return $this;
-	}
-	
-	/**
-	 * Set billing last name
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBillingLastName($lastName) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_billToLastName = $lastName;
-		return $this;
-	}
-	
-	/**
-	 * Set billing address
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBillingAddress($address) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_billToAddress = $address;
-		return $this;
-	}
-	
-	/**
-	 * Set billing city
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBillingCity($city) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_billToCity = $city;
-		return $this;
-	}
-	
-	/**
-	 * Set billing state
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBillingState($state) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_billToState = $state;
-		return $this;
-	}
-	
-	/**
-	 * Set billing zip
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBillingZip($zip) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_billToZip = $zip;
-		return $this;
-	}
-	
-	/**
-	 * Set billing country
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBillingCountry($country) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_billToCountry = $country;
-		return $this;
-	}
-	
-	/**
-	 * Set billing phone Number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBillingPhoneNumber($phoneNumber) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_billToPhoneNumber = $phoneNumber;
-		return $this;
-	}
-	
-	/**
-	 * Set billing fax Number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBillingFaxNumber($faxNumber) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_billToFaxNumber = $faxNumber;
-		return $this;
-	}
-	
-	/**
-	 * Set card Number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setCardNumber($cardNumber) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_cardNumber = $cardNumber;
-		return $this;
-	}
-	
-	/**
-	 * Set expiration Date
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setExpiration($expirationDate) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_expirationDate = $expirationDate;
-		return $this;
-	}
-	
-	/**
-	 * Set account type
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setAccountType($accountType) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_accountType = $accountType;
-		return $this;
-	}
-	
-	/**
-	 * Set name on account
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setName($name) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_nameOnAccount = $name;
-		return $this;
-	}
-	
-	/**
-	 * Set echeck type
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setECheckType($eCheck) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_echeckType = $eCheck;
-		return $this;
-	}
-	
-	/**
-	 * Set bank name
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBankName($bankName) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_bankName = $bankName;
-		return $this;
-	}
-	
-	/**
-	 * Set routing number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setRoutingNumber($routingNumber) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_routingNumber = $routingNumber;
-		return $this;
-	}
-	
-	/**
-	 * Set account number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setAccountNumber($accountNumber) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_accountNumber = $accountNumber;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping first name
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingFirstName($firstName) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipToFirstName = $firstName;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping last name
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingLastName($lastName) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipToLastName = $lastName;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping company
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingCompany($company) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipToCompany = $company;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping address
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingAddress($address) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipToAddress = $address;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping city
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingCity($city) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipToCity = $city;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping state
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingState($state) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipToState = $state;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping zip
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingZip($zip) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipToZip = $zip;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping country
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingCountry($country) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipToCountry = $country;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping phone number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingPhoneNumber($phoneNumber) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipToPhoneNumber = $phoneNumber;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping fax number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingFaxNumber($faxNumber) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipToFaxNumber = $faxNumber;
-		return $this;
-	}
-	
-	/**
-	 * Set amount
-	 *
-	 * @param *integer|float
-	 * @return this
-	 */
-	public function setAmount($amount) {
-		//Argument 1 must be an integer or float
-		Eden_Authorizenet_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_amount = $amount;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping amount
-	 *
-	 * @param *integer|float
-	 * @return this
-	 */
-	public function setShippingAmount($amount) {
-		//Argument 1 must be an integer or float
-		Eden_Authorizenet_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_shipAmount = $amount;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping name
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingName($name) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipName = $name;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping description
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingDescription($desc) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipdescription = $desc;
-		return $this;
-	}
-	
 	
 	/**
 	 * Create a new customer profile along with any 
@@ -780,53 +247,31 @@ class Eden_Authorizenet_Customer extends Eden_Authorizenet_Base {
 	}
 
 	/**
-	 * Create a new customer payment profile for 
-	 * an existing customer profile. 
+	 * Create a new payment transaction from 
+     * an existing customer profile. 
 	 *
 	 * @return array
 	 */
-	public function createPaymentProfile() {
+	public function createProfileTransaction() {
 		
-        $this->_constructXml(self::CREATE_PAYMENT_PROFILE);
+        $this->_constructXml(self::CREATE_TRANSACTION);
 		
-		$this->_xml->addChild(self::PROFILE_ID,	$this->_customerProfileId);
-		
-		$paymentProfile = $this->_xml->addChild(self::PAYMENT_PROFILE);
-			$paymentProfiles->addChild(self::CUSTOMER_TYPE,	$this->_customerType);
-		//Populate billing parameters	
-		$billTo = $paymentProfile->addChild(self::BILLING);
-			$billTo->addChild(self::FIRST_NAME,		$this->_billToFirstName);
-			$billTo->addChild(self::LAST_NAME,		$this->_billToLastName);
-			$billTo->addChild(self::COMPANY,		$this->_billToCompany);
-			$billTo->addChild(self::ADDRESS,		$this->_billToAddress);
-			$billTo->addChild(self::CITY,			$this->_billToCity);
-			$billTo->addChild(self::STATE,			$this->_billToState);
-			$billTo->addChild(self::ZIP,			$this->_billToZip);
-			$billTo->addChild(self::COUNTRY,		$this->_billToCountry);
-			$billTo->addChild(self::PHONE_NUMBER,	$this->_billToPhoneNumber);
-			$billTo->addChild(self::FAX_NUMBER,		$this->_billToFaxNumber);
-		$payment = $paymentProfiles->addChild(self::PAYMENT);
-		
-		//If it is in credit transaction
-		if ($this->_type === self::CREDIT) {
-			 //Populate credit parameters
-			$creditCard = $payment->addChild(self::CREDIT_CARD);
-				$creditCard->addChild(self::CARD_NUMBER,		$this->_cardNumber);
-				$creditCard->addChild(self::EXPIRATION,			$this->_expirationDate);
+		$transaction = $this->_xml->addChild(self::TRASACTION);
+			$this->_profileType = $transaction->addChild(				$this->_profileType);
+				$this->_profileType->addChild(self::AMOUNT,				$this->_amount);
 				
-		//If it is in check transaction
-		} else if ($this->_type === self::CHECK) {
-			//Populate bank parameters
-			$bankAccount = $payment->addChild(self::BANK_ACCOUNT);
-				$bankAccount->addChild(self::ACCOUNT_TYPE,		$this->_accountType);
-				$bankAccount->addChild(self::ACCOUNT_NAME,		$this->_nameOnAccount);
-				$bankAccount->addChild(self::E_CHECK,			$this->_echeckType);
-				$bankAccount->addChild(self::BANK_NAME, 		$this->_bankName);
-				$bankAccount->addChild(self::ROUTING_NUMBER,	$this->_routingNumber);
-				$bankAccount->addChild(self::ACCOUNT_NUMBER,	$this->_accountNumber);		 
-		 }
-		$this->_xml->addChild(self::VALIDATION,	$this->_validationMode);
-			
+				//If shipping is set
+			 	if (isset($this->_shipping)) {
+					//Populate shipping parameters
+					$shipping = $this->_profileType->addChild(self::SHIPPING);
+						$shipping->addChild(self::AMOUNT,				$this->_shipAmount);
+						$shipping->addChild(self::NAME,					$this->_shipName);
+						$shipping->addChild(self::DESCRIPTION,			$this->_shipDescription);
+			 	}
+			 		$this->_profileType->addChild(self::PROFILE_ID,		$this->_customerProfileId);
+					$this->_profileType->addChild(self::PAYMENT_ID,		$this->_customerPaymentProfileId);
+					$this->_profileType->addChild(self::SHIPPING_ID,	$this->_customerShippingAddressId);
+	
 		return $this->_process($this->_xml->asXML());
 	}
 	
@@ -858,73 +303,14 @@ class Eden_Authorizenet_Customer extends Eden_Authorizenet_Base {
 	}
 	
 	/**
-	 * Create a new payment transaction from 
-     * an existing customer profile. 
+	 * Retrieve an existing customer profile along with all the 
+	 * associated customer payment profiles and customer shipping addresses.   
 	 *
 	 * @return array
 	 */
-	public function createProfileTransaction() {
+	public function getPaymentProfile() {
 		
-        $this->_constructXml(self::CREATE_TRANSACTION);
-		
-		$transaction = $this->_xml->addChild(self::TRASACTION);
-			$this->_profileType = $transaction->addChild(				$this->_profileType);
-				$this->_profileType->addChild(self::AMOUNT,				$this->_amount);
-				
-				//If shipping is set
-			 	if (isset($this->_shipping)) {
-					//Populate shipping parameters
-					$shipping = $this->_profileType->addChild(self::SHIPPING);
-						$shipping->addChild(self::AMOUNT,				$this->_shipAmount);
-						$shipping->addChild(self::NAME,					$this->_shipName);
-						$shipping->addChild(self::DESCRIPTION,			$this->_shipDescription);
-			 	}
-			 		$this->_profileType->addChild(self::PROFILE_ID,		$this->_customerProfileId);
-					$this->_profileType->addChild(self::PAYMENT_ID,		$this->_customerPaymentProfileId);
-					$this->_profileType->addChild(self::SHIPPING_ID,	$this->_customerShippingAddressId);
-	
-		return $this->_process($this->_xml->asXML());
-	}
-	
-	/**
-	 * Delete a customer profile  
-	 *
-	 * @return array
-	 */
-	public function removeProfile() {
-		
-        $this->_constructXml(self::REMOVE_PROFILE);
-		
-		$this->_xml->addChild(self::PROFILE_ID,	$this->_customerProfileId);
-		
-		return $this->_process($this->_xml->asXML());
-	}
-	
-	/**
-	 * Delete a customer payment profile from an 
-	 * existing customer profile. 
-	 *
-	 * @return array
-	 */
-	public function removePaymentProfile() {
-		
-        $this->_constructXml(self::REMOVE_PAYMENT_PROFILE);
-		
-		$this->_xml->addChild(self::PROFILE_ID,	$this->_customerProfileId);
-		$this->_xml->addChild(self::PAYMENT_ID,	$this->_customerPaymentProfileId);
-		
-		return $this->_process($this->_xml->asXML());
-	}
-	
-	/**
-	 * Delete a customer shipping address from 
-	 * an existing customer profile.  
-	 *
-	 * @return array
-	 */
-	public function removeShippingAddress() {
-		
-        $this->_constructXml(self::REMOVE_SHIPPING_PROFILE);
+        $this->_constructXml(self::GET_PAYMENT_PROFILE);
 		
 		$this->_xml->addChild(self::PROFILE_ID,	$this->_customerProfileId);
 		$this->_xml->addChild(self::PAYMENT_ID,	$this->_customerPaymentProfileId);
@@ -948,22 +334,6 @@ class Eden_Authorizenet_Customer extends Eden_Authorizenet_Base {
 	}
 	
 	/**
-	 * Retrieve an existing customer profile along with all the 
-	 * associated customer payment profiles and customer shipping addresses.   
-	 *
-	 * @return array
-	 */
-	public function getPaymentProfile() {
-		
-        $this->_constructXml(self::GET_PAYMENT_PROFILE);
-		
-		$this->_xml->addChild(self::PROFILE_ID,	$this->_customerProfileId);
-		$this->_xml->addChild(self::PAYMENT_ID,	$this->_customerPaymentProfileId);
-		
-		return $this->_process($this->_xml->asXML());
-	}
-	
-	/**
 	 * Retrieve a customer shipping address for an 
 	 * existing customer profile.   
 	 *
@@ -980,21 +350,633 @@ class Eden_Authorizenet_Customer extends Eden_Authorizenet_Base {
 	}
 	
 	/**
-	 * Update an existing customer profile.
+	 * Delete a customer payment profile from an 
+	 * existing customer profile. 
 	 *
 	 * @return array
 	 */
-	public function updateProfile() {
+	public function removePaymentProfile() {
 		
-        $this->_constructXml(self::UPDATE_PROFILE);
+        $this->_constructXml(self::REMOVE_PAYMENT_PROFILE);
 		
-		$profile = $this->_xml->addChild(self::PROFILE);
-			$profile->addChild(self::MERCHANT_ID,	$this->_merchantCustomerId);
-			$profile->addChild(self::DESCRIPTION,	$this->_description);
-			$profile->addChild(self::EMAIL,			$this->_email);
-			$profile->addChild(self::PROFILE_ID,	$this->_customerProfileId);
+		$this->_xml->addChild(self::PROFILE_ID,	$this->_customerProfileId);
+		$this->_xml->addChild(self::PAYMENT_ID,	$this->_customerPaymentProfileId);
 		
 		return $this->_process($this->_xml->asXML());
+	}
+	
+	/**
+	 * Delete a customer profile  
+	 *
+	 * @return array
+	 */
+	public function removeProfile() {
+		
+        $this->_constructXml(self::REMOVE_PROFILE);
+		
+		$this->_xml->addChild(self::PROFILE_ID,	$this->_customerProfileId);
+		
+		return $this->_process($this->_xml->asXML());
+	}
+	
+	/**
+	 * Delete a customer shipping address from 
+	 * an existing customer profile.  
+	 *
+	 * @return array
+	 */
+	public function removeShippingAddress() {
+		
+        $this->_constructXml(self::REMOVE_SHIPPING_PROFILE);
+		
+		$this->_xml->addChild(self::PROFILE_ID,	$this->_customerProfileId);
+		$this->_xml->addChild(self::PAYMENT_ID,	$this->_customerPaymentProfileId);
+		
+		return $this->_process($this->_xml->asXML());
+	}
+	
+	/**
+	 * Set account number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setAccountNumber($accountNumber) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_accountNumber = $accountNumber;
+		return $this;
+	}
+	
+	/**
+	 * Set account type
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setAccountType($accountType) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_accountType = $accountType;
+		return $this;
+	}
+	
+	/**
+	 * Set amount
+	 *
+	 * @param *integer|float
+	 * @return this
+	 */
+	public function setAmount($amount) {
+		//Argument 1 must be an integer or float
+		Eden_Authorizenet_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_amount = $amount;
+		return $this;
+	}
+	
+	/**
+	 * Set profile transaction to authorize only
+	 *
+	 * @return this
+	 */
+	public function setAuthorizeOnly() {
+		$this->_profileType = self::AUTH_ONLY;
+		return $this;
+	}
+	
+	/**
+	 * Set bank name
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBankName($bankName) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_bankName = $bankName;
+		return $this;
+	}
+
+	/**
+	 * Set billing address
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBillingAddress($address) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_billToAddress = $address;
+		return $this;
+	}
+	
+	/**
+	 * Set billing city
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBillingCity($city) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_billToCity = $city;
+		return $this;
+	}
+	
+	/**
+	 * Set billing country
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBillingCountry($country) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_billToCountry = $country;
+		return $this;
+	}
+	
+	/**
+	 * Set billing email
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBillingEmail($email) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_email = $email;
+		return $this;
+	}
+	
+	/**
+	 * Set billing fax Number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBillingFaxNumber($faxNumber) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_billToFaxNumber = $faxNumber;
+		return $this;
+	}
+	
+	/**
+	 * Set billing first name
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBillingFirstName($firstName) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->__billToFirstName = $firstName;
+		return $this;
+	}
+	
+	/**
+	 * Set billing last name
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBillingLastName($lastName) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_billToLastName = $lastName;
+		return $this;
+	}
+	
+	/**
+	 * Set billing phone Number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBillingPhoneNumber($phoneNumber) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_billToPhoneNumber = $phoneNumber;
+		return $this;
+	}
+	
+	/**
+	 * Set billing state
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBillingState($state) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_billToState = $state;
+		return $this;
+	}
+	
+	/**
+	 * Set billing zip
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBillingZip($zip) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_billToZip = $zip;
+		return $this;
+	}
+	
+	/**
+	 * Set profile transaction to capture only
+	 *
+	 * @return this
+	 */
+	public function setCaptureOnly() {
+		$this->_profileType = self::CAPTURE_ONLY;
+		return $this;
+	}
+	
+	/**
+	 * Set card Number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setCardNumber($cardNumber) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_cardNumber = $cardNumber;
+		return $this;
+	}
+		
+	/**
+	 * Set echeck type
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setECheckType($eCheck) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_echeckType = $eCheck;
+		return $this;
+	}
+	
+	/**
+	 * Set description
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setDescription($description) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_description = $description;
+		return $this;
+	}
+	
+	/**
+	 * Set expiration Date
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setExpiration($expirationDate) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_expirationDate = $expirationDate;
+		return $this;
+	}
+	
+	/**
+	 * Set name on account
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setName($name) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_nameOnAccount = $name;
+		return $this;
+	}
+	
+	/**
+	 * Set payment profile id
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setPaymentId($id) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_customerPaymentProfileId = $id;
+		return $this;
+	}
+	
+	/**
+	 * Set use profile  
+	 *
+	 * @return this
+	 */
+	public function setProfile() {
+		$this->_useProfile	= true;
+		return $this;
+	}
+	
+	/**
+	 * Set profile id
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setProfileId($id) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_customerProfileId = $id;
+		return $this;
+	}
+	
+	/**
+	 * Enable recurring billing 
+	 *
+	 * @return this
+	 */
+	public function setRecurringBilling() {
+		$this->_recurringBilling = TRUE;
+		return $this;
+	}
+	
+	/**
+	 * Set routing number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setRoutingNumber($routingNumber) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_routingNumber = $routingNumber;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping in profile transaction 
+	 *
+	 * @return this
+	 */
+	public function setShipping() {
+		$this->_shipping = true;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping address
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingAddress($address) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipToAddress = $address;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping amount
+	 *
+	 * @param *integer|float
+	 * @return this
+	 */
+	public function setShippingAmount($amount) {
+		//Argument 1 must be an integer or float
+		Eden_Authorizenet_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_shipAmount = $amount;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping city
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingCity($city) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipToCity = $city;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping company
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingCompany($company) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipToCompany = $company;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping country
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingCountry($country) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipToCountry = $country;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping description
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingDescription($desc) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipdescription = $desc;
+		return $this;
+	}	
+	
+	/**
+	 * Set shipping fax number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingFaxNumber($faxNumber) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipToFaxNumber = $faxNumber;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping first name
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingFirstName($firstName) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipToFirstName = $firstName;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping address id
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingId($id) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_customerShippingAddressId = $id;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping last name
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingLastName($lastName) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipToLastName = $lastName;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping name
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingName($name) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipName = $name;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping phone number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingPhoneNumber($phoneNumber) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipToPhoneNumber = $phoneNumber;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping state
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingState($state) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipToState = $state;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping zip
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingZip($zip) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipToZip = $zip;
+		return $this;
+	}
+	
+	/**
+	 * Enable Tax Exemption 
+	 *
+	 * @return this
+	 */
+	public function setTaxExemption() {
+		$this->_taxExempt = TRUE;
+		return $this;
+	}
+	
+	/**
+	 * Set customer type to business 
+	 *
+	 * @return this
+	 */
+	public function setToBusiness() {
+		$this->_customerType = self::BUSINESS;
+		return $this;
+	}
+	
+	/**
+	 * Set transaction type to check 
+	 *
+	 * @return this
+	 */
+	public function setToCheck() {
+		$this->_type = self::CHECK;
+		return $this;
 	}
 	
 	/**
@@ -1050,6 +1032,24 @@ class Eden_Authorizenet_Customer extends Eden_Authorizenet_Base {
 				$bankAccount->addChild(self::ACCOUNT_NUMBER, 	$this->_accountNumber);		 
 		 }
 			$paymentProfiles->addChild(self::PAYMENT_ID,		$this->_customerPaymentProfileId);
+		
+		return $this->_process($this->_xml->asXML());
+	}
+	
+	/**
+	 * Update an existing customer profile.
+	 *
+	 * @return array
+	 */
+	public function updateProfile() {
+		
+        $this->_constructXml(self::UPDATE_PROFILE);
+		
+		$profile = $this->_xml->addChild(self::PROFILE);
+			$profile->addChild(self::MERCHANT_ID,	$this->_merchantCustomerId);
+			$profile->addChild(self::DESCRIPTION,	$this->_description);
+			$profile->addChild(self::EMAIL,			$this->_email);
+			$profile->addChild(self::PROFILE_ID,	$this->_customerProfileId);
 		
 		return $this->_process($this->_xml->asXML());
 	}

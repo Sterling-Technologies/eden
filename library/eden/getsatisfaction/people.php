@@ -40,6 +40,29 @@ class Eden_GetSatisfaction_People extends Eden_GetSatisfaction_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * Filter by keyword
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function filterByKeyword($keyword) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string');
+		
+		$this->_query['query'] = $keyword;
+		
+		return $this;
+	}
+	
+	/**
+	 * Returns a list of companies
+	 *
+	 * @return array
+	 */
+	public function getResults() {
+		return $this->_getResponse($this->_url, $this->_query);
+	}
+	
+	/**
 	 * Sets company URL
 	 *
 	 * @param string|int
@@ -79,20 +102,6 @@ class Eden_GetSatisfaction_People extends Eden_GetSatisfaction_Base {
 	}
 	
 	/**
-	 * Filter by keyword
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function filterByKeyword($keyword) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string');
-		
-		$this->_query['query'] = $keyword;
-		
-		return $this;
-	}
-	
-	/**
 	 * Set page
 	 *
 	 * @param int
@@ -126,15 +135,6 @@ class Eden_GetSatisfaction_People extends Eden_GetSatisfaction_Base {
 		$this->_query['limit'] = $limit;
 		
 		return $this;
-	}
-	
-	/**
-	 * Returns a list of companies
-	 *
-	 * @return array
-	 */
-	public function getResults() {
-		return $this->_getResponse($this->_url, $this->_query);
 	}
 	
 	/* Protected Methods

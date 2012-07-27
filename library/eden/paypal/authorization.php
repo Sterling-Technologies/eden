@@ -57,86 +57,6 @@ class Eden_Paypal_Authorization extends Eden_Paypal_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set item amount  
-	 *
-	 * @param integer|float Item amount
-	 * @return this
-	 */
-	public function setAmount($amount) {
-		//Argument 1 must be an integer or float
-		Eden_Paypal_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_amount = $amount;
-		return $this;
-	}
-	
-	/**
-	 * Set currency code 
-	 *
-	 * @param string Currency code
-	 * @return this
-	 */
-	public function setCurrency($currency) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_currency = $currency;
-		return $this;
-	}
-	
-	/**
-	 * Set complete type to complete
-	 * Complete - This the last capture you intend to make
-	 *
-	 * @return this
-	 */
-	public function setComplete() {
-		$this->_completeType = self::COMPLETE;
-		return $this;
-	}
-	
-	/**
-	 * Set complete type to no complete
-	 * NoComplete - You intend to make additional captures.
-	 *
-	 * @return this
-	 */
-	public function setNoComplete() {
-		$this->_completeType = self::NO_COMPLETE;
-		return $this;
-	}
-	
-	/**
-	 * An informational note about this settlement that 
-	 * is displayed to the buyer in email and in their 
-	 * transaction history.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setNote($note) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_note = $note;
-		return $this;
-	}
-	
-	/**
-	 * Set Transaction Id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setTransactionId($transactionId) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_transactionId = $transactionId;
-		return $this;
-	}
-	
-	/**
 	 * Authorize a payment. 
 	 *
 	 * @return string
@@ -225,6 +145,86 @@ class Eden_Paypal_Authorization extends Eden_Paypal_Base {
 		} 
 		
 		return $response;	
+	}
+	
+	/**
+	 * Set item amount  
+	 *
+	 * @param integer|float Item amount
+	 * @return this
+	 */
+	public function setAmount($amount) {
+		//Argument 1 must be an integer or float
+		Eden_Paypal_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_amount = $amount;
+		return $this;
+	}
+	
+	/**
+	 * Set complete type to complete
+	 * Complete - This the last capture you intend to make
+	 *
+	 * @return this
+	 */
+	public function setComplete() {
+		$this->_completeType = self::COMPLETE;
+		return $this;
+	}
+	
+	/**
+	 * Set currency code 
+	 *
+	 * @param string Currency code
+	 * @return this
+	 */
+	public function setCurrency($currency) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_currency = $currency;
+		return $this;
+	}
+	
+	/**
+	 * Set complete type to no complete
+	 * NoComplete - You intend to make additional captures.
+	 *
+	 * @return this
+	 */
+	public function setNoComplete() {
+		$this->_completeType = self::NO_COMPLETE;
+		return $this;
+	}
+	
+	/**
+	 * An informational note about this settlement that 
+	 * is displayed to the buyer in email and in their 
+	 * transaction history.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setNote($note) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_note = $note;
+		return $this;
+	}
+	
+	/**
+	 * Set Transaction Id
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setTransactionId($transactionId) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_transactionId = $transactionId;
+		return $this;
 	}
 	
 	/* Protected Methods

@@ -72,172 +72,6 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns the meta of the last call
-	 *
-	 * @return array
-	 */
-	public function getMeta($key = NULL) {
-		Eden_Oauth_Error::i()->argument(1, 'string', 'null');
-		
-		if(isset($this->_meta[$key])) {
-			return $this->_meta[$key];
-		}
-		
-		return $this->_meta;
-	}
-	
-	/**
-	 * Sets request headers
-	 *
-	 * @param array|string
-	 * @return this
-	 */
-	public function setHeaders($key, $value = NULL) {
-		Eden_Oauth_Error::i()
-			->argument(1, 'array', 'string')
-			->argument(2, 'scalar','null');
-		
-		if(is_array($key)) {
-			$this->_headers = $key;
-			return $this;
-		}
-		
-		$this->_headers[] = $key.': '.$value;
-		return $this;
-	}
-	
-	/**
-	 * When sent, sends the parameters as post fields
-	 *
-	 * @return this
-	 */
-	public function setMethodToPost() {
-		$this->_method = self::POST;
-		return $this;
-	}
-	
-	/**
-	 * When sent, sends the parameters as post fields
-	 *
-	 * @return this
-	 */
-	public function jsonEncodeQuery() {
-		$this->_json = true;
-		return $this;
-	}
-	
-	/**
-	 * When sent, appends the parameters to the URL
-	 *
-	 * @return this
-	 */
-	public function setMethodToGet() {
-		$this->_method = self::GET;
-		return $this;
-	}
-	
-	/**
-	 * Sets the signature encryption type to HMAC-SHA1
-	 *
-	 * @return this
-	 */
-	public function setSignatureToHmacSha1() {
-		$this->_signature = self::HMAC_SHA1;
-		return $this;
-	}
-	
-	/** 
-	 * Sets the signature encryption to RSA-SHA1
-	 *
-	 * @return this
-	 */
-	public function setSignatureToRsaSha1() {
-		$this->_signature = self::RSA_SHA1;
-		return $this;
-	}
-	
-	/** 
-	 * Sets the signature encryption to PLAINTEXT
-	 *
-	 * @return this
-	 */
-	public function setSignatureToPlainText() {
-		$this->_signature = self::PLAIN_TEXT;
-		return $this;
-	}
-	
-	/**
-	 * When sent, appends the authroization to the headers
-	 *
-	 * @param bool
-	 * @return this
-	 */
-	public function useAuthorization($use = true) {
-		Eden_Oauth_Error::i()->argument(1, 'bool');
-		$this->_useAuthorization = $use;
-		return $this;
-	}
-	
-	/**
-	 * Some Oauth servers requires a realm to be set
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setRealm($realm) {
-		Eden_Oauth_Error::i()->argument(1, 'string');
-		$this->_realm = $realm;
-		return $this;
-	}
-	
-	/**
-	 * Some Oauth servers requires a verifier to be set
-	 * when retrieving an access token
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setVerifier($verifier) {
-		Eden_Oauth_Error::i()->argument(1, 'scalar');
-		$this->_verifier = $verifier;
-		return $this;
-	}
-	
-	/**
-	 * Sets the request token and secret. 
-	 * This should be set if wanting an access token
-	 *
-	 * @param string
-	 * @param string
-	 * @return this
-	 */
-	public function setToken($token, $secret) {
-		Eden_Oauth_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string');
-		
-		$this->_requestToken = $token;
-		$this->_requestSecret = $secret;
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets the callback for authorization
-	 * This should be set if wanting an access token
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setCallback($url) {
-		Eden_Oauth_Error::i()->argument(1, 'string');
-		
-		$this->_callback = $url;
-		
-		return $this;
-	}
-	
-	/**
 	 * Returns the authorization header string
 	 *
 	 * @param string
@@ -295,6 +129,27 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	}
 	
 	/**
+	 * Returns the results
+	 * parsed as DOMDocument
+	 *
+	 * @return DOMDOcument
+	 */
+	public function getDomDocumentResponse(array $query = array()) {
+		$xml = new DOMDocument();
+		$xml->loadXML($this->getResponse($query));
+		return $xml;
+	}
+	
+	/**
+	 * Returns the signature
+	 *
+	 * @return string
+	 */
+	public function getHmacPlainTextSignature() {
+		return $this->_consumerSecret . '&' . $this->_tokenSecret;
+	}
+	
+	/**
 	 * Returns the signature
 	 *
 	 * @param array
@@ -345,29 +200,39 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	}
 	
 	/**
-	 * Returns the signature
+	 * Returns the json response from the server
 	 *
-	 * @return string
+	 * @param array
+	 * @return array
 	 */
-	public function getHmacPlainTextSignature() {
-		return $this->_consumerSecret . '&' . $this->_tokenSecret;
+	public function getJsonResponse(array $query = array(), $assoc = true) {
+		return json_decode($this->getResponse($query), $assoc);
 	}
 	
 	/**
-	 * Returns the signature based on what signature method was set
+	 * Returns the meta of the last call
+	 *
+	 * @return array
+	 */
+	public function getMeta($key = NULL) {
+		Eden_Oauth_Error::i()->argument(1, 'string', 'null');
+		
+		if(isset($this->_meta[$key])) {
+			return $this->_meta[$key];
+		}
+		
+		return $this->_meta;
+	}
+	
+	/**
+	 * Returns the query response from the server
 	 *
 	 * @param array
-	 * @return string
+	 * @return array
 	 */
-	public function getSignature(array $query = array()) {
-		switch($this->_signature) {
-			case self::HMAC_SHA1:
-				return $this->getHmacSha1Signature($query);
-			case self::RSA_SHA1:
-			case self::PLAIN_TEXT:
-			default:
-				return $this->getHmacPlainTextSignature();
-		}
+	public function getQueryResponse(array $query = array()) {
+		parse_str($this->getResponse($query), $response);
+		return $response;
 	}
 	
 	/**
@@ -450,24 +315,20 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	}
 	
 	/**
-	 * Returns the json response from the server
+	 * Returns the signature based on what signature method was set
 	 *
 	 * @param array
-	 * @return array
+	 * @return string
 	 */
-	public function getJsonResponse(array $query = array(), $assoc = true) {
-		return json_decode($this->getResponse($query), $assoc);
-	}
-	
-	/**
-	 * Returns the query response from the server
-	 *
-	 * @param array
-	 * @return array
-	 */
-	public function getQueryResponse(array $query = array()) {
-		parse_str($this->getResponse($query), $response);
-		return $response;
+	public function getSignature(array $query = array()) {
+		switch($this->_signature) {
+			case self::HMAC_SHA1:
+				return $this->getHmacSha1Signature($query);
+			case self::RSA_SHA1:
+			case self::PLAIN_TEXT:
+			default:
+				return $this->getHmacPlainTextSignature();
+		}
 	}
 	
 	/**
@@ -481,15 +342,154 @@ class Eden_Oauth_Consumer extends Eden_Oauth_Base {
 	}
 	
 	/**
-	 * Returns the results
-	 * parsed as DOMDocument
+	 * When sent, sends the parameters as post fields
 	 *
-	 * @return DOMDOcument
+	 * @return this
 	 */
-	public function getDomDocumentResponse(array $query = array()) {
-		$xml = new DOMDocument();
-		$xml->loadXML($this->getResponse($query));
-		return $xml;
+	public function jsonEncodeQuery() {
+		$this->_json = true;
+		return $this;
+	}
+	
+	/**
+	 * Sets the callback for authorization
+	 * This should be set if wanting an access token
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCallback($url) {
+		Eden_Oauth_Error::i()->argument(1, 'string');
+		
+		$this->_callback = $url;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets request headers
+	 *
+	 * @param array|string
+	 * @return this
+	 */
+	public function setHeaders($key, $value = NULL) {
+		Eden_Oauth_Error::i()
+			->argument(1, 'array', 'string')
+			->argument(2, 'scalar','null');
+		
+		if(is_array($key)) {
+			$this->_headers = $key;
+			return $this;
+		}
+		
+		$this->_headers[] = $key.': '.$value;
+		return $this;
+	}
+	
+	/**
+	 * When sent, appends the parameters to the URL
+	 *
+	 * @return this
+	 */
+	public function setMethodToGet() {
+		$this->_method = self::GET;
+		return $this;
+	}
+	
+	/**
+	 * When sent, sends the parameters as post fields
+	 *
+	 * @return this
+	 */
+	public function setMethodToPost() {
+		$this->_method = self::POST;
+		return $this;
+	}
+	
+	/**
+	 * Some Oauth servers requires a realm to be set
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setRealm($realm) {
+		Eden_Oauth_Error::i()->argument(1, 'string');
+		$this->_realm = $realm;
+		return $this;
+	}
+	
+	/**
+	 * Sets the signature encryption type to HMAC-SHA1
+	 *
+	 * @return this
+	 */
+	public function setSignatureToHmacSha1() {
+		$this->_signature = self::HMAC_SHA1;
+		return $this;
+	}
+	
+	/** 
+	 * Sets the signature encryption to RSA-SHA1
+	 *
+	 * @return this
+	 */
+	public function setSignatureToRsaSha1() {
+		$this->_signature = self::RSA_SHA1;
+		return $this;
+	}
+	
+	/** 
+	 * Sets the signature encryption to PLAINTEXT
+	 *
+	 * @return this
+	 */
+	public function setSignatureToPlainText() {
+		$this->_signature = self::PLAIN_TEXT;
+		return $this;
+	}
+	
+	/**
+	 * Sets the request token and secret. 
+	 * This should be set if wanting an access token
+	 *
+	 * @param string
+	 * @param string
+	 * @return this
+	 */
+	public function setToken($token, $secret) {
+		Eden_Oauth_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$this->_requestToken = $token;
+		$this->_requestSecret = $secret;
+		
+		return $this;
+	}
+	
+	/**
+	 * Some Oauth servers requires a verifier to be set
+	 * when retrieving an access token
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setVerifier($verifier) {
+		Eden_Oauth_Error::i()->argument(1, 'scalar');
+		$this->_verifier = $verifier;
+		return $this;
+	}
+	
+	/**
+	 * When sent, appends the authroization to the headers
+	 *
+	 * @param bool
+	 * @return this
+	 */
+	public function useAuthorization($use = true) {
+		Eden_Oauth_Error::i()->argument(1, 'bool');
+		$this->_useAuthorization = $use;
+		return $this;
 	}
 	
 	/* Protected Methods

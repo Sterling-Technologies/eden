@@ -41,6 +41,16 @@ class Eden_Sql_Delete extends Eden_Sql_Query {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * Returns the string version of the query 
+	 *
+	 * @return string
+	 * @notes returns the query based on the registry
+	 */
+	public function getQuery() {
+		return 'DELETE FROM '. $this->_table . ' WHERE '. implode(' AND ', $this->_where).';';
+	}
+	
+	/**
 	 * Set the table name in which you want to delete from
 	 *
 	 * @param string name
@@ -72,16 +82,6 @@ class Eden_Sql_Delete extends Eden_Sql_Query {
 		$this->_where = array_merge($this->_where, $where); 
 		
 		return $this;
-	}
-	
-	/**
-	 * Returns the string version of the query 
-	 *
-	 * @return string
-	 * @notes returns the query based on the registry
-	 */
-	public function getQuery() {
-		return 'DELETE FROM '. $this->_table . ' WHERE '. implode(' AND ', $this->_where).';';
 	}
 	
 	/* Protected Methods

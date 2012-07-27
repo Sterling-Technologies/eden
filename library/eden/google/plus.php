@@ -56,15 +56,6 @@ class Eden_Google_Plus extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Factory method for Eden_Google_Plus_People Class
-	 *
-	 * @return Eden_Google_Plus_People
-	 */
-	public function people() {
-		return Eden_Google_Plus_People::i($this->_token);
-	}
-	
-	/**
 	 * Factory method for Eden_Google_Plus_Activity Class
 	 *
 	 * @return Eden_Google_Plus_Activity
@@ -82,6 +73,14 @@ class Eden_Google_Plus extends Eden_Google_Base {
 		return Eden_Google_Plus_Comment::i($this->_token);
 	}
 	
+	/**
+	 * Factory method for Eden_Google_Plus_People Class
+	 *
+	 * @return Eden_Google_Plus_People
+	 */
+	public function people() {
+		return Eden_Google_Plus_People::i($this->_token);
+	}
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

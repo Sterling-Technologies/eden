@@ -54,191 +54,13 @@ class Eden_Google_Drive_Permissions extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * The ID of the file. 
+	 * Deletes a permission from a file
 	 *
-	 * @param string
-	 * @return this
+	 * @return array
 	 */
-	public function setFileId($fileId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_fileId = $fileId;
+	public function delete() {
 		
-		return $this;
-	}
-	
-	/**
-	 * The ID for the permission. 
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setPermissionId($permissionId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_permissionId = $permissionId;
-		
-		return $this;
-	}
-	
-	/**
-	 * The ID of the parent. 
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setParentId($parentId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_parentId = $parentId;
-		
-		return $this;
-	}
-	
-	/**
-	 * This is always drive#childReference.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setKind($kind) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_kind = $kind;
-		
-		return $this;
-	}
-	
-	/**
-	 * The ID of the child.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setId($id) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_id = $id;
-		
-		return $this;
-	}
-	
-	/**
-	 * A link back to this reference.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setSelfLink($selfLink) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_selfLink = $selfLink;
-		
-		return $this;
-	}
-	
-	/**
-	 * The name for this permission.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setName($name) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_name = $name;
-		
-		return $this;
-	}
-	
-	/**
-	 * Allowed values are:
-     * - user
-     * - group
-     * - domain
-     * - anyone
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setType($type) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_type = $type;
-		
-		return $this;
-	}
-	
-	/**
-	 * The ETag of the permission.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setEtag($etag) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_etag = $etag;
-		
-		return $this;
-	}
-	
-	/**
-	 * The primary role for this user
-	 * Allowed values are:
-     * - owner
-     * - reader
-     * - writer
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setRole($role) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_role = $role;
-		
-		return $this;
-	}
-	
-	/**
-	 * WWhether the link is required for this permission.
-	 *
-	 * @return this
-	 */
-	public function setWithLink() {
-		$this->_withLink = true;
-		
-		return $this;
-	}
-	
-	/**
-	 * A link to the profile photo, if available.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setPhotoLink($photoLink) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_photoLink = $photoLink;
-		
-		return $this;
-	}
-	
-	/**
-	 * The email address or domain name for the 
-	 * entity. This is not populated in responses.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setValue($value) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_value = $value;
-		
-		return $this;
+		return $this->_delete(sprintf(self::URL_PERMISSIONS_GET, $this->_fileId, $this->_permissionId));
 	}
 	
 	/**
@@ -251,7 +73,6 @@ class Eden_Google_Drive_Permissions extends Eden_Google_Base {
 		return $this->_getResponse(sprintf(self::URL_PERMISSIONS_LIST, $this->_fileId));
 	}
 	
-	
 	/**
 	 * Gets a permission by ID
 	 *
@@ -260,16 +81,6 @@ class Eden_Google_Drive_Permissions extends Eden_Google_Base {
 	public function getSpecific() {
 		
 		return $this->_getResponse(sprintf(self::URL_PERMISSIONS_GET, $this->_fileId, $this->_permissionId));
-	}
-	
-	/**
-	 * Deletes a permission from a file
-	 *
-	 * @return array
-	 */
-	public function delete() {
-		
-		return $this->_delete(sprintf(self::URL_PERMISSIONS_GET, $this->_fileId, $this->_permissionId));
 	}
 	
 	/**
@@ -296,29 +107,6 @@ class Eden_Google_Drive_Permissions extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Updates a permission.
-	 *
-	 * @return array
-	 */
-	public function update() {
-		//populate fields
-		$query = array(
-			self::KIND			=> $this->_kind,
-			self::ETAG			=> $this->_etag,
-			self::ID			=> $this->_id,	
-			self::SELF_LINK		=> $this->_selfLink,
-			self::NAME			=> $this->_name,
-			self::ROLE			=> $this->_role,		//required parameters
-			self::TYPE			=> $this->_type,		//required parameters
-			self::AUTH_KEY		=> $this->_token,		
-			self::WITH_LINK		=> $this->_withLink,
-			self::PHOTO_LINK	=> $this->_photoLink,
-			self::VALUE			=> $this->_value);		//required parameters
-		
-		return $this->_put(sprintf(self::URL_PERMISSIONS_GET, $this->_fileId, $this->_permissionId), $query);
-	}
-	
-	/**
 	 * Updates a permission. This method supports patch semantics.
 	 *
 	 * @return array
@@ -339,6 +127,217 @@ class Eden_Google_Drive_Permissions extends Eden_Google_Base {
 			self::VALUE			=> $this->_value);		//required parameters
 		
 		return $this->_patch(sprintf(self::URL_PERMISSIONS_GET, $this->_fileId, $this->_permissionId), $query);
+	}
+	
+	/**
+	 * The ETag of the permission.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setEtag($etag) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_etag = $etag;
+		
+		return $this;
+	}
+	
+	/**
+	 * The ID of the file. 
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setFileId($fileId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_fileId = $fileId;
+		
+		return $this;
+	}
+	
+	/**
+	 * The ID of the child.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setId($id) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_id = $id;
+		
+		return $this;
+	}
+	
+	/**
+	 * This is always drive#childReference.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setKind($kind) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_kind = $kind;
+		
+		return $this;
+	}
+	
+	/**
+	 * The name for this permission.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setName($name) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_name = $name;
+		
+		return $this;
+	}
+	
+	/**
+	 * The ID of the parent. 
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setParentId($parentId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_parentId = $parentId;
+		
+		return $this;
+	}
+	
+	/**
+	 * The ID for the permission. 
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setPermissionId($permissionId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_permissionId = $permissionId;
+		
+		return $this;
+	}
+	
+	/**
+	 * A link to the profile photo, if available.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setPhotoLink($photoLink) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_photoLink = $photoLink;
+		
+		return $this;
+	}
+	
+	/**
+	 * The primary role for this user
+	 * Allowed values are:
+     * - owner
+     * - reader
+     * - writer
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setRole($role) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_role = $role;
+		
+		return $this;
+	}
+	
+	/**
+	 * A link back to this reference.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setSelfLink($selfLink) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_selfLink = $selfLink;
+		
+		return $this;
+	}
+	
+	/**
+	 * Allowed values are:
+     * - user
+     * - group
+     * - domain
+     * - anyone
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setType($type) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_type = $type;
+		
+		return $this;
+	}
+	
+	/**
+	 * The email address or domain name for the 
+	 * entity. This is not populated in responses.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setValue($value) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_value = $value;
+		
+		return $this;
+	}
+	
+	/**
+	 * WWhether the link is required for this permission.
+	 *
+	 * @return this
+	 */
+	public function setWithLink() {
+		$this->_withLink = true;
+		
+		return $this;
+	}
+	
+	/**
+	 * Updates a permission.
+	 *
+	 * @return array
+	 */
+	public function update() {
+		//populate fields
+		$query = array(
+			self::KIND			=> $this->_kind,
+			self::ETAG			=> $this->_etag,
+			self::ID			=> $this->_id,	
+			self::SELF_LINK		=> $this->_selfLink,
+			self::NAME			=> $this->_name,
+			self::ROLE			=> $this->_role,		//required parameters
+			self::TYPE			=> $this->_type,		//required parameters
+			self::AUTH_KEY		=> $this->_token,		
+			self::WITH_LINK		=> $this->_withLink,
+			self::PHOTO_LINK	=> $this->_photoLink,
+			self::VALUE			=> $this->_value);		//required parameters
+		
+		return $this->_put(sprintf(self::URL_PERMISSIONS_GET, $this->_fileId, $this->_permissionId), $query);
 	}
 	
 	/* Protected Methods

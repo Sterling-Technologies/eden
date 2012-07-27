@@ -32,6 +32,22 @@ class Eden_Postgre_Insert extends Eden_Sql_Insert {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * Returns the string version of the query 
+	 *
+	 * @param  bool
+	 * @return string
+	 * @notes returns the query based on the registry
+	 */
+	public function getQuery() {
+		$multiValList = array();
+		foreach($this->_setVal as $val) {
+			$multiValList[] = '('.implode(', ', $val).')';
+		}
+		
+		return 'INSERT INTO "'. $this->_table . '" ("'.implode('", "', $this->_setKey).'") VALUES '.implode(", \n", $multiValList).';';
+	}
+	
+	/**
 	 * Set clause that assigns a given field name to a given value.
 	 * You can also use this to add multiple rows in one call
 	 *
@@ -58,22 +74,6 @@ class Eden_Postgre_Insert extends Eden_Sql_Insert {
 		
 		$this->_setVal[$index][] = $value;
 		return $this;
-	}
-	
-	/**
-	 * Returns the string version of the query 
-	 *
-	 * @param  bool
-	 * @return string
-	 * @notes returns the query based on the registry
-	 */
-	public function getQuery() {
-		$multiValList = array();
-		foreach($this->_setVal as $val) {
-			$multiValList[] = '('.implode(', ', $val).')';
-		}
-		
-		return 'INSERT INTO "'. $this->_table . '" ("'.implode('", "', $this->_setKey).'") VALUES '.implode(", \n", $multiValList).';';
 	}
 	
 	/* Protected Methods

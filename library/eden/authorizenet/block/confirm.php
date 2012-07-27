@@ -65,17 +65,30 @@ class Eden_Authorizenet_Block_Confirm extends Eden_Block {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
 	/**
-	 * Set the transaction time
+	 * Set the URL the form will submit to
 	 *
-	 * @param int
+	 * @param string
 	 * @return this
 	 */
-	public function setTime($time) {
-		//Argument 1 must be an integer
-		Eden_Authorizenet_Error::i()->argument(1, 'int');
-		$this->_time = $time;
+	public function setAction($action) {
+		//Argument 1 must be as string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');
+		$this->_action = $action;
+		return $this;
+	}
+	
+	/**
+	 * Set the value of the submit button
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setButton($text) {
+		//Argument 1 must be as string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');
+		$this->_submit = $text;
 		return $this;
 	}
 	
@@ -94,41 +107,24 @@ class Eden_Authorizenet_Block_Confirm extends Eden_Block {
 	}
 	
 	/**
-	 * Set the URL the form will submit to
-	 *
-	 * @param string
-	 * @return this
+	 * Returns a template file
+	 * 
+	 * @return string
 	 */
-	public function setAction($action) {
-		//Argument 1 must be as string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');
-		$this->_action = $action;
-		return $this;
+	public function getTemplate() {
+		return realpath(dirname(__FILE__).'/template/confirm.php');
 	}
 	
 	/**
-	 * Set the authorize.net API version
+	 * Set the transaction time
 	 *
-	 * @param string
+	 * @param int
 	 * @return this
 	 */
-	public function setVersion($version) {
-		//Argument 1 must be as string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');
-		$this->_version = $version;
-		return $this;
-	}
-	
-	/**
-	 * Set the value of the submit button
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setButton($text) {
-		//Argument 1 must be as string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');
-		$this->_submit = $text;
+	public function setTime($time) {
+		//Argument 1 must be an integer
+		Eden_Authorizenet_Error::i()->argument(1, 'int');
+		$this->_time = $time;
 		return $this;
 	}
 	
@@ -153,11 +149,16 @@ class Eden_Authorizenet_Block_Confirm extends Eden_Block {
 	}
 	
 	/**
-	 * Returns a template file
-	 * 
-	 * @return string
+	 * Set the authorize.net API version
+	 *
+	 * @param string
+	 * @return this
 	 */
-	public function getTemplate() {
-		return realpath(dirname(__FILE__).'/template/confirm.php');
+	public function setVersion($version) {
+		//Argument 1 must be as string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');
+		$this->_version = $version;
+		return $this;
 	}
+	
 }

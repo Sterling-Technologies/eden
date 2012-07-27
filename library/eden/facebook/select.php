@@ -42,27 +42,6 @@ class Eden_Facebook_Select extends Eden_Class {
 	
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Select clause
-	 *
-	 * @param string select
-	 * @return this
-	 * @notes loads select phrase into registry
-	 */
-	public function select($select = '*') {
-		//Argument 1 must be a string or array
-		Eden_Facebook_Error::i()->argument(1, 'string', 'array');
-		
-		//if select is an array
-		if(is_array($select)) {
-			//transform into a string
-			$select = implode(', ', $select);
-		}
-		
-		$this->_select = $select;
-		
-		return $this;
-	}
 	
 	/**
 	 * From clause
@@ -76,45 +55,6 @@ class Eden_Facebook_Select extends Eden_Class {
 		Eden_Facebook_Error::i()->argument(1, 'string');
 		
 		$this->_from = $from;
-		return $this;
-	}
-	
-	/**
-	 * Where clause
-	 *
-	 * @param array|string where
-	 * @return	this
-	 * @notes loads a where phrase into registry
-	 */
-	public function where($where) {
-		//Argument 1 must be a string or array
-		Eden_Facebook_Error::i()->argument(1, 'string', 'array');
-		
-		if(is_string($where)) {
-			$where = array($where);
-		}
-		
-		$this->_where = array_merge($this->_where, $where); 
-		
-		return $this;
-	}
-	
-	/**
-	 * Order by clause
-	 *
-	 * @param string field
-	 * @param string order
-	 * @return this
-	 * @notes loads field and order into registry
-	 */
-	public function sortBy($field, $order = 'ASC') {
-		//argument test
-		Eden_Facebook_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string'); 	//Argument 2 must be a string
-		
-		$this->_sortBy[] = $field . ' ' . $order;
-		
 		return $this;
 	}
 	
@@ -160,6 +100,67 @@ class Eden_Facebook_Select extends Eden_Class {
 			$where, $sort, $limit);
 		
 		return str_replace('  ', ' ', $query);
+	}
+	
+	/**
+	 * Select clause
+	 *
+	 * @param string select
+	 * @return this
+	 * @notes loads select phrase into registry
+	 */
+	public function select($select = '*') {
+		//Argument 1 must be a string or array
+		Eden_Facebook_Error::i()->argument(1, 'string', 'array');
+		
+		//if select is an array
+		if(is_array($select)) {
+			//transform into a string
+			$select = implode(', ', $select);
+		}
+		
+		$this->_select = $select;
+		
+		return $this;
+	}
+	
+	/**
+	 * Order by clause
+	 *
+	 * @param string field
+	 * @param string order
+	 * @return this
+	 * @notes loads field and order into registry
+	 */
+	public function sortBy($field, $order = 'ASC') {
+		//argument test
+		Eden_Facebook_Error::i()
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string'); 	//Argument 2 must be a string
+		
+		$this->_sortBy[] = $field . ' ' . $order;
+		
+		return $this;
+	}
+	
+	/**
+	 * Where clause
+	 *
+	 * @param array|string where
+	 * @return	this
+	 * @notes loads a where phrase into registry
+	 */
+	public function where($where) {
+		//Argument 1 must be a string or array
+		Eden_Facebook_Error::i()->argument(1, 'string', 'array');
+		
+		if(is_string($where)) {
+			$where = array($where);
+		}
+		
+		$this->_where = array_merge($this->_where, $where); 
+		
+		return $this;
 	}
 	
 	/* Protected Methods

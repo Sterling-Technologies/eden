@@ -58,31 +58,85 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set calendar id
+	 * Adds an entry to the user's calendar list.
 	 *
-	 * @param string
-	 * @return this
+	 * @return array
 	 */
-	public function setCalendarId($calendarId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_calendarId = $calendarId;
+	public function create() {
+		//populate fields
+		$query = array(
+			self::ACCESS_ROLE		=> $this->_accessRole,
+			self::COLOR_ID 			=> $this->_colorId,
+			self::DEFAULT_REMINDERS	=> $this->_defaultReminders,
+			self::DESCRIPTION		=> $this->_description,
+			self::ETAG				=> $this->_etag,
+			self::HIDDEN			=> $this->_hidden,
+			self::ID				=> $this->_id,
+			self::KIND				=> $this->_kind,
+			self::LOCATION			=> $this->_location,
+			self::SELECTED			=> $this->_selected,
+			self::SUMMARY			=> $this->_summary,
+			self::SUMMARY_OVERRIDE	=> $this->_summaryOverride,
+			self::TIMEZONE			=> $this->_timeZone);
 		
-		return $this;
+		return $this->_post(self::URL_CALENDAR_LIST, $query);
 	}
 	
 	/**
-	 * Set query max results
+	 * Return all event fo calendar
 	 *
-	 * @param integer
-	 * @return this
+	 * @return array
 	 */
-	public function setMaxResults($maxResults) {
-		//argument 1 must be a integer
-		Eden_Google_Error::i()->argument(1, 'int');
-		$this->_maxResults = $maxResults; 
+	public function delete() {
 		
-		return $this;
+		return $this->_delete(sprintf(self::URL_CALENDAR_GET, $this->_calendarId));
+	}
+	
+	/**
+	 * Return all event fo calendar
+	 *
+	 * @return array
+	 */
+	public function getCalendar() {
+		
+		return $this->_getResponse(sprintf(self::URL_CALENDAR_GET, $this->_calendarId));
+	}
+	
+	/**
+	 * Return all event fo calendar
+	 *
+	 * @return array
+	 */
+	public function getList() {
+		//populate fields
+		$query = array(self::MAX_RESULTS => $this->_maxResults);
+		
+		return $this->_getResponse(self::URL_CALENDAR_LIST, $query);
+	}
+	
+	/**
+	 * Updates an entry on the user's calendar list. This method supports patch semantics. 
+	 *
+	 * @return array
+	 */
+	public function patch() {
+		//populate fields
+		$query = array(
+			self::ACCESS_ROLE		=> $this->_accessRole,
+			self::COLOR_ID 			=> $this->_colorId,
+			self::DEFAULT_REMINDERS	=> $this->_defaultReminders,
+			self::DESCRIPTION		=> $this->_description,
+			self::ETAG				=> $this->_etag,
+			self::HIDDEN			=> $this->_hidden,
+			self::ID				=> $this->_id,
+			self::KIND				=> $this->_kind,
+			self::LOCATION			=> $this->_location,
+			self::SELECTED			=> $this->_selected,
+			self::SUMMARY			=> $this->_summary,
+			self::SUMMARY_OVERRIDE	=> $this->_summaryOverride,
+			self::TIMEZONE			=> $this->_timeZone);
+		
+		return $this->_patch(sprintf(self::URL_CALENDAR_GET, $this->_calendarId), $query);
 	}
 	
 	/**
@@ -95,6 +149,20 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		$this->_accessRole = $accessRole;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set calendar id
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCalendarId($calendarId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_calendarId = $calendarId;
 		
 		return $this;
 	}
@@ -209,6 +277,20 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	}
 	
 	/**
+	 * Set query max results
+	 *
+	 * @param integer
+	 * @return this
+	 */
+	public function setMaxResults($maxResults) {
+		//argument 1 must be a integer
+		Eden_Google_Error::i()->argument(1, 'int');
+		$this->_maxResults = $maxResults; 
+		
+		return $this;
+	}
+	
+	/**
 	 * Set selected
 	 *
 	 * @return this
@@ -262,38 +344,6 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Return all event fo calendar
-	 *
-	 * @return array
-	 */
-	public function getList() {
-		//populate fields
-		$query = array(self::MAX_RESULTS => $this->_maxResults);
-		
-		return $this->_getResponse(self::URL_CALENDAR_LIST, $query);
-	}
-	
-	/**
-	 * Return all event fo calendar
-	 *
-	 * @return array
-	 */
-	public function getCalendar() {
-		
-		return $this->_getResponse(sprintf(self::URL_CALENDAR_GET, $this->_calendarId));
-	}
-	
-	/**
-	 * Return all event fo calendar
-	 *
-	 * @return array
-	 */
-	public function delete() {
-		
-		return $this->_delete(sprintf(self::URL_CALENDAR_GET, $this->_calendarId));
-	}
-	
-	/**
 	 * Update Calendar
 	 *
 	 * @return array
@@ -316,56 +366,6 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 			self::TIMEZONE			=> $this->_timeZone);
 		
 		return $this->_put(sprintf(self::URL_CALENDAR_GET, $this->_calendarId), $query);
-	}
-	
-	/**
-	 * Updates an entry on the user's calendar list. This method supports patch semantics. 
-	 *
-	 * @return array
-	 */
-	public function patch() {
-		//populate fields
-		$query = array(
-			self::ACCESS_ROLE		=> $this->_accessRole,
-			self::COLOR_ID 			=> $this->_colorId,
-			self::DEFAULT_REMINDERS	=> $this->_defaultReminders,
-			self::DESCRIPTION		=> $this->_description,
-			self::ETAG				=> $this->_etag,
-			self::HIDDEN			=> $this->_hidden,
-			self::ID				=> $this->_id,
-			self::KIND				=> $this->_kind,
-			self::LOCATION			=> $this->_location,
-			self::SELECTED			=> $this->_selected,
-			self::SUMMARY			=> $this->_summary,
-			self::SUMMARY_OVERRIDE	=> $this->_summaryOverride,
-			self::TIMEZONE			=> $this->_timeZone);
-		
-		return $this->_patch(sprintf(self::URL_CALENDAR_GET, $this->_calendarId), $query);
-	}
-	
-	/**
-	 * Adds an entry to the user's calendar list.
-	 *
-	 * @return array
-	 */
-	public function create() {
-		//populate fields
-		$query = array(
-			self::ACCESS_ROLE		=> $this->_accessRole,
-			self::COLOR_ID 			=> $this->_colorId,
-			self::DEFAULT_REMINDERS	=> $this->_defaultReminders,
-			self::DESCRIPTION		=> $this->_description,
-			self::ETAG				=> $this->_etag,
-			self::HIDDEN			=> $this->_hidden,
-			self::ID				=> $this->_id,
-			self::KIND				=> $this->_kind,
-			self::LOCATION			=> $this->_location,
-			self::SELECTED			=> $this->_selected,
-			self::SUMMARY			=> $this->_summary,
-			self::SUMMARY_OVERRIDE	=> $this->_summaryOverride,
-			self::TIMEZONE			=> $this->_timeZone);
-		
-		return $this->_post(self::URL_CALENDAR_LIST, $query);
 	}
 	
 	/* Protected Methods

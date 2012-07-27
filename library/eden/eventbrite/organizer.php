@@ -54,7 +54,21 @@ class Eden_Eventbrite_Organizer extends Eden_Eventbrite_Base {
 		
 		return $this->_getJsonResponse(self::URL_NEW, $query);
 	}
-	
+		
+	/**
+	 * Returns all active organizer events
+	 * 
+	 * @param int
+	 * @return array
+	 */
+	public function getEvents($id) {
+		//Argument 1 must be an int
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
+		
+		$query = array('id'	=> $id);
+		
+		return $this->_getJsonResponse(self::URL_EVENTS, $query);
+	}
 	
 	/**
 	 * Updates an organizer
@@ -77,21 +91,6 @@ class Eden_Eventbrite_Organizer extends Eden_Eventbrite_Base {
 			'description'	=> $description);
 		
 		return $this->_getJsonResponse(self::URL_UPDATE, $query);
-	}
-	
-	/**
-	 * Returns all active organizer events
-	 * 
-	 * @param int
-	 * @return array
-	 */
-	public function getEvents($id) {
-		//Argument 1 must be an int
-		Eden_Eventbrite_Error::i()->argument(1, 'int');
-		
-		$query = array('id'	=> $id);
-		
-		return $this->_getJsonResponse(self::URL_EVENTS, $query);
 	}
 	
 	/* Protected Methods

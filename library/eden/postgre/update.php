@@ -34,6 +34,23 @@ class Eden_Postgre_Update extends Eden_Postgre_Delete {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * Returns the string version of the query 
+	 *
+	 * @param  bool
+	 * @return string
+	 * @notes returns the query based on the registry
+	 */
+	public function getQuery() {
+		
+		$set = array();
+		foreach($this->_set as $key => $value) {
+			$set[] = '"'.$key.'" = '.$value;
+		}
+		
+		return 'UPDATE '. $this->_table . ' SET ' . implode(', ', $set) . ' WHERE '. implode(' AND ', $this->_where).';';
+	}
+	
+	/**
 	 * Set clause that assigns a given field name to a given value.
 	 *
 	 * @param string
@@ -56,23 +73,6 @@ class Eden_Postgre_Update extends Eden_Postgre_Delete {
 		$this->_set[$key] = $value;
 		
 		return $this;
-	}
-	
-	/**
-	 * Returns the string version of the query 
-	 *
-	 * @param  bool
-	 * @return string
-	 * @notes returns the query based on the registry
-	 */
-	public function getQuery() {
-		
-		$set = array();
-		foreach($this->_set as $key => $value) {
-			$set[] = '"'.$key.'" = '.$value;
-		}
-		
-		return 'UPDATE '. $this->_table . ' SET ' . implode(', ', $set) . ' WHERE '. implode(' AND ', $this->_where).';';
 	}
 	
 	/* Protected Methods

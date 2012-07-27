@@ -42,42 +42,22 @@ class Eden_Google_Plus_Comment extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set activity Id
+	 * get comment
 	 *
-	 * @param string
+	 * @param string|null
 	 * @return array
 	 */
-	public function setActivityId($activityId) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_activityId = $activityId;
+	public function get($commentId = NULL) {
+		Eden_Google_Error::i()->argument(1, 'string', 'null');
+		if($commentId) {
+			$this->_commentId = $commentId;
+		}
 		
-		return $this;
-	}
-	
-	/**
-	 * Set activity Id
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setPageToken($pageToken) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_pageToken = $pageToken;
+		$url = sprintf(Eden_Google_Plus::URL_COMMENT, $this->_commentId);
+		$query = array();
+		$query[Eden_Google_Plus::PAGE_TOKEN] = ($this->_pageToken) ? $this->_pageToken : NULL;
 		
-		return $this;
-	}
-	
-	/**
-	 * Set comment Id
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setCommentId($commentId) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_commentId = $commentId;
-		
-		return $this;
+		return $this->_getResponse($url, $query);
 	}
 	
 	/**
@@ -108,23 +88,44 @@ class Eden_Google_Plus_Comment extends Eden_Google_Base {
 	}
 	
 	/**
-	 * get comment
+	 * Set activity Id
 	 *
-	 * @param string|null
+	 * @param string
 	 * @return array
 	 */
-	public function get($commentId = NULL) {
-		Eden_Google_Error::i()->argument(1, 'string', 'null');
-		if($commentId) {
-			$this->_commentId = $commentId;
-		}
+	public function setActivityId($activityId) {
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_activityId = $activityId;
 		
-		$url = sprintf(Eden_Google_Plus::URL_COMMENT, $this->_commentId);
-		$query = array();
-		$query[Eden_Google_Plus::PAGE_TOKEN] = ($this->_pageToken) ? $this->_pageToken : NULL;
-		
-		return $this->_getResponse($url, $query);
+		return $this;
 	}
+	
+	/**
+	 * Set comment Id
+	 *
+	 * @param string
+	 * @return array
+	 */
+	public function setCommentId($commentId) {
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_commentId = $commentId;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set activity Id
+	 *
+	 * @param string
+	 * @return array
+	 */
+	public function setPageToken($pageToken) {
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_pageToken = $pageToken;
+		
+		return $this;
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

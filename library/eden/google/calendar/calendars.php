@@ -51,6 +51,76 @@ class Eden_Google_Calendar_Calendars extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * Clears a primary calendar. This operation 
+	 * deletes all data associated with the primary 
+	 * calendar of an account and cannot be undone
+	 *
+	 * @return null
+	 */
+	public function clear() {
+		//populate fields
+		$query = array(self::CALENDAR_ID => 'primary');
+		
+		return $this->_post(self::URL_CALENDAR_CLEAR, $query);
+	}
+	
+	/**
+	 * Creates a secondary calendar.
+	 *
+	 * @return array
+	 */
+	public function create() {
+		//populate fields
+		$query = array(
+			self::ETAG			=> $this->_etag,
+			self::ID			=> $this->_id,
+			self::KIND			=> $this->_kind,
+			self::SUMMARY		=> $this->_summary,
+			self::DESCRIPTION	=> $this->_description,
+			self::LOCATION		=> $this->_location,
+			self::TIMEZONE		=> $this->_timeZone);
+		
+		return $this->_post(self::URL_CALENDAR_CREATE, $query);
+	}
+	
+	/**
+	 * Deletes a secondary calendar.
+	 *
+	 * @return null
+	 */
+	public function delete() {
+		
+		return $this->_delete(sprintf(self::URL_CALENDAR_GET, $this->_calendarId));
+	}
+	
+	/**
+	 * Return specific calendar
+	 *
+	 * @return array
+	 */
+	public function getCalendars() {
+		
+		return $this->_getResponse(sprintf(self::URL_CALENDAR_GET, $this->_calendarId));
+	}
+	
+	/**
+	 * Updates metadata for a calendar. 
+	 * This method supports patch semantics.
+	 *
+	 * @return array
+	 */
+	public function patch() {
+		//populate fields
+		$query = array(
+			self::ETAG		=> $this->_etag,
+			self::ID		=> $this->_id,
+			self::KIND		=> $this->_kind,
+			self::SUMARRY	=> $this->_summary);
+		
+		return $this->_patch(sprintf(self::URL_CALENDAR_GET, urlencode($this->_calendarId)), $query);
+	}
+	
+	/**
 	 * Set calendar id
 	 *
 	 * @param string
@@ -163,40 +233,6 @@ class Eden_Google_Calendar_Calendars extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Return specific calendar
-	 *
-	 * @return array
-	 */
-	public function getCalendars() {
-		
-		return $this->_getResponse(sprintf(self::URL_CALENDAR_GET, $this->_calendarId));
-	}
-	
-	/**
-	 * Deletes a secondary calendar.
-	 *
-	 * @return null
-	 */
-	public function delete() {
-		
-		return $this->_delete(sprintf(self::URL_CALENDAR_GET, $this->_calendarId));
-	}
-	
-	/**
-	 * Clears a primary calendar. This operation 
-	 * deletes all data associated with the primary 
-	 * calendar of an account and cannot be undone
-	 *
-	 * @return null
-	 */
-	public function clear() {
-		//populate fields
-		$query = array(self::CALENDAR_ID => 'primary');
-		
-		return $this->_post(self::URL_CALENDAR_CLEAR, $query);
-	}
-	
-	/**
 	 * Update Calendar
 	 *
 	 * @return array
@@ -210,42 +246,6 @@ class Eden_Google_Calendar_Calendars extends Eden_Google_Base {
 			self::SUMARRY	=> $this->_summary);
 		
 		return $this->_put(sprintf(self::URL_CALENDAR_GET, urlencode($this->_calendarId)), $query);
-	}
-	
-	/**
-	 * Updates metadata for a calendar. 
-	 * This method supports patch semantics.
-	 *
-	 * @return array
-	 */
-	public function patch() {
-		//populate fields
-		$query = array(
-			self::ETAG		=> $this->_etag,
-			self::ID		=> $this->_id,
-			self::KIND		=> $this->_kind,
-			self::SUMARRY	=> $this->_summary);
-		
-		return $this->_patch(sprintf(self::URL_CALENDAR_GET, urlencode($this->_calendarId)), $query);
-	}
-	
-	/**
-	 * Creates a secondary calendar.
-	 *
-	 * @return array
-	 */
-	public function create() {
-		//populate fields
-		$query = array(
-			self::ETAG			=> $this->_etag,
-			self::ID			=> $this->_id,
-			self::KIND			=> $this->_kind,
-			self::SUMMARY		=> $this->_summary,
-			self::DESCRIPTION	=> $this->_description,
-			self::LOCATION		=> $this->_location,
-			self::TIMEZONE		=> $this->_timeZone);
-		
-		return $this->_post(self::URL_CALENDAR_CREATE, $query);
 	}
 	
 	/* Protected Methods

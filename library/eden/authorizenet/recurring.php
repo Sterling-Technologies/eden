@@ -115,550 +115,6 @@ class Eden_Authorizenet_Recurring extends Eden_Authorizenet_Base {
 	
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Set echeck 
-	 *
-	 * @return this
-	 */
-	public function setECheck() {
-		$this->_echeck = true;
-		return $this;
-	}
-	
-	/**
-	 * Set subscription name 
-	 *
-	 * @params *string
-	 * @return this
-	 */
-	public function setSubscriptionName($name) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_subscrName = $name;
-		return $this;
-	}
-	
-	/**
-	 * The measurement of time, in association with the Interval 
-	 * Unit, that is used to define the frequency of the
-	 * billing occurrences. If the Interval Unit is "months," 
-	 * can be any number between one (1) and 12.
-	 * If the Interval Unit is "days," can be any 
-	 * number between seven (7) and 365.
-	 *
-	 * @params *integer
-	 * @return this
-	 */
-	public function setIntervalLength($length) {
-		//Argument 1 must be a integer
-		Eden_Authorizenet_Error::i()->argument(1, 'int');	
-		
-		$this->_intervalLength = $length;
-		return $this;
-	}
-	
-	/**
-	 * Set interval unit to days 
-	 *
-	 * @return this
-	 */
-	public function setToDays() {
-		$this->_intervalUnit = self::DAYS;
-		return $this;
-	}
-	
-	/**
-	 * Set interval unit to months 
-	 *
-	 * @return this
-	 */
-	public function setToMonths() {
-		$this->_intervalUnit = self::MONTHS;
-		return $this;
-	}
-	
-	/**
-	 * Set interval unit to years 
-	 *
-	 * @return this
-	 */
-	public function setToYears() {
-		$this->_intervalUnit = self::YEARS;
-		return $this;
-	}
-	
-	/**
-	 * Set start date 
-	 *
-	 * @params *string
-	 * @return this
-	 */
-	public function setDate($date) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_startDate = date("Y-m-d",strtotime($date));
-		return $this;
-	}
-	
-	/**
-	 * Number of billing occurrences or payments for the 
-	 * subscription. To submit a subscription with no end 
-	 * date (an ongoing subscription), this field  must be 
-	 * submitted with a value of “9999.”  If a trial period 
-	 * is specified, this number should include the Trial
-	 * Occurrences.
-	 *
-	 * @params *integer
-	 * @return this
-	 */
-	public function setTotalOccurrences($total) {
-		//Argument 1 must be an integer
-		Eden_Authorizenet_Error::i()->argument(1, 'int');	
-		
-		$this->_totalOccurrences = $total;
-		return $this;
-	}
-	
-	/**
-	 * Number of billing occurrences or payments in the trial
-	 * period. If a trial period is specified, this number must 
-	 * be included in the Total Occurrences.
-	 *
-	 * @params *integer
-	 * @return this
-	 */
-	public function setTrialOccurrences($trial) {
-		//Argument 1 must be an integer
-		Eden_Authorizenet_Error::i()->argument(1, 'int');	
-		
-		$this->_trialOccurrences = $trial;
-		return $this;
-	}
-	
-	/**
-	 * Set amount
-	 *
-	 * @params *integer|float
-	 * @return this
-	 */
-	public function setAmount($amount) {
-		//Argument 1 must be an integer or float
-		Eden_Authorizenet_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_amount = $amount;
-		return $this;
-	
-	}
-	
-	/**
-	 * Set trial amount
-	 *
-	 * @params *integer|float
-	 * @return this
-	 */
-	public function setTrialAmount($amount) {
-		//Argument 1 must be an integer or float
-		Eden_Authorizenet_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_trialAmount = $amount;
-		return $this;
-	
-	}
-	
-	/**
-	 * Set card Number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setCardNumber($cardNumber) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_cardNumber = $cardNumber;
-		return $this;
-	}
-	
-	/**
-	 * Set expiration Date
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setExpiration($expirationDate) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_expirationDate = $expirationDate;
-		return $this;
-	}
-	
-	
-	/**
-	 * Set account type
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setAccountType($accountType) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_accountType = $accountType;
-		return $this;
-	}
-	
-	/**
-	 * Set name on account
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setNameOnAccount($nameOnAccount) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_nameOnAccount = $nameOnAccount;
-		return $this;
-	}
-	
-	/**
-	 * Set bank name
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBank($bankName) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_bankName = $bankName;
-		return $this;
-	}
-	
-	/**
-	 * Set routing number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setRoutingNumber($routingNumber) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_routingNumber = $routingNumber;
-		return $this;
-	}
-	
-	/**
-	 * Set account number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setAccountNumber($accountNumber) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_accountNumber = $accountNumber;
-		return $this;
-	}
-	
-	/**
-	 * Set order invoice number
-	 *
-	 * @param *integer
-	 * @return this
-	 */
-	public function setOrderInvoiceNumber($order) {
-		//Argument 1 must be an integer
-		Eden_Authorizenet_Error::i()->argument(1, 'int');	
-		
-		$this->_orderInvoiceNumber = $order;
-		return $this;
-	}
-	
-	/**
-	 * Set order invoice number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setOrderDescription($description) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_orderDescription = $description;
-		return $this;
-	}
-	
-	/**
-	 * Set customer id
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setCustomerId($id) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_customerId = $id;
-		return $this;
-	}
-	
-	/**
-	 * Set customer email
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setCustomerEmail($email) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_customerEmail = $email;
-		return $this;
-	}
-	
-	/**
-	 * Set customer phone number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setCustomerPhone($phone) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_customerPhoneNumber = $phone;
-		return $this;
-	}
-	
-	/**
-	 * Set customer fax number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setCustomerFax($fax) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_customerFaxNumber = $fax;
-		return $this;
-	}
-	
-	/**
-	 * Set Billing first name
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBillingFirstName($name) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_firstName = $name;
-		return $this;
-	}
-	
-	/**
-	 * Set Billing last name
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function seBillingtLastName($name) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_lastName = $name;
-		return $this;
-	}
-	
-	/**
-	 * Set Billing company
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBillingCompany($company) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_company = $company;
-		return $this;
-	}
-	
-	/**
-	 * Set Billing address
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBillingAddress($address) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_address = $address;
-		return $this;
-	}
-	
-	/**
-	 * Set Billing city
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setBillingCity($city) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_city = $city;
-		return $this;
-	}
-	
-	/**
-	 * Set Billing city
-	 *
-	 * @param *state
-	 * @return this
-	 */
-	public function setBillingState($state) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_state = $state;
-		return $this;
-	}
-	
-	/**
-	 * Set Billing city
-	 *
-	 * @param *zip
-	 * @return this
-	 */
-	public function setBillingZip($zip) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_zip = $zip;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping first name
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingFirstName($firstName) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipFirstName = $firstName;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping last name
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingLastName($lastName) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipLastName = $lastName;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping company
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingCompany($company) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipCompany = $company;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping address
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingAddress($address) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipAddress = $address;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping city
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingCity($city) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipCity = $city;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping state
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingState($state) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipState = $state;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping zip
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setShippingZip($zip) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_shipZip = $zip;
-		return $this;
-	}
-	
-	/**
-	 * Set subscription id
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setSubscriptionId($id) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_subscrId = $id;
-		return $this;
-	}
 	
 	/**
 	 * Create Authomated Recurring  
@@ -736,6 +192,563 @@ class Eden_Authorizenet_Recurring extends Eden_Authorizenet_Base {
 	}
 	
 	/**
+	 * Remove Authomated Recurring  
+	 * subscription account
+	 *
+	 * @return array
+	 */
+	public function remove() {
+		$this->_constructXml(self::REMOVE);
+		$this->_xml->addChild(self::SUBSCRIPTION_ID, $this->_subscrId);
+		
+		return $this->_process($this->_xml->asXML());
+	}
+	
+	/**
+	 * Set account number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setAccountNumber($accountNumber) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_accountNumber = $accountNumber;
+		return $this;
+	}
+		
+	/**
+	 * Set account type
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setAccountType($accountType) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_accountType = $accountType;
+		return $this;
+	}
+	
+	/**
+	 * Set amount
+	 *
+	 * @params *integer|float
+	 * @return this
+	 */
+	public function setAmount($amount) {
+		//Argument 1 must be an integer or float
+		Eden_Authorizenet_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_amount = $amount;
+		return $this;
+	
+	}
+	
+	/**
+	 * Set bank name
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBank($bankName) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_bankName = $bankName;
+		return $this;
+	}
+	
+	/**
+	 * Set Billing address
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBillingAddress($address) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_address = $address;
+		return $this;
+	}
+	
+	/**
+	 * Set Billing city
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBillingCity($city) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_city = $city;
+		return $this;
+	}
+	
+	/**
+	 * Set Billing company
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBillingCompany($company) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_company = $company;
+		return $this;
+	}
+	
+	/**
+	 * Set Billing first name
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setBillingFirstName($name) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_firstName = $name;
+		return $this;
+	}
+	
+	/**
+	 * Set Billing last name
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function seBillingtLastName($name) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_lastName = $name;
+		return $this;
+	}
+	
+	/**
+	 * Set Billing city
+	 *
+	 * @param *state
+	 * @return this
+	 */
+	public function setBillingState($state) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_state = $state;
+		return $this;
+	}
+	
+	/**
+	 * Set Billing city
+	 *
+	 * @param *zip
+	 * @return this
+	 */
+	public function setBillingZip($zip) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_zip = $zip;
+		return $this;
+	}
+	
+	/**
+	 * Set card Number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setCardNumber($cardNumber) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_cardNumber = $cardNumber;
+		return $this;
+	}
+	
+	/**
+	 * Set customer email
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setCustomerEmail($email) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_customerEmail = $email;
+		return $this;
+	}
+	
+	/**
+	 * Set customer fax number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setCustomerFax($fax) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_customerFaxNumber = $fax;
+		return $this;
+	}
+	
+	/**
+	 * Set customer id
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setCustomerId($id) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_customerId = $id;
+		return $this;
+	}
+	
+	/**
+	 * Set customer phone number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setCustomerPhone($phone) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_customerPhoneNumber = $phone;
+		return $this;
+	}
+	
+	/**
+	 * Set start date 
+	 *
+	 * @params *string
+	 * @return this
+	 */
+	public function setDate($date) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_startDate = date("Y-m-d",strtotime($date));
+		return $this;
+	}
+	
+	/**
+	 * Set echeck 
+	 *
+	 * @return this
+	 */
+	public function setECheck() {
+		$this->_echeck = true;
+		return $this;
+	}
+	
+	/**
+	 * Set expiration Date
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setExpiration($expirationDate) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_expirationDate = $expirationDate;
+		return $this;
+	}
+	
+	/**
+	 * The measurement of time, in association with the Interval 
+	 * Unit, that is used to define the frequency of the
+	 * billing occurrences. If the Interval Unit is "months," 
+	 * can be any number between one (1) and 12.
+	 * If the Interval Unit is "days," can be any 
+	 * number between seven (7) and 365.
+	 *
+	 * @params *integer
+	 * @return this
+	 */
+	public function setIntervalLength($length) {
+		//Argument 1 must be a integer
+		Eden_Authorizenet_Error::i()->argument(1, 'int');	
+		
+		$this->_intervalLength = $length;
+		return $this;
+	}
+	
+	/**
+	 * Set name on account
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setNameOnAccount($nameOnAccount) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_nameOnAccount = $nameOnAccount;
+		return $this;
+	}
+	
+	/**
+	 * Set order invoice number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setOrderDescription($description) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_orderDescription = $description;
+		return $this;
+	}
+	
+	/**
+	 * Set order invoice number
+	 *
+	 * @param *integer
+	 * @return this
+	 */
+	public function setOrderInvoiceNumber($order) {
+		//Argument 1 must be an integer
+		Eden_Authorizenet_Error::i()->argument(1, 'int');	
+		
+		$this->_orderInvoiceNumber = $order;
+		return $this;
+	}
+	
+	/**
+	 * Set routing number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setRoutingNumber($routingNumber) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_routingNumber = $routingNumber;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping address
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingAddress($address) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipAddress = $address;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping city
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingCity($city) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipCity = $city;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping company
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingCompany($company) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipCompany = $company;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping first name
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingFirstName($firstName) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipFirstName = $firstName;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping last name
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingLastName($lastName) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipLastName = $lastName;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping state
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingState($state) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipState = $state;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping zip
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setShippingZip($zip) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_shipZip = $zip;
+		return $this;
+	}
+	
+	/**
+	 * Set subscription id
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setSubscriptionId($id) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_subscrId = $id;
+		return $this;
+	}
+	
+	/**
+	 * Set subscription name 
+	 *
+	 * @params *string
+	 * @return this
+	 */
+	public function setSubscriptionName($name) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_subscrName = $name;
+		return $this;
+	}
+	
+	/**
+	 * Set interval unit to days 
+	 *
+	 * @return this
+	 */
+	public function setToDays() {
+		$this->_intervalUnit = self::DAYS;
+		return $this;
+	}
+	
+	/**
+	 * Set interval unit to months 
+	 *
+	 * @return this
+	 */
+	public function setToMonths() {
+		$this->_intervalUnit = self::MONTHS;
+		return $this;
+	}
+	
+	/**
+	 * Number of billing occurrences or payments for the 
+	 * subscription. To submit a subscription with no end 
+	 * date (an ongoing subscription), this field  must be 
+	 * submitted with a value of “9999.”  If a trial period 
+	 * is specified, this number should include the Trial
+	 * Occurrences.
+	 *
+	 * @params *integer
+	 * @return this
+	 */
+	public function setTotalOccurrences($total) {
+		//Argument 1 must be an integer
+		Eden_Authorizenet_Error::i()->argument(1, 'int');	
+		
+		$this->_totalOccurrences = $total;
+		return $this;
+	}
+	
+	/**
+	 * Set interval unit to years 
+	 *
+	 * @return this
+	 */
+	public function setToYears() {
+		$this->_intervalUnit = self::YEARS;
+		return $this;
+	}
+	
+	/**
+	 * Number of billing occurrences or payments in the trial
+	 * period. If a trial period is specified, this number must 
+	 * be included in the Total Occurrences.
+	 *
+	 * @params *integer
+	 * @return this
+	 */
+	public function setTrialOccurrences($trial) {
+		//Argument 1 must be an integer
+		Eden_Authorizenet_Error::i()->argument(1, 'int');	
+		
+		$this->_trialOccurrences = $trial;
+		return $this;
+	}
+	
+	/**
+	 * Set trial amount
+	 *
+	 * @params *integer|float
+	 * @return this
+	 */
+	public function setTrialAmount($amount) {
+		//Argument 1 must be an integer or float
+		Eden_Authorizenet_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_trialAmount = $amount;
+		return $this;
+	
+	}
+	
+	/**
 	 * Update Authomated Recurring  
 	 * subscription account
 	 *
@@ -765,19 +778,6 @@ class Eden_Authorizenet_Recurring extends Eden_Authorizenet_Base {
 					$billTo->addChild(self::STATE,			$this->_state);
 					$billTo->addChild(self::ZIP,			$this->_zip);
 				
-		return $this->_process($this->_xml->asXML());
-	}
-	
-	/**
-	 * Remove Authomated Recurring  
-	 * subscription account
-	 *
-	 * @return array
-	 */
-	public function remove() {
-		$this->_constructXml(self::REMOVE);
-		$this->_xml->addChild(self::SUBSCRIPTION_ID, $this->_subscrId);
-		
 		return $this->_process($this->_xml->asXML());
 	}
 	

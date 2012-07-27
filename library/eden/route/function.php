@@ -43,21 +43,37 @@ class Eden_Route_Function extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Routes a class 
+	 * Calls a function considering all routes.
 	 *
-	 * @param *string the class route name
-	 * @param *string the name of the class to route to
-	 * @return Eden_Route
+	 * @param *string class
+	 * @param [variable..] arguments
+	 * @return object
 	 */
-	public function route($route, $function) {
-		Eden_Route_Error::i()
-			->argument(1, 'string')		//argument 1 must be a string
-			->argument(2, 'string');	//argument 2 must be a string
+	public function call($function) {
+		//argument 1 must be a string
+		Eden_Route_Error::i()->argument(1, 'string'); 
+		
+		$args = func_get_args();
+		$function = array_shift($args);
+		
+		return $this->callArray($function, $args);
+	}
+	
+	/**
+	 * Calls a function considering all routes.
+	 *
+	 * @param *string class
+	 * @param array arguments
+	 * @return object
+	 */
+	public function callArray($function, array $args = array()) {
+		//argument 1 must be a string
+		Eden_Route_Error::i()->argument(1, 'string');	
 		
 		$function = $this->getRoute($function);
 		
-		$this->_route[strtolower($route)] = $function;
-		return $this;
+		//try to run the function using PHP call_user_func_array
+		return call_user_func_array($function, $args);
 	}
 	
 	/**
@@ -112,37 +128,21 @@ class Eden_Route_Function extends Eden_Class {
 	}
 	
 	/**
-	 * Calls a function considering all routes.
+	 * Routes a class 
 	 *
-	 * @param *string class
-	 * @param [variable..] arguments
-	 * @return object
+	 * @param *string the class route name
+	 * @param *string the name of the class to route to
+	 * @return Eden_Route
 	 */
-	public function call($function) {
-		//argument 1 must be a string
-		Eden_Route_Error::i()->argument(1, 'string'); 
-		
-		$args = func_get_args();
-		$function = array_shift($args);
-		
-		return $this->callArray($function, $args);
-	}
-	
-	/**
-	 * Calls a function considering all routes.
-	 *
-	 * @param *string class
-	 * @param array arguments
-	 * @return object
-	 */
-	public function callArray($function, array $args = array()) {
-		//argument 1 must be a string
-		Eden_Route_Error::i()->argument(1, 'string');	
+	public function route($route, $function) {
+		Eden_Route_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
 		$function = $this->getRoute($function);
 		
-		//try to run the function using PHP call_user_func_array
-		return call_user_func_array($function, $args);
+		$this->_route[strtolower($route)] = $function;
+		return $this;
 	}
 	
 	/* Protected Methods

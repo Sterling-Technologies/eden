@@ -57,21 +57,6 @@ class Eden_Eventbrite_Event extends Eden_Eventbrite_Base {
 	}
 	
 	/**
-	 * Returns the event details
-	 *
-	 * @param number
-	 * @return array
-	 */
-	public function getDetail($id) {
-		//Argument 1 must be numeric
-		Eden_Eventbrite_Error::i()->argument(1, 'numeric');	
-		
-		$query = array('id' => $id);
-		
-		return $this->_getJsonResponse(self::URL_GET, $query);
-	}
-	
-	/**
 	 * Returns event attendees
 	 *
 	 * @param number
@@ -101,6 +86,21 @@ class Eden_Eventbrite_Event extends Eden_Eventbrite_Base {
 		}
 		
 		return $this->_getJsonResponse(self::URL_LIST_ATTENDEES, $query);
+	}
+	
+	/**
+	 * Returns the event details
+	 *
+	 * @param number
+	 * @return array
+	 */
+	public function getDetail($id) {
+		//Argument 1 must be numeric
+		Eden_Eventbrite_Error::i()->argument(1, 'numeric');	
+		
+		$query = array('id' => $id);
+		
+		return $this->_getJsonResponse(self::URL_GET, $query);
 	}
 	
 	/**

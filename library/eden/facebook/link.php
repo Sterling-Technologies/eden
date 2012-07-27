@@ -45,6 +45,61 @@ class Eden_Facebook_Link extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * sends the post to facebook
+	 *
+	 * @return int
+	 */
+	public function create() {
+		//get the facebook graph url
+		$url 		= Eden_Facebook_Graph::GRAPH_URL.$this->_id.'/links';
+		$query 		= array('access_token' => $this->_token);
+		$url 		.= '?'.http_build_query($query);
+		
+		//send it into curl
+		$response = Eden_Curl::i()
+			->setUrl($url)										//sets the url
+			->setConnectTimeout(10)								//sets connection timeout to 10 sec.
+			->setFollowLocation(true)							//sets the follow location to true 
+			->setTimeout(60)									//set page timeout to 60 sec
+			->verifyPeer(false)									//verifying Peer must be boolean
+			->setUserAgent(Eden_Facebook_Auth::USER_AGENT)		//set facebook USER_AGENT
+			->setHeaders('Expect')								//set headers to EXPECT
+			->setPost(true)										//set post to true
+			->setPostFields(http_build_query($this->_post))		//set post fields
+			->getJsonResponse();								//get the json response
+			
+		return $response['id'];									//return the id
+	}
+	
+	/**
+	 * Sets a picture caption
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCaption($caption){
+		//Argument 1 must be a string
+		Eden_Facebook_Error::i()->argument(1, 'string');
+		
+		$this->_post['caption'] = $caption;
+		return $this;
+	}
+	
+	/**
+	 * Sets description
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setDescription($description){
+		//Argument 1 must be a string
+		Eden_Facebook_Error::i()->argument(1, 'string');
+		
+		$this->_post['description'] = $description;
+		return $this;
+	}
+	
+	/**
 	 * Set the profile id
 	 *
 	 * @param int|string
@@ -73,20 +128,6 @@ class Eden_Facebook_Link extends Eden_Class {
 	}
 	
 	/**
-	 * Sets description
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setDescription($description){
-		//Argument 1 must be a string
-		Eden_Facebook_Error::i()->argument(1, 'string');
-		
-		$this->_post['description'] = $description;
-		return $this;
-	}
-	
-	/**
 	 * Sets a picture
 	 *
 	 * @param string
@@ -98,47 +139,6 @@ class Eden_Facebook_Link extends Eden_Class {
 		
 		$this->_post['picture'] = $picture;
 		return $this;
-	}
-	
-	/**
-	 * Sets a picture caption
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setCaption($caption){
-		//Argument 1 must be a string
-		Eden_Facebook_Error::i()->argument(1, 'string');
-		
-		$this->_post['caption'] = $caption;
-		return $this;
-	}
-	
-	/**
-	 * sends the post to facebook
-	 *
-	 * @return int
-	 */
-	public function create() {
-		//get the facebook graph url
-		$url 		= Eden_Facebook_Graph::GRAPH_URL.$this->_id.'/links';
-		$query 		= array('access_token' => $this->_token);
-		$url 		.= '?'.http_build_query($query);
-		
-		//send it into curl
-		$response = Eden_Curl::i()
-			->setUrl($url)										//sets the url
-			->setConnectTimeout(10)								//sets connection timeout to 10 sec.
-			->setFollowLocation(true)							//sets the follow location to true 
-			->setTimeout(60)									//set page timeout to 60 sec
-			->verifyPeer(false)									//verifying Peer must be boolean
-			->setUserAgent(Eden_Facebook_Auth::USER_AGENT)		//set facebook USER_AGENT
-			->setHeaders('Expect')								//set headers to EXPECT
-			->setPost(true)										//set post to true
-			->setPostFields(http_build_query($this->_post))		//set post fields
-			->getJsonResponse();								//get the json response
-			
-		return $response['id'];									//return the id
 	}
 	
 	/* Protected Methods

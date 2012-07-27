@@ -30,25 +30,7 @@ class Eden_Country_Us extends Eden_Class {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
-	/**
-	 * Returns a list of US territories
-	 *
-	 * @return array
-	 */
-	public function getTerritories() {
-		return self::$_territories;
-	}
-	
-	/**
-	 * Returns a list of US states
-	 *
-	 * @return array
-	 */
-	public function getStates() {
-		return self::$_states;
-	}
-	
+	-------------------------------*/	
 	/**
 	 * Returns a state abbreviation based on zip code
 	 *
@@ -73,6 +55,24 @@ class Eden_Country_Us extends Eden_Class {
 		
 		return false;
 							
+	}
+	
+	/**
+	 * Returns a list of US states
+	 *
+	 * @return array
+	 */
+	public function getStates() {
+		return self::$_states;
+	}
+	
+	/**
+	 * Returns a list of US territories
+	 *
+	 * @return array
+	 */
+	public function getTerritories() {
+		return self::$_territories;
 	}
 	
 	/* Protected Methods

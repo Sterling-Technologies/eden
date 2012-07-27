@@ -69,65 +69,6 @@ class Eden_Google_Oauth extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Access token is sete to offline, long lived 
-	 * 
-	 * @return this
-	 */
-	public function setOffline() {
-		$this->_online = self::OFFLINE;
-		return $this;
-	}
-	
-	/**
-	 * Forces user to re approve of app
-	 * 
-	 * @return this
-	 */
-	public function setRenew() {
-		$this->_renew = self::FORCE;
-		return $this;
-	}
-	
-	/**
-	 * Sets thee state google will return back
-	 * this could be anything you want
-	 * 
-	 * @param string
-	 * @return this
-	 */
-	public function setState($state) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_state = $state;
-		return $this;
-	}
-	
-	/**
-	 * Returns the URL used for login. 
-	 * 
-	 * @param string
-	 * @return string
-	 */
-	public function getLoginUrl($scope) {
-		//Argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string', 'array');
-		
-		if(is_array($scope)) {
-			$scope = implode(' ', $scope);
-		}
-		
-		$query = array(
-			'response_type'		=> self::CODE,
-			'client_id'			=> $this->_key,
-			'redirect_uri'		=> $this->_redirect,
-			'scope'				=> $scope,
-			'access_type'		=> $this->_online, 
-			'state'				=> $this->_state,
-			'approval_prompt'	=> $this->_renew);
-		
-		return self::REQUEST_URL.'?'.http_build_query($query);
-	}
-	
-	/**
 	 * Returns the access token 
 	 * 
 	 * @param string
@@ -161,6 +102,65 @@ class Eden_Google_Oauth extends Eden_Class {
 	 */
 	public function getApiKey() {
 		return $this->_apiKey;
+	}
+	
+	/**
+	 * Returns the URL used for login. 
+	 * 
+	 * @param string
+	 * @return string
+	 */
+	public function getLoginUrl($scope) {
+		//Argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string', 'array');
+		
+		if(is_array($scope)) {
+			$scope = implode(' ', $scope);
+		}
+		
+		$query = array(
+			'response_type'		=> self::CODE,
+			'client_id'			=> $this->_key,
+			'redirect_uri'		=> $this->_redirect,
+			'scope'				=> $scope,
+			'access_type'		=> $this->_online, 
+			'state'				=> $this->_state,
+			'approval_prompt'	=> $this->_renew);
+		
+		return self::REQUEST_URL.'?'.http_build_query($query);
+	}
+	
+	/**
+	 * Access token is sete to offline, long lived 
+	 * 
+	 * @return this
+	 */
+	public function setOffline() {
+		$this->_online = self::OFFLINE;
+		return $this;
+	}
+	
+	/**
+	 * Forces user to re approve of app
+	 * 
+	 * @return this
+	 */
+	public function setRenew() {
+		$this->_renew = self::FORCE;
+		return $this;
+	}
+	
+	/**
+	 * Sets thee state google will return back
+	 * this could be anything you want
+	 * 
+	 * @param string
+	 * @return this
+	 */
+	public function setState($state) {
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_state = $state;
+		return $this;
 	}
 	
 	/* Protected Methods

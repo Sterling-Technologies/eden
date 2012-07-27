@@ -58,72 +58,6 @@ class Eden_Paypal_Billing extends Eden_Paypal_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set billing type
-	 * 
-	 * @param string
-	 * @return this
-	 */
-	public function setBillingType($billingType) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');
-		
-		$this->_billingType = $billingType;
-		return $this;
-	}
-	
-	/**
-	 * Description of goods or services associated 
-	 * with the billing agreement.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setBillingDesc($billingDesc) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');
-		
-		$this->_billingDesc = $billingDesc;
-		return $this;
-	}
-	
-	/**
-	 * Set payment type to Any
-	 *
-	 * @return this
-	 * @note For recurring payments, this field is ignored.
-	 */
-	public function setToAny() {
-		$this->_paymentType = self::ANY;
-		return $this;
-	}
-	
-	/**
-	 * Set payment type to Instant Only
-	 *
-	 * @return this
-	 * @note For recurring payments, this field is ignored.
-	 */
-	public function setToInstantOnly() {
-		$this->_paymentType = self::INSTANT_ONLY;
-		return $this;
-	}
-	
-	/**
-	 * Custom annotation field for your own use.
-	 *
-	 * @param string
-	 * @return this
-	 * @note For recurring payments, this field is ignored.
-	 */
-	public function setAgreementCustom($agreementCustom) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');
-		
-		$this->_agreementCustom = $agreementCustom;
-		return $this;
-	}
-	
-	/**
 	 * initiates the creation of a billing agreement. 
 	 *
 	 * @param string		Returing URL
@@ -159,6 +93,72 @@ class Eden_Paypal_Billing extends Eden_Paypal_Base {
 		} 
 		
 		return $response;	
+	}
+	
+	/**
+	 * Custom annotation field for your own use.
+	 *
+	 * @param string
+	 * @return this
+	 * @note For recurring payments, this field is ignored.
+	 */
+	public function setAgreementCustom($agreementCustom) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');
+		
+		$this->_agreementCustom = $agreementCustom;
+		return $this;
+	}
+	
+	/**
+	 * Description of goods or services associated 
+	 * with the billing agreement.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setBillingDesc($billingDesc) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');
+		
+		$this->_billingDesc = $billingDesc;
+		return $this;
+	}
+	
+	/**
+	 * Set billing type
+	 * 
+	 * @param string
+	 * @return this
+	 */
+	public function setBillingType($billingType) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');
+		
+		$this->_billingType = $billingType;
+		return $this;
+	}
+	
+	/**
+	 * Set payment type to Any
+	 *
+	 * @return this
+	 * @note For recurring payments, this field is ignored.
+	 */
+	public function setToAny() {
+		$this->_paymentType = self::ANY;
+		return $this;
+	}
+	
+	/**
+	 * Set payment type to Instant Only
+	 *
+	 * @return this
+	 * @note For recurring payments, this field is ignored.
+	 */
+	public function setToInstantOnly() {
+		$this->_paymentType = self::INSTANT_ONLY;
+		return $this;
 	}
 	
 	/* Protected Methods

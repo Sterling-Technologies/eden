@@ -35,20 +35,20 @@ class Eden_Eventbrite_Discount extends Eden_Eventbrite_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
 	/**
-	 * Sets the discount code
-	 *
-	 * @param string
-	 * @return this
+	 * Creates the discount
+	 * 
+	 * @param int the event id
+	 * @return array
 	 */
-	public function setCode($code) {
+	public function create($event) {
 		//Argument 1 must be int
-		Eden_Eventbrite_Error::i()->argument(1, 'string');
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
 		
-		$this->_query['code'] = $code;
-		
-		return $this;
+		$query = $this->_query;
+		$query['event_id'] = $event;
+		return $this->_getJsonResponse(self::URL_NEW, $query);
 	}
 	
 	/**
@@ -67,6 +67,42 @@ class Eden_Eventbrite_Discount extends Eden_Eventbrite_Base {
 	}
 	
 	/**
+	 * Sets the discount code
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCode($code) {
+		//Argument 1 must be int
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
+		
+		$this->_query['code'] = $code;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set the end time
+	 *
+	 * @param string|int
+	 * @return this
+	 */
+	public function setEnd($end) {
+		//Argument 1 must be a string
+		Eden_Eventbrite_Error::i()->argument(1, 'string', 'int');
+		
+		if(is_string($end)) {
+			$end = strtotime($end);
+		}
+		
+		$end = date('Y-m-d H:i:s', $end);
+		
+		$this->_query['end_date'] = $end;
+		
+		return $this;
+	}
+	
+	/**
 	 * Sets the discount percent 
 	 *
 	 * @param float|int
@@ -77,25 +113,6 @@ class Eden_Eventbrite_Discount extends Eden_Eventbrite_Base {
 		Eden_Eventbrite_Error::i()->argument(1, 'int', 'float');
 		
 		$this->_query['percent_off'] = $percent;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set ticket ID or a list of ticket IDs 
-	 *
-	 * @param string|array
-	 * @return this
-	 */
-	public function setTickets($tickets) {
-		//Argument 1 must be int
-		Eden_Eventbrite_Error::i()->argument(1, 'string', 'array');
-		
-		if(is_array($tickets)) {
-			$tickets = implode(',', $tickets);
-		}
-		
-		$this->_query['tickets'] = $tickets;
 		
 		return $this;
 	}
@@ -137,41 +154,23 @@ class Eden_Eventbrite_Discount extends Eden_Eventbrite_Base {
 	}
 	
 	/**
-	 * Set the end time
+	 * Set ticket ID or a list of ticket IDs 
 	 *
-	 * @param string|int
+	 * @param string|array
 	 * @return this
 	 */
-	public function setEnd($end) {
-		//Argument 1 must be a string
-		Eden_Eventbrite_Error::i()->argument(1, 'string', 'int');
+	public function setTickets($tickets) {
+		//Argument 1 must be int
+		Eden_Eventbrite_Error::i()->argument(1, 'string', 'array');
 		
-		if(is_string($end)) {
-			$end = strtotime($end);
+		if(is_array($tickets)) {
+			$tickets = implode(',', $tickets);
 		}
 		
-		$end = date('Y-m-d H:i:s', $end);
-		
-		$this->_query['end_date'] = $end;
+		$this->_query['tickets'] = $tickets;
 		
 		return $this;
 	}
-	
-	/**
-	 * Creates the discount
-	 * 
-	 * @param int the event id
-	 * @return array
-	 */
-	public function create($event) {
-		//Argument 1 must be int
-		Eden_Eventbrite_Error::i()->argument(1, 'int');
-		
-		$query = $this->_query;
-		$query['event_id'] = $event;
-		return $this->_getJsonResponse(self::URL_NEW, $query);
-	}
-	
 	
 	/**
 	 * Creates the discount

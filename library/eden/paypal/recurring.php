@@ -92,296 +92,6 @@ class Eden_Paypal_Recurring extends Eden_Paypal_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set credit card type  
-	 *
-	 * @param string		Credit card type
-	 * @return this
-	 */
-	public function setCardType($cardType) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_cardType = $cardType;
-		return $this;
-	}
-	
-	/**
-	 * Set credit card number  
-	 *
-	 * @param string		Credit card number
-	 * @return this
-	 */
-	public function setCardNumber($cardNumber) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_cardNumber = $cardNumber;
-		return $this;
-	}
-	
-	/**
-	 * Set credit card expiration date 
-	 *
-	 * @param string		Credit card expiration date
-	 * @return this
-	 */
-	public function setExpirationDate($expirationDate) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_expirationDate = $expirationDate;
-		return $this;
-	}
-	
-	/**
-	 * Set Card Verification Value  
-	 *
-	 * @param string		3 - digit cvv number
-	 * @return this
-	 */
-	public function setCvv2($cvv2) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_cvv2 = $cvv2;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder first name 
-	 *
-	 * @param string		First name
-	 * @return this
-	 */
-	public function setFirstName($firstName) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_firstName = $firstName;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder last name  
-	 *
-	 * @param string		Last name
-	 * @return this
-	 */
-	public function setLastName($lastName) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_lastName = $lastName;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder email address 
-	 *
-	 * @param string		Email address
-	 * @return this
-	 */
-	public function setEmail($email) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_email = $email;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder country code  
-	 *
-	 * @param string		Country Code
-	 * @return this
-	 */
-	public function setCountryCode($countryCode) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_countryCode = $countryCode;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder state  
-	 *
-	 * @param string		State
-	 * @return this
-	 */
-	public function setState($state) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_state = $state;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder city  
-	 *
-	 * @param string		City
-	 * @return this
-	 */
-	public function setCity($city) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_city = $city;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder street  
-	 *
-	 * @param string		Street
-	 * @return this
-	 */
-	public function setStreet($street) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_street = $street;
-		return $this;
-	}
-	
-	/**
-	 * Set cardholder zip code 
-	 *
-	 * @param string		Zip code
-	 * @return this
-	 */
-	public function setZip($zip) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_zip = $zip;
-		return $this;
-	}
-	
-	/**
-	 * Set item amount  
-	 *
-	 * @param integer or float		Item amount
-	 * @return this
-	 */
-	public function setAmount($amount) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_amount = $amount;
-		return $this;
-	}
-	
-	/**
-	 * Set currency code 
-	 *
-	 * @param string		Currency code
-	 * @return this
-	 */
-	public function setCurrency($currency) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_currency = $currency;
-		return $this;
-	}
-	
-	/**
-	 * Set item description 
-	 *
-	 * @param string		Item description
-	 * @return this
-	 */
-	public function setDescription($description) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_description = $description;
-		return $this;
-	}
-	
-	/**
-	 * Set unit to be used to calculate the billing cycle
-	 * to Day
-	 *
-	 * @return this
-	 */
-	public function setDay() {
-		$this->_billingPeriod = self::DAY;
-		return $this;
-	}
-	
-	/**
-	 * Set unit to be used to calculate the billing cycle
-	 * to Week
-	 *
-	 * @return this
-	 */
-	public function setWeek() {
-		$this->_billingPeriod = self::WEEK;
-		return $this;
-	}
-	
-	/**
-	 * Set unit to be used to calculate the billing cycle
-	 * to SemiMonth
-	 *
-	 * @return this
-	 */
-	public function setSemiMonth() {
-		$this->_billingPeriod = self::SEMI_MONTH;
-		return $this;
-	}
-	
-	/**
-	 * Set unit to be used to calculate the billing cycle
-	 * to Month
-	 *
-	 * @return this
-	 */
-	public function setMonth() {
-		$this->_billingPeriod = self::MONTH;
-		return $this;
-	}
-	
-	/**
-	 * Set unit to be used to calculate the billing cycle
-	 * to Year
-	 *
-	 * @return this
-	 */
-	public function setYear() {
-		$this->_billingPeriod = self::YEAR;
-		return $this;
-	}
-	
-	/**
-	 * Set the billing frequency 
-	 *
-	 * @param integer		Billing frequency
-	 * @return this
-	 */
-	public function setBillingFrequency($billingFrequency) {
-		//Argument 1 must be an integer
-		Eden_Paypal_Error::i()->argument(1, 'int');	
-		
-		$this->_billingFrequency = $billingFrequency;
-		return $this;
-	}
-	
-	/**
-	 * Set to manage profile status
-	 *
-	 * @param boolean		
-	 * @return this
-	 */
-	public function setStatus($status) {
-		$this->_status	= $status;
-		return $this;
-	}
-	
-	/**
 	 * The action to be performed to the 
 	 * recurring payments profile set 
 	 * to Cancel
@@ -390,58 +100,6 @@ class Eden_Paypal_Recurring extends Eden_Paypal_Base {
 	 */
 	public function cancel() {
 		$this->_action	= self::CANCEL;
-		return $this;
-	}
-	
-	/**
-	 * The action to be performed to the 
-	 * recurring payments profile set 
-	 * to Suspend
-	 *		
-	 * @return this
-	 */
-	public function suspend() {
-		$this->_action	= self::SUSPEND;
-		return $this;
-	}
-	
-	/**
-	 * The action to be performed to the 
-	 * recurring payments profile set 
-	 * to Reactivate
-	 *		
-	 * @return this
-	 */
-	public function reactivate() {
-		$this->_action	= self::REACTIVATE;
-		return $this;
-	}
-	
-	/**
-	 * Set reason for the change in status
-	 *
-	 * @param string	The reason for the change in status	
-	 * @return this
-	 */
-	public function setNote($note) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_note	= $note;
-		return $this;
-	}
-	
-	/**
-	 * Set Profile Id
-	 *
-	 * @param string	a valid profile id		
-	 * @return this
-	 */
-	public function setProfileId($profileId) {
-		//Argument 1 must be a string
-		Eden_Paypal_Error::i()->argument(1, 'string');	
-		
-		$this->_profileId	= $profileId;
 		return $this;
 	}
 	
@@ -459,29 +117,6 @@ class Eden_Paypal_Recurring extends Eden_Paypal_Base {
 				self::NOTE			=> $this->_note);		//the reason for the change in status
 		//call request method
 		$response = $this->_request(self::BILL_AMOUNT, $query);
-		//if parameters are success
-		if(isset($response[self::ACK]) && $response[self::ACK] == self::SUCCESS) {
-		  
-			return $response;	   
-		} 
-		
-		return $response;	
-	}
-	
-	/**
-	 * Cancels, suspends, or reactivates a recurring 
-	 * payments profile.
-	 *
-	 * @return string
-	 */
-	public function getStatus() {
-		//populate fields
- 		$query = array(
-				self::PROFILE_ID	=> $this->_profileId,	//profile id of consumer
-				self::ACTION		=> $this->_action,		//valid value are Cancel, Suspend and Reactivate
-				self::NOTE			=> $this->_note);		//the reason for the change in status
-		//call request method
-		$response = $this->_request(self::MANAGE_STATUS, $query);
 		//if parameters are success
 		if(isset($response[self::ACK]) && $response[self::ACK] == self::SUCCESS) {
 		  
@@ -530,6 +165,370 @@ class Eden_Paypal_Recurring extends Eden_Paypal_Base {
 		   	return $this->_getDetails();
 		} 
 		return $response;						
+	}
+	
+	/**
+	 * Cancels, suspends, or reactivates a recurring 
+	 * payments profile.
+	 *
+	 * @return string
+	 */
+	public function getStatus() {
+		//populate fields
+ 		$query = array(
+				self::PROFILE_ID	=> $this->_profileId,	//profile id of consumer
+				self::ACTION		=> $this->_action,		//valid value are Cancel, Suspend and Reactivate
+				self::NOTE			=> $this->_note);		//the reason for the change in status
+		//call request method
+		$response = $this->_request(self::MANAGE_STATUS, $query);
+		//if parameters are success
+		if(isset($response[self::ACK]) && $response[self::ACK] == self::SUCCESS) {
+		  
+			return $response;	   
+		} 
+		
+		return $response;	
+	}
+	
+	/**
+	 * The action to be performed to the 
+	 * recurring payments profile set 
+	 * to Reactivate
+	 *		
+	 * @return this
+	 */
+	public function reactivate() {
+		$this->_action	= self::REACTIVATE;
+		return $this;
+	}
+	
+	/**
+	 * Set item amount  
+	 *
+	 * @param integer or float		Item amount
+	 * @return this
+	 */
+	public function setAmount($amount) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_amount = $amount;
+		return $this;
+	}
+	
+	/**
+	 * Set the billing frequency 
+	 *
+	 * @param integer		Billing frequency
+	 * @return this
+	 */
+	public function setBillingFrequency($billingFrequency) {
+		//Argument 1 must be an integer
+		Eden_Paypal_Error::i()->argument(1, 'int');	
+		
+		$this->_billingFrequency = $billingFrequency;
+		return $this;
+	}
+	/**
+	 * Set credit card number  
+	 *
+	 * @param string		Credit card number
+	 * @return this
+	 */
+	public function setCardNumber($cardNumber) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_cardNumber = $cardNumber;
+		return $this;
+	}
+	
+	/**
+	 * Set credit card type  
+	 *
+	 * @param string		Credit card type
+	 * @return this
+	 */
+	public function setCardType($cardType) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_cardType = $cardType;
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder city  
+	 *
+	 * @param string		City
+	 * @return this
+	 */
+	public function setCity($city) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_city = $city;
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder country code  
+	 *
+	 * @param string		Country Code
+	 * @return this
+	 */
+	public function setCountryCode($countryCode) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_countryCode = $countryCode;
+		return $this;
+	}
+	
+	/**
+	 * Set currency code 
+	 *
+	 * @param string		Currency code
+	 * @return this
+	 */
+	public function setCurrency($currency) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_currency = $currency;
+		return $this;
+	}
+	
+	/**
+	 * Set Card Verification Value  
+	 *
+	 * @param string		3 - digit cvv number
+	 * @return this
+	 */
+	public function setCvv2($cvv2) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_cvv2 = $cvv2;
+		return $this;
+	}
+	
+	/**
+	 * Set unit to be used to calculate the billing cycle
+	 * to Day
+	 *
+	 * @return this
+	 */
+	public function setDay() {
+		$this->_billingPeriod = self::DAY;
+		return $this;
+	}
+	
+	/**
+	 * Set item description 
+	 *
+	 * @param string		Item description
+	 * @return this
+	 */
+	public function setDescription($description) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_description = $description;
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder email address 
+	 *
+	 * @param string		Email address
+	 * @return this
+	 */
+	public function setEmail($email) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_email = $email;
+		return $this;
+	}
+	
+	/**
+	 * Set credit card expiration date 
+	 *
+	 * @param string		Credit card expiration date
+	 * @return this
+	 */
+	public function setExpirationDate($expirationDate) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_expirationDate = $expirationDate;
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder first name 
+	 *
+	 * @param string		First name
+	 * @return this
+	 */
+	public function setFirstName($firstName) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_firstName = $firstName;
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder last name  
+	 *
+	 * @param string		Last name
+	 * @return this
+	 */
+	public function setLastName($lastName) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_lastName = $lastName;
+		return $this;
+	}
+	
+	/**
+	 * Set unit to be used to calculate the billing cycle
+	 * to Month
+	 *
+	 * @return this
+	 */
+	public function setMonth() {
+		$this->_billingPeriod = self::MONTH;
+		return $this;
+	}
+	
+	/**
+	 * Set reason for the change in status
+	 *
+	 * @param string	The reason for the change in status	
+	 * @return this
+	 */
+	public function setNote($note) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_note	= $note;
+		return $this;
+	}
+	
+	/**
+	 * Set Profile Id
+	 *
+	 * @param string	a valid profile id		
+	 * @return this
+	 */
+	public function setProfileId($profileId) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_profileId	= $profileId;
+		return $this;
+	}
+	
+	/**
+	 * Set unit to be used to calculate the billing cycle
+	 * to SemiMonth
+	 *
+	 * @return this
+	 */
+	public function setSemiMonth() {
+		$this->_billingPeriod = self::SEMI_MONTH;
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder state  
+	 *
+	 * @param string		State
+	 * @return this
+	 */
+	public function setState($state) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_state = $state;
+		return $this;
+	}
+	
+	/**
+	 * Set to manage profile status
+	 *
+	 * @param boolean		
+	 * @return this
+	 */
+	public function setStatus($status) {
+		$this->_status	= $status;
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder street  
+	 *
+	 * @param string		Street
+	 * @return this
+	 */
+	public function setStreet($street) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_street = $street;
+		return $this;
+	}
+	
+	/**
+	 * Set unit to be used to calculate the billing cycle
+	 * to Week
+	 *
+	 * @return this
+	 */
+	public function setWeek() {
+		$this->_billingPeriod = self::WEEK;
+		return $this;
+	}
+	
+	/**
+	 * Set unit to be used to calculate the billing cycle
+	 * to Year
+	 *
+	 * @return this
+	 */
+	public function setYear() {
+		$this->_billingPeriod = self::YEAR;
+		return $this;
+	}
+	
+	/**
+	 * Set cardholder zip code 
+	 *
+	 * @param string		Zip code
+	 * @return this
+	 */
+	public function setZip($zip) {
+		//Argument 1 must be a string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_zip = $zip;
+		return $this;
+	}
+	
+	/**
+	 * The action to be performed to the 
+	 * recurring payments profile set 
+	 * to Suspend
+	 *		
+	 * @return this
+	 */
+	public function suspend() {
+		$this->_action	= self::SUSPEND;
+		return $this;
 	}
 	
 	/* Protected Methods

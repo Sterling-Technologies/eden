@@ -45,21 +45,64 @@ class Eden_Google_Calendar_Freebusy extends Eden_Google_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
 	/**
-	 * Sets Minimum time
+	 * Returns free/busy information 
+	 * for a set of calendars
 	 *
-	 * @param string|int
+	 * @return array
+	 */
+	public function query() {
+		//populate fields
+		$query = array(
+			self::TIMEMIN				=> $this->_timeMin,
+			self::TIMEMAX				=> $this->_timeMax,
+			self::TIMEZONE				=> $this->_timeZone
+			self::GROUP_EXPANSION		=> $this->_groupExpansionMax,
+			self::CALENDAR_EXPANSION	=> $this->_calendarExpansionMax,
+			self::ITEMS					=> $id = array(self::ID => $this->_items));
+		
+		return $this->_post(self::URL_CALENDAR_FREEBUSY, $query);
+	}
+	
+	/**
+	 * Set calendar expansion max
+	 *
+	 * @param intger
 	 * @return this
 	 */
-	public function setTimeMin($time) {
+	public function setCalendarExpansionMax($calendarExpansionMax) {
+		//argument 1 must be a integer
+		Eden_Google_Error::i()->argument(1, 'int');
+		$this->_calendarExpansionMax = $calendarExpansionMax;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set group expansion max
+	 *
+	 * @param intger
+	 * @return this
+	 */
+	public function setGroupExpansionMax($groupExpansionMax) {
+		//argument 1 must be a integer
+		Eden_Google_Error::i()->argument(1, 'int');
+		$this->_groupExpansionMax = $groupExpansionMax;
+		
+		return $this;
+	}
+	 
+	/**
+	 * Set items
+	 *
+	 * @param string|intger
+	 * @return this
+	 */
+	public function setItem($item) {
 		//argument 1 must be a string or integer
 		Eden_Google_Error::i()->argument(1, 'string', 'int');
-		if(is_string($time)) {
-			$time = strtotime($time);
-		}
-		
-		$this->_timeMin = $time;
+		$this->_items = $item;
 		
 		return $this;
 	}
@@ -82,67 +125,24 @@ class Eden_Google_Calendar_Freebusy extends Eden_Google_Base {
 		return $this;
 	}
 	
-	/**
-	 * Set items
+	 /**
+	 * Sets Minimum time
 	 *
-	 * @param string|intger
+	 * @param string|int
 	 * @return this
 	 */
-	public function setItem($item) {
+	public function setTimeMin($time) {
 		//argument 1 must be a string or integer
 		Eden_Google_Error::i()->argument(1, 'string', 'int');
-		$this->_items = $item;
+		if(is_string($time)) {
+			$time = strtotime($time);
+		}
+		
+		$this->_timeMin = $time;
 		
 		return $this;
 	}
 	
-	/**
-	 * Set group expansion max
-	 *
-	 * @param intger
-	 * @return this
-	 */
-	public function setGroupExpansionMax($groupExpansionMax) {
-		//argument 1 must be a integer
-		Eden_Google_Error::i()->argument(1, 'int');
-		$this->_groupExpansionMax = $groupExpansionMax;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set calendar expansion max
-	 *
-	 * @param intger
-	 * @return this
-	 */
-	public function setCalendarExpansionMax($calendarExpansionMax) {
-		//argument 1 must be a integer
-		Eden_Google_Error::i()->argument(1, 'int');
-		$this->_calendarExpansionMax = $calendarExpansionMax;
-		
-		return $this;
-	}
-	
-	/**
-	 * Returns free/busy information 
-	 * for a set of calendars
-	 *
-	 * @return array
-	 */
-	public function query() {
-		//populate fields
-		$query = array(
-			self::TIMEMIN				=> $this->_timeMin,
-			self::TIMEMAX				=> $this->_timeMax,
-			self::TIMEZONE				=> $this->_timeZone
-			self::GROUP_EXPANSION		=> $this->_groupExpansionMax,
-			self::CALENDAR_EXPANSION	=> $this->_calendarExpansionMax,
-			self::ITEMS					=> $id = array(self::ID => $this->_items));
-		
-		return $this->_post(self::URL_CALENDAR_FREEBUSY, $query);
-	}
-	 
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

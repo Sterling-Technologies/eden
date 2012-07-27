@@ -37,23 +37,23 @@ class Eden_Oauth2_Server extends Eden_Oauth2_Abstract {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set auth for online access
-	 *
-	 * @return this
-	 */
-	public function forOnline() {
-		$this->_accessType = self::ONLINE;
-	
-		return $this;
-	}
-	
-	/**
 	 * Set auth for offline access
 	 * 
 	 * @return this
 	 */
 	public function forOffline() { 
 		$this->_accessType = self::OFFLINE;
+	
+		return $this;
+	}
+	
+	/**
+	 * Set auth for online access
+	 *
+	 * @return this
+	 */
+	public function forOnline() {
+		$this->_accessType = self::ONLINE;
 	
 		return $this;
 	}

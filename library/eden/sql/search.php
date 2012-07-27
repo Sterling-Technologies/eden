@@ -49,10 +49,6 @@ class Eden_Sql_Search extends Eden_Class {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	public function __construct(Eden_Sql_Database $database) {
-		$this->_database 	= $database;
-	}
-	
 	public function __call($name, $args) {
 		if(strpos($name, 'filterBy') === 0) {
 			//filterByUserName('Chris', '-')
@@ -109,230 +105,24 @@ class Eden_Sql_Search extends Eden_Class {
 		}
 	}
 	
+	public function __construct(Eden_Sql_Database $database) {
+		$this->_database 	= $database;
+	}
+	
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Sets default collection
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setCollection($collection) {
-		$error = Eden_Sql_Error::i()->argument(1, 'string');
-		
-		if(!is_subclass_of($collection, 'Eden_Collection')) {
-			$error->setMessage(Eden_Sql_Error::NOT_SUB_COLLECTION)
-				->addVariable($collection)
-				->trigger();
-		}
-		
-		$this->_collection = $collection;
-		return $this;
-	}
 	
 	/**
-	 * Sets default model
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setModel($model) {
-		$error = Eden_Sql_Error::i()->argument(1, 'string');
-		
-		if(!is_subclass_of($model, 'Eden_Model')) {
-			$error->setMessage(Eden_Sql_Error::NOT_SUB_MODEL)
-				->addVariable($model)
-				->trigger();
-		}
-		
-		$this->_model = $model;
-		return $this;
-	}
-	
-	/**
-	 * Sets Columns
-	 * 
-	 * @param string[,string..]|array
-	 * @return this
-	 */
-	public function setColumns($columns) {
-		if(!is_array($columns)) {
-			$columns = func_get_args();
-		}
-		
-		$this->_columns = $columns;
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets Table
+	 * Adds filter
 	 * 
 	 * @param string
+	 * @param string[,string..]
 	 * @return this
 	 */
-	public function setTable($table) {
+	public function addFilter() {
 		Eden_Sql_Error::i()->argument(1, 'string');
-		$this->_table = $table;
-		return $this;
-	}
-	
-	/**
-	 * Adds Inner Join On
-	 * 
-	 * @param string
-	 * @param string[,string..]
-	 * @return this
-	 */
-	public function innerJoinOn($table, $where) {
-		Eden_Sql_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string');
 		
-		$where = func_get_args();
-		$table = array_shift($where);
-		
-		$this->_join[] = array(self::INNER, $table, $where, false);
-		
-		return $this;
-	}
-	
-	/**
-	 * Adds Inner Join Using
-	 * 
-	 * @param string
-	 * @param string[,string..]
-	 * @return this
-	 */
-	public function innerJoinUsing($table, $where) {
-		Eden_Sql_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string');
-		
-		$where = func_get_args();
-		$table = array_shift($where);
-		
-		$this->_join[] = array(self::INNER, $table, $where, true);
-		
-		return $this;
-	}
-	
-	/**
-	 * Adds Left Join On
-	 * 
-	 * @param string
-	 * @param string[,string..]
-	 * @return this
-	 */
-	public function leftJoinOn($table, $where) {
-		Eden_Sql_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string');
-		
-		$where = func_get_args();
-		$table = array_shift($where);
-		
-		$this->_join[] = array(self::LEFT, $table, $where, false);
-		
-		return $this;
-	}
-	
-	/**
-	 * Adds Left Join Using
-	 * 
-	 * @param string
-	 * @param string[,string..]
-	 * @return this
-	 */
-	public function leftJoinUsing($table, $where) {
-		Eden_Sql_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string');
-		
-		$where = func_get_args();
-		$table = array_shift($where);
-		
-		$this->_join[] = array(self::LEFT, $table, $where, true);
-		
-		return $this;
-	}
-	
-	/**
-	 * Adds Right Join On
-	 * 
-	 * @param string
-	 * @param string[,string..]
-	 * @return this
-	 */
-	public function rightJoinOn($table, $where) {
-		Eden_Sql_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string');
-		
-		$where = func_get_args();
-		$table = array_shift($where);
-		
-		$this->_join[] = array(self::RIGHT, $table, $where, false);
-		
-		return $this;
-	}
-	
-	/**
-	 * Adds Right Join Using
-	 * 
-	 * @param string
-	 * @param string[,string..]
-	 * @return this
-	 */
-	public function rightJoinUsing($table, $where) {
-		Eden_Sql_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string');
-		
-		$where = func_get_args();
-		$table = array_shift($where);
-		
-		$this->_join[] = array(self::RIGHT, $table, $where, true);
-		
-		return $this;
-	}
-	
-	/**
-	 * Adds Outer Join On
-	 * 
-	 * @param string
-	 * @param string[,string..]
-	 * @return this
-	 */
-	public function outerJoinOn($table, $where) {
-		Eden_Sql_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string');
-		
-		$where = func_get_args();
-		$table = array_shift($where);
-		
-		$this->_join[] = array(self::OUTER, $table, $where, false);
-		
-		return $this;
-	}
-	
-	/**
-	 * Adds Outer Join USing
-	 * 
-	 * @param string
-	 * @param string[,string..]
-	 * @return this
-	 */
-	public function outerJoinUsing($table, $where) {
-		Eden_Sql_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string');
-		
-		$where = func_get_args();
-		$table = array_shift($where);
-		
-		$this->_join[] = array(self::OUTER, $table, $where, true);
+		$this->_filter[] = func_get_args();
 		
 		return $this;
 	}
@@ -418,46 +208,6 @@ class Eden_Sql_Search extends Eden_Class {
 	}
 	
 	/**
-	 * Adds Right Join On
-	 * 
-	 * @param string
-	 * @param string[,string..]
-	 * @return this
-	 */
-	public function addRightJoinOn($table, $where) {
-		Eden_Sql_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string');
-		
-		$where = func_get_args();
-		$table = array_shift($where);
-		
-		$this->_join[] = array(self::RIGHT, $table, $where, false);
-		
-		return $this;
-	}
-	
-	/**
-	 * Adds Right Join Using
-	 * 
-	 * @param string
-	 * @param string[,string..]
-	 * @return this
-	 */
-	public function addRightJoinUsing($table, $where) {
-		Eden_Sql_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string');
-		
-		$where = func_get_args();
-		$table = array_shift($where);
-		
-		$this->_join[] = array(self::RIGHT, $table, $where, true);
-		
-		return $this;
-	}
-	
-	/**
 	 * Adds Outer Join On
 	 * 
 	 * @param string
@@ -498,16 +248,41 @@ class Eden_Sql_Search extends Eden_Class {
 	}
 	
 	/**
-	 * Adds filter
+	 * Adds Right Join On
 	 * 
 	 * @param string
 	 * @param string[,string..]
 	 * @return this
 	 */
-	public function addFilter() {
-		Eden_Sql_Error::i()->argument(1, 'string');
+	public function addRightJoinOn($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
 		
-		$this->_filter[] = func_get_args();
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::RIGHT, $table, $where, false);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Right Join Using
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function addRightJoinUsing($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::RIGHT, $table, $where, true);
 		
 		return $this;
 	}
@@ -529,79 +304,6 @@ class Eden_Sql_Search extends Eden_Class {
 		}
 		
 		$this->_sort[$column] = $order;
-		
-		return $this;
-	}
-	
-	/**
-	 * Group by clause
-	 *
-	 * @param string group
-	 * @return this
-	 * @notes adds broup by functionality
-	 */
-	public function setGroup($group) {
-		 //Argument 1 must be a string or array
-		 Eden_Sql_Error::i()->argument(1, 'string', 'array');	
-			
-		if(is_string($group)) {
-			$group = array($group); 
-		}
-		
-		$this->_group = $group; 
-		return $this;
-	}
-	
-	/**
-	 * Sets the pagination start
-	 *
-	 * @param int
-	 * @return this
-	 */
-	public function setStart($start) {
-		Eden_Sql_Error::i()->argument(1, 'int');
-		
-		if($start < 0) {
-			$start = 0;
-		}
-		
-		$this->_start = $start;
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets the pagination range
-	 *
-	 * @param int
-	 * @return this
-	 */
-	public function setRange($range) {
-		Eden_Sql_Error::i()->argument(1, 'int');
-		
-		if($range < 0) {
-			$range = 25;
-		}
-		
-		$this->_range = $range;
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets the pagination page
-	 *
-	 * @param int
-	 * @return this
-	 */
-	public function setPage($page) {
-		Eden_Sql_Error::i()->argument(1, 'int');
-		
-		if($page < 1) {
-			$page = 1;
-		}
-		
-		$this->_start = ($page - 1) * $this->_range;
 		
 		return $this;
 	}
@@ -662,6 +364,305 @@ class Eden_Sql_Search extends Eden_Class {
 		}
 		
 		return $rows[0]['total'];
+	}
+	
+	/**
+	 * Adds Inner Join On
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function innerJoinOn($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::INNER, $table, $where, false);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Inner Join Using
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function innerJoinUsing($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::INNER, $table, $where, true);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Left Join On
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function leftJoinOn($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::LEFT, $table, $where, false);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Left Join Using
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function leftJoinUsing($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::LEFT, $table, $where, true);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Outer Join On
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function outerJoinOn($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::OUTER, $table, $where, false);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Outer Join USing
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function outerJoinUsing($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::OUTER, $table, $where, true);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Right Join On
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function rightJoinOn($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::RIGHT, $table, $where, false);
+		
+		return $this;
+	}
+	
+	/**
+	 * Adds Right Join Using
+	 * 
+	 * @param string
+	 * @param string[,string..]
+	 * @return this
+	 */
+	public function rightJoinUsing($table, $where) {
+		Eden_Sql_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+		
+		$where = func_get_args();
+		$table = array_shift($where);
+		
+		$this->_join[] = array(self::RIGHT, $table, $where, true);
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets Columns
+	 * 
+	 * @param string[,string..]|array
+	 * @return this
+	 */
+	public function setColumns($columns) {
+		if(!is_array($columns)) {
+			$columns = func_get_args();
+		}
+		
+		$this->_columns = $columns;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets default collection
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCollection($collection) {
+		$error = Eden_Sql_Error::i()->argument(1, 'string');
+		
+		if(!is_subclass_of($collection, 'Eden_Collection')) {
+			$error->setMessage(Eden_Sql_Error::NOT_SUB_COLLECTION)
+				->addVariable($collection)
+				->trigger();
+		}
+		
+		$this->_collection = $collection;
+		return $this;
+	}
+	
+	/**
+	 * Group by clause
+	 *
+	 * @param string group
+	 * @return this
+	 * @notes adds broup by functionality
+	 */
+	public function setGroup($group) {
+		 //Argument 1 must be a string or array
+		 Eden_Sql_Error::i()->argument(1, 'string', 'array');	
+			
+		if(is_string($group)) {
+			$group = array($group); 
+		}
+		
+		$this->_group = $group; 
+		return $this;
+	}
+	
+	/**
+	 * Sets default model
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setModel($model) {
+		$error = Eden_Sql_Error::i()->argument(1, 'string');
+		
+		if(!is_subclass_of($model, 'Eden_Model')) {
+			$error->setMessage(Eden_Sql_Error::NOT_SUB_MODEL)
+				->addVariable($model)
+				->trigger();
+		}
+		
+		$this->_model = $model;
+		return $this;
+	}
+	
+	/**
+	 * Sets the pagination page
+	 *
+	 * @param int
+	 * @return this
+	 */
+	public function setPage($page) {
+		Eden_Sql_Error::i()->argument(1, 'int');
+		
+		if($page < 1) {
+			$page = 1;
+		}
+		
+		$this->_start = ($page - 1) * $this->_range;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets the pagination range
+	 *
+	 * @param int
+	 * @return this
+	 */
+	public function setRange($range) {
+		Eden_Sql_Error::i()->argument(1, 'int');
+		
+		if($range < 0) {
+			$range = 25;
+		}
+		
+		$this->_range = $range;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets the pagination start
+	 *
+	 * @param int
+	 * @return this
+	 */
+	public function setStart($start) {
+		Eden_Sql_Error::i()->argument(1, 'int');
+		
+		if($start < 0) {
+			$start = 0;
+		}
+		
+		$this->_start = $start;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets Table
+	 * 
+	 * @param string
+	 * @return this
+	 */
+	public function setTable($table) {
+		Eden_Sql_Error::i()->argument(1, 'string');
+		$this->_table = $table;
+		return $this;
 	}
 	
 	/* Protected Methods

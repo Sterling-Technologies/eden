@@ -37,46 +37,6 @@ class Eden_Sqlite_Utility extends Eden_Sql_Query
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Query for showing all tables
-	 *
-	 * @param string like
-	 * @return this
-	 */
-	public function showTables() {
-		$this->_query = 'SELECT * FROM dbname.sqlite_master WHERE type=\'table\'';
-		return $this;
-	}
-	
-	/**
-	 * Query for showing all columns of a table
-	 *
-	 * @param string the name of the table
-	 * @return this
-	 */
-	public function showColumns($table) {
-		//Argument 1 must be a string
-		Eden_Sqlite_Error::i()->argument(1, 'string');
-		
-	
-		$this->_query = 'PRAGMA table_info('.$table.')';
-		return $this;
-	}
-	
-	/**
-	 * Query for truncating a table
-	 *
-	 * @param string the name of the table
-	 * @return this
-	 */
-	public function truncate($table) {
-		//Argument 1 must be a string
-		Eden_Sqlite_Error::i()->argument(1, 'string');
-		
-		$this->_query = 'TRUNCATE "' . $table .'"';
-		return $this;
-	}
-	
-	/**
 	 * Query for dropping a table
 	 *
 	 * @param string the name of the table
@@ -88,6 +48,15 @@ class Eden_Sqlite_Utility extends Eden_Sql_Query
 		
 		$this->_query = 'DROP TABLE "' . $table .'"';
 		return $this;
+	}
+	
+	/**
+	 * Returns the string version of the query 
+	 *
+	 * @return string
+	 */
+	public function getQuery() {
+		return $this->_query.';';
 	}
 	
 	/**
@@ -104,14 +73,44 @@ class Eden_Sqlite_Utility extends Eden_Sql_Query
 		$this->_query = 'RENAME TABLE "' . $table . '" TO "' . $name . '"';
 		return $this;
 	}
+	/**
+	 * Query for showing all columns of a table
+	 *
+	 * @param string the name of the table
+	 * @return this
+	 */
+	public function showColumns($table) {
+		//Argument 1 must be a string
+		Eden_Sqlite_Error::i()->argument(1, 'string');
+		
+	
+		$this->_query = 'PRAGMA table_info('.$table.')';
+		return $this;
+	}
 	
 	/**
-	 * Returns the string version of the query 
+	 * Query for showing all tables
 	 *
-	 * @return string
+	 * @param string like
+	 * @return this
 	 */
-	public function getQuery() {
-		return $this->_query.';';
+	public function showTables() {
+		$this->_query = 'SELECT * FROM dbname.sqlite_master WHERE type=\'table\'';
+		return $this;
+	}
+	
+	/**
+	 * Query for truncating a table
+	 *
+	 * @param string the name of the table
+	 * @return this
+	 */
+	public function truncate($table) {
+		//Argument 1 must be a string
+		Eden_Sqlite_Error::i()->argument(1, 'string');
+		
+		$this->_query = 'TRUNCATE "' . $table .'"';
+		return $this;
 	}
 	
 	/* Protected Methods

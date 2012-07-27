@@ -66,6 +66,21 @@ class Eden_Paypal_Base extends Eden_Class {
 	
 	/* Protected Methods
 	-------------------------------*/
+	protected function _accessKey($array) {
+		foreach($array as $key => $val) {
+			if(is_array($val)) {
+				$array[$key] = $this->_accessKey($val);
+			}
+			
+			if($val == false || $val == NULL || empty($val) || !$val) {
+				unset($array[$key]);
+			}
+			
+		}
+		
+		return $array;
+	}
+	
 	protected function _request($method, array $query = array(), $post = true) {
       	//Argument 1 must be a string
 		Eden_Paypal_Error::i()->argument(1, 'string');
@@ -92,21 +107,6 @@ class Eden_Paypal_Base extends Eden_Class {
 		$this->_meta = $curl->getMeta();
 		
 		return $response;
-	}
-	
-	protected function _accessKey($array) {
-		foreach($array as $key => $val) {
-			if(is_array($val)) {
-				$array[$key] = $this->_accessKey($val);
-			}
-			
-			if($val == false || $val == NULL || empty($val) || !$val) {
-				unset($array[$key]);
-			}
-			
-		}
-		
-		return $array;
 	}
 	
 	/* Private Methods

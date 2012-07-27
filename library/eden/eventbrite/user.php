@@ -45,6 +45,31 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 	
 	/* Public Methods
 	-------------------------------*/
+	
+	/**
+	 * Create a new user
+	 *
+	 * @param string
+	 * @param string
+	 * @return array
+	 */
+	public function add($user, $pass) {
+		//argument test
+		$error = Eden_Eventbrite_Error::i()
+			->argument(1, 'string')				//Argument 1 must be a atring
+			->argument(2, 'string');			//Argument 2 must be a string
+		//if the string lenght of pass is less than 4
+		if(strlen($pass) < 4){
+			//show an error
+			$error->setMessage(Eden_Eventbrite_Error::INVALID_PASSWORD)->trigger(); 	
+		}
+		
+		$query = array('password' => $pass, 'user' => $user);
+				
+		return $this->_getJsonResponse(self::URL_NEW, $query);
+
+	}
+	
 	/**
 	 * Returns detail about the user
 	 *
@@ -182,30 +207,6 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 	}
 	
 	/**
-	 * Create a new user
-	 *
-	 * @param string
-	 * @param string
-	 * @return array
-	 */
-	public function add($user, $pass) {
-		//argument test
-		$error = Eden_Eventbrite_Error::i()
-			->argument(1, 'string')				//Argument 1 must be a atring
-			->argument(2, 'string');			//Argument 2 must be a string
-		//if the string lenght of pass is less than 4
-		if(strlen($pass) < 4){
-			//show an error
-			$error->setMessage(Eden_Eventbrite_Error::INVALID_PASSWORD)->trigger(); 	
-		}
-		
-		$query = array('password' => $pass, 'user' => $user);
-				
-		return $this->_getJsonResponse(self::URL_NEW, $query);
-
-	}
-	
-	/**
 	 * Updates the current user
 	 *
 	 * @param string|null
@@ -232,7 +233,6 @@ class Eden_Eventbrite_User extends Eden_Eventbrite_Base {
 		
 		return $this->getJsonResponse(self::URL_UPDATE, $query);
 	}
-
 
 	/* Protected Methods
 	-------------------------------*/

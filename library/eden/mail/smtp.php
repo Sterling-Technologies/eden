@@ -78,87 +78,6 @@ class Eden_Mail_Smtp extends Eden_Class {
 	
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Sets subject
-	 *
-	 * @param string subject
-	 * @return this
-	 */
-	public function setSubject($subject) {
-		Eden_Mail_Error::i()->argument(1, 'string');
-		$this->_subject = $subject;
-		return $this;
-	}
-	
-	/**
-	 * Sets body
-	 *
-	 * @param string body
-	 * @param bool is this an html body?
-	 * @return this
-	 */
-	public function setBody($body, $html = false) {
-		Eden_Mail_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'bool');
-			
-		if($html) {
-			$this->_body['text/html'] = $body;
-			$body = strip_tags($body);
-		}
-		
-		$this->_body['text/plain'] = $body;
-		
-		return $this;
-	}
-	
-	/**
-	 * Adds an email to the to list
-	 *
-	 * @param string email
-	 * @param string name
-	 * @return this
-	 */
-	public function addTo($email, $name = NULL) {
-		Eden_Mail_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string', 'null');
-			
-		$this->_to[$email] = $name;
-		return $this;
-	}
-	
-	/**
-	 * Adds an email to the cc list
-	 *
-	 * @param string email
-	 * @param string name
-	 * @return this
-	 */
-	public function addCC($email, $name = NULL) {
-		Eden_Mail_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string', 'null');
-			
-		$this->_cc[$email] = $name;
-		return $this;
-	}
-	
-	/**
-	 * Adds an email to the bcc list
-	 *
-	 * @param string email
-	 * @param string name
-	 * @return this
-	 */
-	public function addBCC($email, $name = NULL) {
-		Eden_Mail_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string', 'null');
-			
-		$this->_bcc[$email] = $name;
-		return $this;
-	}
 	
 	/**
 	 * Adds an attachment to the email
@@ -179,138 +98,50 @@ class Eden_Mail_Smtp extends Eden_Class {
 	}
 	
 	/**
-	 * Sends an email
+	 * Adds an email to the bcc list
 	 *
-	 * @param array custom headers
-	 * @return array headers
+	 * @param string email
+	 * @param string name
+	 * @return this
 	 */
-	public function send(array $headers = array()) {
-		//if no socket
-		if(!$this->_socket) {
-			//then connect
-			$this->connect();
-		}
-		
-		$headers 	= $this->_getHeaders($headers);
-		$body 		= $this->_getBody();
-		
-		//add from
-		if(!$this->_call('MAIL FROM:<' . $this->_username . '>', 250, 251)) {
-			$this->disconnect();
-			//throw exception
-			Eden_Mail_Error::i()
-				->setMessage(Eden_Mail_Error::SMTP_ADD_EMAIL)
-				->addVariable($this->_username)
-				->trigger();
-		}
-		
-		//add to
-		foreach($this->_to as $email => $name) {
-			if(!$this->_call('RCPT TO:<' . $email . '>', 250, 251)) {
-				$this->disconnect();
-				//throw exception
-				Eden_Mail_Error::i()
-					->setMessage(Eden_Mail_Error::SMTP_ADD_EMAIL)
-					->addVariable($email)
-					->trigger();
-			}
-		}
-		
-		//add cc
-		foreach($this->_cc as $email => $name) {
-			if(!$this->_call('RCPT TO:<' . $email . '>', 250, 251)) {
-				$this->disconnect();
-				//throw exception
-				Eden_Mail_Error::i()
-					->setMessage(Eden_Mail_Error::SMTP_ADD_EMAIL)
-					->addVariable($email)
-					->trigger();
-			}
-		}
-		
-		//add bcc
-		foreach($this->_bcc as $email => $name) {
-			if(!$this->_call('RCPT TO:<' . $email . '>', 250, 251)) {
-				$this->disconnect();
-				//throw exception
-				Eden_Mail_Error::i()
-					->setMessage(Eden_Mail_Error::SMTP_ADD_EMAIL)
-					->addVariable($email)
-					->trigger();
-			}
-		}
-		
-		//start compose
-		if(!$this->_call('DATA', 354)) {
-			$this->disconnect();
-			//throw exception
-			Eden_Mail_Error::i(Eden_Mail_Error::SMTP_DATA)->trigger();
-		}
-		
-		//send header data
-		foreach($headers as $name => $value) {
-			$this->_send($name.': '.$value);
-		}
-		
-		//send body data
-		foreach($body as $line) {
-			if (strpos($line, '.') === 0) {
-                // Escape lines prefixed with a '.'
-                $line = '.' . $line;
-            }
-			
-			$this->_send($line);
-		}
-		
-		//tell server this is the end
-		if(!$this->_call("\r\n.\r\n", 250)) {
-			$this->disconnect();
-			//throw exception
-			Eden_Mail_Error::i(Eden_Mail_Error::SMTP_DATA)->trigger();
-		}
-		
-		//reset (some reason without this, this class spazzes out)
-		$this->_send('RSET');
-		
-		return $headers;
-	}
-	
-	/**
-	 * Reply to an existing email 
-	 *
-	 * @param string message id
-	 * @param string topic
-	 * @return array headers
-	 */
-	public function reply($messageId, $topic = NULL, array $headers = array()) {
+	public function addBCC($email, $name = NULL) {
 		Eden_Mail_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string', 'null');
 			
-		$headers['In-Reply-To'] = $messageId;
-		
-		if($topic) {
-			$headers['Thread-Topic'] = $topic;
-		}
-		
-		return $this->send($headers);
+		$this->_bcc[$email] = $name;
+		return $this;
 	}
 	
 	/**
-	 * Resets the class
+	 * Adds an email to the cc list
 	 *
+	 * @param string email
+	 * @param string name
 	 * @return this
 	 */
-	public function reset() {
-		$this->_subject		= NULL;
-		$this->_body		= array();
-		$this->_to 			= array();
-		$this->_cc 			= array();
-		$this->_bcc 		= array();
-		$this->_attachments = array();
-		
-		$this->disconnect();
-		
+	public function addCC($email, $name = NULL) {
+		Eden_Mail_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string', 'null');
+			
+		$this->_cc[$email] = $name;
+		return $this;
+	}
+	
+	/**
+	 * Adds an email to the to list
+	 *
+	 * @param string email
+	 * @param string name
+	 * @return this
+	 */
+	public function addTo($email, $name = NULL) {
+		Eden_Mail_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string', 'null');
+			
+		$this->_to[$email] = $name;
 		return $this;
 	}
 	
@@ -419,8 +250,203 @@ class Eden_Mail_Smtp extends Eden_Class {
         return $this;
 	}
 	
+	/**
+	 * Reply to an existing email 
+	 *
+	 * @param string message id
+	 * @param string topic
+	 * @return array headers
+	 */
+	public function reply($messageId, $topic = NULL, array $headers = array()) {
+		Eden_Mail_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string', 'null');
+			
+		$headers['In-Reply-To'] = $messageId;
+		
+		if($topic) {
+			$headers['Thread-Topic'] = $topic;
+		}
+		
+		return $this->send($headers);
+	}
+	
+	/**
+	 * Resets the class
+	 *
+	 * @return this
+	 */
+	public function reset() {
+		$this->_subject		= NULL;
+		$this->_body		= array();
+		$this->_to 			= array();
+		$this->_cc 			= array();
+		$this->_bcc 		= array();
+		$this->_attachments = array();
+		
+		$this->disconnect();
+		
+		return $this;
+	}
+	
+	/**
+	 * Sends an email
+	 *
+	 * @param array custom headers
+	 * @return array headers
+	 */
+	public function send(array $headers = array()) {
+		//if no socket
+		if(!$this->_socket) {
+			//then connect
+			$this->connect();
+		}
+		
+		$headers 	= $this->_getHeaders($headers);
+		$body 		= $this->_getBody();
+		
+		//add from
+		if(!$this->_call('MAIL FROM:<' . $this->_username . '>', 250, 251)) {
+			$this->disconnect();
+			//throw exception
+			Eden_Mail_Error::i()
+				->setMessage(Eden_Mail_Error::SMTP_ADD_EMAIL)
+				->addVariable($this->_username)
+				->trigger();
+		}
+		
+		//add to
+		foreach($this->_to as $email => $name) {
+			if(!$this->_call('RCPT TO:<' . $email . '>', 250, 251)) {
+				$this->disconnect();
+				//throw exception
+				Eden_Mail_Error::i()
+					->setMessage(Eden_Mail_Error::SMTP_ADD_EMAIL)
+					->addVariable($email)
+					->trigger();
+			}
+		}
+		
+		//add cc
+		foreach($this->_cc as $email => $name) {
+			if(!$this->_call('RCPT TO:<' . $email . '>', 250, 251)) {
+				$this->disconnect();
+				//throw exception
+				Eden_Mail_Error::i()
+					->setMessage(Eden_Mail_Error::SMTP_ADD_EMAIL)
+					->addVariable($email)
+					->trigger();
+			}
+		}
+		
+		//add bcc
+		foreach($this->_bcc as $email => $name) {
+			if(!$this->_call('RCPT TO:<' . $email . '>', 250, 251)) {
+				$this->disconnect();
+				//throw exception
+				Eden_Mail_Error::i()
+					->setMessage(Eden_Mail_Error::SMTP_ADD_EMAIL)
+					->addVariable($email)
+					->trigger();
+			}
+		}
+		
+		//start compose
+		if(!$this->_call('DATA', 354)) {
+			$this->disconnect();
+			//throw exception
+			Eden_Mail_Error::i(Eden_Mail_Error::SMTP_DATA)->trigger();
+		}
+		
+		//send header data
+		foreach($headers as $name => $value) {
+			$this->_send($name.': '.$value);
+		}
+		
+		//send body data
+		foreach($body as $line) {
+			if (strpos($line, '.') === 0) {
+                // Escape lines prefixed with a '.'
+                $line = '.' . $line;
+            }
+			
+			$this->_send($line);
+		}
+		
+		//tell server this is the end
+		if(!$this->_call("\r\n.\r\n", 250)) {
+			$this->disconnect();
+			//throw exception
+			Eden_Mail_Error::i(Eden_Mail_Error::SMTP_DATA)->trigger();
+		}
+		
+		//reset (some reason without this, this class spazzes out)
+		$this->_send('RSET');
+		
+		return $headers;
+	}
+	/**
+	 * Sets body
+	 *
+	 * @param string body
+	 * @param bool is this an html body?
+	 * @return this
+	 */
+	public function setBody($body, $html = false) {
+		Eden_Mail_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'bool');
+			
+		if($html) {
+			$this->_body['text/html'] = $body;
+			$body = strip_tags($body);
+		}
+		
+		$this->_body['text/plain'] = $body;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets subject
+	 *
+	 * @param string subject
+	 * @return this
+	 */
+	public function setSubject($subject) {
+		Eden_Mail_Error::i()->argument(1, 'string');
+		$this->_subject = $subject;
+		return $this;
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
+	protected function _addAttachmentBody(array $body) {
+		foreach($this->_attachments as $attachment) {
+			list($name, $data, $mime) = $attachment;
+			$mime 	= $mime ? $mime : Eden_File::get()->getMimeType($name);
+			$data 	= base64_encode($data);
+			$count 	= ceil(strlen($data) / 998);
+			
+			$body[] = '--'.$this->_boundary[1];
+			$body[] = 'Content-type: '.$mime.'; name="'.$name.'"';
+			$body[] = 'Content-disposition: attachment; filename="'.$name.'"';
+			$body[] = 'Content-transfer-encoding: base64';
+			$body[] = NULL;
+			
+			for ($i = 0; $i < $count; $i++) {
+				$body[] = substr($data, ($i * 998), 998);
+			}
+			
+			$body[] = NULL;
+			$body[] = NULL;
+		}
+		
+		$body[] = '--'.$this->_boundary[1].'--';
+		
+		return $body;
+	}
+	
 	protected function _call($command, $code = NULL) {
 		if(!$this->_send($command)) {
 			return false;
@@ -442,27 +468,63 @@ class Eden_Mail_Smtp extends Eden_Class {
 		return $receive;
 	}
 	
-	protected function _send($command) {
-		$this->_debug('Sending: '.$command);
+	protected function _getAlternativeAttachmentBody() {
+		$alternative 	= $this->_getAlternativeBody();
 		
-        return fwrite($this->_socket, $command . "\r\n");
-  	}
-
-	protected function _receive() {   
-		$data = '';
-		$now = time();
+		$body = array();
+		$body[] = 'Content-Type: multipart/mixed; boundary="'.$this->_boundary[1].'"';
+		$body[] = NULL;
+		$body[] = '--'.$this->_boundary[1];
 		
-		while($str = fgets($this->_socket, 1024)) {
-			
-			$data .= $str;
-			
-			if(substr($str,3,1) == ' ' || time() > ($now + self::TIMEOUT)) {
-				break; 
-			}
+		foreach($alternative as $line) {
+			$body[] = $line;
 		}
 		
-		$this->_debug('Receiving: '. $data);
-		return $data;
+		return $this->_addAttachmentBody($body);
+	}
+	
+	protected function _getAlternativeBody() {
+		$plain 	= $this->_getPlainBody();
+		$html 	= $this->_getHtmlBody();
+			
+		$body 	= array();
+		$body[] = 'Content-Type: multipart/alternative; boundary="'.$this->_boundary[0].'"';
+		$body[] = NULL;
+		$body[] = '--'.$this->_boundary[0];
+		
+		foreach($plain as $line) {
+			$body[] = $line;
+		}
+		
+		$body[] = '--'.$this->_boundary[0];
+		
+		foreach($html as $line) {
+			$body[] = $line;
+		}
+		
+		$body[] = '--'.$this->_boundary[0].'--';
+		$body[] = NULL;
+		$body[] = NULL;
+		
+		return $body;
+	}
+	
+	protected function _getBody() {
+		$type = 'Plain';
+		if(count($this->_body) > 1) {
+			$type = 'Alternative';
+		} else if(isset($this->_body['text/html'])) {
+			$type = 'Html';
+		}
+		
+		$method = '_get%sBody';
+		if(!empty($this->_attachments)) {
+			$method = '_get%sAttachmentBody';
+		}
+		
+		$method = sprintf($method, $type);
+		
+		return $this->$method();
 	}
 	
 	protected function _getHeaders(array $customHeaders = array()) {
@@ -513,22 +575,53 @@ class Eden_Mail_Smtp extends Eden_Class {
 		return $headers;
 	}
 	
-	protected function _getBody() {
-		$type = 'Plain';
-		if(count($this->_body) > 1) {
-			$type = 'Alternative';
-		} else if(isset($this->_body['text/html'])) {
-			$type = 'Html';
+	protected function _getHtmlAttachmentBody() {
+		$html 	= $this->_getHtmlBody();
+		
+		$body = array();
+		$body[] = 'Content-Type: multipart/mixed; boundary="'.$this->_boundary[1].'"';
+		$body[] = NULL;
+		$body[] = '--'.$this->_boundary[1];
+		
+		foreach($html as $line) {
+			$body[] = $line;
 		}
 		
-		$method = '_get%sBody';
-		if(!empty($this->_attachments)) {
-			$method = '_get%sAttachmentBody';
+		return $this->_addAttachmentBody($body);
+	}
+	
+	protected function _getHtmlBody() {
+		$charset 	= $this->_isUtf8($this->_body['text/html']) ? 'utf-8' : 'US-ASCII';
+		$html 		= str_replace("\r", '', trim($this->_body['text/html']));
+		
+		$encoded = explode("\n", $this->_quotedPrintableEncode($html));
+		$body 	= array();
+		$body[] = 'Content-Type: text/html; charset='.$charset;
+		$body[] = 'Content-Transfer-Encoding: quoted-printable'."\n";
+		
+		foreach($encoded as $line) {
+			$body[] = $line;
+		}
+
+		$body[] = NULL;
+		$body[] = NULL;
+		
+		return $body;
+	}
+	
+	protected function _getPlainAttachmentBody() {
+		$plain 	= $this->_getPlainBody();
+		
+		$body = array();
+		$body[] = 'Content-Type: multipart/mixed; boundary="'.$this->_boundary[1].'"';
+		$body[] = NULL;
+		$body[] = '--'.$this->_boundary[1];
+		
+		foreach($plain as $line) {
+			$body[] = $line;
 		}
 		
-		$method = sprintf($method, $type);
-		
-		return $this->$method();
+		return $this->_addAttachmentBody($body);
 	}
 	
 	protected function _getPlainBody() {
@@ -551,124 +644,49 @@ class Eden_Mail_Smtp extends Eden_Class {
 		return $body;
 	}
 	
-	protected function _getHtmlBody() {
-		$charset 	= $this->_isUtf8($this->_body['text/html']) ? 'utf-8' : 'US-ASCII';
-		$html 		= str_replace("\r", '', trim($this->_body['text/html']));
+	protected function _receive() {   
+		$data = '';
+		$now = time();
 		
-		$encoded = explode("\n", $this->_quotedPrintableEncode($html));
-		$body 	= array();
-		$body[] = 'Content-Type: text/html; charset='.$charset;
-		$body[] = 'Content-Transfer-Encoding: quoted-printable'."\n";
-		
-		foreach($encoded as $line) {
-			$body[] = $line;
-		}
-
-		$body[] = NULL;
-		$body[] = NULL;
-		
-		return $body;
-	}
-	
-	protected function _getAlternativeBody() {
-		$plain 	= $this->_getPlainBody();
-		$html 	= $this->_getHtmlBody();
+		while($str = fgets($this->_socket, 1024)) {
 			
-		$body 	= array();
-		$body[] = 'Content-Type: multipart/alternative; boundary="'.$this->_boundary[0].'"';
-		$body[] = NULL;
-		$body[] = '--'.$this->_boundary[0];
-		
-		foreach($plain as $line) {
-			$body[] = $line;
-		}
-		
-		$body[] = '--'.$this->_boundary[0];
-		
-		foreach($html as $line) {
-			$body[] = $line;
-		}
-		
-		$body[] = '--'.$this->_boundary[0].'--';
-		$body[] = NULL;
-		$body[] = NULL;
-		
-		return $body;
-	}
-	
-	protected function _getPlainAttachmentBody() {
-		$plain 	= $this->_getPlainBody();
-		
-		$body = array();
-		$body[] = 'Content-Type: multipart/mixed; boundary="'.$this->_boundary[1].'"';
-		$body[] = NULL;
-		$body[] = '--'.$this->_boundary[1];
-		
-		foreach($plain as $line) {
-			$body[] = $line;
-		}
-		
-		return $this->_addAttachmentBody($body);
-	}
-	
-	protected function _getHtmlAttachmentBody() {
-		$html 	= $this->_getHtmlBody();
-		
-		$body = array();
-		$body[] = 'Content-Type: multipart/mixed; boundary="'.$this->_boundary[1].'"';
-		$body[] = NULL;
-		$body[] = '--'.$this->_boundary[1];
-		
-		foreach($html as $line) {
-			$body[] = $line;
-		}
-		
-		return $this->_addAttachmentBody($body);
-	}
-	
-	protected function _getAlternativeAttachmentBody() {
-		$alternative 	= $this->_getAlternativeBody();
-		
-		$body = array();
-		$body[] = 'Content-Type: multipart/mixed; boundary="'.$this->_boundary[1].'"';
-		$body[] = NULL;
-		$body[] = '--'.$this->_boundary[1];
-		
-		foreach($alternative as $line) {
-			$body[] = $line;
-		}
-		
-		return $this->_addAttachmentBody($body);
-	}
-	
-	protected function _addAttachmentBody(array $body) {
-		foreach($this->_attachments as $attachment) {
-			list($name, $data, $mime) = $attachment;
-			$mime 	= $mime ? $mime : Eden_File::get()->getMimeType($name);
-			$data 	= base64_encode($data);
-			$count 	= ceil(strlen($data) / 998);
+			$data .= $str;
 			
-			$body[] = '--'.$this->_boundary[1];
-			$body[] = 'Content-type: '.$mime.'; name="'.$name.'"';
-			$body[] = 'Content-disposition: attachment; filename="'.$name.'"';
-			$body[] = 'Content-transfer-encoding: base64';
-			$body[] = NULL;
-			
-			for ($i = 0; $i < $count; $i++) {
-				$body[] = substr($data, ($i * 998), 998);
+			if(substr($str,3,1) == ' ' || time() > ($now + self::TIMEOUT)) {
+				break; 
 			}
-			
-			$body[] = NULL;
-			$body[] = NULL;
 		}
 		
-		$body[] = '--'.$this->_boundary[1].'--';
-		
-		return $body;
+		$this->_debug('Receiving: '. $data);
+		return $data;
 	}
+	
+	protected function _send($command) {
+		$this->_debug('Sending: '.$command);
+		
+        return fwrite($this->_socket, $command . "\r\n");
+  	}
 	
 	/* Private Methods
 	-------------------------------*/
+	private function _debug($string) {
+		if($this->_debugging) {
+			$string = htmlspecialchars($string);
+			
+			
+			echo '<pre>'.$string.'</pre>'."\n";
+		}
+		return $this;
+	}
+	
+	private function _getTimestamp() {
+		$zone = date('Z');
+		$sign = ($zone < 0) ? '-' : '+';
+		$zone = abs($zone);
+		$zone = (int)($zone / 3600) * 100 + ($zone % 3600) / 60;
+		return sprintf("%s %s%04d", date('D, j M Y H:i:s'), $sign, $zone);
+	}
+	
 	private function _isUtf8($string) {
 		$regex = array( 
 			'[\xC2-\xDF][\x80-\xBF]', 
@@ -687,24 +705,6 @@ class Eden_Mail_Smtp extends Eden_Class {
 		}
 		
 		return true;	
-	}
-	
-	private function _getTimestamp() {
-		$zone = date('Z');
-		$sign = ($zone < 0) ? '-' : '+';
-		$zone = abs($zone);
-		$zone = (int)($zone / 3600) * 100 + ($zone % 3600) / 60;
-		return sprintf("%s %s%04d", date('D, j M Y H:i:s'), $sign, $zone);
-	}
-	
-	private function _debug($string) {
-		if($this->_debugging) {
-			$string = htmlspecialchars($string);
-			
-			
-			echo '<pre>'.$string.'</pre>'."\n";
-		}
-		return $this;
 	}
 	
 	private function _quotedPrintableEncode($input, $line_max = 75) { 

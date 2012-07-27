@@ -83,6 +83,26 @@ class Eden_Oauth_Base extends Eden_Class {
 		return implode($separator, $params);
 	}
 	
+	protected function _encode($string) {
+		if (is_array($string)) {
+			foreach($string as $i => $value) {
+				$string[$i] = $this->_encode($value);
+			}
+			
+			return $string;
+		} 
+		
+		if (is_scalar($string)) {
+			return str_replace('%7E', '~', rawurlencode($string));
+		}
+		
+		return NULL;
+	}
+	
+	protected function _decode($raw_input) {
+		return rawurldecode($raw_input);
+	}
+	
 	protected function _parseString($string) {
 		$array 	= array();
 		
@@ -111,26 +131,6 @@ class Eden_Oauth_Base extends Eden_Class {
 		}
 		
 		return $array;
-	}
-	
-	protected function _encode($string) {
-		if (is_array($string)) {
-			foreach($string as $i => $value) {
-				$string[$i] = $this->_encode($value);
-			}
-			
-			return $string;
-		} 
-		
-		if (is_scalar($string)) {
-			return str_replace('%7E', '~', rawurlencode($string));
-		}
-		
-		return NULL;
-	}
-	
-	protected function _decode($raw_input) {
-		return rawurldecode($raw_input);
 	}
 	
 	/* Private Methods

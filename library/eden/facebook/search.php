@@ -42,10 +42,6 @@ class Eden_Facebook_Search extends Eden_Class {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	public function __construct(Eden_Facebook_Fql $database) {
-		$this->_database 	= $database;
-	}
-	
 	public function __call($name, $args) {
 		if(strpos($name, 'filterBy') === 0) {
 			//filterByUserName('Chris', '-')
@@ -102,36 +98,12 @@ class Eden_Facebook_Search extends Eden_Class {
 		}
 	}
 	
+	public function __construct(Eden_Facebook_Fql $database) {
+		$this->_database 	= $database;
+	}
+	
 	/* Public Methods
-	-------------------------------*/
-	/**
-	 * Sets Columns
-	 * 
-	 * @param string[,string..]|array
-	 * @return this
-	 */
-	public function setColumns($columns) {
-		if(!is_array($columns)) {
-			$columns = func_get_args();
-		}
-		
-		$this->_columns = $columns;
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets Table
-	 * 
-	 * @param string
-	 * @return this
-	 */
-	public function setTable($table) {
-		Eden_Facebook_Error::i()->argument(1, 'string');
-		$this->_table = $table;
-		return $this;
-	}
-	
+	-------------------------------*/	
 	/**
 	 * Adds filter
 	 * 
@@ -164,91 +136,6 @@ class Eden_Facebook_Search extends Eden_Class {
 		}
 		
 		$this->_sort[$column] = $order;
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets the pagination start
-	 *
-	 * @param int
-	 * @return this
-	 */
-	public function setStart($start) {
-		Eden_Facebook_Error::i()->argument(1, 'int');
-		
-		if($start < 0) {
-			$start = 0;
-		}
-		
-		$this->_start = $start;
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets the pagination range
-	 *
-	 * @param int
-	 * @return this
-	 */
-	public function setRange($range) {
-		Eden_Facebook_Error::i()->argument(1, 'int');
-		
-		if($range < 0) {
-			$range = 25;
-		}
-		
-		$this->_range = $range;
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets the pagination page
-	 *
-	 * @param int
-	 * @return this
-	 */
-	public function setPage($page) {
-		Eden_Facebook_Error::i()->argument(1, 'int');
-		
-		if($page < 1) {
-			$page = 1;
-		}
-		
-		$this->_start = ($page - 1) * $this->_range;
-		
-		return $this;
-	}
-	
-	/**
-	 * Stores this search and resets class.
-	 * Useful for multiple queries.
-	 *
-	 * @param scalar
-	 * @return this
-	 */
-	public function group($key) {
-		Eden_Facebook_Error::i()->argument(1, 'scalar');
-		if(is_null($this->_table)) {
-			return $this;
-		}
-		
-		$this->_group[$key] = array(
-			'table' 	=> $this->_table,
-			'columns' 	=> $this->_columns,
-			'filter' 	=> $this->_filter,
-			'sort' 		=> $this->_sort,
-			'start' 	=> $this->_start,
-			'range' 	=> $this->_range);
-		
-		$this->_table	= NULL;
-		$this->_columns	= array();
-		$this->_filter	= array();
-		$this->_sort	= array();
-		$this->_start	= 0;
-		$this->_range	= 0;
 		
 		return $this;
 	}
@@ -335,6 +222,119 @@ class Eden_Facebook_Search extends Eden_Class {
 		}
 		
 		return $rows[0]['total'];
+	}
+	
+	/**
+	 * Stores this search and resets class.
+	 * Useful for multiple queries.
+	 *
+	 * @param scalar
+	 * @return this
+	 */
+	public function group($key) {
+		Eden_Facebook_Error::i()->argument(1, 'scalar');
+		if(is_null($this->_table)) {
+			return $this;
+		}
+		
+		$this->_group[$key] = array(
+			'table' 	=> $this->_table,
+			'columns' 	=> $this->_columns,
+			'filter' 	=> $this->_filter,
+			'sort' 		=> $this->_sort,
+			'start' 	=> $this->_start,
+			'range' 	=> $this->_range);
+		
+		$this->_table	= NULL;
+		$this->_columns	= array();
+		$this->_filter	= array();
+		$this->_sort	= array();
+		$this->_start	= 0;
+		$this->_range	= 0;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets Columns
+	 * 
+	 * @param string[,string..]|array
+	 * @return this
+	 */
+	public function setColumns($columns) {
+		if(!is_array($columns)) {
+			$columns = func_get_args();
+		}
+		
+		$this->_columns = $columns;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets the pagination page
+	 *
+	 * @param int
+	 * @return this
+	 */
+	public function setPage($page) {
+		Eden_Facebook_Error::i()->argument(1, 'int');
+		
+		if($page < 1) {
+			$page = 1;
+		}
+		
+		$this->_start = ($page - 1) * $this->_range;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets the pagination range
+	 *
+	 * @param int
+	 * @return this
+	 */
+	public function setRange($range) {
+		Eden_Facebook_Error::i()->argument(1, 'int');
+		
+		if($range < 0) {
+			$range = 25;
+		}
+		
+		$this->_range = $range;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets the pagination start
+	 *
+	 * @param int
+	 * @return this
+	 */
+	public function setStart($start) {
+		Eden_Facebook_Error::i()->argument(1, 'int');
+		
+		if($start < 0) {
+			$start = 0;
+		}
+		
+		$this->_start = $start;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets Table
+	 * 
+	 * @param string
+	 * @return this
+	 */
+	public function setTable($table) {
+		Eden_Facebook_Error::i()->argument(1, 'string');
+		$this->_table = $table;
+		return $this;
 	}
 	
 	/* Protected Methods

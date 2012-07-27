@@ -45,67 +45,6 @@ class Eden_Sqlite_Create extends Eden_Sql_Query {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Sets the name of the table you wish to create
-	 *
-	 * @param string name
-	 * @return this
-	 */
-	public function setName($name) {
-		//Argument 1 must be a string
-		Eden_Sqlite_Error::i()->argument(1, 'string');
-		
-		$this->_name = $name;
-		return $this;
-	}
-	
-	/**
-	 * Sets comments
-	 *
-	 * @param string comments
-	 * @return this
-	 */
-	public function setComments($comments) {
-		//Argument 1 must be a string
-		Eden_Sqlite_Error::i()->argument(1, 'string');
-		
-		$this->_comments = $comments;
-		return $this;
-	}
-	
-	/**
-	 * Sets a list of fields to the table
-	 *
-	 * @param array fields
-	 * @return this
-	 */
-	public function setFields(array $fields) {
-		$this->_fields = $fields;
-		return $this;
-	}
-	
-	/**
-	 * Sets a list of keys to the table
-	 *
-	 * @param array keys
-	 * @return this
-	 */
-	public function setForiegnKeys(array $keys) {
-		$this->_keys = $keys;
-		return $this;
-	}
-	
-	/**
-	 * Sets a list of unique keys to the table
-	 *
-	 * @param array uniqueKeys
-	 * @return this
-	 */
-	public function setUniqueKeys(array $uniqueKeys) {
-		$this->_uniqueKeys = $uniqueKeys;
-		return $this;
-	}
-	
-	/**
 	 * Adds a field in the table
 	 *
 	 * @param string name
@@ -218,6 +157,67 @@ class Eden_Sqlite_Create extends Eden_Sql_Query {
 		return sprintf(
 			'CREATE TABLE %s (%s%s%s)',
 			$table, $fields, $unique, $keys);
+	}
+	
+	/**
+	 * Sets comments
+	 *
+	 * @param string comments
+	 * @return this
+	 */
+	public function setComments($comments) {
+		//Argument 1 must be a string
+		Eden_Sqlite_Error::i()->argument(1, 'string');
+		
+		$this->_comments = $comments;
+		return $this;
+	}
+	
+	/**
+	 * Sets a list of fields to the table
+	 *
+	 * @param array fields
+	 * @return this
+	 */
+	public function setFields(array $fields) {
+		$this->_fields = $fields;
+		return $this;
+	}
+	
+	/**
+	 * Sets a list of keys to the table
+	 *
+	 * @param array keys
+	 * @return this
+	 */
+	public function setForiegnKeys(array $keys) {
+		$this->_keys = $keys;
+		return $this;
+	}
+	
+	/**
+	 * Sets the name of the table you wish to create
+	 *
+	 * @param string name
+	 * @return this
+	 */
+	public function setName($name) {
+		//Argument 1 must be a string
+		Eden_Sqlite_Error::i()->argument(1, 'string');
+		
+		$this->_name = $name;
+		return $this;
+	}
+	
+	/**
+	 * Sets a list of unique keys to the table
+	 *
+	 * @param array uniqueKeys
+	 * @return this
+	 */
+	public function setUniqueKeys(array $uniqueKeys) {
+		$this->_uniqueKeys = $uniqueKeys;
+		return $this;
 	}
 	
 	/* Protected Methods

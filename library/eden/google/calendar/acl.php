@@ -47,7 +47,55 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
+	/**
+	 * Creates a secondary calendar.
+	 *
+	 * @return array
+	 */
+	public function create() {
+		//populate fields
+		$query = array(
+			self::ETAG	=> $this->_etag,
+			self::ID	=> $this->_id,
+			self::KIND	=> $this->_kind,
+			self::ROLE	=> $this->_role,
+			self::SCOPE	=> $scope = array(self::TYPE => $this->_type));
+		
+		return $this->_post(sprintf(self::URL_CALENDAR_ACL_GET, $this->_calendarId), $query);
+	}
+	
+	/**
+	 * Deletes an access control rule
+	 *
+	 * @return null
+	 */
+	public function delete() {
+		
+		return $this->_delete(sprintf(self::URL_CALENDAR_ACL_SPECIFIC, $this->_calendarId, $this->_ruleId));
+	}
+	
+	/**
+	 * Returns the rules in the access 
+	 * control list for the calendar. 
+	 *
+	 * @return array
+	 */
+	public function getList() {
+		
+		return $this->_getResponse(sprintf(self::URL_CALENDAR_ACL_GET, $this->_calendarId));
+	}
+	
+	/**
+	 * Returns an access control rule. 
+	 *
+	 * @return array
+	 */
+	public function getSpecific() {
+		
+		return $this->_getResponse(sprintf(self::URL_CALENDAR_ACL_SPECIFIC, $this->_calendarId, $this->_ruleId));
+	}
+	
 	/**
 	 * Set calendar id
 	 *
@@ -58,20 +106,6 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		$this->_calendarId = $calendarId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set rule id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setRuleId($ruleId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_ruleId= $ruleId;
 		
 		return $this;
 	}
@@ -119,23 +153,23 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Provides no access role.
-	 *
-	 * @return this
-	 */
-	public function setRoleToNone() {
-		$this->_role = 'none';
-		
-		return $this;
-	}
-	
-	/**
 	 * Provides read access to free/busy information.
 	 *
 	 * @return this
 	 */
 	public function setRoleToFreeBusyReader() {
 		$this->_role = 'freeBusyReader';
+		
+		return $this;
+	}
+	
+	/**
+	 * Provides no access role.
+	 *
+	 * @return this
+	 */
+	public function setRoleToNone() {
+		$this->_role = 'none';
 		
 		return $this;
 	}
@@ -183,6 +217,20 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	}
 	
 	/**
+	 * Set rule id
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setRuleId($ruleId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_ruleId= $ruleId;
+		
+		return $this;
+	}
+	
+	/**
 	 * The type of the scope. Possible values are:
 	 * "default" - The public scope. This is the default value.
 	 * "user" - Limits the scope to a single user.
@@ -200,37 +248,6 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Returns the rules in the access 
-	 * control list for the calendar. 
-	 *
-	 * @return array
-	 */
-	public function getList() {
-		
-		return $this->_getResponse(sprintf(self::URL_CALENDAR_ACL_GET, $this->_calendarId));
-	}
-	
-	/**
-	 * Returns an access control rule. 
-	 *
-	 * @return array
-	 */
-	public function getSpecific() {
-		
-		return $this->_getResponse(sprintf(self::URL_CALENDAR_ACL_SPECIFIC, $this->_calendarId, $this->_ruleId));
-	}
-	
-	/**
-	 * Deletes an access control rule
-	 *
-	 * @return null
-	 */
-	public function delete() {
-		
-		return $this->_delete(sprintf(self::URL_CALENDAR_ACL_SPECIFIC, $this->_calendarId, $this->_ruleId));
-	}
-	
-	/**
 	 * Updates an access control rule
 	 *
 	 * @return array
@@ -245,23 +262,6 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 			self::SCOPE	=> $scope = array(self::TYPE => $this->_type));
 		
 		return $this->_put(sprintf(self::URL_CALENDAR_ACL_SPECIFIC, $this->_calendarId, $this->_ruleId), $query);
-	}
-		
-	/**
-	 * Creates a secondary calendar.
-	 *
-	 * @return array
-	 */
-	public function create() {
-		//populate fields
-		$query = array(
-			self::ETAG	=> $this->_etag,
-			self::ID	=> $this->_id,
-			self::KIND	=> $this->_kind,
-			self::ROLE	=> $this->_role,
-			self::SCOPE	=> $scope = array(self::TYPE => $this->_type));
-		
-		return $this->_post(sprintf(self::URL_CALENDAR_ACL_GET, $this->_calendarId), $query);
 	}
 	
 	/* Protected Methods

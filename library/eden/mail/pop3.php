@@ -70,6 +70,93 @@ class Eden_Mail_Pop3 extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * Connects to the server
+	 *
+	 * @return this
+	 */
+	public function connect($test = false) {
+		Eden_Mail_Error::i()->argument(1, 'bool');
+		
+		if($this->_loggedin) {
+			return $this;
+		}
+		
+		$host = $this->_host;
+		
+		if ($this->_ssl) {
+            $host = 'ssl://' . $host;
+        }
+		
+		$errno  =  0;
+        $errstr = '';
+        
+		$this->_socket = fsockopen($host, $this->_port, $errno, $errstr, self::TIMEOUT);
+        
+		if (!$this->_socket) {
+			//throw exception
+			Eden_Mail_Error::get()->setMessage(Eden_Mail_Error::SERVER_ERROR)
+				->addVariable($host.':'.$this->_port)
+				->trigger();
+        }
+		
+		$welcome = $this->_receive();
+
+        strtok($welcome, '<');
+        $this->_timestamp = strtok('>');
+        if (!strpos($this->_timestamp, '@')) {
+            $this->_timestamp = null;
+        } else {
+            $this->_timestamp = '<' . $this->_timestamp . '>';
+        }
+
+        if ($this->_tls) {
+            $this->_call('STLS');
+            if (!stream_socket_enable_crypto($this->_socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+				$this->disconnect();
+            	//throw exception
+				Eden_Mail_Error::get()->setMessage(Eden_Mail_Exception::TLS_ERROR)
+					->addVariable($host.':'.$this->_port)
+					->trigger();
+            }
+        }
+		
+		//login
+		if ($this->_timestamp) {
+            try {
+                $this->_call('APOP '.$this->_username .' ' . md5($this->_timestamp . $this->_password));
+                return;
+            } catch (Exception $e) {
+                // ignore
+            }
+        }
+
+        $this->_call('USER '.$this->_username);
+        $this->_call('PASS '.$this->_password);
+		
+		return $this;
+	}
+	
+	/**
+	 * Disconnects from the server
+	 *
+	 * @return this
+	 */
+	public function disconnect() {
+		if (!$this->_socket) {
+            return;
+        }
+
+        try {
+            $this->request('QUIT');
+        } catch (Exception $e) {
+            // ignore error - we're closing the socket anyway
+        }
+
+        fclose($this->_socket);
+        $this->_socket = NULL;
+	}
+	
+	/**
 	 * Returns a list of emails given the range
 	 *
 	 * @param number start
@@ -158,93 +245,6 @@ class Eden_Mail_Pop3 extends Eden_Class {
 		return $this;
 	}
 	
-	/**
-	 * Connects to the server
-	 *
-	 * @return this
-	 */
-	public function connect($test = false) {
-		Eden_Mail_Error::i()->argument(1, 'bool');
-		
-		if($this->_loggedin) {
-			return $this;
-		}
-		
-		$host = $this->_host;
-		
-		if ($this->_ssl) {
-            $host = 'ssl://' . $host;
-        }
-		
-		$errno  =  0;
-        $errstr = '';
-        
-		$this->_socket = fsockopen($host, $this->_port, $errno, $errstr, self::TIMEOUT);
-        
-		if (!$this->_socket) {
-			//throw exception
-			Eden_Mail_Error::get()->setMessage(Eden_Mail_Error::SERVER_ERROR)
-				->addVariable($host.':'.$this->_port)
-				->trigger();
-        }
-		
-		$welcome = $this->_receive();
-
-        strtok($welcome, '<');
-        $this->_timestamp = strtok('>');
-        if (!strpos($this->_timestamp, '@')) {
-            $this->_timestamp = null;
-        } else {
-            $this->_timestamp = '<' . $this->_timestamp . '>';
-        }
-
-        if ($this->_tls) {
-            $this->_call('STLS');
-            if (!stream_socket_enable_crypto($this->_socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
-				$this->disconnect();
-            	//throw exception
-				Eden_Mail_Error::get()->setMessage(Eden_Mail_Exception::TLS_ERROR)
-					->addVariable($host.':'.$this->_port)
-					->trigger();
-            }
-        }
-		
-		//login
-		if ($this->_timestamp) {
-            try {
-                $this->_call('APOP '.$this->_username .' ' . md5($this->_timestamp . $this->_password));
-                return;
-            } catch (Exception $e) {
-                // ignore
-            }
-        }
-
-        $this->_call('USER '.$this->_username);
-        $this->_call('PASS '.$this->_password);
-		
-		return $this;
-	}
-	
-	/**
-	 * Disconnects from the server
-	 *
-	 * @return this
-	 */
-	public function disconnect() {
-		if (!$this->_socket) {
-            return;
-        }
-
-        try {
-            $this->request('QUIT');
-        } catch (Exception $e) {
-            // ignore error - we're closing the socket anyway
-        }
-
-        fclose($this->_socket);
-        $this->_socket = NULL;
-	}
-	
 	/* Protected Methods
 	-------------------------------*/
 	protected function _call($command, $multiline = false) {
@@ -255,13 +255,6 @@ class Eden_Mail_Pop3 extends Eden_Class {
 		return $this->_receive($multiline);
 	}
 	
-	protected function _send($command) {
-		
-		$this->_debug('Sending: '.$command);
-		
-        return fputs($this->_socket, $command . "\r\n");
-   }
-
 	protected function _receive($multiline = false) {
 		$result = @fgets($this->_socket);
         $status = $result = trim($result);
@@ -290,7 +283,13 @@ class Eden_Mail_Pop3 extends Eden_Class {
 
         return $message;
     }
-	
+
+	protected function _send($command) {
+		
+		$this->_debug('Sending: '.$command);
+		
+        return fputs($this->_socket, $command . "\r\n");
+   }
 	/* Private Methods
 	-------------------------------*/
 	private function _debug($string) {

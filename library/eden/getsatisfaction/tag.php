@@ -37,7 +37,16 @@ class Eden_GetSatisfaction_Tag extends Eden_GetSatisfaction_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
+	/**
+	 * Returns a list of companies
+	 *
+	 * @return array
+	 */
+	public function getResults() {
+		return $this->_getResponse($this->_url, $this->_query);
+	}
+	
 	/**
 	 * Sets company URL
 	 *
@@ -98,15 +107,6 @@ class Eden_GetSatisfaction_Tag extends Eden_GetSatisfaction_Base {
 		$this->_query['limit'] = $limit;
 		
 		return $this;
-	}
-	
-	/**
-	 * Returns a list of companies
-	 *
-	 * @return array
-	 */
-	public function getResults() {
-		return $this->_getResponse($this->_url, $this->_query);
 	}
 	
 	/* Protected Methods

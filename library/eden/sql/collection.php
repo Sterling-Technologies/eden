@@ -36,91 +36,6 @@ class Eden_Sql_Collection extends Eden_Collection {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Sets the default database
-	 *
-	 * @param Eden_Sql
-	 */
-	public function setDatabase(Eden_Sql_Database $database) {
-		$this->_database = $database;
-		
-		//for each row
-		foreach($this->_list as $row) {
-			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
-				continue;
-			}
-			
-			//let the row handle this
-			$row->setDatabase($database);
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets the default database
-	 *
-	 * @param string
-	 */
-	public function setTable($table) {
-		//Argument 1 must be a string
-		Eden_Sql_Error::i()->argument(1, 'string');
-		
-		$this->_table = $table;
-		
-		//for each row
-		foreach($this->_list as $row) {
-			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
-				continue;
-			}
-			
-			//let the row handle this
-			$row->setTable($table);
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets default model
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setModel($model) {
-		$error = Eden_Sql_Error::i()->argument(1, 'string');
-		
-		if(!is_subclass_of($model, 'Eden_Model')) {
-			$error->setMessage(Eden_Sql_Error::NOT_SUB_MODEL)
-				->addVariable($model)
-				->trigger();
-		}
-		
-		$this->_model = $model;
-		return $this;
-	}
-	
-	/**
-	 * Useful method for formating a time column.
-	 * 
-	 * @param string
-	 * @param string
-	 * @return this
-	 */
-	public function formatTime($column, $format = Eden_Sql_Model::DATETIME) {
-		//for each row
-		foreach($this->_list as $row) {
-			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
-				continue;
-			}
-			
-			//let the row handle this
-			$row->formatTime($column, $format);
-		}
-		
-		return $this;
-	}
-	
-	/**
 	 * Adds a row to the collection
 	 *
 	 * @param array|Eden_Model
@@ -152,6 +67,27 @@ class Eden_Sql_Collection extends Eden_Collection {
 	}
 	
 	/**
+	 * Useful method for formating a time column.
+	 * 
+	 * @param string
+	 * @param string
+	 * @return this
+	 */
+	public function formatTime($column, $format = Eden_Sql_Model::DATETIME) {
+		//for each row
+		foreach($this->_list as $row) {
+			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
+				continue;
+			}
+			
+			//let the row handle this
+			$row->formatTime($column, $format);
+		}
+		
+		return $this;
+	}
+	
+	/**
 	 * Insert collection to database
 	 *
 	 * @param string
@@ -172,20 +108,21 @@ class Eden_Sql_Collection extends Eden_Collection {
 	}
 	
 	/**
-	 * Updates collection to database
+	 * Removes collection from database
 	 *
 	 * @param string
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function update($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
+	public function remove($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
 		//for each row
 		foreach($this->_list as $i => $row) {
 			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
 				continue;
 			}
 			
-			$row->update($table, $database, $primary);
+			//let the row handle this
+			$row->remove($table, $database, $primary);
 		}
 		
 		return $this;
@@ -212,21 +149,84 @@ class Eden_Sql_Collection extends Eden_Collection {
 	}
 	
 	/**
-	 * Removes collection from database
+	 * Sets the default database
+	 *
+	 * @param Eden_Sql
+	 */
+	public function setDatabase(Eden_Sql_Database $database) {
+		$this->_database = $database;
+		
+		//for each row
+		foreach($this->_list as $row) {
+			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
+				continue;
+			}
+			
+			//let the row handle this
+			$row->setDatabase($database);
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets default model
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setModel($model) {
+		$error = Eden_Sql_Error::i()->argument(1, 'string');
+		
+		if(!is_subclass_of($model, 'Eden_Model')) {
+			$error->setMessage(Eden_Sql_Error::NOT_SUB_MODEL)
+				->addVariable($model)
+				->trigger();
+		}
+		
+		$this->_model = $model;
+		return $this;
+	}
+	
+	/**
+	 * Sets the default database
+	 *
+	 * @param string
+	 */
+	public function setTable($table) {
+		//Argument 1 must be a string
+		Eden_Sql_Error::i()->argument(1, 'string');
+		
+		$this->_table = $table;
+		
+		//for each row
+		foreach($this->_list as $row) {
+			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
+				continue;
+			}
+			
+			//let the row handle this
+			$row->setTable($table);
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Updates collection to database
 	 *
 	 * @param string
 	 * @param Eden_Sql
 	 * @return this
 	 */
-	public function remove($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
+	public function update($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
 		//for each row
 		foreach($this->_list as $i => $row) {
 			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
 				continue;
 			}
 			
-			//let the row handle this
-			$row->remove($table, $database, $primary);
+			$row->update($table, $database, $primary);
 		}
 		
 		return $this;

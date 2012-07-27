@@ -31,16 +31,16 @@ class Eden_Timezone_Validation extends Eden_Class {
 	
     /* Public Methods
 	-------------------------------*/
+	public function isAbbr($value) {
+		return preg_match('/^[A-Z]{1,5}$/', $value); 
+	}
+	
 	public function isLocation($value) {
 		return in_array($value, DateTimeZone::listIdentifiers());
 	}
 	
 	public function isUtc($value) {
 		return preg_match('/^(GMT|UTC){0,1}(\-|\+)[0-9]{1,2}(\:{0,1}[0-9]{2}){0,1}$/', $value); 
-	}
-	
-	public function isAbbr($value) {
-		return preg_match('/^[A-Z]{1,5}$/', $value); 
 	}
 	
 	/* Protected Methods

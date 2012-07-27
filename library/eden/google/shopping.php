@@ -61,116 +61,7 @@ class Eden_Google_Shopping extends Eden_Google_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
-	/**
-	 *	Sets the country
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setCountry($country = 'US'){
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_country = $country;
-		
-		return $this;
-	}
-	
-	/**
-	 *	Sets currency
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setCurrency($currency = 'USD'){
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_currency = $currency;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set Order of the search result
-	 *
-	 * @param string
-	 * @param array
-	 * @return this
-	 */
-	public function setOrder($name, $value = 'assending') {
-		Eden_Google_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string');
-			
-		$this->_rankBy = array(
-			self::NAME	=> $name,
-			self::VALUE	=> $value);
-		
-		return $this;
-	}
-	
-	/**
-	 * Set crowding of the search result
-	 *
-	 * @param string
-	 * @param int
-	 * @return this
-	 */
-	public function setCrowding($name, $occurrence) {
-		Eden_Google_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'int');
-		
-		$this->_crowding = array(
-			self::NAME	=> $name, 
-			self::VALUE	=> $occurrence);
-		
-		return $this;
-	}
-	
-	/**
-	 * Set spell checker
-	 *
-	 * @param bool
-	 * @return this
-	 */
-	public function setSpellChecker($value = true) {
-		Eden_Google_Error::i()->argument(1, 'bool');
-		$this->_spellChecker = $value;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set facet
-	 *
-	 * @param bool
-	 * @return this
-	 */
-	public function setFacet($value = true) {
-		Eden_Google_Error::i()->argument(1, 'bool');
-		$this->_facet = $value;
-		
-		return $this;
-	}
-	
-	/**
-	 *	Add restriction for the search
-	 *
-	 * @param string
-	 * @param array
-	 * @return this
-	 */
-	public function addRestriction($name, $value) {
-		Eden_Google_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'array');
-			
-		$this->_restrictBy[] = array(
-			self::NAME	=> $name,
-			self::VALUE	=> implode('|', $value));
-		
-		return $this;
-	}
-	
+	-------------------------------*/	
 	/**
 	 *	Add facet
 	 *
@@ -214,6 +105,25 @@ class Eden_Google_Shopping extends Eden_Google_Base {
 	}
 	
 	/**
+	 *	Add restriction for the search
+	 *
+	 * @param string
+	 * @param array
+	 * @return this
+	 */
+	public function addRestriction($name, $value) {
+		Eden_Google_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'array');
+			
+		$this->_restrictBy[] = array(
+			self::NAME	=> $name,
+			self::VALUE	=> implode('|', $value));
+		
+		return $this;
+	}
+	
+	/**
 	 * get response
 	 *
 	 * @return json
@@ -251,6 +161,96 @@ class Eden_Google_Shopping extends Eden_Google_Base {
 			self::FACETS_INCLUDE	=> (!isset($facets)) ? NULL : implode(', ', $facets));
 		
 		return $this->_getResponse(self::REQUEST_URL, $params);
+	}
+	
+	/**
+	 *	Sets the country
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCountry($country = 'US'){
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_country = $country;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set crowding of the search result
+	 *
+	 * @param string
+	 * @param int
+	 * @return this
+	 */
+	public function setCrowding($name, $occurrence) {
+		Eden_Google_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'int');
+		
+		$this->_crowding = array(
+			self::NAME	=> $name, 
+			self::VALUE	=> $occurrence);
+		
+		return $this;
+	}
+	
+	/**
+	 *	Sets currency
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCurrency($currency = 'USD'){
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_currency = $currency;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set facet
+	 *
+	 * @param bool
+	 * @return this
+	 */
+	public function setFacet($value = true) {
+		Eden_Google_Error::i()->argument(1, 'bool');
+		$this->_facet = $value;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set Order of the search result
+	 *
+	 * @param string
+	 * @param array
+	 * @return this
+	 */
+	public function setOrder($name, $value = 'assending') {
+		Eden_Google_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+			
+		$this->_rankBy = array(
+			self::NAME	=> $name,
+			self::VALUE	=> $value);
+		
+		return $this;
+	}
+	
+	/**
+	 * Set spell checker
+	 *
+	 * @param bool
+	 * @return this
+	 */
+	public function setSpellChecker($value = true) {
+		Eden_Google_Error::i()->argument(1, 'bool');
+		$this->_spellChecker = $value;
+		
+		return $this;
 	}
 	
 	/* Protected Methods

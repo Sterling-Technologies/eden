@@ -73,34 +73,92 @@ class Eden_Mail_Imap extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns a list of mailboxes
-	 *
-	 * @return array
+	 * Connects to the server
+	 * 
+	 * @return this
 	 */
-	public function getMailboxes() {
-		if(!$this->_socket) {
-			$this->connect();
+	public function connect($timeout = self::TIMEOUT, $test = false) {
+		Eden_Mail_Error::i()->argument(1, 'int')->argument(2, 'bool');
+		
+		if($this->_socket) {
+			return $this;
 		}
+		
+		$host = $this->_host;
+		
+		if ($this->_ssl) {
+            $host = 'ssl://' . $host;
+        }
+		
+		$errno  =  0;
+        $errstr = '';
         
-		$response = $this->_call('LIST', $this->_escape('', '*'));
+		$this->_socket = @fsockopen($host, $this->_port, $errno, $errstr, $timeout);
+        
+		if (!$this->_socket) {
+			//throw exception
+			Eden_Mail_Error::i()
+				->setMessage(Eden_Mail_Error::SERVER_ERROR)
+				->addVariable($host.':'.$this->_port)
+				->trigger();
+        }
+
+        if (strpos($this->_getLine(), '* OK') === false) {
+			$this->disconnect();
+            //throw exception
+			Eden_Mail_Error::i()
+				->setMessage(Eden_Mail_Error::SERVER_ERROR)
+				->addVariable($host.':'.$this->_port)
+				->trigger();
+        }
+
+        if ($this->_tls) {
+            $this->_send('STARTTLS');
+            if (!stream_socket_enable_crypto($this->_socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+				$this->disconnect();
+            	//throw exception
+				Eden_Mail_Error::i()
+				->setMessage(Eden_Mail_Error::TLS_ERROR)
+				->addVariable($host.':'.$this->_port)
+				->trigger();
+            }
+        }
 		
-		$mailboxes = array();	
-		foreach($response as $line) {
-			if (strpos($line, 'Noselect') !== false || strpos($line, 'LIST') == false) {
-				continue;
-			}
-			
-			$line = explode('"', $line);
-			
-			if(strpos(trim($line[0]), '*') !== 0 ) {
-				continue;
-			}
-			
-			$mailboxes[] = $line[count($line)-2];
+		if($test) {
+			fclose($this->_socket);
+            
+			$this->_socket = NULL;
+			return $this;
 		}
 		
-		return $mailboxes;
-    }
+		//login
+		$result = $this->_call('LOGIN', $this->_escape($this->_username, $this->_password));
+		
+		if(strpos(implode(' ', $result), 'OK') === false) {
+			$this->disconnect();
+			//throw exception
+			Eden_Mail_Error::i(Eden_Mail_Error::LOGIN_ERROR)->trigger();
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Disconnects from the server
+	 *
+	 * @return this
+	 */
+	public function disconnect() {
+        if ($this->_socket) {
+            $this->_send('LOGOUT');
+			
+            fclose($this->_socket);
+            
+			$this->_socket = NULL;
+        }
+		
+        return $this;
+	}
 	
 	/**
 	 * Returns the active mailbox
@@ -200,6 +258,36 @@ class Eden_Mail_Imap extends Eden_Class {
 	}
 	
 	/**
+	 * Returns a list of mailboxes
+	 *
+	 * @return array
+	 */
+	public function getMailboxes() {
+		if(!$this->_socket) {
+			$this->connect();
+		}
+        
+		$response = $this->_call('LIST', $this->_escape('', '*'));
+		
+		$mailboxes = array();	
+		foreach($response as $line) {
+			if (strpos($line, 'Noselect') !== false || strpos($line, 'LIST') == false) {
+				continue;
+			}
+			
+			$line = explode('"', $line);
+			
+			if(strpos(trim($line[0]), '*') !== 0 ) {
+				continue;
+			}
+			
+			$mailboxes[] = $line[count($line)-2];
+		}
+		
+		return $mailboxes;
+    }
+	
+	/**
 	 * Returns a list of emails given a uid or set of uids
 	 *
 	 * @param number|array uid/s
@@ -238,6 +326,50 @@ class Eden_Mail_Imap extends Eden_Class {
 		$first 		= is_numeric($uid) ? true : false;
 		return $this->_getEmailResponse('UID FETCH', array($uid, $this->_getList($items)), $first);
     }
+	
+	/**
+	 * Moves an email to another mailbox
+	 *
+	 * @param number uid
+	 * @param string mailbox
+	 * @return this
+	 */
+	public function move($uid, $mailbox) {
+		Eden_Mail_Error::i()->argument(1, 'int', 'string')->argument(2, 'string');
+		if(!$this->_socket) {
+			$this->connect();
+		}
+		
+		if(!is_array($uid)) {
+			$uid = array($uid);
+		}
+		
+		$this->_call('UID COPY '.implode(',', $uid).' '.$mailbox);
+		
+		return $this->remove($uid);
+	}
+	
+	/**
+	 * Remove an email from a mailbox
+	 *
+	 * @param number uid
+	 * @return this
+	 */
+	public function remove($uid) {
+		Eden_Mail_Error::i()->argument(1, 'int', 'string');
+		
+		if(!$this->_socket) {
+			$this->connect();
+		}
+		
+		if(!is_array($uid)) {
+			$uid = array($uid);
+		}
+		
+		$this->_call('UID STORE '.implode(',', $uid).' FLAGS.SILENT \Deleted');
+		
+		return $this;
+	}
 	
 	/**
 	 * Searches a mailbox for specific emails
@@ -436,138 +568,6 @@ class Eden_Mail_Imap extends Eden_Class {
 		return false;
 	}
 	
-	/**
-	 * Remove an email from a mailbox
-	 *
-	 * @param number uid
-	 * @return this
-	 */
-	public function remove($uid) {
-		Eden_Mail_Error::i()->argument(1, 'int', 'string');
-		
-		if(!$this->_socket) {
-			$this->connect();
-		}
-		
-		if(!is_array($uid)) {
-			$uid = array($uid);
-		}
-		
-		$this->_call('UID STORE '.implode(',', $uid).' FLAGS.SILENT \Deleted');
-		
-		return $this;
-	}
-	
-	/**
-	 * Moves an email to another mailbox
-	 *
-	 * @param number uid
-	 * @param string mailbox
-	 * @return this
-	 */
-	public function move($uid, $mailbox) {
-		Eden_Mail_Error::i()->argument(1, 'int', 'string')->argument(2, 'string');
-		if(!$this->_socket) {
-			$this->connect();
-		}
-		
-		if(!is_array($uid)) {
-			$uid = array($uid);
-		}
-		
-		$this->_call('UID COPY '.implode(',', $uid).' '.$mailbox);
-		
-		return $this->remove($uid);
-	}
-	
-	/**
-	 * Connects to the server
-	 * 
-	 * @return this
-	 */
-	public function connect($timeout = self::TIMEOUT, $test = false) {
-		Eden_Mail_Error::i()->argument(1, 'int')->argument(2, 'bool');
-		
-		if($this->_socket) {
-			return $this;
-		}
-		
-		$host = $this->_host;
-		
-		if ($this->_ssl) {
-            $host = 'ssl://' . $host;
-        }
-		
-		$errno  =  0;
-        $errstr = '';
-        
-		$this->_socket = @fsockopen($host, $this->_port, $errno, $errstr, $timeout);
-        
-		if (!$this->_socket) {
-			//throw exception
-			Eden_Mail_Error::i()
-				->setMessage(Eden_Mail_Error::SERVER_ERROR)
-				->addVariable($host.':'.$this->_port)
-				->trigger();
-        }
-
-        if (strpos($this->_getLine(), '* OK') === false) {
-			$this->disconnect();
-            //throw exception
-			Eden_Mail_Error::i()
-				->setMessage(Eden_Mail_Error::SERVER_ERROR)
-				->addVariable($host.':'.$this->_port)
-				->trigger();
-        }
-
-        if ($this->_tls) {
-            $this->_send('STARTTLS');
-            if (!stream_socket_enable_crypto($this->_socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
-				$this->disconnect();
-            	//throw exception
-				Eden_Mail_Error::i()
-				->setMessage(Eden_Mail_Error::TLS_ERROR)
-				->addVariable($host.':'.$this->_port)
-				->trigger();
-            }
-        }
-		
-		if($test) {
-			fclose($this->_socket);
-            
-			$this->_socket = NULL;
-			return $this;
-		}
-		
-		//login
-		$result = $this->_call('LOGIN', $this->_escape($this->_username, $this->_password));
-		
-		if(strpos(implode(' ', $result), 'OK') === false) {
-			$this->disconnect();
-			//throw exception
-			Eden_Mail_Error::i(Eden_Mail_Error::LOGIN_ERROR)->trigger();
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Disconnects from the server
-	 *
-	 * @return this
-	 */
-	public function disconnect() {
-        if ($this->_socket) {
-            $this->_send('LOGOUT');
-			
-            fclose($this->_socket);
-            
-			$this->_socket = NULL;
-        }
-		
-        return $this;
-	}
-	
 	/* Protected Methods
 	-------------------------------*/
 	protected function _call($command, $parameters = array()) {
@@ -577,6 +577,35 @@ class Eden_Mail_Imap extends Eden_Class {
 		
 		return $this->_receive($this->_tag);
 	}
+	
+    protected function _getLine() {
+        $line = fgets($this->_socket);
+		
+		if($line === false) {
+			$this->disconnect();
+		}
+		
+		$this->_debug('Receiving: '.$line);
+		
+		return $line;
+    }
+	
+	protected function _receive($sentTag) {   
+		$this->_buffer = array();
+		
+		$start = time();
+		
+        while (time() < ($start + self::TIMEOUT)) {
+			list($receivedTag, $line) = explode(' ', $this->_getLine(), 2);
+			$this->_buffer[] = trim($receivedTag . ' ' . $line);
+			if($receivedTag == 'TAG'.$sentTag) {
+				return $this->_buffer;
+			}
+			
+        }
+		
+        return NULL;
+    }
 	
 	protected function _send($command, $parameters = array()) {
         $this->_tag ++;
@@ -608,146 +637,33 @@ class Eden_Mail_Imap extends Eden_Class {
         return fputs($this->_socket, $line . "\r\n");
    }
 
-	protected function _receive($sentTag) {   
-		$this->_buffer = array();
-		
-		$start = time();
-		
-        while (time() < ($start + self::TIMEOUT)) {
-			list($receivedTag, $line) = explode(' ', $this->_getLine(), 2);
-			$this->_buffer[] = trim($receivedTag . ' ' . $line);
-			if($receivedTag == 'TAG'.$sentTag) {
-				return $this->_buffer;
-			}
-			
-        }
-		
-        return NULL;
-    }
-	
-    protected function _getLine() {
-        $line = fgets($this->_socket);
-		
-		if($line === false) {
-			$this->disconnect();
-		}
-		
-		$this->_debug('Receiving: '.$line);
-		
-		return $line;
-    }
-	
+
 	/* Private Methods
 	-------------------------------*/
-	private function _getEmailResponse($command, $parameters = array(), $first = false) {
-		//send out the command
-		if(!$this->_send($command, $parameters)) {
-			return false;
+	private function _debug($string) {
+		if($this->_debugging) {
+			$string = htmlspecialchars($string);
+			
+			
+			echo '<pre>'.$string.'</pre>'."\n";
 		}
-		
-		$messageId 	= $uniqueId = $count = 0;
-		$emails 	= $email = array();
-		$start 		= time();
-		
-		//while there is no hang
-        while (time() < ($start + self::TIMEOUT)) {
-			//get a response line
-			$line = str_replace("\n", '', $this->_getLine());
-
-			//if the line starts with a fetch 
-			//it means it's the end of getting an email
-			if(strpos($line, 'FETCH') !== false && strpos($line, 'TAG'.$this->_tag) === false) {
-				//if there is email data
-				if(!empty($email)) {
-					//create the email format and add it to emails
-					$emails[$uniqueId] = $this->_getEmailFormat($email, $uniqueId, $flags);
-					
-					//if all we want is the first one
-					if($first) {
-						//just return this
-						return $emails[$uniqueId];
-					}
-					
-					//make email data empty again
-					$email = array();
-				}
-				
-				//if just okay
-				if(strpos($line, 'OK') !== false) {
-					//then skip the rest
-					continue;
-				}
-				
-				//if it's not just ok
-				//it will contain the message id and the unique id and flags
-				$flags = array();
-				if(strpos($line, '\Answered' ) !== false) {
-					$flags[] = 'answered';
-				}
-				
-				if(strpos($line, '\Flagged' ) !== false) {
-					$flags[] = 'flagged';
-				}
-				
-				if(strpos($line, '\Deleted' ) !== false) {
-					$flags[] = 'deleted';
-				}
-				
-				if(strpos($line, '\Seen' ) !== false) {
-					$flags[] = 'seen';
-				}
-				
-				if(strpos($line, '\Draft' ) !== false) {
-					$flags[] = 'draft';
-				}
-				
-				$findUid = explode(' ', $line);
-				foreach($findUid as $i => $uid) {
-					if(is_numeric($uid)) {
-						$uniqueId = $uid;
-					}
-					if(strpos(strtolower($uid), 'uid') !== false) {
-						$uniqueId = $findUid[$i+1];
-						break;
-					}
-				}
-				
-				//skip the rest
-				continue;
-			} 
-			
-			//if there is a tag it means we are at the end
-			if(strpos($line, 'TAG'.$this->_tag) !== false) {
-				
-				//if email details are not empty and the last line is just a )
-				if(!empty($email) && strpos(trim($email[count($email) -1]), ')') === 0) {
-					//take it out because that is not part of the details
-					array_pop($email);
-				}
-					
-				//if there is email data
-				if(!empty($email)) {
-					//create the email format and add it to emails
-					$emails[$uniqueId] = $this->_getEmailFormat($email, $uniqueId, $flags);
-					
-					//if all we want is the first one
-					if($first) {
-						//just return this
-						return $emails[$uniqueId];
-					}
-				}
-				
-				//break out of this loop
-				break;
-			}
-			
-			//so at this point we are getting raw data
-			//capture this data in email details
-			$email[] = $line;	
-        }
-		
-		return $emails;
+		return $this;
 	}
+	
+	private function _escape($string) {
+        if (func_num_args() < 2) {
+            if (strpos($string, "\n") !== false) {
+                return array('{' . strlen($string) . '}', $string);
+            } else {
+                return '"' . str_replace(array('\\', '"'), array('\\\\', '\\"'), $string) . '"';
+            }
+        }
+        $result = array();
+        foreach (func_get_args() as $string) {
+            $result[] = $this->_escape($string);
+        }
+        return $result;
+    }
 	
 	private function _getEmailFormat($email, $uniqueId = NULL, array $flags = array()) {
 		//if email is an array
@@ -934,6 +850,161 @@ class Eden_Mail_Imap extends Eden_Class {
 		return $format;
 	} 
 	
+	private function _getEmailResponse($command, $parameters = array(), $first = false) {
+		//send out the command
+		if(!$this->_send($command, $parameters)) {
+			return false;
+		}
+		
+		$messageId 	= $uniqueId = $count = 0;
+		$emails 	= $email = array();
+		$start 		= time();
+		
+		//while there is no hang
+        while (time() < ($start + self::TIMEOUT)) {
+			//get a response line
+			$line = str_replace("\n", '', $this->_getLine());
+
+			//if the line starts with a fetch 
+			//it means it's the end of getting an email
+			if(strpos($line, 'FETCH') !== false && strpos($line, 'TAG'.$this->_tag) === false) {
+				//if there is email data
+				if(!empty($email)) {
+					//create the email format and add it to emails
+					$emails[$uniqueId] = $this->_getEmailFormat($email, $uniqueId, $flags);
+					
+					//if all we want is the first one
+					if($first) {
+						//just return this
+						return $emails[$uniqueId];
+					}
+					
+					//make email data empty again
+					$email = array();
+				}
+				
+				//if just okay
+				if(strpos($line, 'OK') !== false) {
+					//then skip the rest
+					continue;
+				}
+				
+				//if it's not just ok
+				//it will contain the message id and the unique id and flags
+				$flags = array();
+				if(strpos($line, '\Answered' ) !== false) {
+					$flags[] = 'answered';
+				}
+				
+				if(strpos($line, '\Flagged' ) !== false) {
+					$flags[] = 'flagged';
+				}
+				
+				if(strpos($line, '\Deleted' ) !== false) {
+					$flags[] = 'deleted';
+				}
+				
+				if(strpos($line, '\Seen' ) !== false) {
+					$flags[] = 'seen';
+				}
+				
+				if(strpos($line, '\Draft' ) !== false) {
+					$flags[] = 'draft';
+				}
+				
+				$findUid = explode(' ', $line);
+				foreach($findUid as $i => $uid) {
+					if(is_numeric($uid)) {
+						$uniqueId = $uid;
+					}
+					if(strpos(strtolower($uid), 'uid') !== false) {
+						$uniqueId = $findUid[$i+1];
+						break;
+					}
+				}
+				
+				//skip the rest
+				continue;
+			} 
+			
+			//if there is a tag it means we are at the end
+			if(strpos($line, 'TAG'.$this->_tag) !== false) {
+				
+				//if email details are not empty and the last line is just a )
+				if(!empty($email) && strpos(trim($email[count($email) -1]), ')') === 0) {
+					//take it out because that is not part of the details
+					array_pop($email);
+				}
+					
+				//if there is email data
+				if(!empty($email)) {
+					//create the email format and add it to emails
+					$emails[$uniqueId] = $this->_getEmailFormat($email, $uniqueId, $flags);
+					
+					//if all we want is the first one
+					if($first) {
+						//just return this
+						return $emails[$uniqueId];
+					}
+				}
+				
+				//break out of this loop
+				break;
+			}
+			
+			//so at this point we are getting raw data
+			//capture this data in email details
+			$email[] = $line;	
+        }
+		
+		return $emails;
+	}
+	
+	private function _getHeaders($rawData) {
+		if(is_string($rawData)) {
+			$rawData = explode("\n", $rawData);
+		}
+		
+		$key = NULL;
+		$headers = array();
+		foreach($rawData as $line) {
+			$line = trim($line);
+			if(preg_match("/^([a-zA-Z0-9-]+):/i", $line, $matches)) {
+				$key = strtolower($matches[1]);
+				if(isset($headers[$key])) {
+					if(!is_array($headers[$key])) {
+						$headers[$key] = array($headers[$key]);
+					}
+					
+					$headers[$key][] = trim(str_replace($matches[0], '', $line));
+					continue;
+				} 
+				
+				$headers[$key] = trim(str_replace($matches[0], '', $line));
+				continue;
+			} 
+			
+			if(!is_null($key) && isset($headers[$key])) {
+				if(is_array($headers[$key])) {
+					$headers[$key][count($headers[$key])-1] .= ' '.$line;	
+					continue;
+				}
+				
+				$headers[$key] .= ' '.$line; 
+			}
+		}
+		
+		return $headers;
+	}
+	
+	private function _getList($array) {
+		$list = array();
+        foreach ($array as $key => $value) {
+            $list[] = !is_array($value) ? $value : $this->_getList($v);
+        }
+        return '(' . implode(' ', $list) . ')';
+	}
+	
 	private function _getParts($content, array $parts = array()) {
 		//separate the head and the body
 		list($head, $body) = preg_split("/\n\s*\n/", $content, 2);
@@ -1025,73 +1096,4 @@ class Eden_Mail_Imap extends Eden_Class {
 		return $parts;
 	}
 	
-	private function _getHeaders($rawData) {
-		if(is_string($rawData)) {
-			$rawData = explode("\n", $rawData);
-		}
-		
-		$key = NULL;
-		$headers = array();
-		foreach($rawData as $line) {
-			$line = trim($line);
-			if(preg_match("/^([a-zA-Z0-9-]+):/i", $line, $matches)) {
-				$key = strtolower($matches[1]);
-				if(isset($headers[$key])) {
-					if(!is_array($headers[$key])) {
-						$headers[$key] = array($headers[$key]);
-					}
-					
-					$headers[$key][] = trim(str_replace($matches[0], '', $line));
-					continue;
-				} 
-				
-				$headers[$key] = trim(str_replace($matches[0], '', $line));
-				continue;
-			} 
-			
-			if(!is_null($key) && isset($headers[$key])) {
-				if(is_array($headers[$key])) {
-					$headers[$key][count($headers[$key])-1] .= ' '.$line;	
-					continue;
-				}
-				
-				$headers[$key] .= ' '.$line; 
-			}
-		}
-		
-		return $headers;
-	}
-	
-	private function _escape($string) {
-        if (func_num_args() < 2) {
-            if (strpos($string, "\n") !== false) {
-                return array('{' . strlen($string) . '}', $string);
-            } else {
-                return '"' . str_replace(array('\\', '"'), array('\\\\', '\\"'), $string) . '"';
-            }
-        }
-        $result = array();
-        foreach (func_get_args() as $string) {
-            $result[] = $this->_escape($string);
-        }
-        return $result;
-    }
-	
-	private function _getList($array) {
-		$list = array();
-        foreach ($array as $key => $value) {
-            $list[] = !is_array($value) ? $value : $this->_getList($v);
-        }
-        return '(' . implode(' ', $list) . ')';
-	}
-	
-	private function _debug($string) {
-		if($this->_debugging) {
-			$string = htmlspecialchars($string);
-			
-			
-			echo '<pre>'.$string.'</pre>'."\n";
-		}
-		return $this;
-	}
 }

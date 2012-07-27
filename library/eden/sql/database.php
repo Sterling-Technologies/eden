@@ -69,6 +69,136 @@ abstract class Eden_Sql_Database extends Eden_Event {
 	abstract public function connect(array $options = array());
 	
 	/**
+	 * Binds a value and returns the bound key
+	 *
+	 * @param string
+	 * @return string
+	 */
+	public function bind($value) {
+		//Argument 1 must be an array, string or number
+		Eden_Sql_Error::i()->argument(1, 'array', 'string', 'numeric', 'null');
+		
+		if(is_array($value)) {
+			foreach($value as $i => $item) {
+				$value[$i] = $this->bind($item);
+			}
+			
+			return '('.implode(",",$value).')';
+		} else if(is_numeric($value)) {
+			return $value;
+		}
+		
+		$name = ':bind'.count($this->_binds).'bind';
+		$this->_binds[$name] = $value;
+		return $name;
+	}
+	
+	/**
+	 * Returns collection
+	 *
+	 * @return Eden_Sql_Collection
+	 */
+	public function collection(array $data = array()) {
+		$collection = $this->_collection;
+		return $this->$collection()
+			->setDatabase($this)
+			->setModel($this->_model)
+			->set($data);
+	}
+	
+	/**
+	 * Returns the delete query builder
+	 *
+	 * @return Eden_Sql_Delete
+	 */ 
+	public function delete($table = NULL) {
+		//Argument 1 must be a string or null
+		Eden_Sql_Error::i()->argument(1, 'string', 'null');
+		
+		return Eden_Sql_Delete::i($table);
+	}
+	
+	/**
+	 * Removes rows that match a filter
+	 *
+	 * @param string table
+	 * @param array filter
+	 * @return var
+	 */
+	public function deleteRows($table, $filters = NULL) {
+		//Argument 1 must be a string
+		Eden_Sql_Error::i()->argument(1, 'string');
+		
+		$query = $this->delete($table);
+		
+		if(is_array($filters)) {
+			foreach($filters as $i => $filter) {
+				//array('post_id=%s AND post_title IN %s', 123, array('asd'));
+				$format = array_shift($filter);
+				$filter = $this->bind($filter);
+				$filters[$i] = vsprintf($format, $filter);
+			}
+		}
+		
+		$query->where($filters);
+		
+		//run the query
+		$this->query($query, $this->getBinds());	
+		
+		$this->trigger($table, $filters);
+		
+		return $this;
+	}
+	
+	/**
+	 * Returns all the bound values of this query
+	 *
+	 * @param void
+	 * @return array
+	 */
+	public function getBinds() {
+		return $this->_binds;
+	}
+	
+	/**
+	 * Returns a collection given the query parameters
+	 *
+	 * @param string table
+	 * @param array joins
+	 * @param array filter
+	 * @param array sort
+	 * @param int start
+	 * @param int range
+	 * @return array
+	 */
+	public function getCollection($table, array $joins = array(), $filters = NULL, 
+		array $sort = array(), $start = 0, $range = 0, $index = NULL) {
+		//argument test
+		Eden_Sql_Error::i()
+			->argument(1, 'string')						//Argument 1 must be a string
+			->argument(3, 'string', 'array', 'null')	//Argument 3 must be a string number or null
+			->argument(5, 'numeric')					//Argument 5 must be a number
+			->argument(6, 'numeric')					//Argument 6 must be a number
+			->argument(7, 'numeric', 'null');			//Argument 7 must be a number or null
+		
+		$results = $this->getRows($table, $joins, $filters, $sort, $start, $range, $index);
+		
+		$collection = $this->collection()
+			->setTable($table)
+			->setModel($this->_model);
+		
+		if(is_null($results)) {
+			return $collection;
+		}
+		
+		if(!is_null($index)) {
+			return $this->model($results)->setTable($table);
+		}
+		
+		return $collection->set($results);
+	}
+	
+	/**
 	 * Returns the connection object
 	 * if no connection has been made 
 	 * it will attempt to make it
@@ -85,92 +215,6 @@ abstract class Eden_Sql_Database extends Eden_Event {
 	}
 	
 	/**
-	 * Returns the delete query builder
-	 *
-	 * @return Eden_Sql_Delete
-	 */ 
-	public function delete($table = NULL) {
-		//Argument 1 must be a string or null
-		Eden_Sql_Error::i()->argument(1, 'string', 'null');
-		
-		return Eden_Sql_Delete::i($table);
-	}
-	
-	/**
-	 * Returns the insert query builder
-	 *
-	 * @return Eden_Sql_Insert
-	 */ 
-	public function insert($table = NULL) {
-		//Argument 1 must be a string or null
-		Eden_Sql_Error::i()->argument(1, 'string', 'null');
-		
-		return Eden_Sql_Insert::i($table);
-	}
-	
-	/**
-	 * Returns the select query builder
-	 *
-	 * @return Eden_Sql_Select
-	 */ 
-	public function select($select = '*') {
-		//Argument 1 must be a string or array
-		Eden_Sql_Error::i()->argument(1, 'string', 'array');
-		
-		return Eden_Sql_Select::i($select);
-	}
-	
-	/**
-	 * Returns the update query builder
-	 *
-	 * @return Eden_Sql_Update
-	 */ 
-	public function update($table = NULL) {
-		//Argument 1 must be a string or null
-		Eden_Sql_Error::i()->argument(1, 'string', 'null');
-		
-		return Eden_Sql_Update::i($table);
-	}
-	
-	/**
-	 * Sets the default model
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setModel($model) {
-		$error = Eden_Sql_Error::i()->argument(1, 'string');
-		
-		if(!is_subclass_of($model, self::MODEL)) {
-			$error->setMessage(Eden_Sql_Error::NOT_SUB_MODEL)
-				->addVariable($model)
-				->trigger();
-		}
-		
-		$this->_model = $model;
-		return $this;
-	}
-	
-	/**
-	 * Sets default collection
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setCollection($collection) {
-		$error = Eden_Sql_Error::i()->argument(1, 'string');
-		
-		if(!is_subclass_of($collection, self::COLLECTION)) {
-			$error->setMessage(Eden_Sql_Error::NOT_SUB_COLLECTION)
-				->addVariable($collection)
-				->trigger();
-		}
-		
-		$this->_collection = $collection;
-		return $this;
-	}
-	
-	/**
 	 * Returns the last inserted id
 	 *
 	 * @return int the id
@@ -180,46 +224,54 @@ abstract class Eden_Sql_Database extends Eden_Event {
 	}
 	
 	/**
-	 * Returns search
+	 * Returns a model given the column name and the value
 	 *
-	 * @return Eden_Sql_Search
+	 * @param string table
+	 * @param string name
+	 * @param string value
+	 * @return array|NULL
 	 */
-	public function search($table = NULL) {
-		//Argument 1 must be a string or null
-		Eden_Sql_Error::i()->argument(1, 'string', 'null');
+	public function getModel($table, $name, $value) {
+		//argument test
+		Eden_Sql_Error::i()
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string')				//Argument 2 must be a string
+			->argument(3, 'string', 'numeric');	//Argument 3 must be a string or number
+
+		$result = $this->getRow($table, $name, $value);
 		
-		$search = Eden_Sql_Search::i($this)
-			->setCollection($this->_collection)
-			->setModel($this->_model);
+		$model = $this->model()->setTable($table);
 		
-		if($table) {
-			$search->setTable($table);
+		if(is_null($result)) {
+			return $model;
 		}
 		
-		return $search;
+		return $model->set($result);
 	}
 	
 	/**
-	 * Returns model
-	 *
-	 * @return Eden_Sql_Model
+	 * Returns the history of queries made still in memory
+	 * 
+	 * @return array the queries
 	 */
-	public function model(array $data = array()) {
-		$model = $this->_model;
-		return $this->$model($data)->setDatabase($this);
-	}
-	
-	/**
-	 * Returns collection
-	 *
-	 * @return Eden_Sql_Collection
-	 */
-	public function collection(array $data = array()) {
-		$collection = $this->_collection;
-		return $this->$collection()
-			->setDatabase($this)
-			->setModel($this->_model)
-			->set($data);
+	public function getQueries($index = NULL) {
+		if(is_null($index)) {
+			return $this->_queries;
+		}
+		
+		if($index == self::FIRST) {
+			$index = 0;
+		}
+		
+		if($index == self::LAST) {
+			$index = count($this->_queries) - 1;
+		}
+		
+		if(isset($this->_queries[$index])) {
+			return $this->_queries[$index];
+		}
+		
+		return NULL;
 	}
 	
 	/**
@@ -391,67 +443,15 @@ abstract class Eden_Sql_Database extends Eden_Event {
 	}
 	
 	/**
-	 * Returns a model given the column name and the value
+	 * Returns the insert query builder
 	 *
-	 * @param string table
-	 * @param string name
-	 * @param string value
-	 * @return array|NULL
-	 */
-	public function getModel($table, $name, $value) {
-		//argument test
-		Eden_Sql_Error::i()
-			->argument(1, 'string')				//Argument 1 must be a string
-			->argument(2, 'string')				//Argument 2 must be a string
-			->argument(3, 'string', 'numeric');	//Argument 3 must be a string or number
-
-		$result = $this->getRow($table, $name, $value);
+	 * @return Eden_Sql_Insert
+	 */ 
+	public function insert($table = NULL) {
+		//Argument 1 must be a string or null
+		Eden_Sql_Error::i()->argument(1, 'string', 'null');
 		
-		$model = $this->model()->setTable($table);
-		
-		if(is_null($result)) {
-			return $model;
-		}
-		
-		return $model->set($result);
-	}
-	
-	/**
-	 * Returns a collection given the query parameters
-	 *
-	 * @param string table
-	 * @param array joins
-	 * @param array filter
-	 * @param array sort
-	 * @param int start
-	 * @param int range
-	 * @return array
-	 */
-	public function getCollection($table, array $joins = array(), $filters = NULL, 
-		array $sort = array(), $start = 0, $range = 0, $index = NULL) {
-		//argument test
-		Eden_Sql_Error::i()
-			->argument(1, 'string')						//Argument 1 must be a string
-			->argument(3, 'string', 'array', 'null')	//Argument 3 must be a string number or null
-			->argument(5, 'numeric')					//Argument 5 must be a number
-			->argument(6, 'numeric')					//Argument 6 must be a number
-			->argument(7, 'numeric', 'null');			//Argument 7 must be a number or null
-		
-		$results = $this->getRows($table, $joins, $filters, $sort, $start, $range, $index);
-		
-		$collection = $this->collection()
-			->setTable($table)
-			->setModel($this->_model);
-		
-		if(is_null($results)) {
-			return $collection;
-		}
-		
-		if(!is_null($index)) {
-			return $this->model($results)->setTable($table);
-		}
-		
-		return $collection->set($results);
+		return Eden_Sql_Insert::i($table);
 	}
 	
 	/**
@@ -525,110 +525,13 @@ abstract class Eden_Sql_Database extends Eden_Event {
 	}
 	
 	/**
-	 * Updates rows that match a filter given the update settings
+	 * Returns model
 	 *
-	 * @param string table
-	 * @param array setting
-	 * @param array filter
-	 * @return var
+	 * @return Eden_Sql_Model
 	 */
-	public function updateRows($table, array $setting, $filters = NULL, $bind = true) {
-		//Argument 1 must be a string
-		Eden_Sql_Error::i()->argument(1, 'string')->argument(4, 'array', 'bool');
-		
-		$query = $this->update($table);
-		
-		foreach($setting as $key => $value) {
-			if(is_null($value) || is_bool($value)) {
-				$query->set($key, $value);
-				continue;
-			}
-			
-			if((is_bool($bind) && $bind) || (is_array($bind) && in_array($key, $bind))) {
-				$value = $this->bind($value);
-			}
-			
-			$query->set($key, $value);
-		}
-		
-		if(is_array($filters)) {
-			foreach($filters as $i => $filter) {
-				//array('post_id=%s AND post_title IN %s', 123, array('asd'));
-				$format = array_shift($filter);
-				$filter = $this->bind($filter);
-				$filters[$i] = vsprintf($format, $filter);
-			}
-		}
-		
-		$query->where($filters);
-		
-		//run the query
-		$this->query($query, $this->getBinds());	
-		
-		$this->trigger($table, $setting, $filters);
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets only 1 row given the column name and the value
-	 *
-	 * @param string table
-	 * @param string name
-	 * @param string value
-	 * @param array setting
-	 * @return var
-	 */
-	public function setRow($table, $name, $value, array $setting) {
-		//argument test
-		Eden_Sql_Error::i()
-			->argument(1, 'string')				//Argument 1 must be a string
-			->argument(2, 'string')				//Argument 2 must be a string
-			->argument(3, 'string', 'numeric');	//Argument 3 must be a string or number
-		
-		//first check to see if the row exists
-		$row = $this->getRow($table, $name, $value);
-		
-		if(!$row) {
-			//we need to insert
-			$setting[$name] = $value;
-			return $this->insertRow($table, $setting);
-		} else {
-			//we need to update this row
-			return $this->updateRows($table, $setting, array(array($name.'=%s', $value)));
-		}
-	}
-	
-	/**
-	 * Removes rows that match a filter
-	 *
-	 * @param string table
-	 * @param array filter
-	 * @return var
-	 */
-	public function deleteRows($table, $filters = NULL) {
-		//Argument 1 must be a string
-		Eden_Sql_Error::i()->argument(1, 'string');
-		
-		$query = $this->delete($table);
-		
-		if(is_array($filters)) {
-			foreach($filters as $i => $filter) {
-				//array('post_id=%s AND post_title IN %s', 123, array('asd'));
-				$format = array_shift($filter);
-				$filter = $this->bind($filter);
-				$filters[$i] = vsprintf($format, $filter);
-			}
-		}
-		
-		$query->where($filters);
-		
-		//run the query
-		$this->query($query, $this->getBinds());	
-		
-		$this->trigger($table, $filters);
-		
-		return $this;
+	public function model(array $data = array()) {
+		$model = $this->_model;
+		return $this->$model($data)->setDatabase($this);
 	}
 	
 	/**
@@ -678,65 +581,36 @@ abstract class Eden_Sql_Database extends Eden_Event {
 		return $results;
 	}
 	
-	
 	/**
-	 * Returns the history of queries made still in memory
-	 * 
-	 * @return array the queries
+	 * Returns search
+	 *
+	 * @return Eden_Sql_Search
 	 */
-	public function getQueries($index = NULL) {
-		if(is_null($index)) {
-			return $this->_queries;
+	public function search($table = NULL) {
+		//Argument 1 must be a string or null
+		Eden_Sql_Error::i()->argument(1, 'string', 'null');
+		
+		$search = Eden_Sql_Search::i($this)
+			->setCollection($this->_collection)
+			->setModel($this->_model);
+		
+		if($table) {
+			$search->setTable($table);
 		}
 		
-		if($index == self::FIRST) {
-			$index = 0;
-		}
-		
-		if($index == self::LAST) {
-			$index = count($this->_queries) - 1;
-		}
-		
-		if(isset($this->_queries[$index])) {
-			return $this->_queries[$index];
-		}
-		
-		return NULL;
+		return $search;
 	}
 	
 	/**
-	 * Binds a value and returns the bound key
+	 * Returns the select query builder
 	 *
-	 * @param string
-	 * @return string
-	 */
-	public function bind($value) {
-		//Argument 1 must be an array, string or number
-		Eden_Sql_Error::i()->argument(1, 'array', 'string', 'numeric', 'null');
+	 * @return Eden_Sql_Select
+	 */ 
+	public function select($select = '*') {
+		//Argument 1 must be a string or array
+		Eden_Sql_Error::i()->argument(1, 'string', 'array');
 		
-		if(is_array($value)) {
-			foreach($value as $i => $item) {
-				$value[$i] = $this->bind($item);
-			}
-			
-			return '('.implode(",",$value).')';
-		} else if(is_numeric($value)) {
-			return $value;
-		}
-		
-		$name = ':bind'.count($this->_binds).'bind';
-		$this->_binds[$name] = $value;
-		return $name;
-	}
-	
-	/**
-	 * Returns all the bound values of this query
-	 *
-	 * @param void
-	 * @return array
-	 */
-	public function getBinds() {
-		return $this->_binds;
+		return Eden_Sql_Select::i($select);
 	}
 	
 	/**
@@ -747,6 +621,131 @@ abstract class Eden_Sql_Database extends Eden_Event {
 	 */
 	public function setBinds(array $binds) {
 		$this->_binds = $binds;
+		return $this;
+	}
+	
+	/**
+	 * Sets default collection
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCollection($collection) {
+		$error = Eden_Sql_Error::i()->argument(1, 'string');
+		
+		if(!is_subclass_of($collection, self::COLLECTION)) {
+			$error->setMessage(Eden_Sql_Error::NOT_SUB_COLLECTION)
+				->addVariable($collection)
+				->trigger();
+		}
+		
+		$this->_collection = $collection;
+		return $this;
+	}
+	
+	/**
+	 * Sets the default model
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setModel($model) {
+		$error = Eden_Sql_Error::i()->argument(1, 'string');
+		
+		if(!is_subclass_of($model, self::MODEL)) {
+			$error->setMessage(Eden_Sql_Error::NOT_SUB_MODEL)
+				->addVariable($model)
+				->trigger();
+		}
+		
+		$this->_model = $model;
+		return $this;
+	}
+	
+	/**
+	 * Sets only 1 row given the column name and the value
+	 *
+	 * @param string table
+	 * @param string name
+	 * @param string value
+	 * @param array setting
+	 * @return var
+	 */
+	public function setRow($table, $name, $value, array $setting) {
+		//argument test
+		Eden_Sql_Error::i()
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string')				//Argument 2 must be a string
+			->argument(3, 'string', 'numeric');	//Argument 3 must be a string or number
+		
+		//first check to see if the row exists
+		$row = $this->getRow($table, $name, $value);
+		
+		if(!$row) {
+			//we need to insert
+			$setting[$name] = $value;
+			return $this->insertRow($table, $setting);
+		} else {
+			//we need to update this row
+			return $this->updateRows($table, $setting, array(array($name.'=%s', $value)));
+		}
+	}
+	
+	/**
+	 * Returns the update query builder
+	 *
+	 * @return Eden_Sql_Update
+	 */ 
+	public function update($table = NULL) {
+		//Argument 1 must be a string or null
+		Eden_Sql_Error::i()->argument(1, 'string', 'null');
+		
+		return Eden_Sql_Update::i($table);
+	}
+	
+	/**
+	 * Updates rows that match a filter given the update settings
+	 *
+	 * @param string table
+	 * @param array setting
+	 * @param array filter
+	 * @return var
+	 */
+	public function updateRows($table, array $setting, $filters = NULL, $bind = true) {
+		//Argument 1 must be a string
+		Eden_Sql_Error::i()->argument(1, 'string')->argument(4, 'array', 'bool');
+		
+		$query = $this->update($table);
+		
+		foreach($setting as $key => $value) {
+			if(is_null($value) || is_bool($value)) {
+				$query->set($key, $value);
+				continue;
+			}
+			
+			if((is_bool($bind) && $bind) || (is_array($bind) && in_array($key, $bind))) {
+				$value = $this->bind($value);
+			}
+			
+			$query->set($key, $value);
+		}
+		
+		if(is_array($filters)) {
+			foreach($filters as $i => $filter) {
+				//array('post_id=%s AND post_title IN %s', 123, array('asd'));
+				$format = array_shift($filter);
+				$filter = $this->bind($filter);
+				$filters[$i] = vsprintf($format, $filter);
+			}
+		}
+		
+		$query->where($filters);
+		
+		//run the query
+		$this->query($query, $this->getBinds());	
+		
+		$this->trigger($table, $setting, $filters);
+		
 		return $this;
 	}
 	

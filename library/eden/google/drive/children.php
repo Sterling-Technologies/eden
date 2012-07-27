@@ -48,100 +48,6 @@ class Eden_Google_Drive_Children extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * The ID of the folder. 
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setFolderId($folderId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_folderId = $folderId;
-		
-		return $this;
-	}
-	
-	/**
-	 * The ID of the child. 
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setChildId($childId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_childId = $childId;
-		
-		return $this;
-	}
-	
-	/**
-	 * This is always drive#childReference.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setKind($kind) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_kind = $kind;
-		
-		return $this;
-	}
-	
-	/**
-	 * The ID of the child.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setId($id) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_id = $id;
-		
-		return $this;
-	}
-	
-	/**
-	 * A link back to this reference.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setSelfLink($selfLink) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_selfLink = $selfLink;
-		
-		return $this;
-	}
-	
-	/**
-	 * A link to the child.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setChildLink($childLink) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_childLink = $childLink;
-		
-		return $this;
-	}
-	
-	/**
-	 * Gets a specific child reference
-	 *
-	 * @return array
-	 */
-	public function getSpecific() {
-		
-		return $this->_getResponse(sprintf(self::URL_CHILDREN_SPECIFIC, $this->_fileId, $this->_childrenId));
-	}
-	
-	/**
 	 * Removes a child from a folder
 	 *
 	 * @return array
@@ -162,6 +68,16 @@ class Eden_Google_Drive_Children extends Eden_Google_Base {
 	}
 	
 	/**
+	 * Gets a specific child reference
+	 *
+	 * @return array
+	 */
+	public function getSpecific() {
+		
+		return $this->_getResponse(sprintf(self::URL_CHILDREN_SPECIFIC, $this->_fileId, $this->_childrenId));
+	}
+	
+	/**
 	 * Inserts a file into a folder
 	 *
 	 * @return array
@@ -177,6 +93,90 @@ class Eden_Google_Drive_Children extends Eden_Google_Base {
 		return $this->_post(sprintf(self::URL_CHANGES_LIST, $this->_folderId), $query);
 	}
 	 
+	/**
+	 * The ID of the child. 
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setChildId($childId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_childId = $childId;
+		
+		return $this;
+	}
+	
+	/**
+	 * A link to the child.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setChildLink($childLink) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_childLink = $childLink;
+		
+		return $this;
+	}
+	
+	/**
+	 * The ID of the folder. 
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setFolderId($folderId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_folderId = $folderId;
+		
+		return $this;
+	}
+	
+	/**
+	 * The ID of the child.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setId($id) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_id = $id;
+		
+		return $this;
+	}
+	
+	/**
+	 * This is always drive#childReference.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setKind($kind) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_kind = $kind;
+		
+		return $this;
+	}
+	
+	/**
+	 * A link back to this reference.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setSelfLink($selfLink) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_selfLink = $selfLink;
+		
+		return $this;
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

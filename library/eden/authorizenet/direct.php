@@ -61,20 +61,6 @@ class Eden_Authorizenet_Direct extends Eden_Authorizenet_Base{
 	}
 	
 	/**
-     * Set return URL 
-     *
-	 * @param *string
-     * @return this
-     */
-	public function setReturnUrl($url) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_returnUrl = $url;
-		return $this;
-	}
-	
-	/**
 	 * Demonstrates the Direct Post Method
 	 *
 	 * return this
@@ -99,6 +85,20 @@ class Eden_Authorizenet_Direct extends Eden_Authorizenet_Base{
 			self::LOGIN		=> $this->_apiLogin));
     }
 		
+	/**
+     * Set return URL 
+     *
+	 * @param *string
+     * @return this
+     */
+	public function setReturnUrl($url) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_returnUrl = $url;
+		return $this;
+	}
+	
 	/* Protected Methods
 	-------------------------------*/	
 	/* Private Methods
