@@ -52,24 +52,179 @@ class Eden_Amazon_S3 extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Get a list of buckets
+	 * Put a bucket
 	 *
-	 * @param boolean $detailed Returns detailed bucket list when true
-	 * @return array | false
+	 * @param string $bucket Bucket name
+ 	 * @param constant $acl ACL flag
+	 * @param string $location Set as "EU" to create buckets hosted in Europe
+	 * @return boolean
 	 */
-	public function getBuckets() {
-		$this->_setResponse('GET');
+	public function addBucket($bucket, $acl = self::ACL_PRIVATE, $location = false) {
+		//argument test
+		Eden_Amazon_Error::i()
+			->argument(1, 'string')				//Argument 1 must be string
+			->argument(2, 'string', 'null')		//Argument 2 must be string or null
+			->argument(3, 'bool');				//Argument 3 must be bool
+			
+		$data = NULL;
+		$headers = array();
+		$amazon = array('x-amz-acl' => $acl);
+		
+		if ($location !== false) {
+			$dom 		= new DOMDocument;
+			$config 	= $dom->createElement('CreateBucketConfiguration');
+			$constraint = $dom->createElement('LocationConstraint', strtoupper($location));
+			
+			$config->appendChild($constraint);
+			$dom->appendChild($config);
+			$data = $dom->saveXML();
+			
+			$headers['Content-Type'] = 'application/xml';
+		}
+		
+		$this->_setResponse('PUT', $bucket, '/', array(), $data, $headers, $amazon);
 		
 		if(!empty($this->_meta['error']) || empty($this->_response)) {
 			return false;
 		}
 		
-		$buckets = array();
-		foreach ($this->_response->Buckets->Bucket as $bucket) {
-			$buckets[] = (string)$bucket->Name;
+		return true;
+	}
+	
+	/**
+	 * Put an object
+	 *
+	 * @param mixed $input Input data
+	 * @param string $bucket Bucket name
+	 * @param string $path Object URI
+	 * @param constant $acl ACL constant
+	 * @param array $metaHeaders Array of x-amz-meta-* headers
+	 * @param array $requestHeaders Array of request headers or content type as a string
+	 * @return boolean
+	 */
+	public function addFile($bucket, $path, $data, $acl = self::ACL_PRIVATE, $file = false) {
+		//argument test
+		Eden_Amazon_Error::i()
+			->argument(1, 'string')		//Argument 1 must be string
+			->argument(2, 'string')		//Argument 2 must be string
+			->argument(4, 'string')		//Argument 4 must be string
+			->argument(5, 'bool');		//Argument 5 must be boolean
+			
+		$headers = $amazon = array();
+		
+		$headers['Content-Type'] = $this->Eden_File()->getMimeType($path);
+		$amazon['x-amz-acl'] = $acl;
+		
+		if(strpos($path, '/') !== 0) {
+			$path = '/'.$path;
 		}
 		
-		return $buckets;
+		//if not file 
+		if(!$file) {
+			//put it into a file
+			//we do this because file data in memory is bad
+			$tmp = tmpfile();
+			fwrite($tmp, $data);
+			$file = $tmp;
+			$size = strlen($data);
+			//release file data from memory
+			$data = NULL;
+		//if is a file
+		} else {
+			$file = fopen($data, 'r');
+			$size = filesize($data);
+		}
+		
+		$data = array($file, $size);
+		
+		$this->_setResponse('PUT', $bucket, $path, array(), $data, $headers, $amazon);
+		
+		//dont forget to close
+		fclose($file);
+		
+		if(!empty($this->_meta['error'])) {
+			return false;
+		}
+		
+		return $size;
+	}
+	
+	/**
+	 * Delete an empty bucket
+	 *
+	 * @param string $bucket Bucket name
+	 * @return boolean
+	 */
+	public function deleteBucket($bucket) {
+		//Argument 1 must be string
+		Eden_Amazon_Error::i()->argument(1, 'string');
+		$this->_setResponse('DELETE', $bucket);
+		
+		if(!empty($this->_meta['error']) || empty($this->_response)) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Delete an object
+	 *
+	 * @param string $bucket Bucket name
+	 * @param string $uri Object URI
+	 * @return boolean
+	 */
+	public function deleteFile($bucket, $path) {
+		//argument test
+		Eden_Amazon_Error::i()
+			->argument(1, 'string')		//Argument 1 must be string
+			->argument(2, 'string');	//Argument 2 must be string
+		
+		$this->_setResponse('DELETE', $bucket, $path);
+		
+		if(!empty($this->_meta['error']) || empty($this->_response)) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Delete an object
+	 *
+	 * @param string $bucket Bucket name
+	 * @param string $uri Object URI
+	 * @return boolean
+	 */
+	public function deleteFolder($bucket, $path) {
+		//argument test
+		Eden_Amazon_Error::i()
+			->argument(1, 'string')		//Argument 1 must be string
+			->argument(2, 'string');	//Argument 2 must be string
+			
+		$list = $this->getBucket($bucket);
+		
+		if(strpos($path, '/') === 0) {
+			$path = substr($path, 1);
+		}
+		
+		if(substr($path, -1) == '/') {
+			$path = substr($path, 0, -1);
+		}
+		
+		
+		$files = array();
+		foreach($list as $object) {
+			//if the oject does not start with the path
+			if(strpos($object['name'], $path) !== 0) {
+				//skip it
+				continue;
+			}
+			
+			$this->deleteFile($bucket, '/'.$object['name']);
+		}
+		
+		return true;
 	}
 	
 	/**
@@ -149,65 +304,74 @@ class Eden_Amazon_S3 extends Eden_Class {
 	}
 	
 	/**
-	 * Get folders given a path
+	 * Get a list of buckets
 	 *
-	 * If maxKeys is NULL this method will loop through truncated result sets
-	 *
-	 * @param string $bucket Bucket name
-	 * @param string path
-	 * @param string $prefix Prefix
-	 * @param string $marker Marker (last file listed)
-	 * @param string $maxKeys Max keys (maximum number of keys to return)
-	 * @param string $delimiter Delimiter
-	 * @param boolean $prefixes Set to true to return CommonPrefixes
+	 * @param boolean $detailed Returns detailed bucket list when true
 	 * @return array | false
 	 */
-	public function getFolders($bucket, $path = NULL, $prefix = NULL, $marker = NULL, $maxKeys = NULL, $delimiter = NULL) {
+	public function getBuckets() {
+		$this->_setResponse('GET');
+		
+		if(!empty($this->_meta['error']) || empty($this->_response)) {
+			return false;
+		}
+		
+		$buckets = array();
+		foreach ($this->_response->Buckets->Bucket as $bucket) {
+			$buckets[] = (string)$bucket->Name;
+		}
+		
+		return $buckets;
+	}
+	
+	/**
+	 * Get an object
+	 *
+	 * @param string $bucket Bucket name
+	 * @param string $uri Object URI
+	 * @param mixed $saveTo Filename or resource to write to
+	 * @return mixed
+	 */
+	public function getFile($bucket, $path) {
 		//argument test
 		Eden_Amazon_Error::i()
-			->argument(1, 'string')				//Argument 1 must be string
-			->argument(2, 'string', 'null')		//Argument 2 must be string or null
-			->argument(3, 'string', 'null')		//Argument 3 must be string or null
-			->argument(4, 'string', 'null')		//Argument 4 must be string or null
-			->argument(5, 'string', 'null')		//Argument 5 must be string or null
-			->argument(6, 'string', 'null');	//Argument 6 must be string or null
+			->argument(1, 'string')		//Argument 1 must be string
+			->argument(2, 'string');	//Argument 2 must be string
 			
-		$bucket = $this->getBucket($bucket, $prefix, $marker, $maxKeys, $delimiter);
+		$this->_setResponse('GET', $bucket, $path);
 		
-		if(strpos($path, '/') === 0) {
-			$path = substr($path, 1);
+		if(!empty($this->_meta['error']) || empty($this->_response)) {
+			return false;
 		}
 		
-		if(substr($path, -1) == '/') {
-			$path = substr($path, 0, -1);
+		return $this->_response;
+	}
+	
+	/**
+	 * Get object information
+	 *
+	 * @param string $bucket Bucket name
+	 * @param string $uri Object URI
+	 * @param boolean $returnInfo Return response information
+	 * @return mixed | false
+	 */
+	public function getFileInfo($bucket, $path) {
+		//argument test
+		Eden_Amazon_Error::i()
+			->argument(1, 'string')		//Argument 1 must be string
+			->argument(2, 'string');	//Argument 2 must be string
+		
+		if(strpos($path, '/') !== 0) {
+			$path = '/'.$path;
 		}
 		
-		$folders = array();
-		foreach($bucket as $object) {
-			$name = $object['name'];
-			if($path) {
-				//if the oject does not start with the path
-				if(strpos($name, $path.'/') !== 0) {
-					//skip it
-					continue;
-				}
-				
-				//remove the path
-				$name = substr($name, strlen($path.'/'));
-			}
-			
-			//we just care about the sub string before the /
-			$paths = explode('/', $name);
-			//if this is an s3fox folder
-			if(strpos($paths[0], '_$folder$') !== false) {
-				//remove the suffix
-				$paths[0] = str_replace('_$folder$', '', $paths[0]);
-			}
-			
-			$folders[$paths[0]] = true;
+		$this->_setResponse('HEAD', $bucket, $path);
+		
+		if(!empty($this->_meta['error'])) {
+			return false;
 		}
 		
-		return array_keys($folders);
+		return $this->_meta['headers'];
 	}
 	
 	/**
@@ -271,61 +435,171 @@ class Eden_Amazon_S3 extends Eden_Class {
 	}
 	
 	/**
-	 * Put a bucket
+	 * Get folders given a path
+	 *
+	 * If maxKeys is NULL this method will loop through truncated result sets
 	 *
 	 * @param string $bucket Bucket name
- 	 * @param constant $acl ACL flag
-	 * @param string $location Set as "EU" to create buckets hosted in Europe
-	 * @return boolean
+	 * @param string path
+	 * @param string $prefix Prefix
+	 * @param string $marker Marker (last file listed)
+	 * @param string $maxKeys Max keys (maximum number of keys to return)
+	 * @param string $delimiter Delimiter
+	 * @param boolean $prefixes Set to true to return CommonPrefixes
+	 * @return array | false
 	 */
-	public function addBucket($bucket, $acl = self::ACL_PRIVATE, $location = false) {
+	public function getFolders($bucket, $path = NULL, $prefix = NULL, $marker = NULL, $maxKeys = NULL, $delimiter = NULL) {
 		//argument test
 		Eden_Amazon_Error::i()
 			->argument(1, 'string')				//Argument 1 must be string
 			->argument(2, 'string', 'null')		//Argument 2 must be string or null
-			->argument(3, 'bool');				//Argument 3 must be bool
+			->argument(3, 'string', 'null')		//Argument 3 must be string or null
+			->argument(4, 'string', 'null')		//Argument 4 must be string or null
+			->argument(5, 'string', 'null')		//Argument 5 must be string or null
+			->argument(6, 'string', 'null');	//Argument 6 must be string or null
 			
-		$data = NULL;
-		$headers = array();
-		$amazon = array('x-amz-acl' => $acl);
+		$bucket = $this->getBucket($bucket, $prefix, $marker, $maxKeys, $delimiter);
 		
-		if ($location !== false) {
-			$dom 		= new DOMDocument;
-			$config 	= $dom->createElement('CreateBucketConfiguration');
-			$constraint = $dom->createElement('LocationConstraint', strtoupper($location));
-			
-			$config->appendChild($constraint);
-			$dom->appendChild($config);
-			$data = $dom->saveXML();
-			
-			$headers['Content-Type'] = 'application/xml';
+		if(strpos($path, '/') === 0) {
+			$path = substr($path, 1);
 		}
 		
-		$this->_setResponse('PUT', $bucket, '/', array(), $data, $headers, $amazon);
-		
-		if(!empty($this->_meta['error']) || empty($this->_response)) {
-			return false;
+		if(substr($path, -1) == '/') {
+			$path = substr($path, 0, -1);
 		}
 		
-		return true;
+		$folders = array();
+		foreach($bucket as $object) {
+			$name = $object['name'];
+			if($path) {
+				//if the oject does not start with the path
+				if(strpos($name, $path.'/') !== 0) {
+					//skip it
+					continue;
+				}
+				
+				//remove the path
+				$name = substr($name, strlen($path.'/'));
+			}
+			
+			//we just care about the sub string before the /
+			$paths = explode('/', $name);
+			//if this is an s3fox folder
+			if(strpos($paths[0], '_$folder$') !== false) {
+				//remove the suffix
+				$paths[0] = str_replace('_$folder$', '', $paths[0]);
+			}
+			
+			$folders[$paths[0]] = true;
+		}
+		
+		return array_keys($folders);
 	}
-
+	
 	/**
-	 * Delete an empty bucket
+	 * Gets the size of a folder
 	 *
 	 * @param string $bucket Bucket name
+	 * @param string $uri Object URI
 	 * @return boolean
 	 */
-	public function deleteBucket($bucket) {
-		//Argument 1 must be string
-		Eden_Amazon_Error::i()->argument(1, 'string');
-		$this->_setResponse('DELETE', $bucket);
+	public function getFolderSize($bucket, $path) {
+		//argument test
+		Eden_Amazon_Error::i()
+			->argument(1, 'string')		//Argument 1 must be string
+			->argument(2, 'string');	//Argument 2 must be string
+			
+		$bucket = $this->getBucket($bucket);
+		
+		if(strpos($path, '/') === 0) {
+			$path = substr($path, 1);
+		}
+		
+		if(substr($path, -1) == '/') {
+			$path = substr($path, 0, -1);
+		}
+		
+		$size = 0;
+		foreach($bucket as $object) {
+			//if the oject does not start with the path
+			if(strpos($object['name'], $path.'/') !== 0) {
+				//skip it
+				continue;
+			}
+			
+			$size += $object['size'];
+		}
+		
+		return $size;
+	}
+	
+	public function getMeta($key = NULL) {
+		if(isset($this->_meta[$key])) {
+			return $this->_meta[$key];
+		}
+		
+		return $this->_meta;
+	}
+	
+	/**
+	 * Get object or bucket Access Control Policy
+	 *
+	 * @param string $bucket Bucket name
+	 * @param string $uri Object URI
+	 * @return mixed | false
+	 */
+	public function getPermissions($bucket, $path = '/') {
+		//argument test
+		Eden_Amazon_Error::i()
+			->argument(1, 'string')		//Argument 1 must be string
+			->argument(2, 'string');	//Argument 2 must be string
+		
+		$query['acl'] = NULL;
+		$this->_setResponse('GET', $bucket, $path);
 		
 		if(!empty($this->_meta['error']) || empty($this->_response)) {
 			return false;
 		}
+
+		$permission = array();
+		if (isset($this->_response->Owner, $this->_response->Owner->ID, $this->_response->Owner->DisplayName)) {
+			$permission['owner'] = array(
+				'id' 	=> $this->_response->Owner->ID, 
+				'name' 	=> $this->_response->Owner->DisplayName);
+		}
 		
-		return true;
+		if (isset($this->_response->AccessControlList)) {
+			$acp['users'] = array();
+			foreach ($this->_response->AccessControlList->Grant as $grant) {
+				foreach ($grant->Grantee as $grantee) {
+					if (isset($grantee->ID, $grantee->DisplayName)) { // CanonicalUser
+					
+						$permission['users'][] = array(
+							'type' 			=> 'CanonicalUser',
+							'id' 			=> $grantee->ID,
+							'name' 			=> $grantee->DisplayName,
+							'permission' 	=> $grant->Permission);
+						
+					} else if (isset($grantee->EmailAddress)) { // AmazonCustomerByEmail
+					
+						$permission['users'][] = array(
+							'type' 			=> 'AmazonCustomerByEmail',
+							'email' 		=> $grantee->EmailAddress,
+							'permission' 	=> $grant->Permission);
+						
+					} else if (isset($grantee->URI)) { // Group
+					
+						$permission['users'][] = array(
+							'type' 			=> 'Group',
+							'uri' 			=> $grantee->URI,
+							'permission' 	=> $grant->Permission);
+						
+					}
+				}
+			}
+		}
+		
+		return $permission;
 	}
 	
 	/**
@@ -390,283 +664,104 @@ class Eden_Amazon_S3 extends Eden_Class {
 		
 		return true;
 	}
-
-	/**
-	 * Get object or bucket Access Control Policy
-	 *
-	 * @param string $bucket Bucket name
-	 * @param string $uri Object URI
-	 * @return mixed | false
-	 */
-	public function getPermissions($bucket, $path = '/') {
-		//argument test
-		Eden_Amazon_Error::i()
-			->argument(1, 'string')		//Argument 1 must be string
-			->argument(2, 'string');	//Argument 2 must be string
-		
-		$query['acl'] = NULL;
-		$this->_setResponse('GET', $bucket, $path);
-		
-		if(!empty($this->_meta['error']) || empty($this->_response)) {
-			return false;
-		}
-
-		$permission = array();
-		if (isset($this->_response->Owner, $this->_response->Owner->ID, $this->_response->Owner->DisplayName)) {
-			$permission['owner'] = array(
-				'id' 	=> $this->_response->Owner->ID, 
-				'name' 	=> $this->_response->Owner->DisplayName);
-		}
-		
-		if (isset($this->_response->AccessControlList)) {
-			$acp['users'] = array();
-			foreach ($this->_response->AccessControlList->Grant as $grant) {
-				foreach ($grant->Grantee as $grantee) {
-					if (isset($grantee->ID, $grantee->DisplayName)) { // CanonicalUser
-					
-						$permission['users'][] = array(
-							'type' 			=> 'CanonicalUser',
-							'id' 			=> $grantee->ID,
-							'name' 			=> $grantee->DisplayName,
-							'permission' 	=> $grant->Permission);
-						
-					} else if (isset($grantee->EmailAddress)) { // AmazonCustomerByEmail
-					
-						$permission['users'][] = array(
-							'type' 			=> 'AmazonCustomerByEmail',
-							'email' 		=> $grantee->EmailAddress,
-							'permission' 	=> $grant->Permission);
-						
-					} else if (isset($grantee->URI)) { // Group
-					
-						$permission['users'][] = array(
-							'type' 			=> 'Group',
-							'uri' 			=> $grantee->URI,
-							'permission' 	=> $grant->Permission);
-						
-					}
-				}
-			}
-		}
-		
-		return $permission;
-	}
-	
-	/**
-	 * Put an object
-	 *
-	 * @param mixed $input Input data
-	 * @param string $bucket Bucket name
-	 * @param string $path Object URI
-	 * @param constant $acl ACL constant
-	 * @param array $metaHeaders Array of x-amz-meta-* headers
-	 * @param array $requestHeaders Array of request headers or content type as a string
-	 * @return boolean
-	 */
-	public function addFile($bucket, $path, $data, $acl = self::ACL_PRIVATE, $file = false) {
-		//argument test
-		Eden_Amazon_Error::i()
-			->argument(1, 'string')		//Argument 1 must be string
-			->argument(2, 'string')		//Argument 2 must be string
-			->argument(4, 'string')		//Argument 4 must be string
-			->argument(5, 'bool');		//Argument 5 must be boolean
-			
-		$headers = $amazon = array();
-		
-		$headers['Content-Type'] = $this->Eden_File()->getMimeType($path);
-		$amazon['x-amz-acl'] = $acl;
-		
-		if(strpos($path, '/') !== 0) {
-			$path = '/'.$path;
-		}
-		
-		//if not file 
-		if(!$file) {
-			//put it into a file
-			//we do this because file data in memory is bad
-			$tmp = tmpfile();
-			fwrite($tmp, $data);
-			$file = $tmp;
-			$size = strlen($data);
-			//release file data from memory
-			$data = NULL;
-		//if is a file
-		} else {
-			$file = fopen($data, 'r');
-			$size = filesize($data);
-		}
-		
-		$data = array($file, $size);
-		
-		$this->_setResponse('PUT', $bucket, $path, array(), $data, $headers, $amazon);
-		
-		//dont forget to close
-		fclose($file);
-		
-		if(!empty($this->_meta['error'])) {
-			return false;
-		}
-		
-		return $size;
-	}
-	
-	/**
-	 * Get an object
-	 *
-	 * @param string $bucket Bucket name
-	 * @param string $uri Object URI
-	 * @param mixed $saveTo Filename or resource to write to
-	 * @return mixed
-	 */
-	public function getFile($bucket, $path) {
-		//argument test
-		Eden_Amazon_Error::i()
-			->argument(1, 'string')		//Argument 1 must be string
-			->argument(2, 'string');	//Argument 2 must be string
-			
-		$this->_setResponse('GET', $bucket, $path);
-		
-		if(!empty($this->_meta['error']) || empty($this->_response)) {
-			return false;
-		}
-		
-		return $this->_response;
-	}
-
-	/**
-	 * Get object information
-	 *
-	 * @param string $bucket Bucket name
-	 * @param string $uri Object URI
-	 * @param boolean $returnInfo Return response information
-	 * @return mixed | false
-	 */
-	public function getFileInfo($bucket, $path) {
-		//argument test
-		Eden_Amazon_Error::i()
-			->argument(1, 'string')		//Argument 1 must be string
-			->argument(2, 'string');	//Argument 2 must be string
-		
-		if(strpos($path, '/') !== 0) {
-			$path = '/'.$path;
-		}
-		
-		$this->_setResponse('HEAD', $bucket, $path);
-		
-		if(!empty($this->_meta['error'])) {
-			return false;
-		}
-		
-		return $this->_meta['headers'];
-	}
-	
-	/**
-	 * Delete an object
-	 *
-	 * @param string $bucket Bucket name
-	 * @param string $uri Object URI
-	 * @return boolean
-	 */
-	public function deleteFile($bucket, $path) {
-		//argument test
-		Eden_Amazon_Error::i()
-			->argument(1, 'string')		//Argument 1 must be string
-			->argument(2, 'string');	//Argument 2 must be string
-		
-		$this->_setResponse('DELETE', $bucket, $path);
-		
-		if(!empty($this->_meta['error']) || empty($this->_response)) {
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * Delete an object
-	 *
-	 * @param string $bucket Bucket name
-	 * @param string $uri Object URI
-	 * @return boolean
-	 */
-	public function deleteFolder($bucket, $path) {
-		//argument test
-		Eden_Amazon_Error::i()
-			->argument(1, 'string')		//Argument 1 must be string
-			->argument(2, 'string');	//Argument 2 must be string
-			
-		$list = $this->getBucket($bucket);
-		
-		if(strpos($path, '/') === 0) {
-			$path = substr($path, 1);
-		}
-		
-		if(substr($path, -1) == '/') {
-			$path = substr($path, 0, -1);
-		}
-		
-		
-		$files = array();
-		foreach($list as $object) {
-			//if the oject does not start with the path
-			if(strpos($object['name'], $path) !== 0) {
-				//skip it
-				continue;
-			}
-			
-			$this->deleteFile($bucket, '/'.$object['name']);
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * Gets the size of a folder
-	 *
-	 * @param string $bucket Bucket name
-	 * @param string $uri Object URI
-	 * @return boolean
-	 */
-	public function getFolderSize($bucket, $path) {
-		//argument test
-		Eden_Amazon_Error::i()
-			->argument(1, 'string')		//Argument 1 must be string
-			->argument(2, 'string');	//Argument 2 must be string
-			
-		$bucket = $this->getBucket($bucket);
-		
-		if(strpos($path, '/') === 0) {
-			$path = substr($path, 1);
-		}
-		
-		if(substr($path, -1) == '/') {
-			$path = substr($path, 0, -1);
-		}
-		
-		$size = 0;
-		foreach($bucket as $object) {
-			//if the oject does not start with the path
-			if(strpos($object['name'], $path.'/') !== 0) {
-				//skip it
-				continue;
-			}
-			
-			$size += $object['size'];
-		}
-		
-		return $size;
-	}
-	
-	public function getMeta($key = NULL) {
-		if(isset($this->_meta[$key])) {
-			return $this->_meta[$key];
-		}
-		
-		return $this->_meta;
-	}
 	
 	/* Protected Methods
-	-------------------------------*/
+	-------------------------------*/	
+	protected function _getHost($bucket = NULL) {
+		if(!$bucket) {
+			return $this->_host;
+		}
+		
+		return strtolower($bucket).'.'.$this->_host;
+	}
+	
+	protected function _getPath($bucket = NULL, $path = '/', array $query = array()) {
+		if ($bucket) {
+			return '/'.strtolower($bucket).$path;
+		} 
+		
+		$keys = array_keys($query);
+		foreach($keys as $key) {
+			if(in_array($key, array('acl', 'location', 'torrent', 'logging'))) {
+				$query = http_build_query($query);
+				
+				$link = '?';
+				if(strpos($path, '?') !== false) {
+					$link = '&';
+				}
+				
+				return $path.$link.$query;
+			}
+		}
+		
+		return $path;
+	}
+	
+	protected function _getSignature($string) {
+		if(extension_loaded('hash')) {
+			$hash = base64_encode(hash_hmac('sha1', $string, $this->_pass, true));
+		} else {
+			$pad1 = str_pad($this->_pass, 64, chr(0x00)) ^ str_repeat(chr(0x36), 64);
+			$pad2 = str_pad($this->_pass, 64, chr(0x00)) ^ str_repeat(chr(0x5c), 64);
+			$pack1	= pack('H*', sha1($pad1 . $string));
+			$pack2 	= pack('H*', sha1($pad2 . $pack1));
+			$hash = base64_encode($pack2);
+		}
+		
+		return 'AWS '.$this->_user.':'.$hash;	
+	}
+
+	protected function _getUrl($host, $path, $query = NULL) {
+		if(is_array($query)) {
+			$query = http_build_query($query);
+		}
+		
+		$link = '?';
+		if(strpos($path, '?') !== false) {
+			$link = '&';
+		}
+		
+		$protocol = 'http://';
+		if($this->_ssl && extension_loaded('openssl')) {
+			$protocol = 'https://';
+		}
+		
+		return $protocol.$host.$path.$link.$query;
+	}
+	
+	protected function _responseHeaderCallback(&$curl, &$data) {
+		$strlen = strlen($data);
+		if ($strlen <= 2) {
+			return $strlen;
+		}
+		
+		if (substr($data, 0, 4) == 'HTTP') {
+			$this->_meta['code'] = substr($data, 9, 3);
+			return $strlen;
+		}
+		
+		list($header, $value) = explode(': ', trim($data), 2);
+		
+		if ($header == 'Last-Modified') {
+			$this->_meta['headers']['time'] = strtotime($value);
+		} else if ($header == 'Content-Length') {
+			$this->_meta['headers']['size'] = $value;
+		} else if ($header == 'Content-Type') {
+			$this->_meta['headers']['type'] = $value;
+		} else if ($header == 'ETag') {
+			$this->_meta['headers']['hash'] = $value{0} == '"' ? substr($value, 1, -1) : $value;
+		} else if (preg_match('/^x-amz-meta-.*$/', $header)) {
+			$this->_meta['headers'][$header] = $value;
+		}
+		
+		return $strlen;
+	}
+	
+	protected function _responseWriteCallback(&$curl, &$data) {
+		$this->_response .= $data;
+		return strlen($data);
+	}
+
 	protected function _setResponse($action, $bucket = NULL, $path = '/', array $query = array(), 
 		$data = NULL, array $headers = array(), array $amazon = array()) {
 		
@@ -797,104 +892,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 		
 		return $this;
 	}
-	
-	/* Protected Methods
-	-------------------------------*/
-	protected function _getHost($bucket = NULL) {
-		if(!$bucket) {
-			return $this->_host;
-		}
-		
-		return strtolower($bucket).'.'.$this->_host;
-	}
-	
-	protected function _getUrl($host, $path, $query = NULL) {
-		if(is_array($query)) {
-			$query = http_build_query($query);
-		}
-		
-		$link = '?';
-		if(strpos($path, '?') !== false) {
-			$link = '&';
-		}
-		
-		$protocol = 'http://';
-		if($this->_ssl && extension_loaded('openssl')) {
-			$protocol = 'https://';
-		}
-		
-		return $protocol.$host.$path.$link.$query;
-	}
-	
-	protected function _getPath($bucket = NULL, $path = '/', array $query = array()) {
-		if ($bucket) {
-			return '/'.strtolower($bucket).$path;
-		} 
-		
-		$keys = array_keys($query);
-		foreach($keys as $key) {
-			if(in_array($key, array('acl', 'location', 'torrent', 'logging'))) {
-				$query = http_build_query($query);
-				
-				$link = '?';
-				if(strpos($path, '?') !== false) {
-					$link = '&';
-				}
-				
-				return $path.$link.$query;
-			}
-		}
-		
-		return $path;
-	}
-	
-	protected function _getSignature($string) {
-		if(extension_loaded('hash')) {
-			$hash = base64_encode(hash_hmac('sha1', $string, $this->_pass, true));
-		} else {
-			$pad1 = str_pad($this->_pass, 64, chr(0x00)) ^ str_repeat(chr(0x36), 64);
-			$pad2 = str_pad($this->_pass, 64, chr(0x00)) ^ str_repeat(chr(0x5c), 64);
-			$pack1	= pack('H*', sha1($pad1 . $string));
-			$pack2 	= pack('H*', sha1($pad2 . $pack1));
-			$hash = base64_encode($pack2);
-		}
-		
-		return 'AWS '.$this->_user.':'.$hash;	
-	}
 
-	protected function _responseWriteCallback(&$curl, &$data) {
-		$this->_response .= $data;
-		return strlen($data);
-	}
-
-	protected function _responseHeaderCallback(&$curl, &$data) {
-		$strlen = strlen($data);
-		if ($strlen <= 2) {
-			return $strlen;
-		}
-		
-		if (substr($data, 0, 4) == 'HTTP') {
-			$this->_meta['code'] = substr($data, 9, 3);
-			return $strlen;
-		}
-		
-		list($header, $value) = explode(': ', trim($data), 2);
-		
-		if ($header == 'Last-Modified') {
-			$this->_meta['headers']['time'] = strtotime($value);
-		} else if ($header == 'Content-Length') {
-			$this->_meta['headers']['size'] = $value;
-		} else if ($header == 'Content-Type') {
-			$this->_meta['headers']['type'] = $value;
-		} else if ($header == 'ETag') {
-			$this->_meta['headers']['hash'] = $value{0} == '"' ? substr($value, 1, -1) : $value;
-		} else if (preg_match('/^x-amz-meta-.*$/', $header)) {
-			$this->_meta['headers'][$header] = $value;
-		}
-		
-		return $strlen;
-	}
-	
 	/* Private Methods
 	-------------------------------*/
 }

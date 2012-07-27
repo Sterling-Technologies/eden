@@ -51,34 +51,6 @@ class Eden_Amazon_Ecs extends Eden_Class {
 	
 	/* Public Methods
 	-------------------------------*/
-	public function setService($service) {
-		Eden_Amazon_Error::i()->argument(1, 'string');
-		$this->_params['Service'] = $service;
-		
-		return $this;
-	}
-	
-	public function setTimestamp($time = NULL) {
-		Eden_Amazon_Error::i()->argument(1, 'string', 'int', 'null');
-		if($time == NULL) {
-			$time = time();
-		}
-		
-		if(is_string($time)) {
-			$time = strtotime($time);
-		}
-		
-		$this->_params['Timestamp'] = gmdate("Y-m-d\TH:i:s\Z", $time);
-		return $this;
-	}
-	
-	public function setVersion($version) {
-		Eden_Amazon_Error::i()->argument(1, 'string');
-		$this->_params['Version'] = $version;
-		
-		return $this;
-	}
-	
 	public function setAssociateTag($tag) {
 		Eden_Amazon_Error::i()->argument(1, 'string');
 		$this->_params['AssociateTag'] = $tag;
@@ -86,9 +58,30 @@ class Eden_Amazon_Ecs extends Eden_Class {
 		return $this;
 	}
 	
+	public function setCountry($country = 'com') {
+		Eden_Amazon_Error::i()->argument(1, 'string');
+		$this->_host = $this->_host.$country;
+		
+		return $this;
+	}
+	
 	public function setIdType($type) {
 		Eden_Amazon_Error::i()->argument(1, 'string');
 		$this->_params['IdType'] = $type;
+		
+		return $this;
+	}
+	
+	public function setItemId($id) {
+		Eden_Amazon_Error::i()->argument(1, 'string', 'int');
+		$this->_params['ItemId'] = $id;
+		
+		return $this;
+	}
+	
+	public function setKeyword($keyword) {
+		Eden_Amazon_Error::i()->argument(1, 'string', 'int');
+		$this->_params['Keywords'] = $keyword;
 		
 		return $this;
 	}
@@ -103,42 +96,6 @@ class Eden_Amazon_Ecs extends Eden_Class {
 	public function setOperation($operation) {
 		Eden_Amazon_Error::i()->argument(1, 'string');
 		$this->_params['Operation'] = $operation;
-		
-		return $this;
-	}
-	
-	public function setKeyword($keyword) {
-		Eden_Amazon_Error::i()->argument(1, 'string', 'int');
-		$this->_params['Keywords'] = $keyword;
-		
-		return $this;
-	}
-	
-	public function setResponseGroup($group) {
-		Eden_Amazon_Error::i()->argument(1, 'string');
-		$this->_params['ResponseGroup'] = $group;
-		
-		return $this;
-	}
-	
-	public function setSearchIndex($index = 'All') {
-		Eden_Amazon_Error::i()->argument(1, 'string');
-		$this->_params['SearchIndex'] = $index;
-		
-		return $this;
-		
-	}
-	
-	public function setItemId($id) {
-		Eden_Amazon_Error::i()->argument(1, 'string', 'int');
-		$this->_params['ItemId'] = $id;
-		
-		return $this;
-	}
-	
-	public function setCountry($country = 'com') {
-		Eden_Amazon_Error::i()->argument(1, 'string');
-		$this->_host = $this->_host.$country;
 		
 		return $this;
 	}
@@ -167,15 +124,51 @@ class Eden_Amazon_Ecs extends Eden_Class {
 		$this->_requestUrl = 'http://'.$this->_host.$this->_uri.'?'.$this->_canonicalizedQuery.'&Signature='.$this->_signature;
 		return $this->_sendRequest();
 	}
-	/* Protected Methods
-	-------------------------------*/
-	protected function _setSignature() {
-		$this->_signature = base64_encode(hash_hmac("sha256", $this->_stringToSign, $this->_privateKey, True));
-		$this->_signature = str_replace("%7E", "~", rawurlencode($this->_signature));
+	
+	public function setResponseGroup($group) {
+		Eden_Amazon_Error::i()->argument(1, 'string');
+		$this->_params['ResponseGroup'] = $group;
 		
 		return $this;
 	}
 	
+	public function setSearchIndex($index = 'All') {
+		Eden_Amazon_Error::i()->argument(1, 'string');
+		$this->_params['SearchIndex'] = $index;
+		
+		return $this;
+	}
+	
+	public function setService($service) {
+		Eden_Amazon_Error::i()->argument(1, 'string');
+		$this->_params['Service'] = $service;
+		
+		return $this;
+	}
+	
+	public function setTimestamp($time = NULL) {
+		Eden_Amazon_Error::i()->argument(1, 'string', 'int', 'null');
+		if($time == NULL) {
+			$time = time();
+		}
+		
+		if(is_string($time)) {
+			$time = strtotime($time);
+		}
+		
+		$this->_params['Timestamp'] = gmdate("Y-m-d\TH:i:s\Z", $time);
+		return $this;
+	}
+	
+	public function setVersion($version) {
+		Eden_Amazon_Error::i()->argument(1, 'string');
+		$this->_params['Version'] = $version;
+		
+		return $this;
+	}
+	
+	/* Protected Methods
+	-------------------------------*/
 	protected function _sendRequest() {
 		//return file_get_contents($this->_requestUrl);
 		return $this->Eden_Curl()
@@ -184,6 +177,13 @@ class Eden_Amazon_Ecs extends Eden_Class {
 			->verifyPeer(false)
 			->setTimeout(60)
 			->getResponse();
+	}
+	
+	protected function _setSignature() {
+		$this->_signature = base64_encode(hash_hmac("sha256", $this->_stringToSign, $this->_privateKey, True));
+		$this->_signature = str_replace("%7E", "~", rawurlencode($this->_signature));
+		
+		return $this;
 	}
 	
 	/* Private Methods
