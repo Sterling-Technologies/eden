@@ -37,14 +37,35 @@ class Eden_Zappos extends Eden_Class {
 	-------------------------------*/
 	/* Public Methods
 	-------------------------------*/
+	
 	/**
-	 * Returns Zappos search results
+	 * Returns Zappos Auto complete
 	 *
 	 * @param *string api key
-	 * @return Eden_Zappos_Search
+	 * @return Eden_Zappos_AutoComplete
 	 */
-	public function search($apiKey) {
-		return Eden_Zappos_Search::i($apiKey);
+	public function autoComplete($apiKey) {
+		return Eden_Zappos_AutoComplete::i($apiKey);
+	}
+		
+	/**
+	 * Returns Zappos brand
+	 *
+	 * @param *string api key
+	 * @return Eden_Zappos_Brand
+	 */
+	public function getBrand($apiKey) {
+		return Eden_Zappos_Brand::i($apiKey);
+	}
+	
+	/**
+	 * Returns Zappos core values
+	 *
+	 * @param *string api key
+	 * @return Eden_Zappos_AutoComplete
+	 */
+	public function getCoreValues($apiKey) {
+		return Eden_Zappos_Values::i($apiKey);
 	}
 	
 	/**
@@ -68,26 +89,6 @@ class Eden_Zappos extends Eden_Class {
 	}
 	
 	/**
-	 * Returns Zappos statistics
-	 *
-	 * @param *string api key
-	 * @return Eden_Zappos_Product
-	 */
-	public function getStatistics($apiKey) {
-		return Eden_Zappos_Product::i($apiKey);
-	}
-		
-	/**
-	 * Returns Zappos brand
-	 *
-	 * @param *string api key
-	 * @return Eden_Zappos_Brand
-	 */
-	public function getBrand($apiKey) {
-		return Eden_Zappos_Brand::i($apiKey);
-	}
-	
-	/**
 	 * Returns Zappos review
 	 *
 	 * @param *string api key
@@ -98,23 +99,13 @@ class Eden_Zappos extends Eden_Class {
 	}
 	
 	/**
-	 * Returns Zappos Auto complete
+	 * Returns Zappos search results
 	 *
 	 * @param *string api key
-	 * @return Eden_Zappos_AutoComplete
+	 * @return Eden_Zappos_Search
 	 */
-	public function autoComplete($apiKey) {
-		return Eden_Zappos_AutoComplete::i($apiKey);
-	}
-	
-	/**
-	 * Returns Zappos core values
-	 *
-	 * @param *string api key
-	 * @return Eden_Zappos_AutoComplete
-	 */
-	public function getCoreValues($apiKey) {
-		return Eden_Zappos_Values::i($apiKey);
+	public function search($apiKey) {
+		return Eden_Zappos_Search::i($apiKey);
 	}
 	
 	/**
@@ -125,6 +116,16 @@ class Eden_Zappos extends Eden_Class {
 	 */
 	public function getSimilarity($apiKey) {
 		return Eden_Zappos_Similarity::i($apiKey);
+	}
+	
+	/**
+	 * Returns Zappos statistics
+	 *
+	 * @param *string api key
+	 * @return Eden_Zappos_Product
+	 */
+	public function getStatistics($apiKey) {
+		return Eden_Zappos_Product::i($apiKey);
 	}
 	
 	/* Protected Methods
