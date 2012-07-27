@@ -90,59 +90,7 @@ class Eden_Webcharge_Model extends Eden_Class
 	}
 	
 	/* Public Methods
-	-------------------------------*/
-	/**
-	 * Sets the Merchant user name
-	 *
-	 * @param string user name
-	 * @return this
-	 */
-	public function setUser($user) {
-		Eden_Webcharge_Error::i()
-				->setMessage()->argument(1, 'string');
-		$this->_transaction['username'] = $user;
-		return $this;
-	}
-	
-	/**
-	 * Sets the merchant password
-	 *
-	 * @param string password
-	 * @return this
-	 */
-	public function setPassword($password) {
-		Eden_Webcharge_Error::i()
-				->setMessage()->argument(1, 'string');
-		$this->_transaction['pw'] = $password;
-		return $this;
-	}
-	
-	/**
-	 * Set a transaction to send.
-	 *
-	 * @param array the transaction to set
-	 * @return string the cURL result
-	 */
-	public function setTransaction(array $transaction) {
-		//we loop through the template because
-		//these are the keys WebCharge will take
-		//and we do not want to add any extra variables
-		//when we query their server
-		foreach($this->_template as $key => $value) {
-			//if the passed in transaction
-			if(isset($transaction[$key])) {
-				//allow this transaction to be set by it
-				$this->_transaction[$key] = $transaction[$key];
-			//else if it is not set in this transaction
-			} else if(!isset($this->_transaction[$key])) {
-				//set it using the template's value
-				$this->_transaction[$key] = $value;
-			}
-		}
-		
-		return $this;
-	}
-	
+	-------------------------------*/	
 	/**
 	 * Validates required transaction parameters and sends 
 	 * the transaction to Innovative Gateway Solutions.
@@ -212,6 +160,58 @@ class Eden_Webcharge_Model extends Eden_Class
 			->setFollowLocation(true)
 			->setTimeout($this->_timeout)
 			->getResponse();
+	}
+	
+	/**
+	 * Sets the merchant password
+	 *
+	 * @param string password
+	 * @return this
+	 */
+	public function setPassword($password) {
+		Eden_Webcharge_Error::i()
+				->setMessage()->argument(1, 'string');
+		$this->_transaction['pw'] = $password;
+		return $this;
+	}
+	
+	/**
+	 * Set a transaction to send.
+	 *
+	 * @param array the transaction to set
+	 * @return string the cURL result
+	 */
+	public function setTransaction(array $transaction) {
+		//we loop through the template because
+		//these are the keys WebCharge will take
+		//and we do not want to add any extra variables
+		//when we query their server
+		foreach($this->_template as $key => $value) {
+			//if the passed in transaction
+			if(isset($transaction[$key])) {
+				//allow this transaction to be set by it
+				$this->_transaction[$key] = $transaction[$key];
+			//else if it is not set in this transaction
+			} else if(!isset($this->_transaction[$key])) {
+				//set it using the template's value
+				$this->_transaction[$key] = $value;
+			}
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets the Merchant user name
+	 *
+	 * @param string user name
+	 * @return this
+	 */
+	public function setUser($user) {
+		Eden_Webcharge_Error::i()
+				->setMessage()->argument(1, 'string');
+		$this->_transaction['username'] = $user;
+		return $this;
 	}
 	
 	/* Protected Methods

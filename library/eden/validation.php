@@ -82,8 +82,42 @@ class Eden_Validation extends Eden_Class {
 		return true;
 	}
 	
-	/* Public String Methods
+	/* Public Number Methods
 	-------------------------------*/
+	public function greaterThan($number) {
+		return $this->_value > (float)$number;
+	}
+	
+	public function greaterThanEqualTo($number) {
+		return $this->_value >= (float)$number;
+	}
+	
+	public function lessThan($number) {
+		return $this->_value < (float)$number;
+	}
+	
+	public function lessThanEqualTo($number) {
+		return $this->_value <= (float)$number;
+	}
+	
+	/* Public String Methods
+	-------------------------------*/		
+	public function lengthGreaterThan($number) {
+		return strlen((string)$this->_value) > (float)$number;
+	}
+	
+	public function lengthGreaterThanEqualTo($number) {
+		return strlen((string)$this->_value) >= (float)$number;
+	}
+	
+	public function lengthLessThan($number) {
+		return strlen((string)$this->_value) < (float)$number;
+	}
+		
+	public function lengthLessThanEqualTo($number) {
+		return strlen((string)$this->_value) <= (float)$number;
+	}
+	
 	public function notEmpty() {
 		return !empty($this->_value);
 	}
@@ -91,43 +125,15 @@ class Eden_Validation extends Eden_Class {
 	public function startsWithLetter() {
 		return !preg_match("/^[a-zA-Z]/i", $this->_value);
 	}
-	
-	public function lengthGreaterThan($number) {
-		return strlen((string)$this->_value) > (float)$number;
-	}
-	
-	public function lengthLessThan($number) {
-		return strlen((string)$this->_value) < (float)$number;
-	}
-	
-	public function lengthGreaterThanEqualTo($number) {
-		return strlen((string)$this->_value) >= (float)$number;
-	}
-	
-	public function lengthLessThanEqualTo($number) {
-		return strlen((string)$this->_value) <= (float)$number;
-	}
-	
-	/* Public Number Methods
-	-------------------------------*/
-	public function greaterThan($number) {
-		return $this->_value > (float)$number;
-	}
-	
-	public function lessThan($number) {
-		return $this->_value < (float)$number;
-	}
-	
-	public function greaterThanEqualTo($number) {
-		return $this->_value >= (float)$number;
-	}
-	
-	public function lessThanEqualTo($number) {
-		return $this->_value <= (float)$number;
-	}
-	
+		
 	/* Protected Methods
 	-------------------------------*/
+	protected function _isCreditCard($value) {
+		return preg_match('/^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]'.
+		'{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-'.
+		'5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/', $value);
+	} 
+	
 	protected function _isEmail($value) {
 		return preg_match('/^(?:(?:(?:[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]|\x5c(?=[@,"\[\]'.
 		'\x5c\x00-\x20\x7f-\xff]))(?:[^@,"\[\]\x5c\x00-\x20\x7f-\xff\.]|(?<=\x5c)[@,"\[\]'.
@@ -139,21 +145,15 @@ class Eden_Validation extends Eden_Class {
 		'[0-5])){3}\])$/', $value);
 	}
 	
-	protected function _isUrl($value) {
-		return preg_match('/^(http|https|ftp):\/\/([A-Z0-9][A-Z0'.
-		'-9_-]*(?:.[A-Z0-9][A-Z0-9_-]*)+):?(d+)?\/?/i', $value);
-	}
-	
 	protected function _isHtml($value) {
 		return preg_match("/<\/?\w+((\s+(\w|\w[\w-]*\w)(\s*=\s*".
 		"(?:\".*?\"|'.*?'|[^'\">\s]+))?)+\s*|\s*)\/?>/i", $value);
 	}
 	
-	protected function _isCreditCard($value) {
-		return preg_match('/^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]'.
-		'{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-'.
-		'5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/', $value);
-	} 
+	protected function _isUrl($value) {
+		return preg_match('/^(http|https|ftp):\/\/([A-Z0-9][A-Z0'.
+		'-9_-]*(?:.[A-Z0-9][A-Z0-9_-]*)+):?(d+)?\/?/i', $value);
+	}
 	
 	protected function _isHex($value) {
 		return preg_match("/^[0-9a-fA-F]{6}$/", $value);

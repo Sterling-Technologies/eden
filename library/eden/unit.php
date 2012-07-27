@@ -70,15 +70,7 @@ class Eden_Unit {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
-	public function setPackage($name) {
-		//Argument 1 must be a string
-		Eden_Unit_Error::i()->argument(1, 'string');
-		
-		$this->_package = $name;
-		return $this;
-	}
-	
+	-------------------------------*/	
 	public function getPassFail($package = NULL) {
 		//Argument 1 must be a string or null
 		Eden_Unit_Error::i()->argument(1, 'string', 'null');
@@ -123,6 +115,14 @@ class Eden_Unit {
 		}
 		
 		return $tests;
+	}
+
+	public function setPackage($name) {
+		//Argument 1 must be a string
+		Eden_Unit_Error::i()->argument(1, 'string');
+		
+		$this->_package = $name;
+		return $this;
 	}
 	
 	/* Protected Methods
