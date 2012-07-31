@@ -104,7 +104,11 @@ class Eden_Paypal_Base extends Eden_Class {
 			->setPostFields($query);
 			
 		$response = $curl->getQueryResponse();
-		$this->_meta = $curl->getMeta();
+		
+		$this->_meta['url']			= $this->_baseUrl;
+		$this->_meta['query']		= $query;
+		$this->_meta['curl']		= $curl->getMeta();
+		$this->_meta['response']	= $response;
 		
 		return $response;
 	}
