@@ -45,117 +45,51 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/ 
 	/**
-	 * Set include entities
+	 * Sends a new direct message to the specified 
+	 * user from the authenticating user. 
 	 *
-	 * @param boolean
-	 * @return this
+	 * @param string
+	 * @return array
 	 */
-	public function setEntities($entities) {
-		//Argument 1 must be a boolean
-		Eden_Twitter_Error::i()->argument(1, 'bool');
+	public function add($text) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');				
 		
-		$this->_entities = $entities;
-		return $this;
+		//poulate fields	
+		$query = array(
+			'text' 			=> $text,
+			'wrap_links'	=> $this->_wrap);
+		
+		//if it is integer
+		if(is_int($this->_user)) {
+			//lets put it in query
+			$query['user_id'] = $this->_user;
+		}
+		
+		//if it is string
+		if(is_string($this->_user)) {
+			//lets put it in query
+			$query['screen_name'] = $this->_user;
+		}
+
+		return $this->_post(self::URL_NEW_MESSAGE, $query);
 	}
 	
 	/**
-	 * Set skip status
+	 * Returns a single direct message, 
+	 * specified by an id parameter.
 	 *
-	 * @param boolean
-	 * @return this
+	 * @param integer
+	 * @return array
 	 */
-	public function setSkip($skip) {
-		//Argument 1 must be a boolean
-		Eden_Twitter_Error::i()->argument(1, 'bool');
-		
-		$this->_skip = $skip;
-		return $this;
-	}
-	
-	/**
-	 * Set wrap link
-	 *
-	 * @param boolean
-	 * @return this
-	 */
-	public function setWrap($wrap) {
-		//Argument 1 must be a boolean
-		Eden_Twitter_Error::i()->argument(1, 'bool');
-		
-		$this->_wrap = $wrap;
-		return $this;
-	}
-	
-	/**
-	 * Set since id
-	 *
-	 * @param integer|null
-	 * @return this
-	 */
-	public function setSince($since) {
-		//Argument 1 must be an integer or null
-		Eden_Twitter_Error::i()->argument(1, 'int', 'null');
-		
-		$this->_since = $since;
-		return $this;
-	}
-	
-	/**
-	 * Set max id
-	 *
-	 * @param integer|null
-	 * @return this
-	 */
-	public function setMax($max) {
-		//Argument 1 must be an integer or null
-		Eden_Twitter_Error::i()->argument(1, 'int', 'null');
-		
-		$this->_max = $max;
-		return $this;
-	}
-	
-	/**
-	 * Set count
-	 *
-	 * @param integer|null
-	 * @return this
-	 */
-	public function setCount($count) {
-		//Argument 1 must be an integer or null
-		Eden_Twitter_Error::i()->argument(1, 'int', 'null');
-		
-		$this->_count = $count;
-		return $this;
-	}
-	
-	/**
-	 * Set page
-	 *
-	 * @param integer|null
-	 * @return this
-	 */
-	public function setPage($page) {
-		//Argument 1 must be an integer or null
-		Eden_Twitter_Error::i()->argument(1, 'int', 'null');
-		
-		$this->_page = $page;
-		return $this;
-	}
-	
-	/**
-	 * Set user id or screen name
-	 *
-	 * @param integer|null
-	 * @return this
-	 */
-	public function setUser($user) {
-		//Argument 1 must be an integer or null
-		Eden_Twitter_Error::i()->argument(1, 'int', 'null');
-		
-		$this->_user = $user;
-		return $this;
+	public function getDetail($id) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');				
+			
+		$url = sprintf(self::URL_SHOW_MESSAGE,$id);
+		return $this->_getResponse($url);
 	}
 	
 	/**
@@ -212,51 +146,117 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 		
 		return $this->_post(self::URL_REMOVE_MESSAGE,$query);
 	}
-	 
+	
 	/**
-	 * Sends a new direct message to the specified 
-	 * user from the authenticating user. 
+	 * Set count
 	 *
-	 * @param string
-	 * @return array
+	 * @param integer|null
+	 * @return this
 	 */
-	public function add($text) {
-		//Argument 1 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');				
+	public function setCount($count) {
+		//Argument 1 must be an integer or null
+		Eden_Twitter_Error::i()->argument(1, 'int', 'null');
 		
-		//poulate fields	
-		$query = array(
-			'text' 			=> $text,
-			'wrap_links'	=> $this->_wrap);
-		
-		//if it is integer
-		if(is_int($this->_user)) {
-			//lets put it in query
-			$query['user_id'] = $this->_user;
-		}
-		
-		//if it is string
-		if(is_string($this->_user)) {
-			//lets put it in query
-			$query['screen_name'] = $this->_user;
-		}
-
-		return $this->_post(self::URL_NEW_MESSAGE, $query);
+		$this->_count = $count;
+		return $this;
 	}
 	
 	/**
-	 * Returns a single direct message, 
-	 * specified by an id parameter.
+	 * Set include entities
 	 *
-	 * @param integer
-	 * @return array
+	 * @param boolean
+	 * @return this
 	 */
-	public function getDetail($id) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');				
-			
-		$url = sprintf(self::URL_SHOW_MESSAGE,$id);
-		return $this->_getResponse($url);
+	public function setEntities($entities) {
+		//Argument 1 must be a boolean
+		Eden_Twitter_Error::i()->argument(1, 'bool');
+		
+		$this->_entities = $entities;
+		return $this;
+	}
+	
+	/**
+	 * Set max id
+	 *
+	 * @param integer|null
+	 * @return this
+	 */
+	public function setMax($max) {
+		//Argument 1 must be an integer or null
+		Eden_Twitter_Error::i()->argument(1, 'int', 'null');
+		
+		$this->_max = $max;
+		return $this;
+	}
+	
+	/**
+	 * Set page
+	 *
+	 * @param integer|null
+	 * @return this
+	 */
+	public function setPage($page) {
+		//Argument 1 must be an integer or null
+		Eden_Twitter_Error::i()->argument(1, 'int', 'null');
+		
+		$this->_page = $page;
+		return $this;
+	}
+	
+	/**
+	 * Set since id
+	 *
+	 * @param integer|null
+	 * @return this
+	 */
+	public function setSince($since) {
+		//Argument 1 must be an integer or null
+		Eden_Twitter_Error::i()->argument(1, 'int', 'null');
+		
+		$this->_since = $since;
+		return $this;
+	}
+	
+	/**
+	 * Set skip status
+	 *
+	 * @param boolean
+	 * @return this
+	 */
+	public function setSkip($skip) {
+		//Argument 1 must be a boolean
+		Eden_Twitter_Error::i()->argument(1, 'bool');
+		
+		$this->_skip = $skip;
+		return $this;
+	}
+	
+	/**
+	 * Set user id or screen name
+	 *
+	 * @param integer|null
+	 * @return this
+	 */
+	public function setUser($user) {
+		//Argument 1 must be an integer or null
+		Eden_Twitter_Error::i()->argument(1, 'int', 'null');
+		
+		$this->_user = $user;
+		return $this;
+	}
+	
+	/**
+	 * Set wrap link
+	 *
+	 * @param boolean
+	 * @return this
+	 */
+	public function setWrap($wrap) {
+		//Argument 1 must be a boolean
+		Eden_Twitter_Error::i()->argument(1, 'bool');
+		
+		$this->_wrap = $wrap;
+		return $this;
 	}
 	
 	/* Protected Methods

@@ -59,158 +59,39 @@ class Eden_Xend_Booking extends Eden_Xend_Base{
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set date
+	 * Retrieves the list of addresses in the account.
 	 *
-	 * @param *string	
-	 * @return this
+	 * return array
 	 */
-	public function setDate($date) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');
+	public function getDetail() {
+		//if it is in test mode
+		if($this->_test) {	
+			$this->_url		= self::TEST_BOOKING_WSDL;
+			$this->_header	= self::TEST_HEADER;
+		} 
 		
-		$start = strtotime($date);
-		$this->_date = date('Y-m-d\TH\:i\:s\.u', $start);
-		return $this;
-	}
-	
-	/**
-	 * Set address reference number
-	 *
-	 * @param *integer	
-	 * @return this
-	 */
-	public function setAddressNumber($addressNumber) {
-		//Argument 1 must be an integer
-		Eden_Xend_Error::i()->argument(1, 'int');	
+		//initialize SOAP client
+		$client	= new SoapClient($this->_url, array());
+		$funcs	= $client->__getFunctions();
 		
-		$this->_addressRefNo = $addressNumber;
-		return $this;
-	}
-	
-	/**
-	 * Set shippers first name
-	 *
-	 * @param *string	
-	 * @return this
-	 */
-	public function setFirstName($firstName) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');
+		//initialize SOAP header
+		$headerbody	= array(self::USER_TOKEN => $this->_userToken);
+		$header		= new SoapHeader($this->_header, self::AUTH_HEADER, $headerbody);
+		$client->__setSoapHeaders($header);
 		
-		$this->_firstName = $firstName;
-		return $this;
-	}
-	
-	/**
-	 * Set shippers last name
-	 *
-	 * @param *string	
-	 * @return this
-	 */
-	public function setLastName($lastName) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');
-		
-		$this->_lastName = $lastName;
-		return $this;
-	}
-	
-	/**
-	 * Set shippers street 1
-	 *
-	 * @param *string	
-	 * @return this
-	 */
-	public function setStreet1($street1) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');
-		
-		$this->_street1 = $street1;
-		return $this;
-	}
-	
-	/**
-	 * Set shippers street 2
-	 *
-	 * @param *string	
-	 * @return this
-	 */
-	public function setStreet2($street2) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');
-		
-		$this->_street2 = $street2;
-		return $this;
-	}
-	
-	/**
-	 * Set shippers city
-	 *
-	 * @param *string	
-	 * @return this
-	 */
-	public function setCity($city) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');
-		
-		$this->_city = $city;
-		return $this;
-	}
-	
-	/**
-	 * Set shippers province
-	 *
-	 * @param *string	
-	 * @return this
-	 */
-	public function setProvince($province) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');
-		
-		$this->_province = $province;
-		return $this;
-	}
-	
-	/**
-	 * Set shippers postal code
-	 *
-	 * @param *string	
-	 * @return this
-	 */
-	public function setPostalCode($postalCode) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');
-		
-		$this->_postalCode = $postalCode;
-		return $this;
-	}
-	
-	/**
-	 * Set shippers landmark
-	 *
-	 * @param *string	
-	 * @return this
-	 */
-	public function setLandmark($landmark) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');
-		
-		$this->_landmark = $landmark;
-		return $this;
-	}
-	
-	/**
-	 * Set remarks
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setRemarks($remarks) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');	
-		
-		$this->_remarks = $remarks;
-		return $this;
+		//execute SOAP method
+		try {
+			$result = $client->GetAddress();
+		//catch soap fault
+		} catch(SoapFault $soapfault) {
+			$this->_exceptionFlag = true;
+			$exception = $soapfault->getMessage();
+			preg_match_all('/: (.*?). at/s', $exception, $error, PREG_SET_ORDER);
+			//Print error
+			return $error[0][1];
+		}
+
+		return $result->GetAddressResult->Address;
 	}
 	
 	/**
@@ -298,39 +179,158 @@ class Eden_Xend_Booking extends Eden_Xend_Base{
 	}
 	
 	/**
-	 * Retrieves the list of addresses in the account.
+	 * Set address reference number
 	 *
-	 * return array
+	 * @param *integer	
+	 * @return this
 	 */
-	public function getDetail() {
-		//if it is in test mode
-		if($this->_test) {	
-			$this->_url		= self::TEST_BOOKING_WSDL;
-			$this->_header	= self::TEST_HEADER;
-		} 
+	public function setAddressNumber($addressNumber) {
+		//Argument 1 must be an integer
+		Eden_Xend_Error::i()->argument(1, 'int');	
 		
-		//initialize SOAP client
-		$client	= new SoapClient($this->_url, array());
-		$funcs	= $client->__getFunctions();
+		$this->_addressRefNo = $addressNumber;
+		return $this;
+	}
+	
+	/**
+	 * Set shippers city
+	 *
+	 * @param *string	
+	 * @return this
+	 */
+	public function setCity($city) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');
 		
-		//initialize SOAP header
-		$headerbody	= array(self::USER_TOKEN => $this->_userToken);
-		$header		= new SoapHeader($this->_header, self::AUTH_HEADER, $headerbody);
-		$client->__setSoapHeaders($header);
+		$this->_city = $city;
+		return $this;
+	}
+	
+	/**
+	 * Set date
+	 *
+	 * @param *string	
+	 * @return this
+	 */
+	public function setDate($date) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');
 		
-		//execute SOAP method
-		try {
-			$result = $client->GetAddress();
-		//catch soap fault
-		} catch(SoapFault $soapfault) {
-			$this->_exceptionFlag = true;
-			$exception = $soapfault->getMessage();
-			preg_match_all('/: (.*?). at/s', $exception, $error, PREG_SET_ORDER);
-			//Print error
-			return $error[0][1];
-		}
-
-		return $result->GetAddressResult->Address;
+		$start = strtotime($date);
+		$this->_date = date('Y-m-d\TH\:i\:s\.u', $start);
+		return $this;
+	}
+	
+	/**
+	 * Set shippers first name
+	 *
+	 * @param *string	
+	 * @return this
+	 */
+	public function setFirstName($firstName) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');
+		
+		$this->_firstName = $firstName;
+		return $this;
+	}
+	
+	/**
+	 * Set shippers landmark
+	 *
+	 * @param *string	
+	 * @return this
+	 */
+	public function setLandmark($landmark) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');
+		
+		$this->_landmark = $landmark;
+		return $this;
+	}
+	
+	/**
+	 * Set shippers last name
+	 *
+	 * @param *string	
+	 * @return this
+	 */
+	public function setLastName($lastName) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');
+		
+		$this->_lastName = $lastName;
+		return $this;
+	}
+	
+	/**
+	 * Set shippers postal code
+	 *
+	 * @param *string	
+	 * @return this
+	 */
+	public function setPostalCode($postalCode) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');
+		
+		$this->_postalCode = $postalCode;
+		return $this;
+	}
+	
+	/**
+	 * Set shippers province
+	 *
+	 * @param *string	
+	 * @return this
+	 */
+	public function setProvince($province) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');
+		
+		$this->_province = $province;
+		return $this;
+	}
+	
+	/**
+	 * Set remarks
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setRemarks($remarks) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');	
+		
+		$this->_remarks = $remarks;
+		return $this;
+	}
+	
+	/**
+	 * Set shippers street 1
+	 *
+	 * @param *string	
+	 * @return this
+	 */
+	public function setStreet1($street1) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');
+		
+		$this->_street1 = $street1;
+		return $this;
+	}
+	
+	/**
+	 * Set shippers street 2
+	 *
+	 * @param *string	
+	 * @return this
+	 */
+	public function setStreet2($street2) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');
+		
+		$this->_street2 = $street2;
+		return $this;
 	}
 	
 	/* Protected Methods

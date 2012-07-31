@@ -37,13 +37,20 @@ class Eden_Twitter_Saved extends Eden_Twitter_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns the authenticated user's 
-	 * saved search queries.
+	 * Create a new saved search for the authenticated user.
+	 * A user may only have 25 saved searches.
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getSavedSearches() {
-		return $this->_getResponse(self::URL_SAVED_SEARCHES);
+	public function createSearch($input) {
+		//Argument 1 must be a integer
+		Eden_Twitter_Error::i()->argument(1, 'string');	
+		
+		$query  = array('query' => $input);
+		
+		$url = sprintf(self::URL_CREATE_SEARCH, $input);
+		return $this->_post($url,$query);
 	}
 	
 	/**
@@ -64,20 +71,13 @@ class Eden_Twitter_Saved extends Eden_Twitter_Base {
 	}
 	
 	/**
-	 * Create a new saved search for the authenticated user.
-	 * A user may only have 25 saved searches.
+	 * Returns the authenticated user's 
+	 * saved search queries.
 	 *
-	 * @param string
 	 * @return array
 	 */
-	public function createSearch($input) {
-		//Argument 1 must be a integer
-		Eden_Twitter_Error::i()->argument(1, 'string');	
-		
-		$query  = array('query' => $input);
-		
-		$url = sprintf(self::URL_CREATE_SEARCH, $input);
-		return $this->_post($url,$query);
+	public function getSavedSearches() {
+		return $this->_getResponse(self::URL_SAVED_SEARCHES);
 	}
 	
 	/**

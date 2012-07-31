@@ -53,149 +53,46 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
 	/**
-	 * Set latitude
-	 *
-	 * @param float
-	 * @return this
-	 */
-	public function setLatitude($latitude) {
-		//Argument 1 must be a float
-		Eden_Twitter_Error::i()->argument(1, 'float');
-		
-		$this->_latitude = $latitude;
-		return $this;
-	}
-	
-	/**
-	 * Set longtitude
-	 *
-	 * @param float
-	 * @return this
-	 */
-	public function setLongtitude($longtitude) {
-		//Argument 1 must be a float
-		Eden_Twitter_Error::i()->argument(1, 'float');
-		
-		$this->_longtitude = $longtitude;
-		return $this;
-	}
-	
-	/**
-	 * Set count
+	 * Returns a single status, specified by the id parameter below.    
+	 * The status's author will be returned inline.
 	 *
 	 * @param integer
 	 * @return array
 	 */
-	public function setCount($count) {
+	public function getDetail($id) {
 		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');
-		
-		$this->_count = $count;
-		return $this;
-	} 
-	
+		Eden_Twitter_Error::i()->argument(1, 'int');	
+
+		//populate fields
+		$query = array(
+			'id' 				=> $id,
+			'trim_user'			=> $this->_trim,
+			'include_entities'	=> $this->_entities);
+
+		return $this->_getResponse(self::URL_GET_LIST, $query);
+	}
+	 
 	/**
-	 * Set page
+	 * Returns up to 100 of the first retweets of a given tweet.   
 	 *
 	 * @param integer
 	 * @return array
 	 */
-	public function setPage($page) {
+	public function getRetweets($id) {
 		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');
+		Eden_Twitter_Error::i()->argument(1, 'int');	
+
+		//populate fields
+		$query = array(
+			'id' 				=> $id,
+			'count'				=> $this->_count,
+			'trim_user'			=> $this->_trim,
+			'include_entities'	=> $this->_entities);
 		
-		$this->_page = $page;
-		return $this;
-	}
-	
-	/**
-	 * Set in reply to status id
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setReply($reply) {
-		//Argument 1 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$this->_reply = $reply;
-		return $this;
-	}
-	
-	/**
-	 * Set place id
-	 *
-	 * @param string|integer
-	 * @return array
-	 */
-	public function setPlace($place) {
-		//Argument 1 must be a string or integer
-		Eden_Twitter_Error::i()->argument(1, 'string', 'int');
-		
-		$this->_place = $place;
-		return $this;
-	}
-	
-	/**
-	 * Set stringify ids
-	 *
-	 * @return array
-	 */
-	public function setStringify() {
-		$this->_stringify = true;
-		return $this;
-	}
-	
-	/**
-	 * Set include entities
-	 *
-	 * @return array
-	 */
-	public function setEntities() {
-		$this->_entities = true;
-		return $this;
-	}
-	
-	/**
-	 * Set trim user
-	 *
-	 * @return array
-	 */
-	public function setTrim() {
-		$this->_trim = true;
-		return $this;
-	}
-	
-	/**
-	 * Set display coordinates
-	 *
-	 * @return array
-	 */
-	public function setDisplay() {
-		$this->_display = true;
-		return $this;
-	}
-	
-	/**
-	 * Set wrap links
-	 *
-	 * @return array
-	 */
-	public function setWrap() {
-		$this->_wrap = true;
-		return $this;
-	}
-	
-	/**
-	 * Set possibly sensitive
-	 *
-	 * @return array
-	 */
-	public function setSensitive() {
-		$this->_sensitive = true;
-		return $this;
+		$url = sprintf(self::URL_GET_RETWEETS, $id);
+		return $this->_post($url, $query);
 	}
 	
 	/**
@@ -237,47 +134,6 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 		
 		$url = sprintf(self::URL_GET_WHO_RETWEETED_IDS, $id);
 		return $this->_post($url, $query);
-	}
-	 
-	/**
-	 * Returns up to 100 of the first retweets of a given tweet.   
-	 *
-	 * @param integer
-	 * @return array
-	 */
-	public function getRetweets($id) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');	
-
-		//populate fields
-		$query = array(
-			'id' 				=> $id,
-			'count'				=> $this->_count,
-			'trim_user'			=> $this->_trim,
-			'include_entities'	=> $this->_entities);
-		
-		$url = sprintf(self::URL_GET_RETWEETS, $id);
-		return $this->_post($url, $query);
-	}
-	
-	/**
-	 * Returns a single status, specified by the id parameter below.    
-	 * The status's author will be returned inline.
-	 *
-	 * @param integer
-	 * @return array
-	 */
-	 public function getDetail($id) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');	
-
-		//populate fields
-		$query = array(
-			'id' 				=> $id,
-			'trim_user'			=> $this->_trim,
-			'include_entities'	=> $this->_entities);
-
-		return $this->_getResponse(self::URL_GET_LIST, $query);
 	}
 	
 	/**
@@ -323,6 +179,149 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 		
 		$url = sprintf(self::URL_RETWEET, $id);
 		return $this->_post($url, $query);
+	}
+	
+	/**
+	 * Set count
+	 *
+	 * @param integer
+	 * @return array
+	 */
+	public function setCount($count) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_count = $count;
+		return $this;
+	} 
+	
+	/**
+	 * Set include entities
+	 *
+	 * @return array
+	 */
+	public function setEntities() {
+		$this->_entities = true;
+		return $this;
+	}
+	
+	/**
+	 * Set display coordinates
+	 *
+	 * @return array
+	 */
+	public function setDisplay() {
+		$this->_display = true;
+		return $this;
+	}
+	/**
+	 * Set latitude
+	 *
+	 * @param float
+	 * @return this
+	 */
+	public function setLatitude($latitude) {
+		//Argument 1 must be a float
+		Eden_Twitter_Error::i()->argument(1, 'float');
+		
+		$this->_latitude = $latitude;
+		return $this;
+	}
+	
+	/**
+	 * Set longtitude
+	 *
+	 * @param float
+	 * @return this
+	 */
+	public function setLongtitude($longtitude) {
+		//Argument 1 must be a float
+		Eden_Twitter_Error::i()->argument(1, 'float');
+		
+		$this->_longtitude = $longtitude;
+		return $this;
+	}
+	
+	/**
+	 * Set page
+	 *
+	 * @param integer
+	 * @return array
+	 */
+	public function setPage($page) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_page = $page;
+		return $this;
+	}
+	
+	/**
+	 * Set place id
+	 *
+	 * @param string|integer
+	 * @return array
+	 */
+	public function setPlace($place) {
+		//Argument 1 must be a string or integer
+		Eden_Twitter_Error::i()->argument(1, 'string', 'int');
+		
+		$this->_place = $place;
+		return $this;
+	}
+	
+	/**
+	 * Set in reply to status id
+	 *
+	 * @param string
+	 * @return array
+	 */
+	public function setReply($reply) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		$this->_reply = $reply;
+		return $this;
+	}
+	
+	/**
+	 * Set possibly sensitive
+	 *
+	 * @return array
+	 */
+	public function setSensitive() {
+		$this->_sensitive = true;
+		return $this;
+	}
+	
+	/**
+	 * Set stringify ids
+	 *
+	 * @return array
+	 */
+	public function setStringify() {
+		$this->_stringify = true;
+		return $this;
+	}
+	
+	/**
+	 * Set wrap links
+	 *
+	 * @return array
+	 */
+	public function setWrap() {
+		$this->_wrap = true;
+		return $this;
+	}
+	
+	/**
+	 * Set trim user
+	 *
+	 * @return array
+	 */
+	public function setTrim() {
+		$this->_trim = true;
+		return $this;
 	}
 	
 	/**

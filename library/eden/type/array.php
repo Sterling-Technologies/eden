@@ -216,6 +216,51 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
     }
 
 	/**
+	 * isset using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+    public function offsetExists($offset) {
+        return isset($this->_data[$offset]);
+    }
+    
+	/**
+	 * returns data using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+	public function offsetGet($offset) {
+        return isset($this->_data[$offset]) ? $this->_data[$offset] : NULL;
+    }
+	
+	/**
+	 * Sets data using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @param mixed
+	 * @return void
+	 */
+	public function offsetSet($offset, $value) {
+        if (is_null($offset)) {
+            $this->_data[] = $value;
+        } else {
+            $this->_data[$offset] = $value;
+        }
+    }
+	
+	/**
+	 * unsets using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+	public function offsetUnset($offset) {
+        unset($this->_data[$offset]);
+    }
+    
+	/**
 	 * Inserts a row in an array after the given index and adjusts all the indexes
 	 *
 	 * @param *scalar the key we are looking for to past after
@@ -265,51 +310,6 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 		return $this;
 	}
 	
-	/**
-	 * isset using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-    public function offsetExists($offset) {
-        return isset($this->_data[$offset]);
-    }
-    
-	/**
-	 * returns data using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-	public function offsetGet($offset) {
-        return isset($this->_data[$offset]) ? $this->_data[$offset] : NULL;
-    }
-	
-	/**
-	 * Sets data using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @param mixed
-	 * @return void
-	 */
-	public function offsetSet($offset, $value) {
-        if (is_null($offset)) {
-            $this->_data[] = $value;
-        } else {
-            $this->_data[$offset] = $value;
-        }
-    }
-	
-	/**
-	 * unsets using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-	public function offsetUnset($offset) {
-        unset($this->_data[$offset]);
-    }
-    
 	/**
 	 * Rewinds the position
 	 * For Iterator interface

@@ -54,200 +54,6 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set count
-	 *
-	 * @param integer
-	 * @return array
-	 */
-	public function setCount($count) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');
-		
-		$this->_count = $count;
-		return $this;
-	}
-	
-	/**
-	 * Set since id
-	 *
-	 * @param integer
-	 * @return array
-	 */
-	public function setSince($since) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');
-		
-		$this->_since = $since;
-		return $this;
-	}
-	
-	/**
-	 * Set max id
-	 *
-	 * @param integer
-	 * @return array
-	 */
-	public function setMax($max) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');
-		
-		$this->_max = $max;
-		return $this;
-	}
-	
-	/**
-	 * Set page
-	 *
-	 * @param integer
-	 * @return array
-	 */
-	public function setPage($page) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');
-		
-		$this->_page = $page;
-		return $this;
-	}
-	
-	/**
-	 * Set user id
-	 *
-	 * @param integer
-	 * @return array
-	 */
-	public function setId($id) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');
-		
-		$this->_id = $id;
-		return $this;
-	}
-	
-	/**
-	 * Set screen name
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setName($name) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$this->_name = $name;
-		return $this;
-	}
-	
-	/**
-	 * Set trim user
-	 *
-	 * @return array
-	 */
-	public function setTrim() {
-		$this->_trim = true;
-		return $this;
-	}
-	
-	/**
-	 * Set include rts
-	 *
-	 * @return array
-	 */
-	public function setInclude() {
-		$this->_include = true;
-		return $this;
-	}
-	
-	/**
-	 * Set inclde entities
-	 *
-	 * @return array
-	 */
-	public function setEntities() {
-		$this->_entities = true;
-		return $this;
-	}
-	
-	/**
-	 * Set exclude replies
-	 *
-	 * @return array
-	 */
-	public function setReplies() {
-		$this->_replies = true;
-		return $this;
-	}
-	
-	/**
-	 * Set contributors details
-	 *
-	 * @return array
-	 */
-	public function setDetail() {
-		$this->_detail = true;
-		return $this;
-	}
-	
-	/**
-	 * Returns the 20 most recent statuses, including retweets 
-	 * if they exist, posted by the authenticating user and 
-	 * the user's they follow. This is the same timeline seen
-	 * by a user when they login to twitter.com.
-	 *
-	 * @return array
-	 */
-	public function getTimeline() {
-		//populate fields
-		$query = array(
-			'count'					=> $this->_count,
-			'since_id'				=> $this->_since,
-			'max_id'				=> $this->_max,
-			'page'					=> $this->_page,
-			'trim_user'				=> $this->_trim,
-			'include_rts'			=> $this->_include,
-			'include_entities'		=> $this->_entities,
-			'exclude_replies'		=> $this->_replies,
-			'contributor_details'	=> $this->_detail);
-		
-		return $this->_getResponse(self::URL_TIMELINE, $query);
-	}
-	 
-	/**
-	 * Returns the 20 most recent mentions (status containing @username)
-	 * for the authenticating user 
-	 *
-	 * @return array
-	 */
-	public function getMention() {
-		//populate fields	
-		$query = array(
-			'count'					=> $this->_count,
-			'since_id'				=> $this->_since,
-			'max_id'				=> $this->_max,
-			'page'					=> $this->_page,
-			'trim_user'				=> $this->_trim,
-			'include_rts'			=> $this->_include,
-			'include_entities'		=> $this->_entities,
-			'contributor_details'	=> $this->_detail);
-		
-		return $this->_getResponse(self::URL_MENTION, $query);
-	}
-	 
-	/**
-	 * Returns the 20 most recent statuses, including  
-	 * retweets if they exist.
-	 *
-	 * @return array
-	 */
-	public function getPublic() {
-		//populate fields	
-		$query = array(
-			'trim_user'			=> $this->_trim,
-			'include_entities'	=> $this->_entities);
-		
-		return $this->_getResponse(self::URL_PUBLIC, $query);
-	}
-	
-	/**
 	 * Returns the 20 most recent retweets posted 
 	 * by the authenticating user.
 	 *
@@ -268,40 +74,24 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	
 	/**
 	 * Returns the 20 most recent retweets posted by 
-	 * users the authenticating user follow
+	 * the specified user. The user is specified using 
+	 * the user_id or screen_name parameters  
 	 *
 	 * @return array
 	 */
-	public function getTo() {
-		//populate fields
+	public function getByUser() {
+		//populate fields	
 		$query = array(
+			'user_id'			=> $this->_id,
+			'screen_name'		=> $this->_name,
+			'since_id'			=> $this->_id,
 			'count'				=> $this->_count,
-			'since_id'			=> $this->_since,
 			'max_id'			=> $this->_max,
 			'page'				=> $this->_page,
 			'trim_user'			=> $this->_trim,
 			'include_entities'	=> $this->_entities);
 		
-		return $this->_getResponse(self::URL_TO_ME, $query);
-	}
-	
-	/**
-	 * Returns the 20 most recent tweets of the authenticated 
-	 * user that have been retweeted by others.
-	 *
-	 * @return array
-	 */
-	 public function getOf() {
-		//populate fields
-		$query = array(
-			'count'				=> $this->_count,
-			'since_id'			=> $this->_since,
-			'max_id'			=> $this->_max,
-			'page'				=> $this->_page,
-			'trim_user'			=> $this->_trim,
-			'include_entities'	=> $this->_entities);
-		
-		return $this->_getResponse(self::URL_OF_ME, $query);
+		return $this->_getResponse(self::URL_BY_USER, $query);
 	}
 	
 	/**
@@ -329,6 +119,104 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 		
 		return $this->_getResponse(self::URL_USER, $query);
 	}
+	 
+	/**
+	 * Returns the 20 most recent mentions (status containing @username)
+	 * for the authenticating user 
+	 *
+	 * @return array
+	 */
+	public function getMention() {
+		//populate fields	
+		$query = array(
+			'count'					=> $this->_count,
+			'since_id'				=> $this->_since,
+			'max_id'				=> $this->_max,
+			'page'					=> $this->_page,
+			'trim_user'				=> $this->_trim,
+			'include_rts'			=> $this->_include,
+			'include_entities'		=> $this->_entities,
+			'contributor_details'	=> $this->_detail);
+		
+		return $this->_getResponse(self::URL_MENTION, $query);
+	}
+	
+	/**
+	 * Returns the 20 most recent tweets of the authenticated 
+	 * user that have been retweeted by others.
+	 *
+	 * @return array
+	 */
+	public function getOf() {
+		//populate fields
+		$query = array(
+			'count'				=> $this->_count,
+			'since_id'			=> $this->_since,
+			'max_id'			=> $this->_max,
+			'page'				=> $this->_page,
+			'trim_user'			=> $this->_trim,
+			'include_entities'	=> $this->_entities);
+		
+		return $this->_getResponse(self::URL_OF_ME, $query);
+	}
+	 
+	/**
+	 * Returns the 20 most recent statuses, including  
+	 * retweets if they exist.
+	 *
+	 * @return array
+	 */
+	public function getPublic() {
+		//populate fields	
+		$query = array(
+			'trim_user'			=> $this->_trim,
+			'include_entities'	=> $this->_entities);
+		
+		return $this->_getResponse(self::URL_PUBLIC, $query);
+	}
+	
+	/**
+	 * Returns the 20 most recent statuses, including retweets 
+	 * if they exist, posted by the authenticating user and 
+	 * the user's they follow. This is the same timeline seen
+	 * by a user when they login to twitter.com.
+	 *
+	 * @return array
+	 */
+	public function getTimeline() {
+		//populate fields
+		$query = array(
+			'count'					=> $this->_count,
+			'since_id'				=> $this->_since,
+			'max_id'				=> $this->_max,
+			'page'					=> $this->_page,
+			'trim_user'				=> $this->_trim,
+			'include_rts'			=> $this->_include,
+			'include_entities'		=> $this->_entities,
+			'exclude_replies'		=> $this->_replies,
+			'contributor_details'	=> $this->_detail);
+		
+		return $this->_getResponse(self::URL_TIMELINE, $query);
+	}
+	
+	/**
+	 * Returns the 20 most recent retweets posted by 
+	 * users the authenticating user follow
+	 *
+	 * @return array
+	 */
+	public function getTo() {
+		//populate fields
+		$query = array(
+			'count'				=> $this->_count,
+			'since_id'			=> $this->_since,
+			'max_id'			=> $this->_max,
+			'page'				=> $this->_page,
+			'trim_user'			=> $this->_trim,
+			'include_entities'	=> $this->_entities);
+		
+		return $this->_getResponse(self::URL_TO_ME, $query);
+	}
 	
 	/**
 	 * Returns the 20 most recent retweets posted 
@@ -336,7 +224,7 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 *
 	 * @return array
 	 */
-	 public function getToUser() {
+	public function getToUser() {
 		//populate fields	
 		$query = array(
 			'user_id'			=> $this->_id,
@@ -352,25 +240,137 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	}
 	
 	/**
-	 * Returns the 20 most recent retweets posted by 
-	 * the specified user. The user is specified using 
-	 * the user_id or screen_name parameters  
+	 * Set count
+	 *
+	 * @param integer
+	 * @return array
+	 */
+	public function setCount($count) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_count = $count;
+		return $this;
+	}
+	
+	/**
+	 * Set contributors details
 	 *
 	 * @return array
 	 */
-	public function getByUser() {
-		//populate fields	
-		$query = array(
-			'user_id'			=> $this->_id,
-			'screen_name'		=> $this->_name,
-			'since_id'			=> $this->_id,
-			'count'				=> $this->_count,
-			'max_id'			=> $this->_max,
-			'page'				=> $this->_page,
-			'trim_user'			=> $this->_trim,
-			'include_entities'	=> $this->_entities);
+	public function setDetail() {
+		$this->_detail = true;
+		return $this;
+	}
+	
+	/**
+	 * Set inclde entities
+	 *
+	 * @return array
+	 */
+	public function setEntities() {
+		$this->_entities = true;
+		return $this;
+	}
+	
+	/**
+	 * Set user id
+	 *
+	 * @param integer
+	 * @return array
+	 */
+	public function setId($id) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
 		
-		return $this->_getResponse(self::URL_BY_USER, $query);
+		$this->_id = $id;
+		return $this;
+	}
+	
+	/**
+	 * Set include rts
+	 *
+	 * @return array
+	 */
+	public function setInclude() {
+		$this->_include = true;
+		return $this;
+	}
+	
+	/**
+	 * Set max id
+	 *
+	 * @param integer
+	 * @return array
+	 */
+	public function setMax($max) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_max = $max;
+		return $this;
+	}
+	
+	/**
+	 * Set screen name
+	 *
+	 * @param string
+	 * @return array
+	 */
+	public function setName($name) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		$this->_name = $name;
+		return $this;
+	}
+	
+	/**
+	 * Set page
+	 *
+	 * @param integer
+	 * @return array
+	 */
+	public function setPage($page) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_page = $page;
+		return $this;
+	}
+	
+	/**
+	 * Set exclude replies
+	 *
+	 * @return array
+	 */
+	public function setReplies() {
+		$this->_replies = true;
+		return $this;
+	}
+	
+	/**
+	 * Set since id
+	 *
+	 * @param integer
+	 * @return array
+	 */
+	public function setSince($since) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_since = $since;
+		return $this;
+	}
+	
+	/**
+	 * Set trim user
+	 *
+	 * @return array
+	 */
+	public function setTrim() {
+		$this->_trim = true;
+		return $this;
 	}
 	
 	/* Protected Methods

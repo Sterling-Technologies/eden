@@ -48,6 +48,33 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * Returns tweets that match a specified query
+	 *
+	 * @param string|integer
+	 * @return array
+	 */
+	public function search($search) {
+		//Argument 1 must be a string or integer
+		Eden_Twitter_Error::i()->argument(1, 'string', 'integer');
+
+		$query = array(
+			'q' 				=> $search,
+			'callback'			=> $this->_callback,
+			'geocode'			=> $this->_geocode,
+			'lang'				=> $this->_lang,
+			'locale'			=> $this->_locale,
+			'page'				=> $this->_page,
+			'result_type'		=> $this->_result,
+			'rpp'				=> $this->_rpp,
+			'show_user'			=> $this->_show,
+			'until'				=> $this->_until,
+			'since_id'			=> $this->_since,
+			'include_entities'	=> $this->_entities);
+		
+		return $this->_getResponse(self::URL_SEARCH, $query);
+	}
+	
+	/**
 	 * Set callback
 	 *
 	 * @param string
@@ -58,6 +85,16 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 		Eden_Twitter_Error::i()->argument(1, 'string');
 		
 		$this->_callback = $callback;
+		return $this;
+	}
+	
+	/**
+	 * Set include entites
+	 *
+	 * @return this
+	 */
+	public function setEntities() {
+		$this->_entities = true;
 		return $this;
 	}
 	
@@ -170,21 +207,6 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	}
 	
 	/**
-	 * Set until
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUntil($until) {
-		//Argument 1 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$until = date('Y-m-d', $until);
-		$this->_until = $until;
-		return $this;
-	}
-	
-	/**
 	 * Set since id
 	 *
 	 * @param string
@@ -209,40 +231,18 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	}
 	
 	/**
-	 * Set include entites
+	 * Set until
 	 *
+	 * @param string
 	 * @return this
 	 */
-	public function setEntities() {
-		$this->_entities = true;
-		return $this;
-	}
-	
-	/**
-	 * Returns tweets that match a specified query
-	 *
-	 * @param string|integer
-	 * @return array
-	 */
-	public function search($search) {
-		//Argument 1 must be a string or integer
-		Eden_Twitter_Error::i()->argument(1, 'string', 'integer');
-
-		$query = array(
-			'q' 				=> $search,
-			'callback'			=> $this->_callback,
-			'geocode'			=> $this->_geocode,
-			'lang'				=> $this->_lang,
-			'locale'			=> $this->_locale,
-			'page'				=> $this->_page,
-			'result_type'		=> $this->_result,
-			'rpp'				=> $this->_rpp,
-			'show_user'			=> $this->_show,
-			'until'				=> $this->_until,
-			'since_id'			=> $this->_since,
-			'include_entities'	=> $this->_entities);
+	public function setUntil($until) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
 		
-		return $this->_getResponse(self::URL_SEARCH, $query);
+		$until = date('Y-m-d', $until);
+		$this->_until = $until;
+		return $this;
 	}
 	 
 	/* Protected Methods

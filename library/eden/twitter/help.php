@@ -36,16 +36,6 @@ class Eden_Twitter_Help extends Eden_Twitter_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns the string "ok" in the requested
-	 * format with a 200 OK HTTP status code.
-	 *
-	 * @return string
-	 */
-	public function setTest() {
-		return $this->_getResponse(self::URL_TEST);
-	}
-	
-	/**
 	 * Returns the current configuration used by 
 	 * Twitter including twitter.com slugs which 
 	 * are not usernames, maximum photo resolutions,
@@ -65,6 +55,16 @@ class Eden_Twitter_Help extends Eden_Twitter_Base {
 	 */
 	public function setLanguages() {
 		return $this->_getResponse(self::URL_LANGUAGES);
+	}
+	
+	/**
+	 * Returns the string "ok" in the requested
+	 * format with a 200 OK HTTP status code.
+	 *
+	 * @return string
+	 */
+	public function setTest() {
+		return $this->_getResponse(self::URL_TEST);
 	}
 	
 	/* Protected Methods

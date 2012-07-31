@@ -35,30 +35,6 @@ class Eden_Twitter_LocalTrends extends Eden_Twitter_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns the top 10 trending topics for a specific
-	 * WOEID, if trending information is available for it.
-	 *
-	 * @param integer
-	 * @param string|null
-	 * @return array
-	 */
-	public function getList($id, $exclude = NULL) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int')				//Argument 1 must be an integer
-			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
-		
-		$query = array('woeid' => $id);
-		//if it is not empty
-		if(!is_null($exclude)) {
-			//lets put it in query
-			$query['exclude'] = $exclude;
-		}
-		
-		return $this->_getResponse(self::URL_GET_LIST);
-	}
-	
-	/**
 	 * Returns the locations that Twitter has 
 	 * trending topic information
 	 *
@@ -87,6 +63,30 @@ class Eden_Twitter_LocalTrends extends Eden_Twitter_Base {
 		}
 		
 		return $this->_getResponse(self::URL_GET_DETAIL);
+	}
+	
+	/**
+	 * Returns the top 10 trending topics for a specific
+	 * WOEID, if trending information is available for it.
+	 *
+	 * @param integer
+	 * @param string|null
+	 * @return array
+	 */
+	public function getList($id, $exclude = NULL) {
+		//Argument Test
+		Eden_Twitter_Error::i()
+			->argument(1, 'int')				//Argument 1 must be an integer
+			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
+		
+		$query = array('woeid' => $id);
+		//if it is not empty
+		if(!is_null($exclude)) {
+			//lets put it in query
+			$query['exclude'] = $exclude;
+		}
+		
+		return $this->_getResponse(self::URL_GET_LIST);
 	}
 	
 	/* Protected Methods

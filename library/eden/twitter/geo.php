@@ -49,216 +49,6 @@ class Eden_Twitter_Geo extends Eden_Twitter_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set accuracy
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setAccuracy($accuracy) {
-		//Argument 1 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$this->_accuracy = $accuracy;
-		return $this;
-	}
-	
-	/**
-	 * Set granularity
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setGranularity($granularity) {
-		//Argument 1 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$this->_granularity = $granularity;
-		return $this;
-	}
-	
-	/**
-	 * Set max results
-	 *
-	 * @param integer
-	 * @return this
-	 */
-	public function setMax($max) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');
-		
-		$this->_max = $max;
-		return $this;
-	}
-	
-	/**
-	 * Set callback
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setCallback($callback) {
-		//Argument 1 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$this->_callback = $callback;
-		return $this;
-	}
-	
-	/**
-	 * Set latitude
-	 *
-	 * @param float
-	 * @return this
-	 */
-	public function setLatitude($latitude) {
-		//Argument 1 must be a float 
-		Eden_Twitter_Error::i()->argument(1, 'float');
-		
-		$this->_latitude = $latitude;
-		return $this;
-	}
-	
-	/**
-	 * Set longtitude
-	 *
-	 * @param float
-	 * @return this
-	 */
-	public function setLongtitude($longtitude) {
-		//Argument 1 must be a float 
-		Eden_Twitter_Error::i()->argument(1, 'float');
-		
-		$this->_longtitude = $longtitude;
-		return $this;
-	}
-	
-	/**
-	 * Set query
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setInput($input) {
-		//Argument 1 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$this->_input = $input;
-		return $this;
-	}
-	
-	/**
-	 * Set ip address
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setIp($ip) {
-		//Argument 1 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$this->_ip = $ip;
-		return $this;
-	}
-	
-	/**
-	 * Set contained within
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setContained($contained) {
-		//Argument 1 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$this->_contained = $contained;
-		return $this;
-	}
-	
-	/**
-	 * Set street address
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setAddress($address) {
-		//Argument 1 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$this->_address = $address;
-		return $this;
-	}
-	
-	/**
-	 * Returns all the information about a known place.
-	 *
-	 * @param integer
-	 * @return array
-	 */
-	public function getPlace($id) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');	
-		
-		$query = array('place_id' => $id);
-		
-		return $this->_getResponse(self::URL_GET_PLACE, $query);
-	}
-	
-	/**
-	 * Given a latitude and a longitude, searches 
-	 * for up to 20 places that can be used as a 
-	 * place_id when updating a status
-	 *
-	 * @param float
-	 * @param float
-	 * @return array
-	 */
-	public function getGeocode($lat, $long) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'float')	//Argument 1 must be a float 
-			->argument(2, 'float');	//Argument 2 must be a float 
-			
-		//populate fields
-		$query = array(
-			'lat' 			=> $lat,
-			'long' 			=> $long,
-			'accuracy'		=> $this->_accuracy,
-			'granularity'	=> $this->_granularity,
-			'max_results'	=> $this->_max,
-			'callback'		=> $this->_callback);
-		
-		return $this->_getResponse(self::URL_GET_GEOCODE, $query);
-	}
-	
-	/**
-	 * Locates places near the given coordinates
-	 * which are similar in name. 
-	 *
-	 * @param float
-	 * @param float
-	 * @param string
-	 * @return array
-	 */
-	public function getSimilarPlaces($lat, $long, $name) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'float')		//Argument 1 must be a float
-			->argument(2, 'float')		//Argument 2 must be a float
-			->argument(3, 'string');	//Argument 3 must be a string
-			
-		//populate fields	
-		$query = array(
-			'lat'						=> $lat,
-			'long'						=> $long,
-			'name'						=> $name,
-			'contained_within'			=>	$this->_contained,
-			'attribute:street_address'	=>	$this->_address,
-			'callback'					=>	$this->_callback);
-		
-		return $this->_getResponse(self::URL_GET_SIMILAR_PLACES, $query);
-	}
-	
-	/**
 	 * Creates a new place object at the given 
 	 * latitude and longitude.
 	 *
@@ -292,6 +82,76 @@ class Eden_Twitter_Geo extends Eden_Twitter_Base {
 	}
 	
 	/**
+	 * Given a latitude and a longitude, searches 
+	 * for up to 20 places that can be used as a 
+	 * place_id when updating a status
+	 *
+	 * @param float
+	 * @param float
+	 * @return array
+	 */
+	public function getGeocode($lat, $long) {
+		//Argument Test
+		Eden_Twitter_Error::i()
+			->argument(1, 'float')	//Argument 1 must be a float 
+			->argument(2, 'float');	//Argument 2 must be a float 
+			
+		//populate fields
+		$query = array(
+			'lat' 			=> $lat,
+			'long' 			=> $long,
+			'accuracy'		=> $this->_accuracy,
+			'granularity'	=> $this->_granularity,
+			'max_results'	=> $this->_max,
+			'callback'		=> $this->_callback);
+		
+		return $this->_getResponse(self::URL_GET_GEOCODE, $query);
+	}
+	
+	/**
+	 * Returns all the information about a known place.
+	 *
+	 * @param integer
+	 * @return array
+	 */
+	public function getPlace($id) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');	
+		
+		$query = array('place_id' => $id);
+		
+		return $this->_getResponse(self::URL_GET_PLACE, $query);
+	}
+	
+	/**
+	 * Locates places near the given coordinates
+	 * which are similar in name. 
+	 *
+	 * @param float
+	 * @param float
+	 * @param string
+	 * @return array
+	 */
+	public function getSimilarPlaces($lat, $long, $name) {
+		//Argument Test
+		Eden_Twitter_Error::i()
+			->argument(1, 'float')		//Argument 1 must be a float
+			->argument(2, 'float')		//Argument 2 must be a float
+			->argument(3, 'string');	//Argument 3 must be a string
+			
+		//populate fields	
+		$query = array(
+			'lat'						=> $lat,
+			'long'						=> $long,
+			'name'						=> $name,
+			'contained_within'			=>	$this->_contained,
+			'attribute:street_address'	=>	$this->_address,
+			'callback'					=>	$this->_callback);
+		
+		return $this->_getResponse(self::URL_GET_SIMILAR_PLACES, $query);
+	}
+	
+	/**
 	 * Search for places that can be attached 
 	 * to a statuses/update. 
 	 *
@@ -311,6 +171,146 @@ class Eden_Twitter_Geo extends Eden_Twitter_Base {
 			'callback'					=> $this->_callback);
 		
 		return $this->_getResponse(self::URL_SEARCH, $query);
+	}
+	
+	/**
+	 * Set accuracy
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setAccuracy($accuracy) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		$this->_accuracy = $accuracy;
+		return $this;
+	}
+	
+	/**
+	 * Set street address
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setAddress($address) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		$this->_address = $address;
+		return $this;
+	}
+	
+	/**
+	 * Set callback
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCallback($callback) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		$this->_callback = $callback;
+		return $this;
+	}
+	
+	/**
+	 * Set contained within
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setContained($contained) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		$this->_contained = $contained;
+		return $this;
+	}
+	
+	/**
+	 * Set granularity
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setGranularity($granularity) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		$this->_granularity = $granularity;
+		return $this;
+	}
+	
+	/**
+	 * Set query
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setInput($input) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		$this->_input = $input;
+		return $this;
+	}
+	
+	/**
+	 * Set ip address
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setIp($ip) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		$this->_ip = $ip;
+		return $this;
+	}
+	
+	/**
+	 * Set latitude
+	 *
+	 * @param float
+	 * @return this
+	 */
+	public function setLatitude($latitude) {
+		//Argument 1 must be a float 
+		Eden_Twitter_Error::i()->argument(1, 'float');
+		
+		$this->_latitude = $latitude;
+		return $this;
+	}
+	
+	/**
+	 * Set longtitude
+	 *
+	 * @param float
+	 * @return this
+	 */
+	public function setLongtitude($longtitude) {
+		//Argument 1 must be a float 
+		Eden_Twitter_Error::i()->argument(1, 'float');
+		
+		$this->_longtitude = $longtitude;
+		return $this;
+	}
+	
+	/**
+	 * Set max results
+	 *
+	 * @param integer
+	 * @return this
+	 */
+	public function setMax($max) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_max = $max;
+		return $this;
 	}
 	
 	/* Protected Methods
