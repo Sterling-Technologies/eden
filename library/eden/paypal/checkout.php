@@ -181,7 +181,7 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 		
 		$query = array(
 			'PAYMENTREQUEST_0_PAYMENTACTION'	=> 'Authorization',
-			self::SOLUTION_TYPE					=> $this->_solutionType
+			self::SOLUTION_TYPE					=> $this->_solutionType,
 			self::TOTAL_AMOUNT					=> $this->_amount,			//amount of item
 			self::RETURN_URL 					=> $return,
 			self::CANCEL_URL 					=> $cancel,					
