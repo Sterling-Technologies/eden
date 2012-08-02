@@ -51,6 +51,7 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 	const ZIP				= 'ZIP';
 	const RETURN_CURRENCIES	= 'RETURNALLCURRENCIES';
 	const EMAIL_SUBJECT		= 'EMAILSUBJECT';
+	const SOLUTION_TYPE		= 'SOLUTIONTYPE';
 	
 	const PAYMENT_ACTION	= 'PAYMENTACTION';					
 	const PAYER_ID			= 'PAYERID';						
@@ -74,6 +75,7 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 	protected $_street			= NULL;
 	protected $_zip				= NULL;
 	protected $_emailSubject	= NULL;
+	protected $_solutionType	= 'Sole';
 	
 	/* Private Properties
 	-------------------------------*/
@@ -179,7 +181,8 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 		
 		$query = array(
 			'PAYMENTREQUEST_0_PAYMENTACTION'	=> 'Authorization',
-			self::TOTAL_AMOUNT					=> $this->_amount,	//amount of item
+			self::SOLUTION_TYPE					=> $this->_solutionType
+			self::TOTAL_AMOUNT					=> $this->_amount,			//amount of item
 			self::RETURN_URL 					=> $return,
 			self::CANCEL_URL 					=> $cancel,					
 			self::SHIPPING_AMOUNT				=> $this->_shippingAmount,	//amount of shipping
@@ -234,6 +237,25 @@ class Eden_Paypal_Checkout extends Eden_Paypal_Base {
 	 */
 	public function setCallBack() {	
 		$this->_callBack = 'true';
+		return $this;
+	}
+	
+	/**
+	 * Set Solution type, value are
+	 * Sole – 	Buyer does not need to create a 
+	 * 			PayPal account to check out. This 
+	 * 			is referred to as PayPal Account Optional.
+	 * Mark – 	Buyer must have a PayPal account to 
+	 * 			check out.
+	 *	
+	 * @param string
+	 * @return this
+	 */
+	public function setSolutionType($solutioType = 'Sole') {
+		//Argument 1 must be an string
+		Eden_Paypal_Error::i()->argument(1, 'string');	
+		
+		$this->_solutionType = $solutioType;
 		return $this;
 	}
 	
