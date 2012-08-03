@@ -8,27 +8,24 @@
  */
 
 /**
- * Google Plus comment
+ * Google Contacts Photos
  *
  * @package    Eden
  * @category   google
- * @author     Clark Galgo cgalgo@openovate.com
+ * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
-class Eden_Google_Plus_Comment extends Eden_Google_Base {
+class Eden_Google_Contacts_Photo extends Eden_Google_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_COMMENTS_LIST	= 'https://www.googleapis.com/plus/v1/activities/%s/comments';
-	const URL_COMMENTS_GET	= 'https://www.googleapis.com/plus/v1/comments/%s';
+	const URL_CONTACTS_GET_IMAGE = 'https://www.google.com/m8/feeds/photos/media/%s/%s';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
-	-------------------------------*/ 
-	protected $_activityId	= NULL;
-	protected $_pageToken	= NULL;
-	protected $_maxResults	= NULL;
-	protected $_commentId 	= NULL;
-	protected $_sortOrder 	= NULL;
+	-------------------------------*/
+	protected $_userEmail	= 'default';
+	protected $_version		= '3.0';
+	protected $_contactId	= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -47,71 +44,70 @@ class Eden_Google_Plus_Comment extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set activity Id
+	 * Set user email
 	 *
 	 * @param string
-	 * @return array
+	 * @return this
 	 */
-	public function setActivityId($activityId) {
+	public function setUserEmail($userEmail) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_activityId = $activityId;
-		
-		return $this;
-	}
-	
-	/** 
-	 * Set comment Id
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setCommentId($commentId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_commentId = $commentId;
-		
-		return $this;
-	}
-	
-	/** 
-	 * Sort newest comments first.
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function descendingOrder() {
-		$this->_sortOrder = 'descending';
+		$this->_userEmail = $userEmail;
 		
 		return $this;
 	}
 	
 	/**
-	 * List all of the comments for an activity.
+	 * Set contact id
 	 *
-	 * @return array
+	 * @param string
+	 * @return this
 	 */
-	public function getList() {
+	public function setContactId($contactId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_contactId = $contactId;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set etag
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setEtag($etag) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_etag = $etag;
+		
+		return $this;
+	}
+	
+	/**
+	 * Retrieve a single contact photo
+	 *
+	 * return array
+	 */
+	public function getImage() {
 		//populate fields
 		$query = array(
-			'maxResults'	=> $this->_maxResults,
-			'pageToken'		=> $this->_pageToken,
-			'sortOrder'		=> $this->_sortOrder);
+			self::VERSION 	=> $this->_version,
+			self::RESPONSE	=> self::JSON_FORMAT);
 		
-		return $this->_getResponse(sprintf(self::URL_COMMENTS_LIST, $this->_activityId), $query);
+		return $this->_getResponse(sprintf(self::URL_CONTACTS_GET_IMAGE, $this->_userEmail, $this->_contactId), $query);
 	}
 	
 	/**
-	 * Get a comment
+	 * Delete a photo
 	 *
-	 * @return array
+	 * return array
 	 */
-	public function getSpecific() {
+	public function delete() {
 		
-		return $this->_getResponse(sprintf(self::URL_COMMENTS_GET));
+		return $this->_delete(sprintf(self::URL_CONTACTS_GET_IMAGE, $this->_userEmail, $this->_contactId), true);
 	}
-	
-	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

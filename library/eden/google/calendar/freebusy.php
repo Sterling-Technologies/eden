@@ -57,7 +57,7 @@ class Eden_Google_Calendar_Freebusy extends Eden_Google_Base {
 		$query = array(
 			self::TIMEMIN				=> $this->_timeMin,
 			self::TIMEMAX				=> $this->_timeMax,
-			self::TIMEZONE				=> $this->_timeZone
+			self::TIMEZONE				=> $this->_timeZone,
 			self::GROUP_EXPANSION		=> $this->_groupExpansionMax,
 			self::CALENDAR_EXPANSION	=> $this->_calendarExpansionMax,
 			self::ITEMS					=> $id = array(self::ID => $this->_items));
@@ -125,7 +125,7 @@ class Eden_Google_Calendar_Freebusy extends Eden_Google_Base {
 		return $this;
 	}
 	
-	 /**
+	/**
 	 * Sets Minimum time
 	 *
 	 * @param string|int

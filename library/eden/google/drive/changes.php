@@ -24,7 +24,7 @@ class Eden_Google_Drive_Changes extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_fileId	= NULL:
+	protected $_fileId	= NULL;
 	 
 	/* Private Properties
 	-------------------------------*/

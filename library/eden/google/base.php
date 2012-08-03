@@ -89,6 +89,10 @@ class Eden_Google_Base extends Eden_Class {
 	const EXPORT_LINK			= 'exportLinks';				
 	const MD5_CHECKSUM			= 'md5Checksum';	
 	
+	const RESPONSE		= 'alt';
+	const JSON_FORMAT	= 'json';
+	const VERSION		= 'v';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -96,6 +100,10 @@ class Eden_Google_Base extends Eden_Class {
 	protected $_token		= NULL;
 	protected $_maxResult	= NULL;
 	protected $_headers		= array(self::FORM_HEADER, self::CONTENT_TYPE);
+	protected $_meta		= array();
+	protected $_developerId	= NULL;
+	protected $_etag		= NULL;
+	protected $_apiKey		= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -110,68 +118,120 @@ class Eden_Google_Base extends Eden_Class {
 	 *
 	 * @return array
 	 */
-	public function getMeta($key = NULL) {
-		Eden_Google_Error::i()->argument(1, 'string', 'null');
-		
-		if(isset($this->_meta[$key])) {
-			return $this->_meta[$key];
-		}
-		
+	public function getMeta() {
+	
 		return $this->_meta;
 	}
 	
 	/**
 	 * Check if the response is xml
 	 *
-	 * @param string
-	 * @return array
+	 * @param string|array|object|null
+	 * @return bollean
 	 */
 	public function isXml($xml) {
+		//argument 1 must be a string, array,  object or null
+		Eden_Google_Error::i()->argument(1, 'string', 'array', 'object', 'null');
+		
+		if(is_array($xml) || is_null($xml)) {
+			return false;
+		}
 		libxml_use_internal_errors( true );
 		$doc = new DOMDocument('1.0', 'utf-8');
-		$doc->loadXML( $xml );
+		$doc->loadXML($xml);
 		$errors = libxml_get_errors();
-	
-		return empty( $errors );
+		//front()->output($errors); exit;
+		return empty($errors);
 	}
 	
 	/**
-	 * Set Maximum results of query
+	 * Check if the response is json format
 	 *
-	 * @param int
-	 * @return array
+	 * @param string
+	 * @return boolean
 	 */
-	public function setMaxResult($maxResult) {
-		Eden_Google_Error::i()->argument(1, 'int');
-		$this->_maxResult = $maxResult;
+	public function isJson($string) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
 		
-		return $this;
+ 		json_decode($string);
+ 		return (json_last_error() == JSON_ERROR_NONE);
 	}
 	
-	public function setXmlHeaders($developerId) {
-		//form xml header
-		$headers = array(
-			'application/x-www-form-urlencoded',
-			'Content-Type: application/atom+xml',
-			'X-GData-Key: key='.$developerId);
+	/**
+	 * Set xml headers 
+	 *
+	 * @param string
+	 * @param boolean 
+	 * @return array
+	 */
+	public function setXmlHeaders($developerId, $etag = false) {
+		//argument testing
+		Eden_Google_Error::i()
+			->argument(1, 'string', 'null')	//argument 1 must be a string or null
+			->argument(2, 'bool');			//argument 2 must be a boolean
+		
+		//if developer id is not needed in header
+		if(is_null($developerId)) {
+			//form xml header with no header
+			$headers = array(
+				'application/x-www-form-urlencoded',
+				'Content-Type: application/atom+xml');
+		} 
+		//if developer id is needed
+		if(!is_null($developerId) && !$etag){
+			//form xml header with developer id
+			$headers = array(
+				'application/x-www-form-urlencoded',
+				'Content-Type: application/atom+xml',
+				'X-GData-Key: key='.$developerId,
+				'GData-Version: 2');
+		}	
+		
+		//if etag is needed in the headers
+		if(is_null($developerId) && $etag){
+			//form xml header
+			$headers = array(
+				'application/x-www-form-urlencoded',
+				'Content-Type: application/atom+xml',
+				'If-Match: *');
+		}
 		
 		return $headers;
 	}
 	
+	/**
+	 * Well format xml  
+	 *
+	 * @param string|object
+	 * @return xml
+	 */
+	public function formatToXml($query) {
+		//argument 1 must be a string or object
+		Eden_Google_Error::i()->argument(1, 'string', 'object');
+		
+		$xml = new DOMDocument(); 
+		$xml->preserveWhiteSpace = false; 
+		$xml->formatOutput = true; 
+		$xml->loadXML($query); 
+		
+		return $xml->saveXML();
+	}
 	/* Protected Methods
 	-------------------------------*/
 	protected function _accessKey($array) {
 		
 		foreach($array as $key => $val) {
+			// if value is array
 			if(is_array($val)) {
 				$array[$key] = $this->_accessKey($val);
 			}
-			
+			//if value in null
 			if($val == NULL || empty($val)) {
+				//remove it from query
 				unset($array[$key]);
 			}
 		}
-		
 		return $array;
 	}
 	
@@ -207,9 +267,18 @@ class Eden_Google_Base extends Eden_Class {
 		return $response;
 	}
 	
-	protected function _delete($url) {		
-		//add access token to the url
-		$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token;
+	protected function _delete($url, array $query = array(), $etag = false) {
+		//if etag or developer id is needed in header
+		if($etag || !is_null($this->_developerId)) {
+			//set different headers for xml
+			$this->_headers = $this->setXmlHeaders($this->_developerId, $etag);
+			//add access token and version to the url
+			$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token.'&v=3';
+		//else it just needed regular headers
+		} else {
+			//add access token to the url
+			$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token;
+		} 
 		//set curl
 		$curl = Eden_Curl::i()
 			->verifyHost(false)
@@ -219,11 +288,22 @@ class Eden_Google_Base extends Eden_Class {
 			->setCustomRequest('DELETE');
 			
 		//get the response
-		$response = $curl->getJsonResponse();
+		$response = $curl->getResponse();
 		
 		$this->_meta 					= $curl->getMeta();
 		$this->_meta['url'] 			= $url;
 		$this->_meta['headers'] 		= $this->_headers;
+		front()->output($this->_meta);
+		//check if response is in json format
+		if($this->isJson($response)) {
+			//else it is in json format, covert it to array
+			$response = json_decode($response, true);
+		}
+		//check if response is in xml format
+		if($this->isXml($response)) {
+			//if it is xml, convert it to array
+			$response =  simplexml_load_string($response);
+		}
 		
 		return $response;
 	}
@@ -231,31 +311,54 @@ class Eden_Google_Base extends Eden_Class {
 	protected function _getResponse($url, array $query = array()) {
 		//if needed, add access token to query
 		$query[self::ACCESS_TOKEN] = $this->_token;
-		//if needed,  add api key to the query
-		if(isset($this->_apiKey)) {
-			$query[self::KEY] = $this->_apiKey;
-			//prevent sending fields with no value
+		//if needed, add developer id to the query
+		if(!is_null($this->_developerId)) {
+			$query[self::KEY] = $this->_developerId;
 		}
+		//if needed, add api key to the query
+		if(!is_null($this->_apiKey)) {
+			$query[self::KEY] = $this->_apiKey;
+		}
+		//prevent sending fields with no value
 		$query = $this->_accessKey($query);
 		//build url query
 		$url = $url.'?'.http_build_query($query);
 		//set curl
-		$response =  Eden_Curl::i()
+		$curl =  $this->Eden_Curl()
 			->setUrl($url)
 			->verifyHost(false)
 			->verifyPeer(false)
-			->setTimeout(60)
-			->getResponse();
+			->setTimeout(60);
+		//get response from curl
+		$response = $curl->getResponse();
+		//get curl infomation
+		$this->_meta['url']			= $url;
+		$this->_meta['query']		= $query;
+		$this->_meta['curl']		= $curl->getMeta();
+		$this->_meta['response']	= $response;
+		front()->output($this->_meta);
 		//check if response is in xml format
 		if($this->isXml($response)) {
 			//if it is xml, convert it to array
-			$response =  simplexml_load_string($response);
-		} else {
-			//else it is in json format, covert it to array
-			$response = json_decode($response, true);
+			return $response =  simplexml_load_string($response);
 		}
 		
-		return $response;
+		//check if response is in json format
+		if($this->isJson($response)) { 
+			//else it is in json format, convert it to array
+			return $response = json_decode($response, true);
+		}
+
+		//check if response is in base64 format
+		if(base64_decode($response, true)) {
+			//if not base64 format, return normal response
+			return $response;
+		//else it is in base64 format
+		} else { 
+			//return an image
+			return '<img src="data:image/jpeg;base64,'.base64_encode($response).'" />';
+		}
+		
 	}
 	
 	protected function _patch($url, array $query = array()) {
@@ -286,88 +389,81 @@ class Eden_Google_Base extends Eden_Class {
 		return $response;
 	}
 	
-	protected function _post($url, $query) {
-		//add access token to query
-		$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token;
-		//check if query is in xml format
-		if($this->isXml($query)) {
-			//set different headers for xml
-			$this->_headers = $this->setXmlHeaders($this->_developerId);
-		//else it is in array	
-		} else {
+	protected function _post($url, $query, $etag = false) {
+		//if query is in array
+		if(is_array($query)) {
 			//prevent sending fields with no value
 			$query = $this->_accessKey($query);
 			//json encode query
 			$query = json_encode($query);
+			//add access token to query
+			$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token;
 		}
-		
+		//if query is in xml format
+		if($this->isXml($query)) { 
+			//set different headers for xml
+			$this->_headers = $this->setXmlHeaders($this->_developerId, $etag);
+			//well format the xml
+			$query = $this->formatToXml($query);
+			//add access token to query and convert response ti json format
+			$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token.'&alt=json';
+		} 
 		//set curl
-		$response = Eden_Curl::i()
+		$curl = $this->Eden_Curl()
 			->verifyHost(false)
 			->verifyPeer(false)
 			->setUrl($url)
 			->setPost(true)
 			->setPostFields($query)
-			->setHeaders($this->_headers)
-			->getResponse();
-		return $response;
+			->setHeaders($this->_headers);
+		//get response form curl
+		$response = $curl->getResponse();		
+		
+		$this->_meta 					= $curl->getMeta();
+		$this->_meta['url'] 			= $url;
+		$this->_meta['headers'] 		= $this->_headers;
+		$this->_meta['query'] 			= $query;
+		
+		//check if response is in json format
+		if($this->isJson($response)) {
+			//else it is in json format, covert it to array
+			return $response = json_decode($response, true);
+		}
 		//check if response is in xml format
 		if($this->isXml($response)) {
 			//if it is xml, convert it to array
-			$response =  simplexml_load_string($response);
-		} else {
-			//else it is in json format, covert it to array
-			$response = json_decode($response, true);
-		}
-		
+			return $response =  simplexml_load_string($response);
+		} 
+		//if it is a normal response
 		return $response;
 	}
 	
-	protected function _postXml($url, $query) {
-		
-		if($this->isXml($query)) {
-		
-		}
-		echo $query; exit;
-		//set headers
-		$headers = $this->setXmlHeaders($this->_developerId);
-		//add access token to query
-		$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token;
-		//prevent sending fields with no value
-		$query = $this->_accessKey($query);
-		//json encode query
-		//$query = json_encode($query);
-		
-		echo $query; exit;
-		//set curl
-		$response = Eden_Curl::i()
-			->verifyHost(false)
-			->verifyPeer(false)
-			->setUrl($url)
-			->setPost(true)
-			->setPostFields($query)
-			->setHeaders($headers)
-			->getSimpleXmlResponse();
-		
-		return $response;
-	}
-	
-	protected function _put($url, array $query = array()) {
+	protected function _put($url, $query, $etag = false) {
 		//if query is an array
 		if(is_array($query)) {
 			//prevent sending fields with no value
 			$query = $this->_accessKey($query); 
 			//covent query to json format
 			$query = json_encode($query);
+			//add access token to the url
+			$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token;
 		}
-		//add access token to the url
-		$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token;
+		//if query is an xml
+		if($this->isXml($query)) { 
+			//set different headers for xml
+			$this->_headers = $this->setXmlHeaders($this->_developerId, $etag);
+			//well format the xml
+			$query = $this->formatToXml($query);
+			//add access token to the url
+			$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token;
+		} 
 		//Open a file resource using the php://memory stream
 		$fh = fopen('php://memory', 'rw');
 		// Write the data to the file
 		fwrite($fh, $query);
 		// Move back to the beginning of the file
-		rewind($fh);
+		rewind($fh); 
+		
 		//start curl
 		$curl = Eden_Curl::i()
 			->verifyHost(false)
@@ -379,13 +475,68 @@ class Eden_Google_Base extends Eden_Class {
 			->setInFileSize(strlen($query));
 			
 		//get the response
-		$response = $curl->getJsonResponse();
+		$response = $curl->getResponse();
 		
 		$this->_meta 					= $curl->getMeta();
 		$this->_meta['url'] 			= $url;
 		$this->_meta['headers'] 		= $this->_headers;
 		$this->_meta['query'] 			= $query;
+		front()->output($this->_meta);
+		//check if response is in json format
+		if($this->isJson($response)) {
+			//else it is in json format, covert it to array
+			return $response = json_decode($response, true);
+		}
+		//check if response is in xml format
+		if($this->isXml($response)) {
+			//if it is xml, convert it to array
+			return $response =  simplexml_load_string($response);
+		} 
+
+		return $response;
+	}
+	
+	protected function _upload($url, $query, $etag = false) {
+	
+		//if query is in xml format
+		if($this->isXml($query)) {
+			//well format the xml
+			$query = $this->formatToXml($query);
+			//set different headers for xml
+			$this->_headers = $this->setXmlHeaders($this->_developerId, $etag);
+			$this->_headers[] = 'Content-Length:'.strlen($query);
+			$this->_headers[] = 'Host: gdata.youtube.com';
+			//add access token to query and convert response ti json format
+			$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token.'&alt=json';
+		} 
+		//set curl
+		$curl = $this->Eden_Curl()
+			->verifyHost(false)
+			->verifyPeer(false)
+			->setUrl($url)
+			->setPost(true)
+			->setPostFields($query)
+			->setHeaders($this->_headers);
+		//get response form curl
+		$response = $curl->getResponse();		
 		
+		$this->_meta 					= $curl->getMeta();
+		$this->_meta['url'] 			= $url;
+		$this->_meta['headers'] 		= $this->_headers;
+		$this->_meta['query'] 			= $query;
+		//front()->output($this->_meta);
+		
+		//check if response is in json format
+		if($this->isJson($response)) {
+			//else it is in json format, covert it to array
+			return $response = json_decode($response, true);
+		}
+		//check if response is in xml format
+		if($this->isXml($response)) {
+			//if it is xml, convert it to array
+			return $response =  simplexml_load_string($response);
+		} 
+		//if it is a normal response
 		return $response;
 	}
 	

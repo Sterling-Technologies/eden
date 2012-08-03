@@ -8,21 +8,19 @@
  */
 
 /**
- *  Google docs
+ * Google Analytics
  *
  * @package    Eden
  * @category   google
- * @author     Clark Galgo cgalgo@openovate.com
- */
-class Eden_Google_Plus_People extends Eden_Google_Base {
+ * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
+ */ 
+class Eden_Google_Analytics extends Eden_Google_Base {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/ 
-	protected $_userId = NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -34,15 +32,21 @@ class Eden_Google_Plus_People extends Eden_Google_Base {
 	public function __construct($token) {
 		//argument test
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_token 	= $token;
-	}
-	
-	public function get($userId = NULL) {
-		return $this->_getResponse(Eden_Google_Plus::URL_USER_PROFILE.'/'.Eden_Google_Plus::DEFAULT_USERID, array());
+		$this->_token = $token; 
 	}
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Returns Google analytics management
+	 *
+	 * @return Eden_Google_Analytics_Management
+	 */
+	public function management() {
+			
+		return Eden_Google_Analytics_Management::i($this->_token);
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

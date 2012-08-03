@@ -1,4 +1,4 @@
-<?php //-->
+<?php //--> 
 /*
  * This file is part of the Eden package.
  * (c) 2011-2012 Openovate Labs
@@ -8,13 +8,13 @@
  */
 
 /**
- * Google Contacts
+ * Google Maps
  *
  * @package    Eden
  * @category   google
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */ 
-class Eden_Google_Contacts extends Eden_Google_Base {
+class Eden_Google_Maps extends Eden_Google_Base {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
@@ -38,44 +38,55 @@ class Eden_Google_Contacts extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns Google contacts batch
+	 * Returns Google maps direction
 	 *
-	 * @return Eden_Google_Contacts_Batch
+	 * @return Eden_Google_Map_Direction
 	 */
-	public function batch() {
+	public function direction() {
 			
-		return Eden_Google_Contacts_Batch::i($this->_token);
+		return Eden_Google_Map_Direction::i($this->_token);
 	}
 	
 	/**
-	 * Returns Google contacts data
+	 * Returns Google maps distance
 	 *
-	 * @return Eden_Google_Contacts_Batch
+	 * @return Eden_Google_Map_Distance
 	 */
-	public function data() {
+	public function distance() {
 			
-		return Eden_Google_Contacts_Data::i($this->_token);
+		return Eden_Google_Map_Distance::i($this->_token);
 	}
 	
 	/**
-	 * Returns Google contacts groups
+	 * Returns Google maps elevation
 	 *
-	 * @return Eden_Google_Contacts_Groups
+	 * @return Eden_Google_Map_Elevation
 	 */
-	public function groups() {
+	public function elevation() {
 			
-		return Eden_Google_Contacts_Groups::i($this->_token);
+		return Eden_Google_Map_Elevation::i($this->_token);
 	}
 	
 	/**
-	 * Returns Google contacts photo
+	 * Returns Google maps geocoding
 	 *
-	 * @return Eden_Google_Contacts_Photo
+	 * @return Eden_Google_Map_Geocoding
 	 */
-	public function photo() {
+	public function geocoding() {
 			
-		return Eden_Google_Contacts_Photo::i($this->_token);
+		return Eden_Google_Map_Geocoding::i($this->_token);
 	}
+	
+	/**
+	 * Returns Google maps image
+	 *
+	 * @return Eden_Google_Map_Image
+	 */
+	public function image() {
+			
+		return Eden_Google_Map_Image::i($this->_token);
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

@@ -43,8 +43,6 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 * @return Eden_Google_Calendar_acl
 	 */
 	public function acl() {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
 			
 		return Eden_Google_Calendar_Acl::i($this->_token);
 	}
@@ -55,8 +53,6 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 * @return Eden_Google_Calendar_Calendars
 	 */
 	public function calendars() {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
 			
 		return Eden_Google_Calendar_Calendars::i($this->_token);
 	}
@@ -67,8 +63,6 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 * @return Eden_Google_Calendar_color
 	 */
 	public function color() {
-		//argument 1 must be a string 
-		Eden_Google_Error::i()->argument(1, 'string');
 			
 		return Eden_Google_Calendar_Color::i($this->_token);
 	}
@@ -79,8 +73,6 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 * @return Eden_Google_Calendar_Event
 	 */
 	public function event() {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
 			
 		return Eden_Google_Calendar_Event::i($this->_token);
 	}
@@ -91,8 +83,6 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 * @return Eden_Google_Calendar_freebusy
 	 */
 	public function freebusy() {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
 			
 		return Eden_Google_Calendar_Freebusy::i($this->_token);
 	}
@@ -103,8 +93,6 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 * @return Eden_Google_Calendar_List
 	 */
 	public function lists() {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
 			
 		return Eden_Google_Calendar_List::i($this->_token);
 	}
@@ -115,8 +103,6 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 * @return Eden_Google_Calendar_Settings
 	 */
 	public function settings() {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
 			
 		return Eden_Google_Calendar_Settings::i($this->_token);
 	}
