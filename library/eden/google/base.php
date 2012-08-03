@@ -293,7 +293,7 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta 					= $curl->getMeta();
 		$this->_meta['url'] 			= $url;
 		$this->_meta['headers'] 		= $this->_headers;
-		front()->output($this->_meta);
+		
 		//check if response is in json format
 		if($this->isJson($response)) {
 			//else it is in json format, covert it to array
@@ -336,7 +336,7 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['query']		= $query;
 		$this->_meta['curl']		= $curl->getMeta();
 		$this->_meta['response']	= $response;
-		front()->output($this->_meta);
+	
 		//check if response is in xml format
 		if($this->isXml($response)) {
 			//if it is xml, convert it to array
@@ -481,7 +481,7 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['url'] 			= $url;
 		$this->_meta['headers'] 		= $this->_headers;
 		$this->_meta['query'] 			= $query;
-		front()->output($this->_meta);
+		
 		//check if response is in json format
 		if($this->isJson($response)) {
 			//else it is in json format, covert it to array
