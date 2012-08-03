@@ -73,7 +73,8 @@ class Eden_Template extends Eden_Class {
 	/**
 	 * For PHP templates, this will transform the given document to an actual page or partial
 	 *
-	 * @param *string template file
+	 * @param *string template file or PHP template string
+	 * @param bool whether to evaluate the first argument
 	 * @return string
 	 */
 	public function parsePhp($____file, $___evalString = false) {
