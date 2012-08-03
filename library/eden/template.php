@@ -34,39 +34,7 @@ class Eden_Template extends Eden_Class {
 	}
 	
 	/* Public Methods
-	-------------------------------*/	
-	/**
-	 * For PHP templates, this will transform the given document to an actual page or partial
-	 *
-	 * @param *string template file
-	 * @return string
-	 */
-	public function parsePhp($____file) {
-		Eden_Template_Error::i()->argument(0, $____file, 'string');
-		
-		extract($this->_data, EXTR_SKIP); 	// Extract the values to a local namespace
-		ob_start();							// Start output buffering
-		include $____file;					// Include the template file
-		$____contents = ob_get_contents();	// Get the contents of the buffer
-		ob_end_clean();						// End buffering and discard
-		return $____contents;				// Return the contents
-	}
-	
-	/**
-	 * Simple string replace template parser
-	 *
-	 * @param *string template file
-	 * @return string
-	 */
-	public function parseString($string) {
-		Eden_Template_Error::i()->argument(0, 'string');
-		foreach($this->_data as $key => $value) {
-			$string = str_replace($key, $value, $string);
-		}
-		
-		return $string;
-	}
-	
+	-------------------------------*/
 	/**
 	 * Sets template variables
 	 *
@@ -85,6 +53,44 @@ class Eden_Template extends Eden_Class {
 		$this->_data[$data] = $value;
 		
 		return $this;
+	}
+	
+	/**
+	 * Simple string replace template parser
+	 *
+	 * @param *string template file
+	 * @return string
+	 */
+	public function parseString($string) {
+		Eden_Template_Error::i()->argument(0, 'string');
+		foreach($this->_data as $key => $value) {
+			$string = str_replace($key, $value, $string);
+		}
+		
+		return $string;
+	}
+	
+	/**
+	 * For PHP templates, this will transform the given document to an actual page or partial
+	 *
+	 * @param *string template file
+	 * @return string
+	 */
+	public function parsePhp($____file, $___evalString = false) {
+		Eden_Template_Error::i()
+			->argument(0, $____file, 'string')
+			->argument(0, $___evalString, 'bool');
+		
+		if($___evalString) {
+			return eval('?>'.$___file.'<?php;');
+		}
+		
+		extract($this->_data, EXTR_SKIP); 	// Extract the values to a local namespace
+		ob_start();							// Start output buffering
+		include $____file;					// Include the template file
+		$____contents = ob_get_contents();	// Get the contents of the buffer
+		ob_end_clean();						// End buffering and discard
+		return $____contents;				// Return the contents
 	}
 	
 	/* Protected Methods
