@@ -75,7 +75,7 @@ class Eden_Authorizenet_Direct extends Eden_Authorizenet_Base{
 		$fingerPrint = 	$this->_getFingerprint($this->_amount);
 	
 		//Call block
-		return $this->Eden_Authorizenet_Block_Post($this->_postUrl, array(
+		return Eden_Authorizenet_Block_Post::i($this->_postUrl, array(
 			self::AMOUNT	=> $this->_amount,		
 			self::SEQUENCE	=> $this->_sequence,	
 			self::HASH		=> $fingerPrint,		

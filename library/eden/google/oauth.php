@@ -85,7 +85,7 @@ class Eden_Google_Oauth extends Eden_Class {
 			'grant_type'		=> self::AUTH_CODE);
 		
 		
-		return $this->Eden_Curl()
+		return Eden_Curl::i()
 			->setUrl(self::ACCESS_URL)
 			->verifyHost(false)
 			->verifyPeer(false)

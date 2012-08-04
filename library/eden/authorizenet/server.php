@@ -79,7 +79,7 @@ class Eden_Authorizenet_Server extends Eden_Authorizenet_Base{
 		//Call get fingerprint method
 		$fingerprint = $this->_getFingerprint($this->_amount);
 		//Call block
-		return $this->Eden_Authorizenet_Block_Confirm(
+		return Eden_Authorizenet_Block_Confirm::i(
 			$this->_apiLogin, 	
 			$fingerprint, 
 			$this->_amount, 

@@ -81,7 +81,7 @@ class Eden_Oauth2_Desktop extends Eden_Oauth2_Abstract {
 			self::GRANT_TYPE	=> $this->_grantType);
 		
 		//set curl	  
-		return $this->Eden_Curl()
+		return Eden_Curl::i()
 		  ->setUrl($url)
 		  ->verifyHost()
 		  ->verifyPeer()

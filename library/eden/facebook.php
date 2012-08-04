@@ -129,7 +129,7 @@ class Eden_Facebook extends Eden_Class {
 	 */
 	public function rss($id) {
 		Eden_Facebook_Error::i()->argument(1, 'int');
-		return $this->Eden_Curl()
+		return Eden_Curl::i()
 			->setUrl(sprintf(self::RSS, $id))
 			->setUserAgent(self::RSS_AGENT)
 			->setConnectTimeout(10)

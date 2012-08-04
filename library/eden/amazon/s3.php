@@ -112,7 +112,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 			
 		$headers = $amazon = array();
 		
-		$headers['Content-Type'] = $this->Eden_File()->getMimeType($path);
+		$headers['Content-Type'] = Eden_File::i()->getMimeType($path);
 		$amazon['x-amz-acl'] = $acl;
 		
 		if(strpos($path, '/') !== 0) {

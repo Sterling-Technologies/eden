@@ -170,8 +170,7 @@ class Eden_Amazon_Ecs extends Eden_Class {
 	/* Protected Methods
 	-------------------------------*/
 	protected function _sendRequest() {
-		//return file_get_contents($this->_requestUrl);
-		return $this->Eden_Curl()
+		return Eden_Curl::i()
 			->setUrl($this->_requestUrl)
 			->verifyHost(false)
 			->verifyPeer(false)

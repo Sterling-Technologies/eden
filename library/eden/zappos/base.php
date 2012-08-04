@@ -70,7 +70,7 @@ class Eden_Zappos_Base extends Eden_Oauth_Base {
 		//generate URL-encoded query string to build our NVP string
 		$query = http_build_query($query + $default);
 
-  		$curl = $this->Eden_Curl()
+  		$curl = Eden_Curl::i()
 			->setUrl($method.'?'.$query)
 			->setReturnTransfer(TRUE)
 			->setHeader(false);

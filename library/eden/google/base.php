@@ -324,7 +324,7 @@ class Eden_Google_Base extends Eden_Class {
 		//build url query
 		$url = $url.'?'.http_build_query($query);
 		//set curl
-		$curl =  $this->Eden_Curl()
+		$curl =  Eden_Curl::i()
 			->setUrl($url)
 			->verifyHost(false)
 			->verifyPeer(false)
@@ -409,7 +409,7 @@ class Eden_Google_Base extends Eden_Class {
 			$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token.'&alt=json';
 		} 
 		//set curl
-		$curl = $this->Eden_Curl()
+		$curl = Eden_Curl::i()
 			->verifyHost(false)
 			->verifyPeer(false)
 			->setUrl($url)
@@ -510,7 +510,7 @@ class Eden_Google_Base extends Eden_Class {
 			$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token.'&alt=json';
 		} 
 		//set curl
-		$curl = $this->Eden_Curl()
+		$curl = Eden_Curl::i()
 			->verifyHost(false)
 			->verifyPeer(false)
 			->setUrl($url)

@@ -93,7 +93,7 @@ class Eden_Authorizenet_Base extends Eden_Class {
 			$this->_xmlUrl = self::LIVE_XML_URL;
 		}		
 		//Execute curl 
-		$curl = $this->Eden_Curl()
+		$curl = Eden_Curl::i()
 			->setUrl($this->_xmlUrl)			
 			->setPostFields($xml)			
 			->setHeader(false)
@@ -131,7 +131,7 @@ class Eden_Authorizenet_Base extends Eden_Class {
 			$this->_url = self::LIVE_URL;
 		}
 		//Execute curl 
-		$curl = $this->Eden_Curl()
+		$curl = Eden_Curl::i()
 			->setUrl($this->_url)			
 			->setPostFields($post)			
 			->setHeader(false)
