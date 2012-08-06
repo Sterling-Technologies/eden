@@ -17,8 +17,8 @@
 class Eden_Google_Contacts_Data extends Eden_Google_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_CONTACTS_LIST			= 'https://www.google.com/m8/feeds/contacts/%s/full';
-	const URL_CONTACTS_GET			= 'https://www.google.com/m8/feeds/contacts/%s/full/%s';
+	const URL_CONTACTS_LIST	= 'https://www.google.com/m8/feeds/contacts/%s/full';
+	const URL_CONTACTS_GET	= 'https://www.google.com/m8/feeds/contacts/%s/full/%s';
 	
 	/* Public Properties
 	-------------------------------*/
@@ -275,15 +275,15 @@ class Eden_Google_Contacts_Data extends Eden_Google_Base {
 	
 		//make a xml template
 		$query = Eden_Template::i()
-			->set('givenName', $this->_givenName)
-			->set('familyName', $this->_familyName)
-			->set('phoneNumber', $this->_phoneNumber)
-			->set('city', $this->_city)
-			->set('street', $this->_street)
-			->set('postCode', $this->_postCode)
-			->set('country', $this->_country)
-			->set('notes', $this->_notes)
-			->set('email', $this->_email)
+			->set(self::GIVEN_NAME, $this->_givenName)
+			->set(self::FAMILY_NAME, $this->_familyName)
+			->set(self::PHONE_NUMBER, $this->_phoneNumber)
+			->set(self::CITY, $this->_city)
+			->set(self::STREET, $this->_street)
+			->set(self::POST_CODE, $this->_postCode)
+			->set(self::COUNTRY, $this->_country)
+			->set(self::NOTES, $this->_notes)
+			->set(self::EMAIL, $this->_email)
 			->parsePHP(dirname(__FILE__).'/template/addcontacts.php');
 			
 		return $this->_post(sprintf(self::URL_CONTACTS_LIST, $this->_userEmail), $query);

@@ -94,9 +94,9 @@ class Eden_Google_Plus_Comment extends Eden_Google_Base {
 	public function getList() {
 		//populate fields
 		$query = array(
-			'maxResults'	=> $this->_maxResults,
-			'pageToken'		=> $this->_pageToken,
-			'sortOrder'		=> $this->_sortOrder);
+			self::MAX_RESULTS	=> $this->_maxResults,
+			self::PAGE_TOKEN	=> $this->_pageToken,
+			self::SORT			=> $this->_sortOrder);
 		
 		return $this->_getResponse(sprintf(self::URL_COMMENTS_LIST, $this->_activityId), $query);
 	}

@@ -153,9 +153,9 @@ class Eden_Google_Contacts_Groups extends Eden_Google_Base {
 	public function create() {
 		//make a xml template
 		$query = Eden_Template::i()
-			->set('title', $this->_title)
-			->set('description', $this->_description)
-			->set('info', $this->_info)
+			->set(self::TITLE, $this->_title)
+			->set(self::DESCRIPTION, $this->_description)
+			->set(self::INFO, $this->_info)
 			->parsePHP(dirname(__FILE__).'/template/addgroups.php');
 			
 		return $this->_post(sprintf(self::URL_CONTACTS_GROUPS_LIST, $this->_userEmail), $query);

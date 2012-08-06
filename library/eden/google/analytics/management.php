@@ -127,8 +127,8 @@ class Eden_Google_Analytics_Management extends Eden_Google_Base {
 	public function getAccounts() {
 		//populate parameters
 		$query = array(
-			'start-index'	=> $this->_startIndex,
-			'max-results'	=> $this->_maxResults);	
+			self::START_INDEX	=> $this->_startIndex,
+			self::MAX_RESULTS	=> $this->_maxResults);	
 		
 		return $this->_getResponse(self::URL_ANALYTICS_ACCOUNTS, $query);
 	}
@@ -141,8 +141,8 @@ class Eden_Google_Analytics_Management extends Eden_Google_Base {
 	public function getWebProperties() {
 		//populate parameters
 		$query = array(
-			'start-index'	=> $this->_startIndex,
-			'max-results'	=> $this->_maxResults);	
+			self::START_INDEX	=> $this->_startIndex,
+			self::MAX_RESULTS	=> $this->_maxResults);	
 		
 		return $this->_getResponse(sprintf(self::URL_ANALYTICS_WEBPROPERTIES, $this->_accountId), $query);
 	}
@@ -155,8 +155,8 @@ class Eden_Google_Analytics_Management extends Eden_Google_Base {
 	public function getProfiles() {
 		//populate parameters
 		$query = array(
-			'start-index'	=> $this->_startIndex,
-			'max-results'	=> $this->_maxResults);	
+			self::START_INDEX	=> $this->_startIndex,
+			self::MAX_RESULTS	=> $this->_maxResults);	
 		
 		return $this->_getResponse(sprintf(self::URL_ANALYTICS_PROFILE, $this->_accountId, $this->_webPropertyId), $query);
 	}
@@ -169,8 +169,8 @@ class Eden_Google_Analytics_Management extends Eden_Google_Base {
 	public function getGoals() {
 		//populate parameters
 		$query = array(
-			'start-index'	=> $this->_startIndex,
-			'max-results'	=> $this->_maxResults);	
+			self::START_INDEX	=> $this->_startIndex,
+			self::MAX_RESULTS	=> $this->_maxResults);	
 		
 		return $this->_getResponse(sprintf(self::URL_ANALYTICS_GOALS, $this->_accountId, $this->_webPropertyId, $this->_profileId), $query);
 	}
@@ -183,8 +183,8 @@ class Eden_Google_Analytics_Management extends Eden_Google_Base {
 	public function getSegments() {
 		//populate parameters
 		$query = array(
-			'start-index'	=> $this->_startIndex,
-			'max-results'	=> $this->_maxResults);	
+			self::START_INDEX	=> $this->_startIndex,
+			self::MAX_RESULTS	=> $this->_maxResults);	
 		
 		return $this->_getResponse(self::URL_ANALYTICS_SEGMENTS, $query);
 	}

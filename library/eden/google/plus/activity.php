@@ -161,10 +161,10 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	 public function getList() {
 		//populate fields
 		$query = array(
-			'collection'	=> $this->_collection,
-			'userId'		=> $this->_userId,
-			'maxResults'	=> $this->_maxResults,
-			'pageToken'		=> $this->_pageToken);
+			self::COLLECTION	=> $this->_collection,
+			self::USER_ID		=> $this->_userId,
+			self::MAX_RESULTS	=> $this->_maxResults,
+			SELF::PAGE_TOKEN	=> $this->_pageToken);
 		
 		return $this->_getResponse(sprintf(self::URL_ACTIVITY_LIST, $this->_userId, $this->_collection) , $query);
 	 }
@@ -187,10 +187,10 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	public function search() {
 		//populate fields
 		$query = array(
-			'query'			=> $this->_queryString,
-			'pageToken'		=> $this->_pageToken,
-			'maxResults'	=> $this->_maxResults,
-			'orderBy'		=> $this->_orderBy);
+			self::QUERY_STRING	=> $this->_queryString,
+			self::PAGE_TOKEN	=> $this->_pageToken,
+			self::MAX_RESULTS	=> $this->_maxResults,
+			self::ORDER			=> $this->_orderBy);
 		
 		return $this->_getResponse(self::URL_ACTIVITY_SEARCH, $query);
 	}

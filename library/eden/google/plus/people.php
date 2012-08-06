@@ -158,9 +158,9 @@ class Eden_Google_Plus_People extends Eden_Google_Base {
 	public function search() {
 		//populate fields
 		$query = array(
-			'query'			=> $this->_queryString,
-			'pageToken'		=> $this->_pageToken,
-			'maxResults'	=> $this->_maxResults);
+			self::QUERY_STRING	=> $this->_queryString,
+			self::PAGE_TOKEN	=> $this->_pageToken,
+			self::MAX_RESULTS	=> $this->_maxResults);
 		
 		return $this->_getResponse(self::URL_PEOPLE_SEARCH, $query);
 	}
@@ -174,10 +174,10 @@ class Eden_Google_Plus_People extends Eden_Google_Base {
 	public function getActivityList() {
 		//populate fields
 		$query = array(
-			'activityId'	=> $this->_activityId,
-			'collection'	=> $this->_collection,
-			'maxResults'	=> $this->_maXResults,
-			'pageToken'		=> $this->_pageToken);
+			self::ACTIVITY_ID	=> $this->_activityId,
+			self::COLLECTION	=> $this->_collection,
+			self::MAX_RESULTS	=> $this->_maXResults,
+			self::PAGE_TOKEN	=> $this->_pageToken);
 		
 		return $this->_getResponse(sprintf(self::URL_PEOPLE_ACTIVITY, $this->_activityId, $this->_collection), $query);
 	}	

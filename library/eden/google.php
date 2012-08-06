@@ -39,12 +39,33 @@ require_once dirname(__FILE__).'/google/plus/activity.php';
 require_once dirname(__FILE__).'/google/plus/comment.php';
 require_once dirname(__FILE__).'/google/plus/people.php';
 require_once dirname(__FILE__).'/google/plus.php';
+require_once dirname(__FILE__).'/google/map/direction.php';
+require_once dirname(__FILE__).'/google/map/distance.php';
+require_once dirname(__FILE__).'/google/map/elevation.php';
+require_once dirname(__FILE__).'/google/map/geocoding.php';
+require_once dirname(__FILE__).'/google/map/image.php';
+require_once dirname(__FILE__).'/google/maps.php';
+require_once dirname(__FILE__).'/google/youtube/activity.php';
+require_once dirname(__FILE__).'/google/youtube/channel.php';
+require_once dirname(__FILE__).'/google/youtube/comment.php';
+require_once dirname(__FILE__).'/google/youtube/contacts.php';
+require_once dirname(__FILE__).'/google/youtube/favorites.php';
+require_once dirname(__FILE__).'/google/youtube/history.php';
+require_once dirname(__FILE__).'/google/youtube/message.php';
+require_once dirname(__FILE__).'/google/youtube/playlist.php';
+require_once dirname(__FILE__).'/google/youtube/profile.php';
+require_once dirname(__FILE__).'/google/youtube/ratings.php';
+require_once dirname(__FILE__).'/google/youtube/search.php';
+require_once dirname(__FILE__).'/google/youtube/subscription.php';
+require_once dirname(__FILE__).'/google/youtube/upload.php';
+require_once dirname(__FILE__).'/google/youtube/video.php';
+require_once dirname(__FILE__).'/google/youtube.php';
 
 /**
  * Google API factory. This is a factory class with 
  * methods that will load up different google classes.
  * Google classes are organized as described on their 
- * developer site: analytics, calendar ,contacts ,drive and plus.
+ * developer site: analytics, calendar ,contacts ,drive, plus and youtube.
  *
  * @package    Eden
  * @category   google
@@ -144,6 +165,22 @@ class Eden_Google extends Eden_Class {
 		Eden_Google_Error::i()->argument(1, 'string');
 		
 		return Eden_Google_Plus::i($token);
+	}
+	
+	/**
+	 * Returns google youtube methods
+	 *
+	 * @param *string 
+	 * @param *string 
+	 * @return Eden_Google_Youtube
+	 */
+	public function youtube($token, $developerId) {
+		//Argument Testing
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string');	//Argument 2 must be a string
+		
+		return Eden_Google_Youtube::i($token, $developerId);
 	}
 	/* Protected Methods
 	-------------------------------*/
