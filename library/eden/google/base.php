@@ -8,7 +8,7 @@
  */
 
 /**
- *  Google oauth 
+ * Google base 
  *
  * @package    Eden
  * @category   google
@@ -22,7 +22,6 @@ class Eden_Google_Base extends Eden_Class {
 	const MAX_RESULTS	= 'maxResults';
 	const FORM_HEADER	= 'application/x-www-form-urlencoded';
 	const CONTENT_TYPE	= 'Content-Type: application/json';
-	
 	const KIND			= 'kind';
 	const ID			= 'id';					
 	const OCR			= 'ocr';
@@ -36,6 +35,11 @@ class Eden_Google_Base extends Eden_Class {
 	const NAME			= 'name';		
 	const ROLE			= 'role';		
 	const TYPE 			= 'type';		
+	const RESPONSE		= 'alt';
+	const JSON_FORMAT	= 'json';
+	const VERSION		= 'v';
+	const QUERY			= 'q';
+	const QUERY_STRING	= 'query';
 	
 	const NEW_REVISION		= 'newRevision';					
 	const OCR_LANGUAGE		= 'ocrLanguage';			
@@ -88,11 +92,41 @@ class Eden_Google_Base extends Eden_Class {
 	const DOWNLOAD_URL			= 'downloadUrl';				
 	const EXPORT_LINK			= 'exportLinks';				
 	const MD5_CHECKSUM			= 'md5Checksum';	
-	
-	const RESPONSE		= 'alt';
-	const JSON_FORMAT	= 'json';
-	const VERSION		= 'v';
-	
+	const KEYWORD				= 'keyword';
+	const CATEGORY				= 'category';
+	const POST_URL				= 'postUrl';
+	const UPLOAD_TOKEN			= 'uploadToken';
+	const REDIRECT_URL			= 'redirectUrl';
+	const USER					= 'user';
+	const CHANNEL				= 'channel';
+	const START_INDEX			= 'start-index';
+	const ORDER_BY				= 'orderby';
+	const LIKE					= 'like';
+	const DISLIKE				= 'dislike';
+	const RATINGS				= 'ratings';
+	const USER_NAME				= 'userName';
+	const VIDEO_ID				= 'videoId';
+	const POSITION				= 'position';
+	const COMMENT				= 'comment';
+	const COMMENT_ID			= 'commentId';
+	const TIME					= 'time';
+	const COLLECTION			= 'collection';
+	const USER_ID				= 'userId';
+	const PAGE_TOKEN			= 'pageToken';
+	const ORDER					= 'orderBy';
+	const SORT					= 'sortOrder';
+	const ACITIVITY_ID			= 'activityId';
+	const INFO					= 'info';
+	const GIVEN_NAME			= 'givenName';
+	const FAMILY_NAME			= 'familyName';
+	const STREET				= 'street';
+	const PHONE_NUMBER			= 'phoneNumber';
+	const CITY					= 'city';
+	const POST_CODE				= 'postCode';
+	const COUNTRY				= 'country';
+	const NOTES					= 'notes';
+	const EMAIL					= 'email';
+
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -497,18 +531,15 @@ class Eden_Google_Base extends Eden_Class {
 	}
 	
 	protected function _upload($url, $query, $etag = false) {
-	
-		//if query is in xml format
-		if($this->isXml($query)) {
-			//well format the xml
-			$query = $this->formatToXml($query);
-			//set different headers for xml
-			$this->_headers = $this->setXmlHeaders($this->_developerId, $etag);
-			$this->_headers[] = 'Content-Length:'.strlen($query);
-			$this->_headers[] = 'Host: gdata.youtube.com';
-			//add access token to query and convert response ti json format
-			$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token.'&alt=json';
-		} 
+		//well format the xml
+		$query = $this->formatToXml($query);
+		//set different headers for xml
+		$this->_headers = $this->setXmlHeaders($this->_developerId, $etag);
+		$this->_headers[] = 'Content-Length:'.strlen($query);
+		$this->_headers[] = 'Host: gdata.youtube.com';
+		//add access token to query 
+		$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token;
+		
 		//set curl
 		$curl = Eden_Curl::i()
 			->verifyHost(false)
@@ -524,13 +555,7 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['url'] 			= $url;
 		$this->_meta['headers'] 		= $this->_headers;
 		$this->_meta['query'] 			= $query;
-		//front()->output($this->_meta);
-		
-		//check if response is in json format
-		if($this->isJson($response)) {
-			//else it is in json format, covert it to array
-			return $response = json_decode($response, true);
-		}
+	
 		//check if response is in xml format
 		if($this->isXml($response)) {
 			//if it is xml, convert it to array
