@@ -22,7 +22,7 @@ class Eden_Google_Contacts_Batch extends Eden_Google_Base {
 	
 	/* Public Properties
 	-------------------------------*/
-	/* Protected Properties
+	/* Protected Properties 
 	-------------------------------*/
 	protected $_userEmail	= 'default';
 	protected $_version		= '3.0';
@@ -124,7 +124,7 @@ class Eden_Google_Contacts_Batch extends Eden_Google_Base {
 	 */
 	public function getList() {
 		//populate fields
-		$query = array('v' => $this->_version);
+		$query = array(self::VERSION => $this->_version);
 		
 		return $this->_getResponse(sprintf(self::URL_CONTACTS_GROUPS_LIST, $this->_userEmail), $query);
 	}
@@ -137,13 +137,18 @@ class Eden_Google_Contacts_Batch extends Eden_Google_Base {
 	public function create() {
 		//populate fields
 		$parameters	= array(
-			'title'			=> $this->_title,
-			'description'	=> $this->_description,
-			'info'			=> $this->_info);
+			self::TITLE			=> $this->_title,
+			self::DESCRIPTION	=> $this->_description,
+			self::INFO			=> $this->_info);
 		
 		//format a xml files
-		$query = Eden_Google_Contacts_Block_Addgroups::i($parameters);
+		$query = $this->Eden_Google_Contacts_Block_Addgroups($parameters);
 		
+		//make a xml template
+		$query = Eden_Template::i()
+			->set(self::TITLE,  $this->_title)
+			->parsePHP(dirname(__FILE__).'/template/addgroups.php');
+			
 		return $this->_post(sprintf(self::URL_CONTACTS_GROUPS_LIST, $this->_userEmail), $query);
 	}
 	
