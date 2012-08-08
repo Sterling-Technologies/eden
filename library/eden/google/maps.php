@@ -40,51 +40,51 @@ class Eden_Google_Maps extends Eden_Google_Base {
 	/**
 	 * Returns Google maps direction
 	 *
-	 * @return Eden_Google_Map_Direction
+	 * @return Eden_Google_Maps_Direction
 	 */
 	public function direction() {
 			
-		return Eden_Google_Map_Direction::i($this->_token);
+		return Eden_Google_Maps_Direction::i($this->_token);
 	}
 	
 	/**
 	 * Returns Google maps distance
 	 *
-	 * @return Eden_Google_Map_Distance
+	 * @return Eden_Google_Maps_Distance
 	 */
 	public function distance() {
 			
-		return Eden_Google_Map_Distance::i($this->_token);
+		return Eden_Google_Maps_Distance::i($this->_token);
 	}
 	
 	/**
 	 * Returns Google maps elevation
 	 *
-	 * @return Eden_Google_Map_Elevation
+	 * @return Eden_Google_Maps_Elevation
 	 */
 	public function elevation() {
 			
-		return Eden_Google_Map_Elevation::i($this->_token);
+		return Eden_Google_Maps_Elevation::i($this->_token);
 	}
 	
 	/**
 	 * Returns Google maps geocoding
 	 *
-	 * @return Eden_Google_Map_Geocoding
+	 * @return Eden_Google_Maps_Geocoding
 	 */
 	public function geocoding() {
 			
-		return Eden_Google_Map_Geocoding::i($this->_token);
+		return Eden_Google_Maps_Geocoding::i($this->_token);
 	}
 	
 	/**
 	 * Returns Google maps image
 	 *
-	 * @return Eden_Google_Map_Image
+	 * @return Eden_Google_Maps_Image
 	 */
 	public function image() {
 			
-		return Eden_Google_Map_Image::i($this->_token);
+		return Eden_Google_Maps_Image::i($this->_token);
 	}
 	
 	/* Protected Methods
