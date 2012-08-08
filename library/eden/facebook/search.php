@@ -346,6 +346,12 @@ class Eden_Facebook_Search extends Eden_Class {
 			//array('post_id=%s AND post_title IN %s', 123, array('asd'));
 			$where = array_shift($filter);
 			if(!empty($filter)) {
+				foreach($filter as $i => $value) {
+					if(!is_string($value)) {
+						continue;
+					}
+					$filter[$i] = "'".$value."'";
+				}
 				$where = vsprintf($where, $filter);
 			}
 			
