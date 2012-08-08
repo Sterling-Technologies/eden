@@ -34,10 +34,10 @@ class Eden_Google_Oauth extends Eden_Class {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_key 		= NULL;
-	protected $_secret 		= NULL;
-	protected $_redirect 	= NULL;
-	protected $_apiKey		= NULL;
+	protected $_clientId 		= NULL;
+	protected $_clientSecret 	= NULL;
+	protected $_redirect 		= NULL;
+	protected $_apiKey			= NULL;
 	
 	protected $_online 	= self::ONLINE;
 	protected $_renew 	= self::AUTO;
@@ -51,7 +51,7 @@ class Eden_Google_Oauth extends Eden_Class {
 		return self::_getSingleton(__CLASS__);
 	}
 	
-	public function __construct($key, $secret, $redirect, $apiKey) {
+	public function __construct($clientId, $clientSecret, $redirect, $apiKey) {
 		//argument test
 		Eden_Google_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
@@ -60,10 +60,10 @@ class Eden_Google_Oauth extends Eden_Class {
 			->argument(4, 'string');			//Argument 4 must be a string
 
 			
-		$this->_key 		= $key; 
-		$this->_secret 		= $secret;
-		$this->_redirect 	= $redirect;
-		$this->_apiKey		= $apiKey;
+		$this->_clientId 		= $clientId; 
+		$this->_clientSecret 	= $clientSecret;
+		$this->_redirect 		= $redirect;
+		$this->_apiKey			= $apiKey;
 	}
 	
 	/* Public Methods
@@ -79,8 +79,8 @@ class Eden_Google_Oauth extends Eden_Class {
 			
 		$query = array(
 			'code' 				=> $code,
-			'client_id'			=> $this->_key,
-			'client_secret'		=> $this->_secret,
+			'client_id'			=> $this->_clientId,
+			'client_secret'		=> $this->_clientSecret,
 			'redirect_uri'		=> $this->_redirect,
 			'grant_type'		=> self::AUTH_CODE);
 		
@@ -120,7 +120,7 @@ class Eden_Google_Oauth extends Eden_Class {
 		
 		$query = array(
 			'response_type'		=> self::CODE,
-			'client_id'			=> $this->_key,
+			'client_id'			=> $this->_clientId,
 			'redirect_uri'		=> $this->_redirect,
 			'scope'				=> $scope,
 			'access_type'		=> $this->_online, 

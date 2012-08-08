@@ -82,11 +82,12 @@ class Eden_Template extends Eden_Class {
 			->argument(1, $____file, 'string')
 			->argument(2, $___evalString, 'bool');
 		
+		extract($this->_data, EXTR_SKIP); 	// Extract the values to a local namespace
+		
 		if($___evalString) {
 			return eval('?>'.$___file.'<?php;');
 		}
 		
-		extract($this->_data, EXTR_SKIP); 	// Extract the values to a local namespace
 		ob_start();							// Start output buffering
 		include $____file;					// Include the template file
 		$____contents = ob_get_contents();	// Get the contents of the buffer

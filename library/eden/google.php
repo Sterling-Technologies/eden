@@ -92,6 +92,26 @@ class Eden_Google extends Eden_Class {
 	/**
 	 * Returns google analytics methods
 	 *
+	 * @param *string
+	 * @param *string
+	 * @param *string
+	 * @param *string 
+	 * @return Eden_Google_Oauth
+	 */
+	public function auth($clientId, $clientSecret, $redirect, $apiKey) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string')				//Argument 2 must be a string
+			->argument(3, 'string')				//Argument 3 must be a string
+			->argument(4, 'string');			//Argument 4 must be a string
+		
+		return Eden_Google_Oauth::i($clientId, $clientSecret, $redirect, $apiKey);
+	}
+	
+	/**
+	 * Returns google analytics methods
+	 *
 	 * @param *string 
 	 * @return Eden_Google_Analytics
 	 */
