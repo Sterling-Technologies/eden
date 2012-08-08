@@ -43,6 +43,35 @@ class Eden_Google_Oauth extends Eden_Class {
 	protected $_renew 	= self::AUTO;
 	protected $_state 	= NULL;
 	
+	protected $_scopes = array(	
+		'analytics' 	=> 'https://www.google.com/analytics/feeds/',
+		'base' 			=> 'https://www.google.com/base/feeds/',
+		'buzz' 			=> 'https://www.googleapis.com/auth/buzz',
+		'book' 			=> 'https://www.google.com/books/feeds/',
+		'blogger'		=> 'https://www.blogger.com/feeds/',
+		'calendar' 		=> 'https://www.google.com/calendar/feeds/',
+		'contacts' 		=> 'https://www.google.com/m8/feeds/',
+		'chrome' 		=> 'https://www.googleapis.com/auth/chromewebstore.readonly',
+		'documents'		=> 'https://docs.google.com/feeds/',
+		'finance'		=> 'https://finance.google.com/finance/feeds/',
+		'gmail'			=> 'https://mail.google.com/mail/feed/atom',
+		'health' 		=> 'https://www.google.com/health/feeds/',
+		'h9' 			=> 'https://www.google.com/h9/feeds/',
+		'maps'			=> 'https://maps.google.com/maps/feeds/',
+		'moderator' 	=> 'https://www.googleapis.com/auth/moderator',
+		'opensocial'	=> 'https://www-opensocial.googleusercontent.com/api/people/',
+		'orkut' 		=> 'https://www.googleapis.com/auth/orkut',
+		'orkut'			=> 'https://orkut.gmodules.com/social/rest',
+		'picasa'		=> 'https://picasaweb.google.com/data/',
+		'sidewiki' 		=> 'https://www.google.com/sidewiki/feeds/',
+		'sites'			=> 'https://sites.google.com/feeds/',
+		'spreadsheets'	=> 'https://spreadsheets.google.com/feeds/',
+		'tasks'			=> 'https://www.googleapis.com/auth/tasks',
+		'shortener' 	=> 'https://www.googleapis.com/auth/urlshortener',
+		'wave'			=> 'http://wave.googleusercontent.com/api/rpc',
+		'webmaster' 	=> 'https://www.google.com/webmasters/tools/feeds/',
+		'youtube' 		=> 'https://gdata.youtube.com');
+	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -107,16 +136,24 @@ class Eden_Google_Oauth extends Eden_Class {
 	/**
 	 * Returns the URL used for login. 
 	 * 
-	 * @param string
+	 * @param array|string[,string]
 	 * @return string
 	 */
 	public function getLoginUrl($scope) {
 		//Argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string', 'array');
 		
-		if(is_array($scope)) {
-			$scope = implode(' ', $scope);
+		if(!is_array($scope)) {
+			$scope = func_get_args();
 		}
+		
+		foreach($scope as $i => $url) {
+			if(isset($this->_scopes[$url])) {
+				$scope[$i] = $this->_scopes[$url];
+			}
+		}
+		
+		$scope = implode(' ', $scope);
 		
 		$query = array(
 			'response_type'		=> self::CODE,
