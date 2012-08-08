@@ -98,7 +98,7 @@ class Eden_Google extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Google_Oauth
 	 */
-	public function auth($clientId, $clientSecret, $redirect, $apiKey) {
+	public function auth($clientId, $clientSecret, $apiKey, $redirect) {
 		//argument test
 		Eden_Google_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
@@ -106,7 +106,7 @@ class Eden_Google extends Eden_Class {
 			->argument(3, 'string')				//Argument 3 must be a string
 			->argument(4, 'string');			//Argument 4 must be a string
 		
-		return Eden_Google_Oauth::i($clientId, $clientSecret, $redirect, $apiKey);
+		return Eden_Google_Oauth::i($clientId, $clientSecret, $apiKey, $redirect);
 	}
 	
 	/**

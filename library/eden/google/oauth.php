@@ -51,7 +51,7 @@ class Eden_Google_Oauth extends Eden_Class {
 		return self::_getSingleton(__CLASS__);
 	}
 	
-	public function __construct($clientId, $clientSecret, $redirect, $apiKey) {
+	public function __construct($clientId, $clientSecret, $apiKey, $redirect) {
 		//argument test
 		Eden_Google_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
