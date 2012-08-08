@@ -164,6 +164,10 @@ class Eden_Google_Oauth extends Eden_Class {
 			'state'				=> $this->_state,
 			'approval_prompt'	=> $this->_renew);
 		
+		if(!$this->_state) {
+			unset($query['state']);
+		} 
+		
 		return self::REQUEST_URL.'?'.http_build_query($query);
 	}
 	
