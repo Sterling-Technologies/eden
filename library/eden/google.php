@@ -30,8 +30,6 @@ require_once dirname(__FILE__).'/google/contacts/batch.php';
 require_once dirname(__FILE__).'/google/contacts/data.php';
 require_once dirname(__FILE__).'/google/contacts/groups.php';
 require_once dirname(__FILE__).'/google/contacts/photo.php';
-require_once dirname(__FILE__).'/google/contacts/block/addcontacts.php';
-require_once dirname(__FILE__).'/google/contacts/block/addgroups.php';
 require_once dirname(__FILE__).'/google/contacts.php';
 require_once dirname(__FILE__).'/google/analytics/management.php';
 require_once dirname(__FILE__).'/google/analytics.php';
