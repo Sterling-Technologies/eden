@@ -141,12 +141,9 @@ class Eden_Google_Contacts_Batch extends Eden_Google_Base {
 			self::DESCRIPTION	=> $this->_description,
 			self::INFO			=> $this->_info);
 		
-		//format a xml files
-		$query = $this->Eden_Google_Contacts_Block_Addgroups($parameters);
-		
 		//make a xml template
 		$query = Eden_Template::i()
-			->set(self::TITLE,  $this->_title)
+			->set($parameters)
 			->parsePHP(dirname(__FILE__).'/template/addgroups.php');
 			
 		return $this->_post(sprintf(self::URL_CONTACTS_GROUPS_LIST, $this->_userEmail), $query);
