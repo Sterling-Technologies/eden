@@ -56,7 +56,7 @@ require_once dirname(__FILE__).'/google/youtube/ratings.php';
 require_once dirname(__FILE__).'/google/youtube/search.php';
 require_once dirname(__FILE__).'/google/youtube/subscription.php';
 require_once dirname(__FILE__).'/google/youtube/upload.php';
-require_once dirname(__FILE__).'/google/youtube/video.php';
+//require_once dirname(__FILE__).'/google/youtube/video.php';
 require_once dirname(__FILE__).'/google/youtube.php';
 
 /**
