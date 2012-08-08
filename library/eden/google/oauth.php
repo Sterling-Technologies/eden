@@ -44,7 +44,7 @@ class Eden_Google_Oauth extends Eden_Class {
 	protected $_state 	= NULL;
 	
 	protected $_scopes = array(	
-		'analytics' 	=> 'https://www.google.com/analytics/feeds/',
+		'analytics' 	=> 'https://www.googleapis.com/auth/analytics.readonly',
 		'base' 			=> 'https://www.google.com/base/feeds/',
 		'buzz' 			=> 'https://www.googleapis.com/auth/buzz',
 		'book' 			=> 'https://www.google.com/books/feeds/',
