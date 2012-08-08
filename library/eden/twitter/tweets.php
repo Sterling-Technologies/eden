@@ -13,6 +13,7 @@
  * @package    Eden
  * @category   twitter
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	/* Constants
@@ -32,16 +33,16 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	-------------------------------*/
 	protected $_latitude	= NULL;
 	protected $_longtitude	= NULL;
-	protected $_count		= NULL;
-	protected $_page		= NULL;
+	protected $_count		= 0;
+	protected $_page		= 0;
 	protected $_reply		= NULL;
 	protected $_place		= NULL;
-	protected $_stringify	= NULL;
-	protected $_entities	= NULL;
-	protected $_trim		= NULL;
-	protected $_display		= NULL;
-	protected $_wrap		= NULL;
-	protected $_sensitive	= NULL;
+	protected $_stringify	= false;
+	protected $_entities	= false;
+	protected $_trim		= false;
+	protected $_display		= false;
+	protected $_wrap		= false;
+	protected $_sensitive	= false;
 	
 	
 	/* Private Properties
@@ -53,7 +54,37 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/	
+	-------------------------------*/
+	/**
+	 * Set display coordinates
+	 *
+	 * @return array
+	 */
+	public function displayCoordinates() {
+		$this->_display = true;
+		return $this;
+	}
+		
+	/**
+	 * Set include entities
+	 *
+	 * @return array
+	 */
+	public function includeEntities() {
+		$this->_entities = true;
+		return $this;
+	}
+	
+	/**
+	 * Set possibly sensitive
+	 *
+	 * @return array
+	 */
+	public function isSensitive() {
+		$this->_sensitive = true;
+		return $this;
+	}
+	
 	/**
 	 * Returns a single status, specified by the id parameter below.    
 	 * The status's author will be returned inline.
@@ -64,12 +95,16 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	public function getDetail($id) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');	
-
-		//populate fields
-		$query = array(
-			'id' 				=> $id,
-			'trim_user'			=> $this->_trim,
-			'include_entities'	=> $this->_entities);
+		
+		$query = array('id' => $id);
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
+		
+		if($this->_trim) {
+			$query['trim_user'] = 1;
+		}
 
 		return $this->_getResponse(self::URL_GET_LIST, $query);
 	}
@@ -83,13 +118,20 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	public function getRetweets($id) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');	
-
-		//populate fields
-		$query = array(
-			'id' 				=> $id,
-			'count'				=> $this->_count,
-			'trim_user'			=> $this->_trim,
-			'include_entities'	=> $this->_entities);
+		
+		$query = array('id' => $id);
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
+		
+		if($this->_trim) {
+			$query['trim_user'] = 1;
+		}
+		
+		if($this->_count) {
+			$query['count'] = $this->_count;
+		}
 		
 		$url = sprintf(self::URL_GET_RETWEETS, $id);
 		return $this->_post($url, $query);
@@ -104,13 +146,17 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 */
 	public function getWhoRetweeted($id) {
 		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');			
+		Eden_Twitter_Error::i()->argument(1, 'int');
 		
-		//populate fields
-		$query = array(
-			'id' 	=> $id,
-			'count'	=> $this->_count,
-			'page'	=> $this>_page);
+		$query = array('id' => $id);
+		
+		if($this->_page) {
+			$query['page'] = $this->_page;
+		}
+		
+		if($this->_count) {
+			$query['count'] = $this->_count;
+		}			
 	}
 	
 	/**
@@ -120,18 +166,24 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 * @param integer
 	 * @return array
 	 */
-	public function getWhoRetweetedIds() {
+	public function getWhoRetweetedIds($id) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');	
 
-		//populate fields
-		$query = array(
-			'id' 			=> $id,
-			'count'			=> $this->_count,
-			'page'			=> $this->_page,
-			'stringify_ids'	=> $this->_stringify);
+		$query = array('id' => $id);
 		
+		if($this->_page) {
+			$query['page'] = $this->_page;
+		}
 		
+		if($this->_count) {
+			$query['count'] = $this->_count;
+		}			
+		
+		if($this->_stringify) {
+			$query['stringify_ids'] = 1;
+		}
+
 		$url = sprintf(self::URL_GET_WHO_RETWEETED_IDS, $id);
 		return $this->_post($url, $query);
 	}
@@ -142,22 +194,38 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 * status. Returns the destroyed status if successful.
 	 *
 	 * @param integer
-	 * @param boolean
-	 * @param boolean
 	 * @return array
 	 */
 	public function remove($id) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');	
-
-		//populate fields
-		$query = array(
-			'id' 				=> $id,
-			'trim_user'			=> $this->_trim,
-			'include_entities'	=> $this->_entities);
+		
+		$query = array('id' => $id);
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
+		
+		if($this->_trim) {
+			$query['trim_user'] = 1;
+		}
 
 		$url = sprintf(self::URL_REMOVE, $id);
 		return $this->_post($url,$query);
+	}
+	
+	/**
+	 * Set in reply to status id
+	 *
+	 * @param string
+	 * @return array
+	 */
+	public function replyTo($reply) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		$this->_reply = $reply;
+		return $this;
 	}
 	
 	/**
@@ -172,10 +240,15 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 		Eden_Twitter_Error::i()->argument(1, 'int');	
 
 		//populate fields
-		$query = array(
-			'id' 				=> $id,
-			'trim_user'			=> $this->_trim,
-			'include_entities'	=> $this->_entities);
+		$query = array('id' => $id);
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
+		
+		if($this->_trim) {
+			$query['trim_user'] = 1;
+		}
 		
 		$url = sprintf(self::URL_RETWEET, $id);
 		return $this->_post($url, $query);
@@ -195,25 +268,6 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 		return $this;
 	} 
 	
-	/**
-	 * Set include entities
-	 *
-	 * @return array
-	 */
-	public function setEntities() {
-		$this->_entities = true;
-		return $this;
-	}
-	
-	/**
-	 * Set display coordinates
-	 *
-	 * @return array
-	 */
-	public function setDisplay() {
-		$this->_display = true;
-		return $this;
-	}
 	/**
 	 * Set latitude
 	 *
@@ -271,46 +325,12 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	}
 	
 	/**
-	 * Set in reply to status id
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setReply($reply) {
-		//Argument 1 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$this->_reply = $reply;
-		return $this;
-	}
-	
-	/**
-	 * Set possibly sensitive
-	 *
-	 * @return array
-	 */
-	public function setSensitive() {
-		$this->_sensitive = true;
-		return $this;
-	}
-	
-	/**
 	 * Set stringify ids
 	 *
 	 * @return array
 	 */
-	public function setStringify() {
+	public function stringify() {
 		$this->_stringify = true;
-		return $this;
-	}
-	
-	/**
-	 * Set wrap links
-	 *
-	 * @return array
-	 */
-	public function setWrap() {
-		$this->_wrap = true;
 		return $this;
 	}
 	
@@ -319,7 +339,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 *
 	 * @return array
 	 */
-	public function setTrim() {
+	public function trimUser() {
 		$this->_trim = true;
 		return $this;
 	}
@@ -335,17 +355,39 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 		//Argument 1 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(
-			'status' 				=> $status,
-			'in_reply_to_status_id'	=> $this->_reply,
-			'lat'					=> $this->_latitude,
-			'long'					=> $this->_longtitude,
-			'place_id'				=> $this->_place,
-			'display_coordinates'	=> $this->_display,
-			'trim_user'				=> $this->_trim,
-			'include_entities'		=> $this->_entities,
-			'wrap_links'			=> $this->_wrap);		
+		$query = array('status', $status);
+		
+		if($this->_reply) {
+			$query['in_reply_to_status_id'] = $this->_reply;
+		}
+		
+		if($this->_latitude) {
+			$query['lat'] = $this->_latitude;
+		}
+		
+		if($this->_longtitude) {
+			$query['long'] = $this->_longtitude;
+		}
+		
+		if($this->_place) {
+			$query['place_id'] = $this->_place;
+		}			
+		
+		if($this->_display) {
+			$query['display_coordinates'] = 1;
+		}
+		
+		if($this->_trim) {
+			$query['trim_user'] = 1;
+		}
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
+		
+		if($this->_wrap) {
+			$query['wrap_links'] = 1;
+		}		
 		
 		return $this->_post(self::URL_UPDATE, $query);
 	}
@@ -367,15 +409,43 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 		//populate fields
 		$query = array(
 			'status' 				=> $status,
-			'media[]'				=> $media,
-			'possibly_sensitive'	=> $this->_sensitive,
-			'in_reply_to_status_id'	=> $this->_reply,
-			'lat'					=> $this->_latitude,
-			'long'					=> $this->_longtitude,
-			'place_id'				=> $this->_place,
-			'display_coordinates'	=> $this->_display);
+			'media[]'				=> $media);
+		
+		if($this->_reply) {
+			$query['in_reply_to_status_id'] = $this->_reply;
+		}
+		
+		if($this->_latitude) {
+			$query['lat'] = $this->_latitude;
+		}
+		
+		if($this->_longtitude) {
+			$query['long'] = $this->_longtitude;
+		}
+		
+		if($this->_place) {
+			$query['place_id'] = $this->_place;
+		}			
+		
+		if($this->_sensitive) {
+			$query['possibly_sensitive'] = 1;
+		}
+		
+		if($this->_display) {
+			$query['display_coordinates'] = 1;
+		}	
 		
 		return $this->_getResponse(self::URL_UPDATE_MEDIA, $query);
+	}
+	
+	/**
+	 * Set wrap links
+	 *
+	 * @return array
+	 */
+	public function wrapLinks() {
+		$this->_wrap = true;
+		return $this;
 	}
 	
 	/* Protected Methods

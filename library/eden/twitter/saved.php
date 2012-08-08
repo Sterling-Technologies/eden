@@ -58,7 +58,7 @@ class Eden_Twitter_Saved extends Eden_Twitter_Base {
 	 * by the given id. The authenticating user must be the 
 	 * owner of saved search ID being requested.
 	 *
-	 * @param integer
+	 * @param int search ID
 	 * @return array
 	 */
 	public function getDetail($id) {
@@ -85,7 +85,7 @@ class Eden_Twitter_Saved extends Eden_Twitter_Base {
 	 * The authenticating user must be the owner of 
 	 * saved search id being destroyed.
 	 *
-	 * @param integer
+	 * @param int search ID
 	 * @return array
 	 */
 	public function remove($id) {

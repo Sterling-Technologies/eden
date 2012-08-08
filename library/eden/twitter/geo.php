@@ -111,7 +111,7 @@ class Eden_Twitter_Geo extends Eden_Twitter_Base {
 	/**
 	 * Returns all the information about a known place.
 	 *
-	 * @param integer
+	 * @param int place ID
 	 * @return array
 	 */
 	public function getPlace($id) {

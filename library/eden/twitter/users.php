@@ -53,12 +53,23 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 * @return array
 	 */
 	public function getContributees() {
-		//populate fields
-		$query = array(
-			'user_id'			=> $this->_id,
-			'screen_name'		=> $this->_name,
-			'include_entities'	=> $this->_entities,
-			'skip_status'		=> $this->_status);
+		$query = array();
+		
+		if($this->_id) {
+			$query['user_id'] = $this->_id;
+		}
+		
+		if($this->_name) {
+			$query['screen_name'] = $this->_name;
+		}
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
+		
+		if($this->_status) {
+			$query['skip_status'] = 1;
+		}
 		
 		return $this->_getResponse(self::URL_CONTRIBUTEES, $query);
 	}
@@ -70,12 +81,23 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 * @return array
 	 */
 	public function getContributors() {
-		//populate fields
-		$query = array(
-			'user_id'			=> $this->_id,
-			'screen_name'		=> $this->_name,
-			'include_entities'	=> $this->_entities,
-			'skip_status'		=> $this->_status);
+		$query = array();
+		
+		if($this->_id) {
+			$query['user_id'] = $this->_id;
+		}
+		
+		if($this->_name) {
+			$query['screen_name'] = $this->_name;
+		}
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
+		
+		if($this->_status) {
+			$query['skip_status'] = 1;
+		}
 		
 		return $this->_getResponse(self::URL_CONTRIBUTORS, $query);
 	}
@@ -84,16 +106,18 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 * Returns extended information of a given user, specified
 	 * by ID or screen name as per the required id parameter.
 	 *
-	 * @param string
+	 * @param int user ID
 	 * @return array
 	 */
 	public function getDetail($id) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1,'int');		
 
-		$query = array(
-			'user_id'			=> $id,
-			'include_entities'	=> $this->_entities);
+		$query = array('user_id' => $id);
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
 		
 		return $this->_getResponse(self::URL_SHOW, $query);
 	}
@@ -121,8 +145,11 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 * @return array
 	 */
 	public function lookupFriends() {
-
-		$query = array('include_entities' => $this->_entities);
+		$query = array();
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
 		
 		//if id is integer
 		if(is_int($this->_id)) {
@@ -149,7 +176,7 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 *
 	 * @return array
 	 */
-	public function setEntities() {
+	public function includeEntities() {
 		$this->_entities = true;
 		return $this;
 	}
@@ -160,7 +187,7 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 * @param integer
 	 * @return array
 	 */
-	public function setId($id) {
+	public function setUserId($id) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');
 		
@@ -174,7 +201,7 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 * @param string
 	 * @return array
 	 */
-	public function setName($name) {
+	public function setScreenName($name) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'string');
 		
@@ -229,7 +256,7 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 *
 	 * @return array
 	 */
-	public function setStatus() {
+	public function skipStatus() {
 		$this->_status = true;
 		return $this;
 	}
@@ -244,11 +271,19 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 		//Argument 1 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');	
 
-		$query = array(
-			'q' 				=> $search,
-			'page'				=> $this->_page,
-			'per_page'			=> $this->_perpage,
-			'include_entities'	=> $this->_entities);
+		$query = array('q' => $search);
+		
+		if($this->_page) {
+			$query['page'] = $this->_page;
+		}
+		
+		if($this->_perpage) {
+			$query['per_page'] = $this->_perpage;
+		}
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
 		
 		return $this->_getResponse(self::URL_SEARCH, $query);
 	}

@@ -31,11 +31,11 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	protected $_locale		= NULL;
 	protected $_page		= NULL;
 	protected $_result		= NULL;
-	protected $_rpp			= NULL;
+	protected $_rpp			= 25;
 	protected $_until		= NULL;
-	protected $_since		= NULL;		
-	protected $_show		= NULL;
-	protected $_entities	= NULL;
+	protected $_since		= 0;		
+	protected $_show		= 0;
+	protected $_entities	= false;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -56,20 +56,52 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	public function search($search) {
 		//Argument 1 must be a string or integer
 		Eden_Twitter_Error::i()->argument(1, 'string', 'integer');
-
-		$query = array(
-			'q' 				=> $search,
-			'callback'			=> $this->_callback,
-			'geocode'			=> $this->_geocode,
-			'lang'				=> $this->_lang,
-			'locale'			=> $this->_locale,
-			'page'				=> $this->_page,
-			'result_type'		=> $this->_result,
-			'rpp'				=> $this->_rpp,
-			'show_user'			=> $this->_show,
-			'until'				=> $this->_until,
-			'since_id'			=> $this->_since,
-			'include_entities'	=> $this->_entities);
+		
+		$query = array('q' => $search);
+		
+		if($this->_callback) {
+			$query['callback'] = $this->_callback;
+		}
+		
+		if($this->_geocode) {
+			$query['geocode'] = $this->_geocode;
+		}
+		
+		if($this->_lang) {
+			$query['lang'] = $this->_lang;
+		}
+		
+		if($this->_locale) {
+			$query['locale'] = $this->_locale;
+		}
+		
+		if($this->_page) {
+			$query['page'] = $this->_page;
+		}
+		
+		if($this->_result) {
+			$query['result_type'] = $this->_result;
+		}
+		
+		if($this->_rpp) {
+			$query['rpp'] = $this->_rpp;
+		}
+		
+		if($this->_show) {
+			$query['show_user'] = $this->_show;
+		}
+		
+		if($this->_until) {
+			$query['until'] = $this->_until;
+		}
+		
+		if($this->_since) {
+			$query['since_id'] = $this->_since;
+		}
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
 		
 		return $this->_getResponse(self::URL_SEARCH, $query);
 	}
@@ -93,7 +125,7 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	 *
 	 * @return this
 	 */
-	public function setEntities() {
+	public function includeEntities() {
 		$this->_entities = true;
 		return $this;
 	}
@@ -155,52 +187,48 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	}
 	
 	/**
-	 * Set result
+	 * Set mixed result
 	 *
-	 * @param string
 	 * @return this
 	 */
-	public function setResult($result) {
-		//Argument 1 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		//if result is a string
-			if(is_string($result)) {
-				//lets make it an array
-				$result = explode(',', $result);
-			}
-			
-			//at this point result will be an array
-			$results = array();
-			//for each result
-			foreach($result as $event) {
-				//if this result is a valid result
-				if(in_array($result, $this->_validResult)) {
-					//lets add this to our valid resulr list 
-					$results[] = $event;
-				}
-			}
-			
-			//if we have at least one valid result
-			if(!empty($results)) {
-				//lets make results into a string
-				$result = implode(',', $result);
-				//and add to query
-				$this->_result = $result;		
-			}
-			
+	public function setMixedResultType() {
+		$this->_result = 'mixed';
+		return $this;
+	}
+	
+	/**
+	 * Set recent result
+	 *
+	 * @return this
+	 */
+	public function setRecentResultType() {
+		$this->_result = 'recent';
+		return $this;
+	}
+	
+	/**
+	 * Set populat result
+	 *
+	 * @return this
+	 */
+	public function setPopularResultType() {
+		$this->_result = 'popular';
 		return $this;
 	}
 	
 	/**
 	 * Set rpp
 	 *
-	 * @param string
+	 * @param int The number of tweets to return per page, up to a max of 100
 	 * @return this
 	 */
 	public function setRpp($rpp) {
 		//Argument 1 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		if($this->_rpp > 100) {
+			$this->_rpp = 100;
+		}
 		
 		$this->_rpp = $rpp;
 		return $this;
@@ -209,12 +237,12 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	/**
 	 * Set since id
 	 *
-	 * @param string
+	 * @param int
 	 * @return this
 	 */
 	public function setSince($since) {
 		//Argument 1 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
+		Eden_Twitter_Error::i()->argument(1, 'int');
 		
 		$this->_since = $since;
 		return $this;
@@ -225,7 +253,7 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	 *
 	 * @return this
 	 */
-	public function setShow() {
+	public function showUser() {
 		$this->_show = true;
 		return $this;
 	}
@@ -233,12 +261,16 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	/**
 	 * Set until
 	 *
-	 * @param string
+	 * @param string|int unix time for date format
 	 * @return this
 	 */
 	public function setUntil($until) {
 		//Argument 1 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
+		Eden_Twitter_Error::i()->argument(1, 'string', 'int');
+		
+		if(is_string($until)) {
+			$until = strtotime($until);
+		}
 		
 		$until = date('Y-m-d', $until);
 		$this->_until = $until;

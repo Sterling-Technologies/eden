@@ -39,32 +39,26 @@ class Eden_Twitter_Notification extends Eden_Twitter_Base {
 	 * from the specified user. Returns the 
 	 * specified user when successful.
 	 *
-	 * @param string|null
-	 * @param integer|null
+	 * @param string|int user ID or screen name
 	 * @return array
 	 */
-	public function follow($name = NULL, $id = NULL) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string', 'null')	//Argument 1 must be a string or null
-			->argument(2, 'int', 'null');	//Argument 2 must be a integer or null
+	public function follow($id) {
+		//Argument 1 must be a string or integer
+		Eden_Twitter_Error::i()->argument(1, 'string', 'int');	
 		
 		$query  = array();
 		
-		//if it is not empty
-		if(!is_null($name)) {
-			//lets put it in query
-			$query['screen_name'] = $name;
-		}
-		
-		//if it is not empty
-		if(!is_null($id)) {
-			//lets put it in query
+		//if it is integer
+		if(is_int($id)) {
+			//lets put it in our query
 			$query['user_id'] = $id;
+		//else it is string
+		} else {
+			//lets put it in our query
+			$query['screen_name'] = $id;
 		}
 		
-		$url = sprintf(self::URL_FOLLOW, $name);
-		return $this->_post($url,$query);
+		return $this->_post(self::URL_FOLLOW, $query);
 	}
 	
 	/**
@@ -72,32 +66,26 @@ class Eden_Twitter_Notification extends Eden_Twitter_Base {
 	 * specified user to the authenticating user. 
 	 * Returns the specified user when successful.
 	 *
-	 * @param string|null
-	 * @param integer|null
+	 * @param string|int user ID or screen name
 	 * @return array
 	 */
-	public function leave($name = NULL, $id = NULL) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string', 'null')	//Argument 1 must be a string or null
-			->argument(2, 'int', 'null');	//Argument 2 must be a integer or null
+	public function leave($id) {
+		//Argument 1 must be a string or integer
+		Eden_Twitter_Error::i()->argument(1, 'string', 'int');	
 		
 		$query  = array();
 		
-		//if it is not empty
-		if(!is_null($name)) {
-			//lets put it in query
-			$query['screen_name'] = $name;
-		}
-		
-		//if it is not empty
-		if(!is_null($id)) {
-			//lets put it in query
+		//if it is integer
+		if(is_int($id)) {
+			//lets put it in our query
 			$query['user_id'] = $id;
+		//else it is string
+		} else {
+			//lets put it in our query
+			$query['screen_name'] = $id;
 		}
 		
-		$url = sprintf(self::URL_LEAVE, $name);
-		return $this->_post($url,$query);
+		return $this->_post(self::URL_LEAVE, $query);
 	}
 	
 	/* Protected Methods

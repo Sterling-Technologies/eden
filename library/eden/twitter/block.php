@@ -40,32 +40,30 @@ class Eden_Twitter_Block extends Eden_Twitter_Base {
 	/**
 	 * Blocks the specified user from following the authenticating user.
 	 *
-	 * @param string|integer|null
+	 * @param string|integer either the screen name or user ID
 	 * @param boolean
 	 * @param boolean
 	 * @return array
 	 */
-	public function createBlocking($id = NULL, $entities = false, $status = false) {
+	public function blockUser($id, $entities = false, $status = false) {
 		//Argument Test
 		Eden_Twitter_Error::i()
-			->argument(1, 'string', 'int', 'null')	//Argument 1 must be a string, integer or null
-			->argument(2, 'bool')					//Argument 2 must be a boolean
-			->argument(3, 'bool');					//Argument 3 must be a boolean
+			->argument(1, 'string', 'int')	//Argument 1 must be a string, integer
+			->argument(2, 'bool')			//Argument 2 must be a boolean
+			->argument(3, 'bool');			//Argument 3 must be a boolean
 		
 		$query = array();
 		
-		//if it is not empty
-		if(!is_null($id)) {
-			//if it is integer
-			if(is_int($id)) {
-				//lets put it in our query
-				$query['user_id'] = $id;
-			//else it is string
-			} else {
-				//lets put it in our query
-				$query['screen_name'] = $id;
-			}
+		//if it is integer
+		if(is_int($id)) {
+			//lets put it in our query
+			$query['user_id'] = $id;
+		//else it is string
+		} else {
+			//lets put it in our query
+			$query['screen_name'] = $id;
 		}
+		
 		//if entities
 		if($entities) {
 			$query['include_entities'] = 1;
@@ -81,31 +79,30 @@ class Eden_Twitter_Block extends Eden_Twitter_Base {
 	/**
 	 * Returns if the authenticating user is blocking a target user. 
 	 *
-	 * @param string|integer|null
+	 * @param string|integer either the screen name or user ID
 	 * @param boolean
 	 * @param boolean
 	 * @return array
 	 */
-	public function getBlocking($id = NULL, $entities = false, $status = false) {
+	public function isBlocked($id = NULL, $entities = false, $status = false) {
 		//Argument Test
 		Eden_Twitter_Error::i()
-			->argument(1, 'string', 'int', 'null')	//Argument 1 must be a string, integer or null
-			->argument(2, 'bool')					//Argument 2 must be a boolean
-			->argument(3, 'bool');					//Argument 3 must be a boolean
+			->argument(1, 'string', 'int')	//Argument 1 must be a string, integer
+			->argument(2, 'bool')			//Argument 2 must be a boolean
+			->argument(3, 'bool');			//Argument 3 must be a boolean
 		
 		$query = array();
-		//if it is not empty
-		if(!is_null($id)) {
-			//if it is integer
-			if(is_int($id)) {
-				//lets put it in our query
-				$query['user_id'] = $id;
-			//else it is string
-			} else {
-				//lets put it in our query
-				$query['screen_name'] = $id;
-			}
+		
+		//if it is integer
+		if(is_int($id)) {
+			//lets put it in our query
+			$query['user_id'] = $id;
+		//else it is string
+		} else {
+			//lets put it in our query
+			$query['screen_name'] = $id;
 		}
+			
 		//if entities
 		if($entities) {
 			$query['include_entities'] = 1;
@@ -125,7 +122,7 @@ class Eden_Twitter_Block extends Eden_Twitter_Base {
 	 * @param boolean
 	 * @return integer
 	 */
-	public function getBlockingId($stringify = false) {
+	public function getBlockedUserIds($stringify = false) {
 		//Argument Test
 		Eden_Twitter_Error::i()
 			->argument(1, 'bool');		//Argument 1 must be a boolean
@@ -145,7 +142,7 @@ class Eden_Twitter_Block extends Eden_Twitter_Base {
 	 * @param boolean
 	 * @return array
 	 */
-	public function getUserBlock($page = NULL, $perPage = NULL, $entities = false, $status = false) {
+	public function getBlockedUsers($page = NULL, $perPage = NULL, $entities = false, $status = false) {
 		//Argument Test
 		Eden_Twitter_Error::i()
 			->argument(1, 'int', 'null')	//Argument 1 must be a integer or null
@@ -181,31 +178,28 @@ class Eden_Twitter_Block extends Eden_Twitter_Base {
 	 * Un-blocks the user specified in the ID parameter for the 
 	 * authenticating user.
 	 *
-	 * @param string|integer|null
+	 * @param string|integer either the screen name or user ID
 	 * @param boolean
 	 * @param boolean
 	 * @return array
 	 */
-	public function removeBlocking($id = NULL, $entities = false, $status = false) {
+	public function unblock($id, $entities = false, $status = false) {
 		//Argument Test
 		Eden_Twitter_Error::i()
-			->argument(1, 'string', 'int', 'null')	//Argument 1 must be a string, integer or null
-			->argument(2, 'bool')					//Argument 2 must be a boolean
-			->argument(3, 'bool');					//Argument 3 must be a boolean
+			->argument(1, 'string', 'int')	//Argument 1 must be a string, integer
+			->argument(2, 'bool')			//Argument 2 must be a boolean
+			->argument(3, 'bool');			//Argument 3 must be a boolean
 		
 		$query = array();
 		
-		//if it is not empty
-		if(!is_null($id)) {
-			//if it is integer
-			if(is_int($id)) {
-				//lets put it in our query
-				$query['user_id'] = $id;
-			//else it is string
-			} else {
-				//lets put it in our query
-				$query['screen_name'] = $id;
-			}
+		//if it is integer
+		if(is_int($id)) {
+			//lets put it in our query
+			$query['user_id'] = $id;
+		//else it is string
+		} else {
+			//lets put it in our query
+			$query['screen_name'] = $id;
 		}
 		
 		//if entities

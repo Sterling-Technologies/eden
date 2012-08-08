@@ -84,10 +84,10 @@ class Eden_Facebook_Graph extends Eden_Class {
 	/**
 	 * Add an album
 	 *
-	 * @param string|int
+	 * @param string|int the object ID to place the album
 	 * @param string
-	 * @param string
-	 * @return int
+	 * @param string the album description
+	 * @return int the album ID
 	 */
 	public function addAlbum($id, $name, $message) {
 		//Argument test
@@ -109,9 +109,9 @@ class Eden_Facebook_Graph extends Eden_Class {
 	/**
 	 * Adds a comment to a post
 	 *
-	 * @param int
+	 * @param int the post ID commenting on
 	 * @param string
-	 * @return int
+	 * @return int the comment ID
 	 */
 	public function addComment($id, $message) {
 		//Argument test
@@ -132,7 +132,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	/**
 	 * Attend an event
 	 *
-	 * @param int
+	 * @param int the event ID
 	 * @return this
 	 */
 	public function attendEvent($id) {
@@ -150,11 +150,11 @@ class Eden_Facebook_Graph extends Eden_Class {
 	/**
 	 * Check into a place
 	 *
-	 * @param string|int
-	 * @param string
+	 * @param string|int the checkin ID
+	 * @param string 
 	 * @param float
 	 * @param float
-	 * @param int
+	 * @param int the place ID
 	 * @param string|array
 	 * @return int
 	 */
@@ -206,7 +206,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	/**
 	 * Add a note
 	 *
-	 * @param int|string
+	 * @param int|string object ID where to put the note
 	 * @param string
 	 * @param string
 	 * @return int
@@ -231,7 +231,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	/**
 	 * Decline an event
 	 *
-	 * @param int
+	 * @param int event ID
 	 * @return this
 	 */
 	public function declineEvent($id) {
@@ -248,9 +248,9 @@ class Eden_Facebook_Graph extends Eden_Class {
 	/**
 	 * Add an event
 	 *
-	 * @param string
-	 * @param string|int
-	 * @param string|int
+	 * @param string name of event
+	 * @param string|int string date or time format
+	 * @param string|int string date or time format
 	 * @return Eden_Facebook_Event
 	 */
 	public function event($name, $start, $end) {
@@ -261,6 +261,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	 *
 	 * @param string|int
 	 * @param string|array
+	 * @return array
 	 */
 	public function getFields($id = 'me', $fields) {
 		//Argument test
@@ -288,6 +289,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		Eden_Facebook_Error::i()->argument(1, 'url');
 		return sprintf(self::LOGOUT_URL, urlencode($redirect), $this->_token);
 	}
+	
 	/** 
 	 * Returns the detail of any object
 	 *
@@ -393,7 +395,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	/**
 	 * Like an object
 	 *
-	 * @param int|string
+	 * @param int|string object ID
 	 * @return array
 	 */
 	public function like($id) {
@@ -410,7 +412,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	 * Add a link
 	 *
 	 * @param string
-	 * @return Eden_Facebook_Post
+	 * @return Eden_Facebook_Link
 	 */
 	public function link($url) {
 		return Eden_Facebook_Link::i($this->_token, $url);
@@ -419,7 +421,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	/**
 	 * Maybe an event
 	 *
-	 * @param int
+	 * @param int event ID
 	 * @return this
 	 */
 	public function maybeEvent($id) {
@@ -450,7 +452,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 	 * @param int|string
 	 * @param string
 	 * @param string|null
-	 * @return id
+	 * @return int photo ID
 	 */
 	public function uploadPhoto($albumId, $file, $message = NULL) {
 		//Argument test

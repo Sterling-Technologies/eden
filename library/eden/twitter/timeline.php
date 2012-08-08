@@ -13,6 +13,7 @@
  * @package    Eden
  * @category   twitter
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
+ * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	/* Constants
@@ -35,13 +36,11 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	protected $_since		= NULL;
 	protected $_max			= NULL;
 	protected $_page		= NULL;
-	protected $_id			= NULL;
-	protected $_name		= NULL;
 	protected $_trim		= NULL;
-	protected $_include		= NULL;
-	protected $_entities	= NULL;
-	protected $_replies		= NULL;
-	protected $_detail		= NULL;
+	protected $_entities	= false;
+	protected $_rtds		= false;
+	protected $_replies		= false;
+	protected $_detail		= false;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -54,44 +53,76 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns the 20 most recent retweets posted 
-	 * by the authenticating user.
+	 * Set contributors details
 	 *
 	 * @return array
 	 */
-	public function getBy() {
-		//populate fields
-		$query = array(
-			'count'				=> $this->_count,
-			'since_id'			=> $this->_since,
-			'max_id'			=> $this->_max,
-			'page'				=> $this->_page,
-			'trim_user'			=> $this->_trim,
-			'include_entities'	=> $this->_entities);
-		
-		return $this->_getResponse(self::URL_BY_ME, $query);
+	public function addContributorDetail() {
+		$this->_detail = true;
+		return $this;
 	}
 	
 	/**
-	 * Returns the 20 most recent retweets posted by 
-	 * the specified user. The user is specified using 
-	 * the user_id or screen_name parameters  
+	 * Set exclude replies
 	 *
 	 * @return array
 	 */
-	public function getByUser() {
-		//populate fields	
-		$query = array(
-			'user_id'			=> $this->_id,
-			'screen_name'		=> $this->_name,
-			'since_id'			=> $this->_id,
-			'count'				=> $this->_count,
-			'max_id'			=> $this->_max,
-			'page'				=> $this->_page,
-			'trim_user'			=> $this->_trim,
-			'include_entities'	=> $this->_entities);
+	public function excludeReplies() {
+		$this->_replies = true;
+		return $this;
+	}
+	
+	/**
+	 * Returns the 20 most recent retweets posted 
+	 * by the authenticating user.
+	 *
+	 * @param string|int|null user ID or screen name
+	 * @return array
+	 */
+	public function getRetweets($id = NULL) {
+		//Argument 1 must be an integer, string or null
+		Eden_Twitter_Error::i()->argument(1, 'int', 'string', 'null');
 		
-		return $this->_getResponse(self::URL_BY_USER, $query);
+		$query = array();
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
+		
+		if($this->_trim) {
+			$query['trim_user'] = 1;
+		}
+		
+		if($this->_since) {
+			$query['since_id'] = $this->_since;
+		}
+		
+		if($this->_max) {
+			$query['max_id'] = $this->_max;
+		}
+		
+		if($this->_page) {
+			$query['page'] = $this->_page;
+		}
+		
+		if($this->_count) {
+			$query['count'] = $this->_count;
+		}
+		
+		if(!is_null($id)) {
+			//if it is integer
+			if(is_int($id)) {
+				//lets put it in our query
+				$query['user_id'] = $id;
+			//else it is string
+			} else {
+				//lets put it in our query
+				$query['screen_name'] = $id;
+			}
+			return $this->_getResponse(self::URL_BY_USER, $query);
+		} 
+		
+		return $this->_getResponse(self::URL_BY_ME, $query);
 	}
 	
 	/**
@@ -100,22 +131,62 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 * another user's timeline by using the screen_name 
 	 * or user_id parameter
 	 *
+	 * @param string|int|null user ID or screen name
 	 * @return array
 	 */
-	public function getList() {
-		//populate fields	
-		$query = array(
-			'user_id'				=> $this->_id,
-			'screen_name'			=> $this->_name,
-			'since_id'				=> $this->_since,
-			'count'					=> $this->_count,
-			'max_id'				=> $this->_max,
-			'page'					=> $this->_page,
-			'trim_user'				=> $this->_trim,
-			'include_rts'			=> $this->_include,
-			'include_entities'		=> $this->_entities,
-			'exclude_replies'		=> $this->_replies,
-			'contributor_details'	=> $this->_detail);
+	public function getStatuses($id = NULL) {
+		//Argument 1 must be an integer, string or null
+		Eden_Twitter_Error::i()->argument(1, 'int', 'string', 'null');
+		
+		$query = array();
+		
+		if(!is_null($id)) {
+			//if it is integer
+			if(is_int($id)) {
+				//lets put it in our query
+				$query['user_id'] = $id;
+			//else it is string
+			} else {
+				//lets put it in our query
+				$query['screen_name'] = $id;
+			}
+		} 
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
+		
+		if($this->_rts) {
+			$query['include_rts'] = 1;
+		}
+		
+		if($this->_replies) {
+			$query['exclude_replies'] = 1;
+		}
+		
+		if($this->_trim) {
+			$query['trim_user'] = 1;
+		}
+		
+		if($this->_detail) {
+			$query['contributor_details'] = 1;
+		}
+		
+		if($this->_since) {
+			$query['since_id'] = $this->_since;
+		}
+		
+		if($this->_max) {
+			$query['max_id'] = $this->_max;
+		}
+		
+		if($this->_page) {
+			$query['page'] = $this->_page;
+		}
+		
+		if($this->_count) {
+			$query['count'] = $this->_count;
+		}
 		
 		return $this->_getResponse(self::URL_USER, $query);
 	}
@@ -126,17 +197,40 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 *
 	 * @return array
 	 */
-	public function getMention() {
-		//populate fields	
-		$query = array(
-			'count'					=> $this->_count,
-			'since_id'				=> $this->_since,
-			'max_id'				=> $this->_max,
-			'page'					=> $this->_page,
-			'trim_user'				=> $this->_trim,
-			'include_rts'			=> $this->_include,
-			'include_entities'		=> $this->_entities,
-			'contributor_details'	=> $this->_detail);
+	public function getMentions() {
+		$query = array();
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
+		
+		if($this->_rts) {
+			$query['include_rts'] = 1;
+		}
+		
+		if($this->_trim) {
+			$query['trim_user'] = 1;
+		}
+		
+		if($this->_detail) {
+			$query['contributor_details'] = 1;
+		}
+		
+		if($this->_since) {
+			$query['since_id'] = $this->_since;
+		}
+		
+		if($this->_max) {
+			$query['max_id'] = $this->_max;
+		}
+		
+		if($this->_page) {
+			$query['page'] = $this->_page;
+		}
+		
+		if($this->_count) {
+			$query['count'] = $this->_count;
+		}
 		
 		return $this->_getResponse(self::URL_MENTION, $query);
 	}
@@ -147,15 +241,32 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 *
 	 * @return array
 	 */
-	public function getOf() {
-		//populate fields
-		$query = array(
-			'count'				=> $this->_count,
-			'since_id'			=> $this->_since,
-			'max_id'			=> $this->_max,
-			'page'				=> $this->_page,
-			'trim_user'			=> $this->_trim,
-			'include_entities'	=> $this->_entities);
+	public function getRetweeted() {
+		$query = array();
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
+		
+		if($this->_trim) {
+			$query['trim_user'] = 1;
+		}
+		
+		if($this->_since) {
+			$query['since_id'] = $this->_since;
+		}
+		
+		if($this->_max) {
+			$query['max_id'] = $this->_max;
+		}
+		
+		if($this->_page) {
+			$query['page'] = $this->_page;
+		}
+		
+		if($this->_count) {
+			$query['count'] = $this->_count;
+		}
 		
 		return $this->_getResponse(self::URL_OF_ME, $query);
 	}
@@ -166,11 +277,16 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 *
 	 * @return array
 	 */
-	public function getPublic() {
-		//populate fields	
-		$query = array(
-			'trim_user'			=> $this->_trim,
-			'include_entities'	=> $this->_entities);
+	public function getAllTweets() {
+		$query = array();
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
+		
+		if($this->_trim) {
+			$query['trim_user'] = 1;
+		}
 		
 		return $this->_getResponse(self::URL_PUBLIC, $query);
 	}
@@ -184,17 +300,43 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 * @return array
 	 */
 	public function getTimeline() {
-		//populate fields
-		$query = array(
-			'count'					=> $this->_count,
-			'since_id'				=> $this->_since,
-			'max_id'				=> $this->_max,
-			'page'					=> $this->_page,
-			'trim_user'				=> $this->_trim,
-			'include_rts'			=> $this->_include,
-			'include_entities'		=> $this->_entities,
-			'exclude_replies'		=> $this->_replies,
-			'contributor_details'	=> $this->_detail);
+		$query = array();
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
+		
+		if($this->_rts) {
+			$query['include_rts'] = 1;
+		}
+		
+		if($this->_replies) {
+			$query['exclude_replies'] = 1;
+		}
+		
+		if($this->_trim) {
+			$query['trim_user'] = 1;
+		}
+		
+		if($this->_detail) {
+			$query['contributor_details'] = 1;
+		}
+		
+		if($this->_since) {
+			$query['since_id'] = $this->_since;
+		}
+		
+		if($this->_max) {
+			$query['max_id'] = $this->_max;
+		}
+		
+		if($this->_page) {
+			$query['page'] = $this->_page;
+		}
+		
+		if($this->_count) {
+			$query['count'] = $this->_count;
+		}
 		
 		return $this->_getResponse(self::URL_TIMELINE, $query);
 	}
@@ -203,40 +345,78 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 * Returns the 20 most recent retweets posted by 
 	 * users the authenticating user follow
 	 *
+	 * @param string|int|null user ID or screen name
 	 * @return array
 	 */
-	public function getTo() {
-		//populate fields
-		$query = array(
-			'count'				=> $this->_count,
-			'since_id'			=> $this->_since,
-			'max_id'			=> $this->_max,
-			'page'				=> $this->_page,
-			'trim_user'			=> $this->_trim,
-			'include_entities'	=> $this->_entities);
+	public function getFollowingRetweets($id = NULL) {
+		//Argument 1 must be an integer, string or null
+		Eden_Twitter_Error::i()->argument(1, 'int', 'string', 'null');
+		
+		$query = array();
+		
+		if($this->_entities) {
+			$query['include_entities'] = 1;
+		}
+		
+		if($this->_trim) {
+			$query['trim_user'] = 1;
+		}
+		
+		if($this->_since) {
+			$query['since_id'] = $this->_since;
+		}
+		
+		if($this->_max) {
+			$query['max_id'] = $this->_max;
+		}
+		
+		if($this->_page) {
+			$query['page'] = $this->_page;
+		}
+		
+		if($this->_count) {
+			$query['count'] = $this->_count;
+		}
+		
+		if(!is_null($id)) {
+			//if it is integer
+			if(is_int($id)) {
+				//lets put it in our query
+				$query['user_id'] = $id;
+			//else it is string
+			} else {
+				//lets put it in our query
+				$query['screen_name'] = $id;
+			}
+		
+			return $this->_getResponse(self::URL_TO_USER, $query);
+		} 
 		
 		return $this->_getResponse(self::URL_TO_ME, $query);
 	}
 	
 	/**
-	 * Returns the 20 most recent retweets posted 
-	 * by users the specified user follows.  
+	 * Each tweet will include a node called "entities". This node offers a variety 
+	 * of metadata about the tweet in a discreet structure, including: user_mentions, 
+	 * urls, and hashtags. 
 	 *
-	 * @return array
+	 * @return this
 	 */
-	public function getToUser() {
-		//populate fields	
-		$query = array(
-			'user_id'			=> $this->_id,
-			'screen_name'		=> $this->_name,
-			'since_id'			=> $this->_id,
-			'count'				=> $this->_count,
-			'max_id'			=> $this->_max,
-			'page'				=> $this->_page,
-			'trim_user'			=> $this->_trim,
-			'include_entities'	=> $this->_entities);
-		
-		return $this->_getResponse(self::URL_TO_USER, $query);
+	public function includeEntities() {
+		$this->_entities = true;
+		return $this;
+	}
+	
+	/**
+	 * The list timeline will contain native retweets (if they exist) in addition to the 
+	 * standard stream of tweets. The output format of retweeted tweets is identical to 
+	 * the representation you see in home_timeline.
+	 *
+	 * @return this
+	 */
+	public function includeRts() {
+		$this->_rts = true;
+		return $this;
 	}
 	
 	/**
@@ -250,50 +430,6 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 		Eden_Twitter_Error::i()->argument(1, 'int');
 		
 		$this->_count = $count;
-		return $this;
-	}
-	
-	/**
-	 * Set contributors details
-	 *
-	 * @return array
-	 */
-	public function setDetail() {
-		$this->_detail = true;
-		return $this;
-	}
-	
-	/**
-	 * Set inclde entities
-	 *
-	 * @return array
-	 */
-	public function setEntities() {
-		$this->_entities = true;
-		return $this;
-	}
-	
-	/**
-	 * Set user id
-	 *
-	 * @param integer
-	 * @return array
-	 */
-	public function setId($id) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');
-		
-		$this->_id = $id;
-		return $this;
-	}
-	
-	/**
-	 * Set include rts
-	 *
-	 * @return array
-	 */
-	public function setInclude() {
-		$this->_include = true;
 		return $this;
 	}
 	
@@ -312,20 +448,6 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	}
 	
 	/**
-	 * Set screen name
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setName($name) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$this->_name = $name;
-		return $this;
-	}
-	
-	/**
 	 * Set page
 	 *
 	 * @param integer
@@ -336,16 +458,6 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 		Eden_Twitter_Error::i()->argument(1, 'int');
 		
 		$this->_page = $page;
-		return $this;
-	}
-	
-	/**
-	 * Set exclude replies
-	 *
-	 * @return array
-	 */
-	public function setReplies() {
-		$this->_replies = true;
 		return $this;
 	}
 	
@@ -368,7 +480,7 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 *
 	 * @return array
 	 */
-	public function setTrim() {
+	public function trimUser() {
 		$this->_trim = true;
 		return $this;
 	}

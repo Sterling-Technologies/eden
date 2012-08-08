@@ -270,11 +270,11 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	}
 	
 	/**
-	 * Set use
+	 * Determines whether to display the profile background image or not
 	 *
 	 * @return this
 	 */
-	public function setUse() {
+	public function show() {
 		$this->_use = true;
 		return $this;
 	}
