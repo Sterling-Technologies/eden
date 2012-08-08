@@ -38,7 +38,7 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	protected $_page		= NULL;
 	protected $_trim		= NULL;
 	protected $_entities	= false;
-	protected $_rtds		= false;
+	protected $_rts			= false;
 	protected $_replies		= false;
 	protected $_detail		= false;
 	
