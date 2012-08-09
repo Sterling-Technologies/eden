@@ -17,6 +17,8 @@
 class Eden_Eventbrite_Base extends Eden_Class {
 	/* Constants
 	-------------------------------*/
+	const ACCESS_HEADER = 'Authorization: Bearer %s';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -29,11 +31,11 @@ class Eden_Eventbrite_Base extends Eden_Class {
 	-------------------------------*/
 	/* Magic
 	-------------------------------*/
-	public function __construct($user, $api) {
+	public function __construct($user, $api = NULL) {
 		//argument test
 		Eden_Eventbrite_Error::i()
-			->argument(1, 'string','array')	//Argument 1 must be a string or array
-			->argument(2, 'string');		//Argument 2 must be a string
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
 			
 		$this->_api = $api; 
 		$this->_user = $user; 
@@ -67,11 +69,12 @@ class Eden_Eventbrite_Base extends Eden_Class {
 		$headers = array();
 		$headers[] = 'Content-Type: application/json';
 		
-		$query['app_key'] = $this->_api;
-		if(is_array($this->_user)) {
-			$query['user'] = $this->_user[0];
-			$query['password'] = $this->_user[1];
+		//if api key is null
+		if(is_null($this->_api)) {
+			//we must have an oauth token
+			$headers[] = sprintf(self::ACCESS_HEADER, $this->_user);
 		} else {
+			$query['app_key'] = $this->_api;
 			$query['user_key'] = $this->_user;
 		}
 		
