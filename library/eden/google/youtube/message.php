@@ -24,11 +24,6 @@ class Eden_Google_Youtube_Message extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_userId		= 'default';
-	protected $_userName	= NULL;
-	protected $_videoId		= NULL;
-	protected $_summary		= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -50,111 +45,59 @@ class Eden_Google_Youtube_Message extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * YouTube user ID.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUserId($userId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userId = $userId;
-		
-		return $this;
-	}
-	
-	/**
-	 * YouTube video ID.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setVideoId($videoId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_videoId = $videoId;
-		
-		return $this;
-	}
-	
-	/**
-	 * YouTube message ID.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setMessageId($messageId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_messageId = $messageId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set message summary.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setSummary($summary) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_summary = $summary;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set user name or channel name.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUserName($userName) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userName = $userName;
-		
-		return $this;
-	}
-	
-	/**
 	 * Retrieve all user's contacts
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getList() {
+	public function getList($userId = self::DEFAULT_VALUE) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
 		//populate fields
 		$query  = array(self::RESPONSE => self::JSON_FORMAT);
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_MESSAGE, $this->_userId), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_MESSAGE, $userId), $query);
 	}
 	
 	/**
 	 * Send a video message
 	 *
+	 * @param string
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function sendMessage() {
+	public function sendMessage($videoId, $summary, $userName) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string');	//argument 3 must be a string
 		
 		//make a xml template
 		$query = Eden_Template::i()
-			->set(self::VIDEO_ID, $this->_videoId)
-			->set(self::SUMMARY, $this->_summary)
+			->set(self::VIDEO_ID, $videoId)
+			->set(self::SUMMARY, $summary)
 			->parsePHP(dirname(__FILE__).'/template/sendmessage.php');
 		
-		return $this->_post(sprintf(self::URL_YOUTUBE_MESSAGE, $this->_userName), $query);
+		return $this->_post(sprintf(self::URL_YOUTUBE_MESSAGE, $userName), $query);
 	}
 	
 	/**
 	 * Delete a message 
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function delete() {
+	public function delete($messageId, $userId = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
-		return $this->_delete(sprintf(self::URL_YOUTUBE_MESSAGE_GET, $this->_userId, $this->_messageId));
+		return $this->_delete(sprintf(self::URL_YOUTUBE_MESSAGE_GET, $userId, $messageId));
 	}
 	
 	/* Protected Methods

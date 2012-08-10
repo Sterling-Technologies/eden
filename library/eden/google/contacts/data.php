@@ -24,22 +24,6 @@ class Eden_Google_Contacts_Data extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_userEmail	= 'default';
-	protected $_version		= '3.0';
-	protected $_contactId	= NULL;
-	protected $_givenName	= NULL;
-	protected $_familyName	= NULL;
-	protected $_fullName	= NULL;
-	protected $_phoneNumber	= NULL;
-	protected $_city		= NULL;
-	protected $_street		= NULL;
-	protected $_region		= NULL;
-	protected $_postCode	= NULL;
-	protected $_country		= NULL;
-	protected $_notes		= NULL;
-	protected $_email		= NULL;
-	protected $_etag		= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -57,246 +41,103 @@ class Eden_Google_Contacts_Data extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUserEmail($userEmail) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userEmail = $userEmail;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setEmail($email) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_email = $email;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setGivenName($givenName) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_givenName = $givenName;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setFamilyName($familyName) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_familyName = $familyName;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setPhoneNumber($phoneNumber) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_phoneNumber = $phoneNumber;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setCity($city) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_city = $city;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setStreet($street) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_street = $street;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setRegion($region) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_region = $region;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setPostCode($postCode) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_postCode = $postCode;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setCountry($country) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_country = $country;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setNotes($notes) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_notes = $notes;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setEtag($etag) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_etag = $etag;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set contact id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setContactId($contactId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_contactId = $contactId;
-		
-		return $this;
-	}
-	
-	/**
 	 * Retrieve all of a user's contacts
 	 *
+	 * @param string
 	 * return array
 	 */
-	public function getList() {
+	public function getList($userEmail = self::DEFAULT_VALUE) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
 		//populate fields
 		$query = array(
-			self::VERSION 	=> $this->_version,
+			self::VERSION 	=> self::VERSION_THREE,
 			self::RESPONSE	=> self::JSON_FORMAT);
 		
-		return $this->_getResponse(sprintf(self::URL_CONTACTS_LIST, $this->_userEmail), $query);
+		return $this->_getResponse(sprintf(self::URL_CONTACTS_LIST, $userEmail), $query);
 	}  
 	
 	/**
 	 * Retrieve a single contact
 	 *
+	 * @param string
+	 * @param string
 	 * return array
 	 */
-	public function getSpecific() {
+	public function getSpecific($contactId, $userEmail = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
+		
 		//populate fields
 		$query = array(
-			self::VERSION 	=> $this->_version,
+			self::VERSION 	=> self::VERSION_THREE,
 			self::RESPONSE	=> self::JSON_FORMAT);
 		
-		return $this->_getResponse(sprintf(self::URL_CONTACTS_GET, $this->_userEmail, $this->_contactId), $query);
+		return $this->_getResponse(sprintf(self::URL_CONTACTS_GET, $userEmail, $contactId), $query);
 	}
 	
 	/**
 	 * Creates a contacts.
 	 *
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function create() {
+	public function create($givenName, $familyName, $phoneNumber, $city, $street, $postCode, $country, $notes, $email, $userEmail = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string')		//argument 3 must be a string
+			->argument(4, 'string')		//argument 4 must be a string
+			->argument(5, 'string')		//argument 5 must be a string
+			->argument(6, 'string')		//argument 6 must be a string
+			->argument(7, 'string')		//argument 7 must be a string
+			->argument(8, 'string')		//argument 8 must be a string
+			->argument(9, 'string')		//argument 9 must be a string
+			->argument(10, 'string');	//argument 10 must be a string
 	
 		//make a xml template
 		$query = Eden_Template::i()
-			->set(self::GIVEN_NAME, $this->_givenName)
-			->set(self::FAMILY_NAME, $this->_familyName)
-			->set(self::PHONE_NUMBER, $this->_phoneNumber)
-			->set(self::CITY, $this->_city)
-			->set(self::STREET, $this->_street)
-			->set(self::POST_CODE, $this->_postCode)
-			->set(self::COUNTRY, $this->_country)
-			->set(self::NOTES, $this->_notes)
-			->set(self::EMAIL, $this->_email)
+			->set(self::GIVEN_NAME, $givenName)
+			->set(self::FAMILY_NAME, $familyName)
+			->set(self::PHONE_NUMBER, $phoneNumber)
+			->set(self::CITY, $city)
+			->set(self::STREET, $street)
+			->set(self::POST_CODE, $postCode)
+			->set(self::COUNTRY, $country)
+			->set(self::NOTES, $notes)
+			->set(self::EMAIL, $email)
 			->parsePHP(dirname(__FILE__).'/template/addcontacts.php');
 			
-		return $this->_post(sprintf(self::URL_CONTACTS_LIST, $this->_userEmail), $query);
+		return $this->_post(sprintf(self::URL_CONTACTS_LIST, $userEmail), $query);
 	}
 	
 	/**
 	 * Delete a contact
 	 *
 	 * @return array
+	 * @param string
+	 * @param string
 	 */
-	public function delete() {
+	public function delete($contactId, $userEmail = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
-		return $this->_delete(sprintf(self::URL_CONTACTS_GET, $this->_userEmail, $this->_contactId), true);
+		return $this->_delete(sprintf(self::URL_CONTACTS_GET, $userEmail, $contactId), true);
 	}
 	
 	/* Protected Methods

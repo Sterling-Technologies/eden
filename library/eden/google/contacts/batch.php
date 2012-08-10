@@ -120,43 +120,64 @@ class Eden_Google_Contacts_Batch extends Eden_Google_Base {
 	/**
 	 * Retrieve all group list
 	 *
+	 * @param string
 	 * return array
 	 */
-	public function getList() {
-		//populate fields
-		$query = array(self::VERSION => $this->_version);
+	public function getList($userEmail = self::DEFAULT_VALUE) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
 		
-		return $this->_getResponse(sprintf(self::URL_CONTACTS_GROUPS_LIST, $this->_userEmail), $query);
+		//populate fields
+		$query = array(self::VERSION => self::VERSION_THREE);
+		
+		return $this->_getResponse(sprintf(self::URL_CONTACTS_GROUPS_LIST, $userEmail), $query);
 	}
 	
 	/**
 	 * Retrieve all group list
 	 *
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
 	 * return array
 	 */
-	public function create() {
+	public function create($title, $description, $info, $userEmail = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string')		//argument 3 must be a string
+			->argument(4, 'string');	//argument 4 must be a string
+			
 		//populate fields
 		$parameters	= array(
-			self::TITLE			=> $this->_title,
-			self::DESCRIPTION	=> $this->_description,
-			self::INFO			=> $this->_info);
+			self::TITLE			=> $title,
+			self::DESCRIPTION	=> $description,
+			self::INFO			=> $info);
 		
 		//make a xml template
 		$query = Eden_Template::i()
 			->set($parameters)
 			->parsePHP(dirname(__FILE__).'/template/addgroups.php');
 			
-		return $this->_post(sprintf(self::URL_CONTACTS_GROUPS_LIST, $this->_userEmail), $query);
+		return $this->_post(sprintf(self::URL_CONTACTS_GROUPS_LIST, $userEmail), $query);
 	}
 	
 	/**
 	 * Delete a group
 	 *
+	 * @param string
+	 * @param string
 	 * return array
 	 */
-	public function delete() {
+	public function delete($groupId, $userEmail = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
-		return $this->_delete(sprintf(self::URL_CONTACTS_GROUPS_GET, $this->_userEmail, $this->_groupId), true);
+		return $this->_delete(sprintf(self::URL_CONTACTS_GROUPS_GET, $userEmail, $groupId), true);
 	}
 	
 	/* Protected Methods

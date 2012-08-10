@@ -19,18 +19,15 @@ class Eden_Google_Youtube_Channel extends Eden_Google_Base {
 	-------------------------------*/ 
 	const URL_YOUTUBE_CHANNEL		= 'https://gdata.youtube.com/feeds/api/channels';
 	const URL_YOUTUBE_CHANNEL_FEEDS	= 'https://gdata.youtube.com/feeds/api/channelstandardfeeds/%s';
+	const URL_YOUTUBE_REGION		= 'https://gdata.youtube.com/feeds/api/channelstandardfeeds/%s/%s';
 	
 	/* Public Properties 
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_query 		= NULL;
 	protected $_startIndex	= NULL;
 	protected $_maxResults	= NULL;
-	protected $_feeds		= NULL;
 	protected $_time		= NULL;
-	protected $_regionId	= NULL;
-	protected $_version		= '2';
 	
 	/* Private Properties
 	-------------------------------*/
@@ -47,35 +44,7 @@ class Eden_Google_Youtube_Channel extends Eden_Google_Base {
 	}
 
 	/* Public Methods
-	-------------------------------*/
-	/**
-	 * Set the keyword yoy want to search
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setQuery($query) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_query = $query;
-		
-		return $this;
-	}
-	
-	/**
-	 * Country acronyms
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setRegionId($regionId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_regionId = $regionId;
-		
-		return $this;
-	}
-	
+	-------------------------------*/	
 	/**
 	 * Set start index
 	 *
@@ -149,40 +118,21 @@ class Eden_Google_Youtube_Channel extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Returns most frequently watched YouTube channels
-	 *
-	 * @return this
-	 */
-	public function setByMostViewed() {
-		$this->_feeds = 'most_viewed';
-		
-		return $this;
-	}
-	
-	/**
-	 * Returns the channels with the most subscribers or the most 
-	 * new subscribers during a given time period.
-	 *
-	 * @return this
-	 */
-	public function setByMostSubscribed() {
-		$this->_feeds = 'most_subscribed';
-		
-		return $this;
-	}
-	
-	/**
 	 * Returns a collection of videos that match the API request parameters.
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getlist() {
+	public function search($queryString) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
 		//populate parameters
 		$query = array(
-			self::QUERY			=> $this->_query,
-			self::START_INDEX	=> $this->_startIndex,
-			self::MAX_RESULTS	=> $this->_maxResults,
-			self::VERSION		=> $this->_version);	
+			self::QUERY			=> $queryString,
+			self::START_INDEX	=> $this->_startIndex,	//optional
+			self::MAX_RESULTS	=> $this->_maxResults,	//optional
+			self::VERSION		=> self::VERSION_TWO);	
 		
 		return $this->_getResponse(self::URL_YOUTUBE_CHANNEL, $query);
 	}
@@ -190,27 +140,56 @@ class Eden_Google_Youtube_Channel extends Eden_Google_Base {
 	/**
 	 * Returns a collection of videos that match the API request parameters.
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getChannelFeeds() {
+	public function getChannelFeeds($feeds) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
+		//if the input value is not allowed
+		if(!in_array($feeds, array('most_viewed', 'most_subscribed'))) {
+			//throw error
+			Eden_Google_Error::i()
+				->setMessage(Eden_Google_Error::INVALID_FEEDS_ONE) 
+				->addVariable($feeds)
+				->trigger();
+		}
+		
 		//populate parameters
 		$query = array(
-			self::VERSION	=> $this->_version,
+			self::VERSION	=> self::VERSION_TWO,
 			self::TIME		=> $this->_time);	
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_CHANNEL_FEEDS, $this->_feeds), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_CHANNEL_FEEDS, $feeds), $query);
 	}
 	
 	/**
 	 * Returns a collection of videos that match the API request parameters.
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function getChannelByRegion() {
-		//populate parameters
-		$query = array(self::VERSION => $this->_version);
+	public function getChannelByRegion($regionId, $feeds) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_REGION, $this->_regionId, $this->_feeds), $query);
+		//if the input value is not allowed
+		if(!in_array($feeds, array('most_viewed', 'most_subscribed'))) {
+			//throw error
+			Eden_Google_Error::i()
+				->setMessage(Eden_Google_Error::INVALID_FEEDS_TWO) 
+				->addVariable($feeds)
+				->trigger();
+		}
+		
+		//populate parameters
+		$query = array(self::VERSION => self::VERSION_TWO);
+		
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_REGION, $regionId, $feeds), $query);
 	}
 	
 	/* Protected Methods

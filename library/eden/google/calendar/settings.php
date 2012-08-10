@@ -23,9 +23,7 @@ class Eden_Google_Calendar_Settings extends Eden_Google_Base {
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
-	-------------------------------*/
-	protected $_settingId	= NULL;
-	 
+	-------------------------------*/ 
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -53,28 +51,16 @@ class Eden_Google_Calendar_Settings extends Eden_Google_Base {
 	}
 	 
 	/**
-	 * Returns all user settings for the authenticated user. 
+	 * Returns a single user setting
 	 *
+	 * @param string Name of the user setting.
 	 * @return array
 	 */
-	public function getSpecific() {
+	public function getSpecific($setting) {
 		
-		return $this->_getResponse(sprintf(self::URL_CALENDAR_SETTINGS_GET, $this->_settingId));
+		return $this->_getResponse(sprintf(self::URL_CALENDAR_SETTINGS_GET, $setting));
 	}
 	
-	/**
-	 * Set calendar id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setSettingId($settingId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_settingId = $settingId;
-		
-		return $this;
-	}
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

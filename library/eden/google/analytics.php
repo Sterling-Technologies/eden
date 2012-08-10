@@ -47,6 +47,26 @@ class Eden_Google_Analytics extends Eden_Google_Base {
 		return Eden_Google_Analytics_Management::i($this->_token);
 	}
 	
+	/**
+	 * Returns Google analytics reporting
+	 *
+	 * @return Eden_Google_Analytics_Reporting
+	 */
+	public function reporting() {
+			
+		return Eden_Google_Analytics_Reporting::i($this->_token);
+	}
+	
+	/**
+	 * Returns Google analytics multichannel
+	 *
+	 * @return Eden_Google_Analytics_Multichannel
+	 */
+	public function multiChannel() {
+			
+		return Eden_Google_Analytics_Multichannel::i($this->_token);
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

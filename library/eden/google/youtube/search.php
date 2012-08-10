@@ -23,11 +23,9 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_query 		= NULL;
 	protected $_startIndex	= NULL;
 	protected $_maxResults	= NULL;
 	protected $_orderBy		= NULL;
-	protected $_version		= '2';
 	
 	/* Private Properties
 	-------------------------------*/
@@ -45,20 +43,6 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Set the keyword yoy want to search
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setQuery($query) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_query = $query;
-		
-		return $this;
-	}
-	
 	/**
 	 * Set start index
 	 *
@@ -92,7 +76,7 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	 *
 	 * @return this
 	 */
-	public function setOrderByRelevance() {
+	public function orderByRelevance() {
 		$this->_orderBy = 'relevance';
 		
 		return $this;
@@ -103,7 +87,7 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	 *
 	 * @return this
 	 */
-	public function setOrderByPublished() {
+	public function orderByPublished() {
 		$this->_orderBy = 'published';
 		
 		return $this;
@@ -114,7 +98,7 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	 *
 	 * @return this
 	 */
-	public function setOrderByViewCount() {
+	public function orderByViewCount() {
 		$this->_orderBy = 'viewCount';
 		
 		return $this;
@@ -125,7 +109,7 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	 *
 	 * @return this
 	 */
-	public function setOrderByRating() {
+	public function orderByRating() {
 		$this->_orderBy = 'rating';
 		
 		return $this;
@@ -134,16 +118,20 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	/**
 	 * Returns a collection of videos that match the API request parameters.
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getList() {
+	public function search($queryString) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
 		//populate parameters
 		$query = array(
-			self::QUERY			=> $this->_query,
-			self::START_INDEX	=> $this->_startIndex,
-			self::MAX_RESULTS	=> $this->_maxResults,
-			self::VERSION		=> $this->_version,	//Gdata version
-			self::ORDER_BY		=> $this->_orderBy);	
+			self::QUERY			=> $queryString,
+			self::VERSION		=> self::VERSION_TWO,	
+			self::START_INDEX	=> $this->_startIndex,	//optional
+			self::MAX_RESULTS	=> $this->_maxResults,	//optional
+			self::ORDER_BY		=> $this->_orderBy);	//optional
 		
 		return $this->_getResponse(self::URL_YOUTUBE_SEARCH, $query);
 	}

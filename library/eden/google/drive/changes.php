@@ -24,8 +24,6 @@ class Eden_Google_Drive_Changes extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_fileId	= NULL;
-	 
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -55,27 +53,15 @@ class Eden_Google_Drive_Changes extends Eden_Google_Base {
 	/**
 	 * Gets a specific changes.
 	 *
+	 * @param string The ID of the change
 	 * @return array
 	 */
-	public function getSpecific() {
-		
-		return $this->_getResponse(sprintf(self::URL_DRIVE_CHANGES_GET, $this->_fileId));
-	}
-	
-	/**
-	 * The ID for the file
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setFileId($fileId) {
-		//argument 1 must be a string
+	public function getSpecific($changeId) {
+		//argument test
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_fileId = $fileId;
 		
-		return $this;
+		return $this->_getResponse(sprintf(self::URL_DRIVE_CHANGES_GET, $changeId));
 	}
-	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

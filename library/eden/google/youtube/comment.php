@@ -24,12 +24,6 @@ class Eden_Google_Youtube_Comment extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_videoId 	= NULL;
-	protected $_developerId	= NULL;
-	protected $_comment		= NULL;
-	protected $_commentId	= NULL;
-	protected $_version		= '2';
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -51,107 +45,94 @@ class Eden_Google_Youtube_Comment extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Youtube video id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setVideoId($videoId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_videoId = $videoId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Youtube comment id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setCommentId($commentId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_commentId = $commentId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set text comment
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setComment($comment) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_comment = $comment;
-		
-		return $this;
-	}
-	
-	/**
 	 * Returns a collection of videos that match the API request parameters.
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getList() {
+	public function getList($videoId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_GET_COMMENTS, $this->_videoId));
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_GET_COMMENTS, $videoId));
 	}
 	
 	/**
 	 * Returns a specific comment
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function getSpecific() {
+	public function getSpecific($videoId, $commentId) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_COMMENTS, $this->_videoId, $this->_commentId));
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_COMMENTS, $videoId, $commentId));
 	}
 	
 	/**
 	 * Add comment to a video
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function addComment() {
+	public function addComment($videoId, $comment) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
 		//make a xml template file
 		$query = Eden_Template::i()
-			->set(self::COMMENT, $this->_comment)
+			->set(self::COMMENT, $comment)
 			->parsePHP(dirname(__FILE__).'/template/addcomment.php');
 		
-		return $this->_post(sprintf(self::URL_YOUTUBE_GET_COMMENTS, $this->_videoId), $query);
+		return $this->_post(sprintf(self::URL_YOUTUBE_GET_COMMENTS, $videoId), $query);
 	}
 		
 	/**
 	 * Reply to a comment in a video
 	 *
+	 * @param string
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function replyToComment() {
+	public function replyToComment($videoId,$commentId, $comment) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string');	//argument 3 must be a string
 
 		//make a xml template file
 		$query = Eden_Template::i()
-			->set(self::COMMENT, $this->_comment)
-			->set(self::COMMENT_ID, $this->_commentId)
-			->set(self::VIDEO_ID, $this->_videoId)
+			->set(self::COMMENT, $comment)
+			->set(self::COMMENT_ID, $commentId)
+			->set(self::VIDEO_ID, $videoId)
 			->parsePHP(dirname(__FILE__).'/template/replytocomment.php');
 		
-		return $this->_post(sprintf(self::URL_YOUTUBE_GET_COMMENTS, $this->_videoId), $query);
+		return $this->_post(sprintf(self::URL_YOUTUBE_GET_COMMENTS, $videoId), $query);
 	}
 	
 	/**
 	 * Delete a comment
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function delete() {
+	public function delete($videoId, $commentId) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 	 
-		return $this->_delete(sprintf(self::URL_YOUTUBE_COMMENTS, $this->_videoId, $this->_commentId));
+		return $this->_delete(sprintf(self::URL_YOUTUBE_COMMENTS, $videoId, $commentId));
 	}
 	
 	/* Protected Methods

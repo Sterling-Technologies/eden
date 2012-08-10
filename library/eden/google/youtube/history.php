@@ -25,14 +25,6 @@ class Eden_Google_Youtube_History extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_historyId 	= NULL;
-	
-	protected $_videoId 	= NULL;
-	protected $_developerId	= NULL;
-	protected $_comment		= NULL;
-	protected $_commentId	= NULL;
-	protected $_version		= '2';
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -54,20 +46,6 @@ class Eden_Google_Youtube_History extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Watch history event id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setHistoryId($historyId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_historyId = $historyId;
-		
-		return $this;
-	}
-		
-	/**
 	 * Retrieve a user's watch history feed.
 	 *
 	 * @return array
@@ -75,7 +53,7 @@ class Eden_Google_Youtube_History extends Eden_Google_Base {
 	public function getList() {
 		//populate fields
 		$query = array(
-			self::VERSION	=> $this->_version,
+			self::VERSION	=> self::VERSION_TWO,
 			self::RESPONSE	=> self::JSON_FORMAT);
 		
 		return $this->_getResponse(sprintf(self::URL_YOUTUBE_HISTORY), $query);
@@ -84,11 +62,14 @@ class Eden_Google_Youtube_History extends Eden_Google_Base {
 	/**
 	 * Delete a specific history
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function deleteSpecific() {
+	public function deleteSpecific($historyId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
 	
-		return $this->_delete(sprintf(self::URL_YOUTUBE_HISTORY_GET, $this->_historyId));
+		return $this->_delete(sprintf(self::URL_YOUTUBE_HISTORY_GET, $historyId));
 	}
 	
 	/**

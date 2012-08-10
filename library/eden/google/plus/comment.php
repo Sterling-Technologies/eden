@@ -24,10 +24,8 @@ class Eden_Google_Plus_Comment extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/ 
-	protected $_activityId	= NULL;
 	protected $_pageToken	= NULL;
 	protected $_maxResults	= NULL;
-	protected $_commentId 	= NULL;
 	protected $_sortOrder 	= NULL;
 	
 	/* Private Properties
@@ -47,29 +45,32 @@ class Eden_Google_Plus_Comment extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set activity Id
+	 * The continuation token, used to page through large result sets. 
+	 * To get the next page of results, set this parameter to the 
+	 * value of "nextPageToken" from the previous response. 
 	 *
 	 * @param string
-	 * @return array
+	 * @return this
 	 */
-	public function setActivityId($activityId) {
+	public function setPageToken($pageToken) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_activityId = $activityId;
+		$this->_pageToken = $pageToken;
 		
 		return $this;
 	}
 	
-	/** 
-	 * Set comment Id
+	/**
+	 * The maximum number of people to include in the response, 
+	 * used for paging.
 	 *
-	 * @param string
-	 * @return array
+	 * @param integer
+	 * @return this
 	 */
-	public function setCommentId($commentId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_commentId = $commentId;
+	public function setMaxResults($maxResults) {
+		//argument 1 must be a integer
+		Eden_Google_Error::i()->argument(1, 'int');
+		$this->_maxResults = $maxResults;
 		
 		return $this;
 	}
@@ -89,26 +90,33 @@ class Eden_Google_Plus_Comment extends Eden_Google_Base {
 	/**
 	 * List all of the comments for an activity.
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getList() {
+	public function getList($activityId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
 		//populate fields
 		$query = array(
-			self::MAX_RESULTS	=> $this->_maxResults,
-			self::PAGE_TOKEN	=> $this->_pageToken,
-			self::SORT			=> $this->_sortOrder);
+			self::MAX_RESULTS	=> $this->_maxResults,		//optional
+			self::PAGE_TOKEN	=> $this->_pageToken,		//optional
+			self::SORT			=> $this->_sortOrder);		//optional
 		
-		return $this->_getResponse(sprintf(self::URL_COMMENTS_LIST, $this->_activityId), $query);
+		return $this->_getResponse(sprintf(self::URL_COMMENTS_LIST, $activityId), $query);
 	}
 	
 	/**
 	 * Get a comment
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getSpecific() {
+	public function getSpecific($commentId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
 		
-		return $this->_getResponse(sprintf(self::URL_COMMENTS_GET));
+		return $this->_getResponse(sprintf(self::URL_COMMENTS_GET, $commentId));
 	}
 	
 	

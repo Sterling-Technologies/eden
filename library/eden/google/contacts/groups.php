@@ -24,13 +24,6 @@ class Eden_Google_Contacts_Groups extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_userEmail	= 'default';
-	protected $_version		= '3.0';
-	protected $_title		= NULL;
-	protected $_description	= NULL;
-	protected $_info		= NULL;
-	protected $_groupId		= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -48,127 +41,85 @@ class Eden_Google_Contacts_Groups extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUserEmail($userEmail) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userEmail = $userEmail;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setGroupId($groupId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_groupId = $groupId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set group title
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setTitle($title) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_title = $title;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set group description
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setDescription($description) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_description = $description;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set group description
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setInfo($info) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_info = $info;
-		
-		return $this;
-	}
-	
-	/**
 	 * Retrieve all group list
 	 *
+	 * @param string
 	 * return array
 	 */
-	public function getList() {
+	public function getList($userEmail = self::DEFAULT_VALUE) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
 		//populate fields
 		$query = array(
-			self::VERSION 	=> $this->_version,
+			self::VERSION 	=> self::VERSION_THREE,
 			self::RESPONSE	=> self::JSON_FORMAT);
 		
-		return $this->_getResponse(sprintf(self::URL_CONTACTS_CONTACTS_LIST, $this->_userEmail), $query);
+		return $this->_getResponse(sprintf(self::URL_CONTACTS_CONTACTS_LIST, $userEmail), $query);
 	}
 	
 	/**
 	 * Retrieve single group list
 	 *
+	 * @param string
+	 * @param string
 	 * return array
 	 */
-	public function getSpecific() {
+	public function getSpecific($groudId, $userEmail = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
+		
 		//populate fields
 		$query = array(
-			self::VERSION 	=> $this->_version,
+			self::VERSION 	=> self::VERSION_THREE,
 			self::RESPONSE	=> self::JSON_FORMAT);
 		
-		return $this->_getResponse(sprintf(self::URL_CONTACTS_GROUPS_GET, $this->_userEmail, $this->_groupId), $query);
+		return $this->_getResponse(sprintf(self::URL_CONTACTS_GROUPS_GET, $userEmail, $groupId), $query);
 	}
 	
 	/**
 	 * Retrieve all group list
 	 *
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
 	 * return array
 	 */
-	public function create() {
+	public function create($title, $description, $info, $userEmail = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string')		//argument 3 must be a string
+			->argument(4, 'string');	//argument 4 must be a string
+		
 		//make a xml template
 		$query = Eden_Template::i()
-			->set(self::TITLE, $this->_title)
-			->set(self::DESCRIPTION, $this->_description)
-			->set(self::INFO, $this->_info)
+			->set(self::TITLE, $title)
+			->set(self::DESCRIPTION, $description)
+			->set(self::INFO, $info)
 			->parsePHP(dirname(__FILE__).'/template/addgroups.php');
 			
-		return $this->_post(sprintf(self::URL_CONTACTS_GROUPS_LIST, $this->_userEmail), $query);
+		return $this->_post(sprintf(self::URL_CONTACTS_GROUPS_LIST, $userEmail), $query);
 	}
 	
 	/**
 	 * Delete a group
 	 *
+	 * @param string
+	 * @param string
 	 * return array
 	 */
-	public function delete() {
+	public function delete($groupId, $userEmail = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
-		return $this->_delete(sprintf(self::URL_CONTACTS_GROUPS_GET, $this->_userEmail, $this->_groupId), true);
+		return $this->_delete(sprintf(self::URL_CONTACTS_GROUPS_GET, $userEmail, $groupId), true);
 	}
 	
 	/* Protected Methods

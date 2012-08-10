@@ -24,9 +24,6 @@ class Eden_Google_Youtube_Activity extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_userId		= 'default';
-	protected $_version		= '2';
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -46,47 +43,40 @@ class Eden_Google_Youtube_Activity extends Eden_Google_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
-	/**
-	 * YouTube user ID.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUserId($userId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userId = $userId;
-		
-		return $this;
-	}
-	
+	-------------------------------*/	
 	/**
 	 * Retrieve all user's event
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getEvent() {
+	public function getEvent($userId = self::DEFAULT_VALUE) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
 		//populate fields
 		$query  = array(
 			self::RESPONSE	=> self::JSON_FORMAT,
-			self::VERSION	=> $this->_version);
+			self::VERSION	=> self::VERSION);
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_EVENT, $this->_userId), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_EVENT, $userId), $query);
 	}
 	
 	/**
 	 * Retrieve all user's subtivity
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getSubtivity() {
+	public function getSubtivity($userId = self::DEFAULT_VALUE) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
 		//populate fields
 		$query  = array(
 			self::RESPONSE	=> self::JSON_FORMAT,
-			self::VERSION	=> $this->_version);
+			self::VERSION	=> self::VERSION);
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_SUBTIVITY, $this->_userId), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_SUBTIVITY, $userId), $query);
 	}
 
 	/* Protected Methods

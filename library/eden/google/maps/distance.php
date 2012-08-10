@@ -8,7 +8,7 @@
  */
 
 /**
- * Google Map Static Class
+ * Google Map distance Class
  *
  * @package    Eden
  * @category   google
@@ -24,13 +24,10 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 	/* Protected Properties
 	-------------------------------*/
 	protected $_apiKey			= NULL;
-	protected $_origins			= NULL;
-	protected $_destinations	= NULL;
 	protected $_mode			= NULL;
 	protected $_language 		= NULL;
 	protected $_avoid 			= NULL;
 	protected $_units 			= NULL;
-	protected $_sensor 			= 'false';
 	
 	/* Private Properties
 	-------------------------------*/
@@ -42,36 +39,6 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 	
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Sets origin of direction
-	 *
-	 * @param string|int|float
-	 * @return this
-	 */
-	public function setOrigins($origins) {
-		//argument 1 must be a string, integer or float
-		Eden_Google_Error::i()->argument(1, 'string', 'int', 'float');	
-		
-		$this->_origins = $origins;
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets destination of direction
-	 *
-	 * @param string|int|float
-	 * @return this
-	 */
-	public function setDestinations($destination) {
-		//argument 1 must be a string, integer or float
-		Eden_Google_Error::i()->argument(1, 'string', 'int', 'float');	
-		
-		$this->_destinations = $destination;
-		
-		return $this;
-	}
-	
 	/**
 	 * Specifies the mode of transport to use when 
 	 * calculating directions is driving.
@@ -157,32 +124,29 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Specifies whether the application requesting 
-	 * elevation data is using a sensor (such as a GPS device) 
-	 * to determine the user's location
+	 * Returns travel distance and time for a matrix of origins and destinations
 	 *
-	 * @return this
-	 */
-	public function setSensor() {
-		$this->_sensor  = 'true';
-		
-		return $this;
-	}
-	
-	/**
-	 * Returns elevation information
-	 *
+	 * @param string|integer|float
+	 * @param string|integer|float
+	 * @param string
 	 * @return array
 	 */
-	public function getDistance() {
+	public function getDistance($origin, $destination, $sensor = 'false') {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string', 'int', 'float')		//argument 1 must be a string, integer or float
+			->argument(2, 'string', 'int', 'float')		//argument 2 must be a string, integer or float
+			->argument(3, 'string');					//argument 3 must be a string	
+			
 		//populate paramenter
 		$query = array(
-			'origins'		=> $this->_origins,			//required
-			'sensor'		=> $this->_sensor,			//required
-			'destinations'	=> $this->_destinations,	//required
-			'language'		=> $this->_language,
-			'avoid'			=> $this->_avoid,
-			'units'			=> $this->_units);	
+			'origins'		=> $origin,			
+			'sensor'		=> $sensor,			
+			'destinations'	=> $destination,	
+			'language'		=> $this->_language,	//optional
+			'avoid'			=> $this->_avoid,		//optional
+			'mode'			=> $this->_mode,		//optional
+			'units'			=> $this->_units);		//optional
 		
 		return $this->_getResponse(self::URL_MAP_DISTANCE, $query);
 	}

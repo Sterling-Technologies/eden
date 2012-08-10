@@ -25,10 +25,6 @@ class Eden_Google_Youtube_Profile extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_userId		= 'default';
-	protected $_videoId		= NULL;
-	protected $_userName	= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -50,96 +46,75 @@ class Eden_Google_Youtube_Profile extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * YouTube user ID.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUserId($userId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userId = $userId;
-		
-		return $this;
-	}
-	
-	/**
-	 * set user name.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUserName($userName) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userName = $userName;
-		
-		return $this;
-	}
-	
-	/**
-	 * YouTube video ID.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setVideoId($videoId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_videoId = $videoId;
-		
-		return $this;
-	}
-	
-	/**
 	 * Returns a collection of videos that match the API request parameters.
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getlist() {
+	public function getlist($userId = self::DEFAULT_VALUE) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
 		//populate fields
 		$query  = array(self::RESPONSE => self::JSON_FORMAT);
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_PROFILE, $this->_userId), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_PROFILE, $userId), $query);
 	}
 	
 	/**
 	 * Returns all videos uploaded by user,
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getUserVideoUploads() {
+	public function getUserVideoUploads($userId = self::DEFAULT_VALUE) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
 		//populate fields
 		$query  = array(self::RESPONSE => self::JSON_FORMAT);
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_UPLOADS, $this->_userId), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_UPLOADS, $userId), $query);
 	}
 	
 	/**
 	 * Returns specific videos uploaded by user,
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function getSpecificUserVideo() {
+	public function getSpecificUserVideo($videoId, $userId = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
+			
 		//populate fields
 		$query  = array(self::RESPONSE => self::JSON_FORMAT);
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_GET, $this->_userId, $this->_videoId), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_GET, $userId, $videoId), $query);
 	}
 	
 	/**
 	 * Activate user account for youtube 
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function activateAccount() {
+	public function activateAccount($userName, $userId = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
 		//make a xml template
 		$query = Eden_Template::i()
-			->set(self::USER_NAME, $this->_userName)
+			->set(self::USER_NAME, $userName)
 			->parsePHP(dirname(__FILE__).'/template/activate.php');
 		
-		return $this->_put(sprintf(self::URL_YOUTUBE_PROFILE, $this->_userId), $query);
+		return $this->_put(sprintf(self::URL_YOUTUBE_PROFILE, $userId), $query);
 	}
 	
 	/* Protected Methods

@@ -23,10 +23,6 @@ class Eden_Google_Contacts_Photo extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_userEmail	= 'default';
-	protected $_version		= '3.0';
-	protected $_contactId	= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -42,71 +38,42 @@ class Eden_Google_Contacts_Photo extends Eden_Google_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
-	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUserEmail($userEmail) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userEmail = $userEmail;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set contact id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setContactId($contactId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_contactId = $contactId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set etag
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setEtag($etag) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_etag = $etag;
-		
-		return $this;
-	}
-	
+	-------------------------------*/	
 	/**
 	 * Retrieve a single contact photo
 	 *
+	 * @param string
+	 * @param string
 	 * return array
 	 */
-	public function getImage() {
+	public function getImage($contactId, $userEmail = self::DAFAULT) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
+		
 		//populate fields
 		$query = array(
-			self::VERSION 	=> $this->_version,
+			self::VERSION 	=> self::VERSION_THREE,
 			self::RESPONSE	=> self::JSON_FORMAT);
 		
-		return $this->_getResponse(sprintf(self::URL_CONTACTS_GET_IMAGE, $this->_userEmail, $this->_contactId), $query);
+		return $this->_getResponse(sprintf(self::URL_CONTACTS_GET_IMAGE, $userEmail, $contactId), $query);
 	}
 	
 	/**
 	 * Delete a photo
 	 *
+	 * @param string
+	 * @param string
 	 * return array
 	 */
-	public function delete() {
+	public function delete($contactId, $userEmail = self::DAFAULT) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
-		return $this->_delete(sprintf(self::URL_CONTACTS_GET_IMAGE, $this->_userEmail, $this->_contactId), true);
+		return $this->_delete(sprintf(self::URL_CONTACTS_GET_IMAGE, $userEmail, contactId), true);
 	}
 	/* Protected Methods
 	-------------------------------*/

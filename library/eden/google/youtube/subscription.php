@@ -25,11 +25,6 @@ class Eden_Google_Youtube_Subscription extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_userId 			= 'default';
-	protected $_channel 		= NULL;
-	protected $_user	 		= NULL;
-	protected $_subscriptionId	= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -51,123 +46,93 @@ class Eden_Google_Youtube_Subscription extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set user id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUserId($userId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userId = $userId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set subscription id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setSubscriptionId($subscriptionId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_subscriptionId = $subscriptionId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set Channel
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setChannel($channel) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_channel = $channel;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set User name
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUser($user) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_user = $user;
-		
-		return $this;
-	}
-	
-	/**
 	 * Returns all user subscription
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getList() {
+	public function getList($userId = self::DEFAULT_VALUE) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
 		//populate fields
 		$query  = array(self::RESPONSE => self::JSON_FORMAT);
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_SUBSCRIPTION, $this->_userId), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_SUBSCRIPTION, $userId), $query);
 	}
 	
 	/**
 	 * Returns new user subscription
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getNewSubscription() {
+	public function getNewSubscription($userId = self::DEFAULT_VALUE) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
 		//populate fields
 		$query  = array(self::RESPONSE => self::JSON_FORMAT);
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_NEW_SUBSCRIPTION, $this->_userId), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_NEW_SUBSCRIPTION, $userId), $query);
 	}
 	
 	/**
 	 * Subscribe to a channel
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function subscribeToChannel() {
+	public function subscribeToChannel($channel, $userId = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 	
 		//make a xml template
 		$query = Eden_Template::i()
-			->set(self::CHANNEL, $this->_channel)
+			->set(self::CHANNEL, $channel)
 			->parsePHP(dirname(__FILE__).'/template/subscribe.php');
 		
-		return $this->_post(sprintf(self::URL_YOUTUBE_SUBSCRIPTION, $this->_userId), $query);
+		return $this->_post(sprintf(self::URL_YOUTUBE_SUBSCRIPTION, $userId), $query);
 	}
 	
 	/**
 	 * Subscribe to a users activity
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function subscribeToUser() {
+	public function subscribeToUser($user, $userId = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
 		//make a xml template
 		$query = Eden_Template::i()
-			->set(self::USER, $this->_user)
+			->set(self::USER, $user)
 			->parsePHP(dirname(__FILE__).'/template/subscribe.php');
 		
-		return $this->_post(sprintf(self::URL_YOUTUBE_SUBSCRIPTION, $this->_userId), $query);
+		return $this->_post(sprintf(self::URL_YOUTUBE_SUBSCRIPTION, $userId), $query);
 	}
 	
 	/**
 	 * Subscribe to a users activity
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function unsubscribe() {
+	public function unsubscribe($subscriptionId, $userId = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
-		return $this->_delete(sprintf(self::URL_YOUTUBE_UNSUBSCRIPTION, $this->_userId, $this->_subscriptionId));
+		return $this->_delete(sprintf(self::URL_YOUTUBE_UNSUBSCRIPTION, $userId, $subscriptionId));
 	}
 	
 	/* Protected Methods

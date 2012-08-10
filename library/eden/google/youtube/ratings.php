@@ -23,9 +23,6 @@ class Eden_Google_Youtube_Ratings extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_videoId 	= NULL;
-	protected $_ratings 	= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -45,78 +42,62 @@ class Eden_Google_Youtube_Ratings extends Eden_Google_Base {
 	}
 
 	/* Public Methods
-	-------------------------------*/
-	/**
-	 * Youtube video id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setVideoId($videoId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_videoId = $videoId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set video rating (1- 5)
-	 *
-	 * @param integer
-	 * @return this
-	 */
-	public function setRatings($ratings) {
-		//argument 1 must be a integer
-		Eden_Google_Error::i()->argument(1, 'int');
-		$this->_ratings = $ratings;
-		
-		return $this;
-	}
-	
+	-------------------------------*/	
 	/**
 	 * Add a numeric (1-5) video rating
 	 *
+	 * @param string
+	 * @param integer Video ratings (1-5)
 	 * @return array
 	 */
-	public function addRating() {
+	public function addRating($videoId, $rating) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')			//argument 1 must be a string
+			->argument(2, 'string', 'int');	//argument 2 must be a string or integer
 	
 		//make a xml template
 		$query = Eden_Template::i()
-			->set(self::RATINGS, $this->_ratings)
+			->set(self::RATINGS, $rating)
 			->parsePHP(dirname(__FILE__).'/template/addratings.php');
 			
-		return $this->_post(sprintf(self::URL_YOUTUBE_RATINGS, $this->_videoId), $query);
+		return $this->_post(sprintf(self::URL_YOUTUBE_RATINGS, $videoId), $query);
 	}
 	
 	/**
 	 * Like a video
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function like() {
+	public function like($videoId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
 	
 		//make a xml template
 		$query = Eden_Template::i()
 			->set(self::VALUE, self::LIKE)
 			->parsePHP(dirname(__FILE__).'/template/like.php');
 			
-		return $this->_post(sprintf(self::URL_YOUTUBE_RATINGS, $this->_videoId), $query);
+		return $this->_post(sprintf(self::URL_YOUTUBE_RATINGS, $videoId), $query);
 	}
 	
 	/**
 	 * Dislike a video
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function dislike() {
+	public function dislike($videoId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
 		
 		//make a xml template
 		$query = Eden_Template::i()
 			->set(self::VALUE, self::DISLIKE)
 			->parsePHP(dirname(__FILE__).'/template/like.php');
 		
-		return $this->_post(sprintf(self::URL_YOUTUBE_RATINGS, $this->_videoId), $query);
+		return $this->_post(sprintf(self::URL_YOUTUBE_RATINGS, $videoId), $query);
 	}
 	
 	/* Protected Methods

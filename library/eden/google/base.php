@@ -126,6 +126,13 @@ class Eden_Google_Base extends Eden_Class {
 	const COUNTRY				= 'country';
 	const NOTES					= 'notes';
 	const EMAIL					= 'email';
+	const PRIMARY				= 'primary';
+	const DEFAULT_VALUE			= 'default';
+	const VERSION_THREE			= '3.0';
+	const VERSION_TWO			= '2';
+	const ME					= 'me';
+	const PUBLIC_DATA			= 'public';
+	const ALL					= '~all';
 
 	/* Public Properties
 	-------------------------------*/
@@ -269,6 +276,26 @@ class Eden_Google_Base extends Eden_Class {
 		return $array;
 	}
 	
+	protected function _reset() {
+		//foreach this as key => value
+		foreach ($this as $key => $value) {
+			//if the value of key is not array
+			if(!is_array($this->$key)) {
+				//if key name starts at underscore, probably it is protected variable
+				if(preg_match('/^_/', $key)) {
+					//if the protected variable is not equal to token
+					//we dont want to unset the access token
+					if($key != '_token') {
+						//reset all protected variables that currently use
+						$this->$key = NULL;
+					}
+				}
+			} 
+        } 
+		
+		return $this;
+	}
+	
 	protected function _customPost($url, array $query = array()) {
 		//add access token to query
 		$query[self::ACCESS_TOKEN] = $this->_token;
@@ -297,6 +324,9 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['url'] 			= $url;
 		$this->_meta['headers'] 		= $this->_headers;
 		$this->_meta['query'] 			= $query;
+		
+		//reset protected variables
+		$this->_reset(); 
 		
 		return $response;
 	}
@@ -327,6 +357,9 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta 					= $curl->getMeta();
 		$this->_meta['url'] 			= $url;
 		$this->_meta['headers'] 		= $this->_headers;
+		
+		//reset protected variables
+		$this->_reset(); 
 		
 		//check if response is in json format
 		if($this->isJson($response)) {
@@ -370,7 +403,10 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['query']		= $query;
 		$this->_meta['curl']		= $curl->getMeta();
 		$this->_meta['response']	= $response;
-	
+		
+		//reset protected variables
+		$this->_reset(); 
+		
 		//check if response is in xml format
 		if($this->isXml($response)) {
 			//if it is xml, convert it to array
@@ -420,6 +456,9 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['headers'] 		= $this->_headers;
 		$this->_meta['query'] 			= $query;
 		
+		//reset protected variables
+		$this->_reset(); 
+		
 		return $response;
 	}
 	
@@ -457,6 +496,9 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['url'] 			= $url;
 		$this->_meta['headers'] 		= $this->_headers;
 		$this->_meta['query'] 			= $query;
+		
+		//reset protected variables
+		$this->_reset(); 
 		
 		//check if response is in json format
 		if($this->isJson($response)) {
@@ -516,6 +558,9 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['headers'] 		= $this->_headers;
 		$this->_meta['query'] 			= $query;
 		
+		//reset protected variables
+		$this->_reset(); 
+		
 		//check if response is in json format
 		if($this->isJson($response)) {
 			//else it is in json format, covert it to array
@@ -555,7 +600,10 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['url'] 			= $url;
 		$this->_meta['headers'] 		= $this->_headers;
 		$this->_meta['query'] 			= $query;
-	
+		
+		//reset protected variables
+		$this->_reset(); 
+		
 		//check if response is in xml format
 		if($this->isXml($response)) {
 			//if it is xml, convert it to array

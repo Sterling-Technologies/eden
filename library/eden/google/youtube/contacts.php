@@ -24,10 +24,6 @@ class Eden_Google_Youtube_Contacts extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_userId		= 'default';
-	protected $_userName	= NULL;
-	protected $_status		= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -49,117 +45,106 @@ class Eden_Google_Youtube_Contacts extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * YouTube user ID.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUserId($userId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userId = $userId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set user name or channel name.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUserName($userName) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userName = $userName;
-		
-		return $this;
-	}
-	
-	/**
-	 * Accept a contacts
-	 *
-	 * @return this
-	 */
-	public function accept() {
-		$this->_status = 'accepted';
-		
-		return $this;
-	}
-	
-	/**
-	 * Reject a contacts
-	 *
-	 * @return this
-	 */
-	public function reject() {
-		$this->_status = 'rejected';
-		
-		return $this;
-	}
-	
-	/**
 	 * Retrieve all user's contacts
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getList() {
+	public function getList($userId = self::DEFAULT_VALUE) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
 		//populate fields
 		$query  = array(self::RESPONSE => self::JSON_FORMAT);
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_CONTACTS, $this->_userId), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_CONTACTS, $userId), $query);
 	}
 	
 	/**
 	 * Retrieve specific user's contacts
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function getSpecific() {
+	public function getSpecific($userName, $userId = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		//populate fields
 		$query  = array(self::RESPONSE => self::JSON_FORMAT);
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_CONTACTS_GET, $this->_userId, $this->_userName), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_CONTACTS_GET, $userId, $userName), $query);
 	}
 	
 	/**
 	 * Delete a contact
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function delete() {
+	public function delete($userName, $userId = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
-		return $this->_delete(sprintf(self::URL_YOUTUBE_CONTACTS_GET, $this->_userId, $this->_userName));
+		return $this->_delete(sprintf(self::URL_YOUTUBE_CONTACTS_GET, $userId, $userName));
 	}
 	
 	/**
 	 * Add contacts
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function addContacts() {
+	public function addContacts($userName, $userId = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 
 		//make a xml template file
 		$query = Eden_Template::i()
-			->set(self::USER_NAME, $this->_userName)
+			->set(self::USER_NAME, $userName)
 			->parsePHP(dirname(__FILE__).'/template/activate.php');
 		
-		return $this->_post(sprintf(self::URL_YOUTUBE_CONTACTS, $this->_userId), $query);
+		return $this->_post(sprintf(self::URL_YOUTUBE_CONTACTS, $userId), $query);
 	}
 	
 	/**
 	 * Update contacts
 	 *
+	 * @param string
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function updateContacts() {
+	public function updateContacts($userName, $status, $userId = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string');	//argument 3 must be a string
+		
+		//if the input value is not allowed
+		if(!in_array($status, array('accepted', 'rejected'))) {
+			//throw error
+			Eden_Google_Error::i()
+				->setMessage(Eden_Google_Error::INVALID_STATUS) 
+				->addVariable($status)
+				->trigger();
+		}
 		
 		//make a xml template file
 		$query = Eden_Template::i()
-			->set(self::STATUS, $this->_status)
+			->set(self::STATUS, $status)
 			->parsePHP(dirname(__FILE__).'/template/updatecontacts.php');
 			
-		return $this->_put(sprintf(self::URL_YOUTUBE_CONTACTS_GET, $this->_userId, $this->_userName), $query);
+		return $this->_put(sprintf(self::URL_YOUTUBE_CONTACTS_GET, $userId, $userName), $query);
 	}
 	
 	/* Protected Methods

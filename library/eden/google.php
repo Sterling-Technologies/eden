@@ -32,6 +32,8 @@ require_once dirname(__FILE__).'/google/contacts/groups.php';
 require_once dirname(__FILE__).'/google/contacts/photo.php';
 require_once dirname(__FILE__).'/google/contacts.php';
 require_once dirname(__FILE__).'/google/analytics/management.php';
+require_once dirname(__FILE__).'/google/analytics/reporting.php';
+require_once dirname(__FILE__).'/google/analytics/multichannel.php';
 require_once dirname(__FILE__).'/google/analytics.php';
 require_once dirname(__FILE__).'/google/plus/activity.php';
 require_once dirname(__FILE__).'/google/plus/comment.php';
@@ -56,7 +58,7 @@ require_once dirname(__FILE__).'/google/youtube/ratings.php';
 require_once dirname(__FILE__).'/google/youtube/search.php';
 require_once dirname(__FILE__).'/google/youtube/subscription.php';
 require_once dirname(__FILE__).'/google/youtube/upload.php';
-//require_once dirname(__FILE__).'/google/youtube/video.php';
+require_once dirname(__FILE__).'/google/youtube/video.php';
 require_once dirname(__FILE__).'/google/youtube.php';
 
 /**
@@ -131,6 +133,19 @@ class Eden_Google extends Eden_Class {
 		Eden_Google_Error::i()->argument(1, 'string');
 		
 		return Eden_Google_Calendar::i($token);
+	}
+	
+	/**
+	 * Returns google checkout methods
+	 *
+	 * @param *string 
+	 * @return Eden_Google_Checkout_Form
+	 */
+	public function checkout($merchantId) {
+		//Argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
+		return Eden_Google_Checkout_Form::i($merchantId);
 	}
 	
 	/**

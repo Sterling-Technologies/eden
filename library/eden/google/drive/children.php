@@ -24,13 +24,6 @@ class Eden_Google_Drive_Children extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_folderId	= NULL;
-	protected $_childrenId	= NULL;
-	protected $_kind		= NULL;
-	protected $_id			= NULL;
-	protected $_selfLink	= NULL;
-	protected $_childLink	= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -50,133 +43,66 @@ class Eden_Google_Drive_Children extends Eden_Google_Base {
 	/**
 	 * Removes a child from a folder
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function delete() {
+	public function delete($folderId, $childId) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argunemt 1 must be a string
+			->argument(2, 'string');	//argunemt 2 must be a string
 		
-		return $this->_delete(sprintf(self::URL_CHILDREN_SPECIFIC, $this->_fileId, $this->_childrenId));
+		return $this->_delete(sprintf(self::URL_CHILDREN_SPECIFIC, $fileId, $childId));
 	}
 	
 	/**
-	 * Lists the changes for a user.
+	 * Returns list of folder's children
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getList() {
+	public function getList($folderId) {
+		//argument test
+		Eden_Google_Error::i()->argument(1, 'string');
 		
-		return $this->_getResponse(sprintf(self::URL_CHANGES_LIST, $this->_folderId));
+		return $this->_getResponse(sprintf(self::URL_CHANGES_LIST, $folderId));
 	}
 	
 	/**
 	 * Gets a specific child reference
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function getSpecific() {
+	public function getSpecific($folderId, $childId) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argunemt 1 must be a string
+			->argument(2, 'string');	//argunemt 2 must be a string
 		
-		return $this->_getResponse(sprintf(self::URL_CHILDREN_SPECIFIC, $this->_fileId, $this->_childrenId));
+		return $this->_getResponse(sprintf(self::URL_CHILDREN_SPECIFIC, $fileId, $childId));
 	}
 	
 	/**
 	 * Inserts a file into a folder
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function insert() {
+	public function insert($folderId, $childId) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argunemt 1 must be a string
+			->argument(2, 'string');	//argunemt 2 must be a string
+			
 		//populate fields
-		$query = array(
-			self::KIND			=> $this->_kind,
-			self::ID			=> $this->_id,	
-			self::SELF_LINK		=> $this->_selfLink,
-			self::CHILD_LINK	=> $this->_childLink);
+		$query = array(self::ID => $childId);
 		
-		return $this->_post(sprintf(self::URL_CHANGES_LIST, $this->_folderId), $query);
+		return $this->_post(sprintf(self::URL_CHANGES_LIST, $folderId), $query);
 	}
-	 
-	/**
-	 * The ID of the child. 
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setChildId($childId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_childId = $childId;
-		
-		return $this;
-	}
-	
-	/**
-	 * A link to the child.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setChildLink($childLink) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_childLink = $childLink;
-		
-		return $this;
-	}
-	
-	/**
-	 * The ID of the folder. 
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setFolderId($folderId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_folderId = $folderId;
-		
-		return $this;
-	}
-	
-	/**
-	 * The ID of the child.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setId($id) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_id = $id;
-		
-		return $this;
-	}
-	
-	/**
-	 * This is always drive#childReference.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setKind($kind) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_kind = $kind;
-		
-		return $this;
-	}
-	
-	/**
-	 * A link back to this reference.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setSelfLink($selfLink) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_selfLink = $selfLink;
-		
-		return $this;
-	}
-	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

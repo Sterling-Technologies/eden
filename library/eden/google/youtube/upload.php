@@ -23,16 +23,6 @@ class Eden_Google_Youtube_Upload extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_userId		= 'default';
-	protected $_version		= '2';
-	protected $_title		= NULL;
-	protected $_description	= NULL;
-	protected $_category	= NULL;
-	protected $_keyword		= NULL;
-	protected $_uploadToken	= NULL;
-	protected $_redirectUrl	= NULL;
-	protected $_postUrl		= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -54,145 +44,50 @@ class Eden_Google_Youtube_Upload extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * YouTube user ID.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUserId($userId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userId = $userId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set video title.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setTitle($title) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_title = $title;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set video description.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setDescription($description) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_description = $description;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set video category.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setCategory($category) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_category = $category;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set video Keyword.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setKeyword($keyword) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_keyword = $keyword;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set upload token from getUploadToken()
-	 *
-	 * @param string|object
-	 * @return this
-	 */
-	public function setUploadToken($uploadToken) {
-		//argument 1 must be a string or object
-		Eden_Google_Error::i()->argument(1, 'object', 'string');
-		$this->_uploadToken = $uploadToken;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set redirect url
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setRedirectUrl($redirectUrl) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_redirectUrl = $redirectUrl;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set post url
-	 *
-	 * @param string|object
-	 * @return this
-	 */
-	public function setPostUrl($postUrl) {
-		//argument 1 must be a string or object
-		Eden_Google_Error::i()->argument(1, 'object', 'string');
-		$this->_postUrl = $postUrl;
-		
-		return $this;
-	}
-	
-	/**
 	 * Get upload token
 	 *
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function getUploadToken() {
+	public function getUploadToken($title, $description, $category, $keyword, $userId = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string')		//argument 3 must be a string
+			->argument(4, 'string');	//argument 4 must be a string
+			
 		//make a xml template
 		$query = Eden_Template::i()
-			->set(self::TITLE, $this->_title)
-			->set(self::DESCRIPTION, $this->_description)
-			->set(self::CATEGORY, $this->_category)
-			->set(self::KEYWORD, $this->_keyword)
+			->set(self::TITLE, $title)
+			->set(self::DESCRIPTION, $description)
+			->set(self::CATEGORY, $category)
+			->set(self::KEYWORD, $keyword)
 			->parsePHP(dirname(__FILE__).'/template/upload.php');
 		
-		return $this->_upload(sprintf(self::URL_YOUTUBE_UPLOAD, $this->_userId), $query);
+		return $this->_upload(sprintf(self::URL_YOUTUBE_UPLOAD, $userId), $query);
 	}
 	
 	/**
 	 * Upload video to youtube
 	 *
-	 * @return string
+	 * @return form
 	 */
-	public function upload() {
+	public function upload($uploadToken, $postUrl, $redirectUrl) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'object', 'string')		//argument 1 must be a object or string
+			->argument(2, 'object', 'string')		//argument 2 must be a object or string
+			->argument(3, 'string');				//argument 3 must be a string
+			
 		//make a xml template
 		$query = Eden_Template::i()
-			->set(self::UPLOAD_TOKEN, $this->_uploadToken)
-			->set(self::REDIRECT_URL, $this->_redirectUrl)
-			->set(self::POST_URL, $this->_postUrl)
+			->set(self::UPLOAD_TOKEN, $uploadToken)
+			->set(self::REDIRECT_URL, $redirectUrl)
+			->set(self::POST_URL, $postUrl)
 			->parsePHP(dirname(__FILE__).'/template/form.php');
 		
 		return $query;

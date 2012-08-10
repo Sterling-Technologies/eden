@@ -25,9 +25,6 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 	/* Protected Properties
 	-------------------------------*/
 	protected $_apiKey		= NULL;
-	protected $_center		= NULL;
-	protected $_zoom		= NULL;
-	protected $_size		= NULL; 
 	protected $_scale		= NULL;
 	protected $_format		= NULL;
 	protected $_maptype		= NULL;
@@ -37,11 +34,9 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 	protected $_path		= NULL;
 	protected $_visible		= NULL;
 	protected $_style		= NULL;
-	protected $_location	= NULL;
 	protected $_heading		= NULL;
 	protected $_fov			= NULL;
 	protected $_pitch		= NULL;
-	protected $_sensor		= 'false';
 	
 	/* Private Properties
 	-------------------------------*/
@@ -59,59 +54,6 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 	
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Defines the center of the map, 
-	 * equidistant from all edges of the map.
-	 *
-	 * @param string|int|float
-	 * @param string|int|float
-	 * @return this
-	 */
-	public function setCenter($latitude, $longtitude) {
-		//argument testing
-		Eden_Google_Error::i()
-			->argument(1, 'string', 'int', 'float')		//argument 1 must be a string, integer or float
-			->argument(2, 'string', 'int', 'float');	//argument 2 must be a string, integer or float
-		
-		$this->_center = $latitude.', '.$longtitude;
-		
-		return $this;
-	}
-	
-	/**
-	 * Defines the zoom level of the map, 
-	 * which determines the magnification level of the map.
-	 *
-	 * @param int|float
-	 * @return this
-	 */
-	public function setZoom($zoom) {
-		//argument 1 must be a integer or float
-		Eden_Google_Error::i()->argument(1, 'int', 'float');		
-		
-		$this->_zoom = $zoom;
-		
-		return $this;
-	}
-	
-	/**
-	 * Defines the rectangular dimensions of the map image.
-	 *
-	 * @param integer
-	 * @param integer
-	 * @return this
-	 */
-	public function setSize($horizontal, $vertical) {
-		//argument testing
-		Eden_Google_Error::i()
-			->argument(1, 'int')	//argument 1 must be a integer 
-			->argument(2, 'int');	//argument 2 must be a integer 	
-		
-		$this->_size = $horizontal.'x'.$vertical;
-		
-		return $this;
-	}
-	
 	/**
 	 * Affects the number of pixels that are returned.
 	 *
@@ -290,24 +232,6 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 	}
 	
 	/**
-	 * The street location
-	 *
-	 * @param integer|string|float
-	 * @param integer|string|float
-	 * @return this
-	 */
-	public function setLocation($longtitude, $latitude) {
-		//argument testing
-		Eden_Google_Error::i()
-			->argument(1, 'int', 'string', 'float')		//argument 1 must be a integer, string or float 
-			->argument(2, 'int', 'string', 'float');	//argument 2 must be a integer, string or float
-		
-		$this->_location = $longtitude.','.$latitude;
-		
-		return $this;
-	}
-	
-	/**
 	 * Indicates the compass heading of the camera. 
 	 * Accepted values are from 0 to 360 (both values 
 	 * indicating North, with 90 indicating East, and 180 South).
@@ -358,68 +282,64 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 	}
 	
 	/**
-	 * specifies whether the application requesting the static 
-	 * map is using a sensor to determine the user's location.
-	 *
-	 * @return this
-	 */
-	public function setSensor() {
-		
-		$this->_sensor  = 'true';
-		
-		return $this;
-	}
-	
-	/**
 	 * Return url of the image map
 	 *
+	 * @param string Defines the center of the map, latitude,longitude pai or address pair
+	 * @param string Defines the zoom level of the map, which determines the magnification level of the map
+	 * @param string This parameter takes a string of the form {horizontal_value}x{vertical_value}
+	 * @param string
 	 * @return url
 	 */
-	public function getStaticMap() {
-		//location Parameters
-		$location = array(
-			'center'	=> $this->_center,	//required
-			'zoom'		=> $this->_zoom);	//required
-		
-		//map Parameters
-		$map = array(
-			'size'		=> $this->_size,	//required	
-			'scale'		=> $this->_scale,
-			'format'	=> $this->_format,
-			'maptype'	=> $this->_maptype,
-			'language'	=> $this->_language,
-			'region'	=> $this->_region);
-		
-		//feature Parameters
-		$feature = array(
-			'markers'	=> $this->_markers,
-			'path'		=> $this->_path,
-			'visible'	=> $this->_visible,
-			'style'		=> $this->_style);
-		
-		//reporting Parameters
-		$reporting = array('sensor' => $this->_sensor); //required
-		
-		//make a query
-		$query = array_merge($location, $map, $feature, $reporting);
-		
+	public function getStaticMap($center, $zoom, $size, $sensor = 'false') {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string')		//argument 3 must be a string
+			->argument(4, 'string');	//argument 4 must be a string	
+			
+		//populate fields
+		$query = array(
+			'center'	=> $center,	
+			'zoom'		=> $zoom,
+			'size'		=> $size,
+			'sensor' 	=> $sensor,		
+			'scale'		=> $this->_scale,		//optional
+			'format'	=> $this->_format,		//optional
+			'maptype'	=> $this->_maptype,		//optional
+			'language'	=> $this->_language,	//optional
+			'region'	=> $this->_region,		//optional
+			'markers'	=> $this->_markers,		//optional
+			'path'		=> $this->_path,		//optional
+			'visible'	=> $this->_visible,		//optional
+			'style'		=> $this->_style);		//optional
+	
 		return $this->_getResponse(self::URL_MAP_IMAGE_STATIC, $query);
 	}
 	
 	/**
 	 * Return url of the street map
 	 *
+	 * @param string Latitude,longitude pai or address pair
+	 * @param string Size is specified as {width}x{height}
+	 * @param string
 	 * @return url
 	 */
-	public function getStreetMap() {
+	public function getStreetMap($location, $size, $sensor = 'false') {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string');	//argument 3 must be a string
+			
 		//populate paramenter
 		$query = array(
-			'size'		=> $this->_size,		//required
-			'location'	=> $this->_location,	//required
-			'sensor'	=> $this->_sensor,		//required
-			'heading'	=> $this->_heading,
-			'fov'		=> $this->_fov,
-			'pitch'		=> $this->_pitch);	
+			'size'		=> $size,		
+			'location'	=> $location,	
+			'sensor'	=> $sensor,		
+			'heading'	=> $this->_heading,	//optional
+			'fov'		=> $this->_fov,		//optional
+			'pitch'		=> $this->_pitch);	//optional
 	
 		return $this->_getResponse(self::URL_MAP_IMAGE_STREET, $query);
 	}

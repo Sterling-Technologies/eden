@@ -29,9 +29,6 @@ class Eden_Google_Analytics_Management extends Eden_Google_Base {
 	-------------------------------*/ 
 	protected $_startIndex		= NULL;
 	protected $_maxResults		= NULL;
-	protected $_accountId		= '~all';
-	protected $_webPropertyId	= '~all';
-	protected $_profileId		= '~all';
 	
 	/* Private Properties
 	-------------------------------*/
@@ -78,48 +75,6 @@ class Eden_Google_Analytics_Management extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Account ID to retrieve web properties for
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setAccountId($accountId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_accountId = $accountId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Web property ID for the profiles to retrieve
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setWebPropertyId($webPropertyId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_webPropertyId = $webPropertyId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Profile ID to retrieve goals for.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setProfileId($profileId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_profileId = $profileId;
-		
-		return $this;
-	}
-	
-	/**
 	 * Returns all accounts to which the user has access.
 	 *
 	 * @return array
@@ -127,8 +82,8 @@ class Eden_Google_Analytics_Management extends Eden_Google_Base {
 	public function getAccounts() {
 		//populate parameters
 		$query = array(
-			self::START_INDEX	=> $this->_startIndex,
-			self::MAX_RESULTS	=> $this->_maxResults);	
+			self::START_INDEX	=> $this->_startIndex,		//optional
+			self::MAX_RESULTS	=> $this->_maxResults);		//optional
 		
 		return $this->_getResponse(self::URL_ANALYTICS_ACCOUNTS, $query);
 	}
@@ -136,43 +91,63 @@ class Eden_Google_Analytics_Management extends Eden_Google_Base {
 	/**
 	 * Returns web properties to which the user has access
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getWebProperties() {
+	public function getWebProperties($accountId = self::ALL) {
+		//argument test
+		Eden_Google_Error::i()->argument(1, 'string');
+		
 		//populate parameters
 		$query = array(
-			self::START_INDEX	=> $this->_startIndex,
-			self::MAX_RESULTS	=> $this->_maxResults);	
+			self::START_INDEX	=> $this->_startIndex,		//optional
+			self::MAX_RESULTS	=> $this->_maxResults);		//optional
 		
-		return $this->_getResponse(sprintf(self::URL_ANALYTICS_WEBPROPERTIES, $this->_accountId), $query);
+		return $this->_getResponse(sprintf(self::URL_ANALYTICS_WEBPROPERTIES, $accountId), $query);
 	}
 	
 	/**
 	 * Returns lists of profiles to which the user has access
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function getProfiles() {
+	public function getProfiles($accountId = self::ALL, $webPropertyId = self::ALL) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string	
+			
 		//populate parameters
 		$query = array(
-			self::START_INDEX	=> $this->_startIndex,
-			self::MAX_RESULTS	=> $this->_maxResults);	
+			self::START_INDEX	=> $this->_startIndex,		//optional
+			self::MAX_RESULTS	=> $this->_maxResults);		//optional
 		
-		return $this->_getResponse(sprintf(self::URL_ANALYTICS_PROFILE, $this->_accountId, $this->_webPropertyId), $query);
+		return $this->_getResponse(sprintf(self::URL_ANALYTICS_PROFILE, $accountId, $webPropertyId), $query);
 	}
 	
 	/**
 	 * Returns lists of goals to which the user has access
 	 *
+	 * @param string
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function getGoals() {
+	public function getGoals($accountId = self::ALL, $webPropertyId = self::ALL, $profileId = self::ALL) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string');	//argument 3 must be a string
+			
 		//populate parameters
 		$query = array(
-			self::START_INDEX	=> $this->_startIndex,
-			self::MAX_RESULTS	=> $this->_maxResults);	
+			self::START_INDEX	=> $this->_startIndex,		//optional
+			self::MAX_RESULTS	=> $this->_maxResults);		//optional
 		
-		return $this->_getResponse(sprintf(self::URL_ANALYTICS_GOALS, $this->_accountId, $this->_webPropertyId, $this->_profileId), $query);
+		return $this->_getResponse(sprintf(self::URL_ANALYTICS_GOALS, $accountId, $webPropertyId, $profileId), $query);
 	}
 	
 	/**
@@ -183,8 +158,8 @@ class Eden_Google_Analytics_Management extends Eden_Google_Base {
 	public function getSegments() {
 		//populate parameters
 		$query = array(
-			self::START_INDEX	=> $this->_startIndex,
-			self::MAX_RESULTS	=> $this->_maxResults);	
+			self::START_INDEX	=> $this->_startIndex,		///optional
+			self::MAX_RESULTS	=> $this->_maxResults);		//optional
 		
 		return $this->_getResponse(self::URL_ANALYTICS_SEGMENTS, $query);
 	}

@@ -23,8 +23,6 @@ class Eden_Google_Calendar_Freebusy extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_timeMin					= NULL;
-	protected $_timeMax					= NULL;
 	protected $_timeZone				= NULL;
 	protected $_groupExpansionMax		= NULL;
 	protected $_calendarExpansionMax	= NULL;
@@ -50,13 +48,28 @@ class Eden_Google_Calendar_Freebusy extends Eden_Google_Base {
 	 * Returns free/busy information 
 	 * for a set of calendars
 	 *
+	 * @param string|integer The start of the interval
+	 * @param string|integer The end of the interval
 	 * @return array
 	 */
-	public function query() {
+	public function query($startTime, $endTime) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string', 'int')		//argument 1 must be a string or integer
+			->argument(2, 'string', 'int');		//argument 2 must be a string or integer
+		
+		if(is_string($startTime)) {
+			$startTime = strtotime($startTime);
+		}
+		
+		if(is_string($endTime)) {
+			$endTime = strtotime($endTime);
+		}
+		
 		//populate fields
 		$query = array(
-			self::TIMEMIN				=> $this->_timeMin,
-			self::TIMEMAX				=> $this->_timeMax,
+			self::TIMEMIN				=> $startTime,
+			self::TIMEMAX				=> $endTime,
 			self::TIMEZONE				=> $this->_timeZone,
 			self::GROUP_EXPANSION		=> $this->_groupExpansionMax,
 			self::CALENDAR_EXPANSION	=> $this->_calendarExpansionMax,
@@ -103,42 +116,6 @@ class Eden_Google_Calendar_Freebusy extends Eden_Google_Base {
 		//argument 1 must be a string or integer
 		Eden_Google_Error::i()->argument(1, 'string', 'int');
 		$this->_items = $item;
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets Maximun time
-	 *
-	 * @param string|int
-	 * @return this
-	 */
-	public function setTimeMax($time) {
-		//argument 1 must be a string or integer
-		Eden_Google_Error::i()->argument(1, 'string', 'int');
-		if(is_string($time)) {
-			$time = strtotime($time);
-		}
-		
-		$this->_timeMax = $time;
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets Minimum time
-	 *
-	 * @param string|int
-	 * @return this
-	 */
-	public function setTimeMin($time) {
-		//argument 1 must be a string or integer
-		Eden_Google_Error::i()->argument(1, 'string', 'int');
-		if(is_string($time)) {
-			$time = strtotime($time);
-		}
-		
-		$this->_timeMin = $time;
 		
 		return $this;
 	}

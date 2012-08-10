@@ -8,7 +8,7 @@
  */
 
 /**
- * Google Map Static Class
+ * Google Map geocoding Class
  *
  * @package    Eden
  * @category   google
@@ -25,11 +25,9 @@ class Eden_Google_Maps_Geocoding extends Eden_Google_Base {
 	-------------------------------*/
 	protected $_apiKey		= NULL;
 	protected $_latlng		= NULL;
-	protected $_address		= NULL;
 	protected $_bounds		= NULL;
 	protected $_language	= NULL;
 	protected $_region		= NULL;
-	protected $_sensor		= 'false';
 	
 	/* Private Properties
 	-------------------------------*/
@@ -55,21 +53,6 @@ class Eden_Google_Maps_Geocoding extends Eden_Google_Base {
 			->argument(2, 'string', 'int', 'float');	//argument 2 must be a string, integer or float
 		
 		$this->_latlng = $latitude.','.$longtitude;
-		
-		return $this;
-	}
-	
-	/**
-	 * The address that you want to geocode. 
-	 *
-	 * @param string|int
-	 * @return this
-	 */
-	public function setAddress($address) {
-		//argument 1 must be a string or integer
-		Eden_Google_Error::i()->argument(1, 'string', 'integer');		
-		
-		$this->_address = $address;
 		
 		return $this;
 	}
@@ -120,31 +103,25 @@ class Eden_Google_Maps_Geocoding extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Indicates whether or not the geocoding request
-	 * comes from a device with a location sensor
-	 *
-	 * @return this
-	 */
-	public function setSensor() {
-		$this->_sensor  = 'true';
-		
-		return $this;
-	}
-	
-	/**
 	 * Returns geocode information
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function getGeocode() {
+	public function getGeocode($address, $sensor = 'false') {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
+			
 		//populate paramenter
 		$query = array(
-			'address'	=> $this->_address,		//required
-			'latlng'	=> $this->_latlng,		//required
-			'sensor'	=> $this->_sensor,		//required
-			'bounds'	=> $this->_bounds,
-			'language'	=> $this->_language,
-			'region'	=> $this->_region);	
+			'address'	=> $address,		
+			'sensor'	=> $sensor,		
+			'bounds'	=> $this->_bounds,		//optional
+			'language'	=> $this->_language,	//optional
+			'region'	=> $this->_region);		//optional
 	
 		return $this->_getResponse(self::URL_MAP_GEOCODING, $query);
 	}

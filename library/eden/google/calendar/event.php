@@ -28,11 +28,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/ 
-	protected $_summary		= NULL;
 	protected $_location	= NULL;
-	protected $_eventId		= NULL;
-	protected $_importId	= NULL;
-	protected $_destination	= NULL;
 	protected $_description	= NULL;
 	protected $_colorId		= NULL;
 	protected $_creator		= NULL;
@@ -44,7 +40,6 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	protected $_start 		= array();
 	protected $_end 		= array();
 	protected $_attendees 	= array();
-	protected $_calendarId 	= 'primary';
 	
 	/* Private Properties
 	-------------------------------*/
@@ -87,136 +82,193 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	/**
 	 * Create event
 	 *
+	 * @param string* Title of the calendar
+	 * @param string* Calendar identifier.
 	 * @return array
 	 */
-	public function create() {
+	public function create($summary, $calendarId = self::PRIMARY) {
+		//argument testing
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
+			
 		//populate fields
 		$query = array(
-			self::SUMMARY	=> $this->_summary,
-			self::LOCATION	=> $this->_location,
-			self::START		=> $this->_start,
-			self::END		=> $this->_end,
-			self::ATTENDEES	=> $this->_attendees);
+			self::SUMMARY	=> $summary,
+			self::LOCATION	=> $this->_location,	//optional
+			self::START		=> $this->_start,		//optional
+			self::END		=> $this->_end,			//optional
+			self::ATTENDEES	=> $this->_attendees);	//optional
 		
-		return $this->_post(sprintf(self::URL_CALENDAR_EVENT, $this->_calendarId), $query);
+		return $this->_post(sprintf(self::URL_CALENDAR_EVENT, $calendarId), $query);
 	}
 	
 	/**
 	 * Delete Calendar specific events
 	 *
+	 * @param string Event identifier
+	 * @param string Calendar identifier
 	 * @return array
 	 */
-	public function delete() {
+	public function delete($eventId, $calendarId = self::PRIMARY) {
+		//argument testing
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
-		return $this->_delete(sprintf(self::URL_CALENDAR, $this->_calendarId, $this->_eventId), $url);
+		return $this->_delete(sprintf(self::URL_CALENDAR, $calendarId, $eventId), $url);
 	}
 	
 	/**
 	 * Return all event fo calendar
 	 *
+	 * @param string Calendar identifier
 	 * @return array
 	 */
-	public function getEvent() {
+	public function getEvent($calendarId = self::PRIMARY) {
+		//argument 1 must be a string or integer
+		Eden_Google_Error::i()->argument(1, 'int', 'string');
 		
-		return $this->_getResponse(sprintf(self::URL_CALENDAR_EVENT, $this->_calendarId));
+		return $this->_getResponse(sprintf(self::URL_CALENDAR_EVENT, $calendarId));
 	}
 	
 	/**
 	 * Return instances of specific event
 	 *
+	 * @param string Event identifier
+	 * @param string Calendar identifier
 	 * @return array
 	 */
-	public function getInstances() {
+	public function getInstances($eventId, $calendarId = self::PRIMARY) {
+		//argument testing
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
-		return $this->_getResponse(sprintf(self::URL_CALENDAR_INSTANCES, $this->_calendarId, $this->_eventId));
+		return $this->_getResponse(sprintf(self::URL_CALENDAR_INSTANCES, $calendarId, $eventId));
 	}
 	
 	/**
 	 * Return specific event
 	 *
+	 * @param string Event identifier
+	 * @param string Calendar identifier
 	 * @return array
 	 */
-	public function getSpecificEvent() {
+	public function getSpecificEvent($eventId, $calendarId = self::PRIMARY) {
+		//argument testing
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
-		return $this->_getResponse(sprintf(self::URL_CALENDAR, $this->_calendarId, $this->_eventId));
+		return $this->_getResponse(sprintf(self::URL_CALENDAR, $calendarId, $eventId));
 	}
 	
 	/**
 	 * Import an event of a calendar
 	 *
+	 * @param  string|integer The (exclusive) start time of the event
+	 * @param  string|integer The (exclusive) end time of the event
+	 * @param  string Event ID in the iCalendar format.
+	 * @param  string Calendar identifier
 	 * @return array
 	 */
-	public function importEvent() {
+	public function importEvent($start, $end, $importId, $calendarId = self::PRIMARY) {
+		//argument testing
+		Eden_Google_Error::i()
+			->argument(1, 'string', 'int')	//argument 1 must be a string or integer
+			->argument(2, 'string', 'int')	//argument 2 must be a string or integer
+			->argument(3, 'string')			//argument 3 must be a string
+			->argument(4, 'string');		//argument 4 must be a string
+		
+		if(is_string($start) ) {
+			$start = strtotime($start);
+		}
+		
+		if(is_string($end) ) {
+			$end = strtotime($end);
+		}
+		
+		$end['dateTime']	= date('c', $end);
+		$start['dateTime']	= date('c', $start);
+		
 		//populate fields
 		$query = array(
-			self::START	=> $this->_start,
-			self::END	=> $this->_end,
-			self::UID	=> $this->_importId);
+			self::START	=> $start,
+			self::END	=> $end,
+			self::UID	=> $importId);
 		
-		return $this->_post(sprintf(self::URL_CALENDAR_IMPORT, $this->_calendarId), $query);
+		return $this->_post(sprintf(self::URL_CALENDAR_IMPORT, $calendarId), $query);
 	}	
 	
 	/**
 	 * Moves an event to another calendar
 	 *
+	 * @param string Calendar identifier of the target calendar where the event is to be moved to.
+	 * @param string Event identifier
+	 * @param string Calendar identifier
 	 * @return array
 	 */
-	public function moveEvent() {
+	public function moveEvent($destination, $eventId, $calendarId = self::PRIMARY) {
+		//argument testing
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string');	//argument 3 must be a string
+			
 		//populate fields
-		$query = array(self::DESTINATION => $this->_destination);
+		$query = array(self::DESTINATION => $destination);
 		
-		return $this->_customPost(sprintf(self::URL_CALENDAR_MOVE, $this->_calendarId, $this->_eventId), $query);
+		return $this->_customPost(sprintf(self::URL_CALENDAR_MOVE, $calendarId, $eventId), $query);
 	}
 	
 	/**
 	 * Updates an entry on the user's calendar list. 
 	 * This method supports patch semantics.
 	 *
+	 * @param string Event identifier
+	 * @param string Calendar identifier
 	 * @return array
 	 */
-	public function patch() {
+	public function patch($eventId, $calendarId = self::PRIMARY) {
+		//argument testing
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
+			
 		//populate fields
 		$query = array(
-			self::END			=> $this->_end,
-			self::START			=> $this->_start,
-			self::DESCRIPTION	=> $this->_description,
-			self::COLOR_ID		=> $this->_colorId,
-			self::CREATOR		=> $this->_creator,
-			self::KIND			=> $this->_kind,
-			self::LOCATION		=> $this->_location,
-			self::ORGANIZER		=> $this->_organizer,
-			self::REMINDERS		=> $this->_reminders,
-			self::STATUS		=> $this->_status);
+			self::END			=> $this->_end,			//optional
+			self::START			=> $this->_start,		//optional
+			self::DESCRIPTION	=> $this->_description,	//optional
+			self::COLOR_ID		=> $this->_colorId,		//optional
+			self::CREATOR		=> $this->_creator,		//optional
+			self::KIND			=> $this->_kind,		//optional
+			self::LOCATION		=> $this->_location,	//optional
+			self::ORGANIZER		=> $this->_organizer,	//optional
+			self::REMINDERS		=> $this->_reminders,	//optional
+			self::STATUS		=> $this->_status);		//optional
 		
-		return $this->_patch(sprintf(self::URL_CALENDAR, urlencode($this->_calendarId), urlencode($this->_eventId)), $query);
+		return $this->_patch(sprintf(self::URL_CALENDAR, $calendarId, $eventId), $query);
 	}
 	
 	/**
 	 * Creates an event based on a simple text string
 	 *
+	 * @param string The text describing the event to be created.
+	 * @param string Calendar identifier
 	 * @return array
 	 */
-	public function quickCreate($text) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
+	public function quickCreate($text, $calendarId = self::PRIMARY) {
+		//argument testing
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
+		
 		//populate fields
 		$query = array(self::TEXT => $text);
 		
-		return $this->_customPost(sprintf(self::URL_QUICK_CREATE_EVENT, $this->_calendarId), $query);
-	}
-	
-	/**
-	 * sets the calendar id for event
-	 *
-	 * @param int|string
-	 * @return this
-	 */
-	public function setCalendarId($calendarId) {
-		//argument 1 must be a string or integer
-		Eden_Google_Error::i()->argument(1, 'int', 'string');
-		$this->_calendarId = $calendarId;
-		
-		return $this;
+		return $this->_customPost(sprintf(self::URL_QUICK_CREATE_EVENT, $calendarId), $query);
 	}
 	
 	/**
@@ -234,9 +286,9 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Set event creator
+	 * Set the color of the event.
 	 *
-	 * @param string
+	 * @param string ID referring to an entry in the "event" section of the colors definition 
 	 * @return this
 	 */
 	public function setCreator($creator) {
@@ -262,20 +314,6 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Set destination or calendar id
-	 *
-	 * @param int|string
-	 * @return this
-	 */
-	public function setDestination($destination) {
-		//argument 1 must be a string or integer
-		Eden_Google_Error::i()->argument(1, 'int', 'string');
-		$this->_destination = $destination;
-		
-		return $this;
-	}
-	
-	/**
 	 * sets the end for event
 	 *
 	 * @param string|int
@@ -290,34 +328,6 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 		}
 		
 		$this->_end['dateTime'] = date('c', $end);
-		
-		return $this;
-	}
-	
-	/**
-	 * Set event id
-	 *
-	 * @param int|string
-	 * @return this
-	 */
-	public function setEventId($eventId) {
-		//argument 1 must be a string or integer
-		Eden_Google_Error::i()->argument(1, 'int', 'string');
-		$this->_eventId = $eventId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set import id (iCalUID) of an event
-	 *
-	 * @param int|string
-	 * @return this
-	 */
-	public function setImportId($importId) {
-		//argument 1 must be a string or integer
-		Eden_Google_Error::i()->argument(1, 'int', 'string');
-		$this->_importId = $importId;
 		
 		return $this;
 	}
@@ -411,39 +421,32 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Set the summary for event
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setSummary($summary) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_summary = $summary;
-		
-		return $this;
-	}
-	
-	/**
 	 * Update Calendar specific events
 	 *
+	 * @param string Event identifier
+	 * @param string Calendar identifier
 	 * @return array
 	 */
-	public function update() {
+	public function update($eventId, $calendarId = self::PRIMARY) {
+		//argument testing
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
+		
 		//populate fields
 		$query = array(
-			self::END			=> $this->_end,
-			self::START			=> $this->_start,
-			self::DESCRIPTION	=> $this->_description,
-			self::COLOR_ID		=> $this->_colorId,
-			self::CREATOR		=> $this->_creator,
-			self::KIND			=> $this->_kind,
-			self::LOCATION		=> $this->_location,
-			self::ORGANIZER		=> $this->_organizer,
-			self::REMINDERS		=> $this->_reminders,
-			self::STATUS		=> $this->_status);
+			self::END			=> $this->_end,			//optional
+			self::START			=> $this->_start,		//optional
+			self::DESCRIPTION	=> $this->_description,	//optional
+			self::COLOR_ID		=> $this->_colorId,		//optional
+			self::CREATOR		=> $this->_creator,		//optional
+			self::KIND			=> $this->_kind,		//optional
+			self::LOCATION		=> $this->_location,	//optional
+			self::ORGANIZER		=> $this->_organizer,	//optional
+			self::REMINDERS		=> $this->_reminders,	//optional
+			self::STATUS		=> $this->_status);		//optional
 		
-		return $this->_put(sprintf(self::URL_CALENDAR, urlencode($this->_calendarId), urlencode($this->_eventId)), $query);
+		return $this->_put(sprintf(self::URL_CALENDAR, $calendarId, $eventId), $query);
 	}
 	
 	/* Protected Methods

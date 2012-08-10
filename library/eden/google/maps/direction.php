@@ -8,7 +8,7 @@
  */
 
 /**
- * Google Map Static Class
+ * Google Map Direction Class
  *
  * @package    Eden
  * @category   google
@@ -24,8 +24,6 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	/* Protected Properties
 	-------------------------------*/
 	protected $_apiKey			= NULL;
-	protected $_origins			= NULL;
-	protected $_destinations	= NULL;
 	protected $_samples			= NULL;
 	protected $_mode			= NULL;
 	protected $_language 		= NULL;
@@ -36,7 +34,6 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	protected $_departureTime	= NULL;
 	protected $_arrivalTime		= NULL;
 	protected $_region			= NULL;
-	protected $_sensor 			= 'false';
 	
 	/* Private Properties
 	-------------------------------*/
@@ -47,37 +44,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
-	/**
-	 * Sets origin of direction
-	 *
-	 * @param string|int|float
-	 * @return this
-	 */
-	public function setOrigins($origins) {
-		//argument 1 must be a string, integer or float
-		Eden_Google_Error::i()->argument(1, 'string', 'int', 'float');	
-		
-		$this->_origins = $origins;
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets destination of direction
-	 *
-	 * @param string|int|float
-	 * @return this
-	 */
-	public function setDestinations($destination) {
-		//argument 1 must be a string, integer or float
-		Eden_Google_Error::i()->argument(1, 'string', 'int', 'float');	
-		
-		$this->_destinations = $destination;
-		
-		return $this;
-	}
-	
+	-------------------------------*/	
 	/**
 	 * Specifies the mode of transport to use when 
 	 * calculating directions is driving.
@@ -206,19 +173,6 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Specifies whether the application requesting 
-	 * elevation data is using a sensor (such as a GPS device) 
-	 * to determine the user's location
-	 *
-	 * @return this
-	 */
-	public function setSensor() {
-		$this->_sensor  = 'true';
-		
-		return $this;
-	}
-	
-	/**
 	 * Specifies that the Directions service may 
 	 * provide more than one route alternative in the response.
 	 *
@@ -263,23 +217,32 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Returns elevation information
+	 * Returns calculated directions between locations
 	 *
+	 * @param string|integer|float The address or textual latitude/longitude value from which you wish to calculate directions
+	 * @param string|integer|float The address or textual latitude/longitude value from which you wish to calculate directions
+	 * @param booelean  Indicates whether or not the directions request comes from a device with a location sensor
 	 * @return array
 	 */
-	public function getDirection() {
+	public function getDirection($origin, $destination, $sensor = 'false') {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string', 'int', 'float')		//argument 1 must be a string, integer or float
+			->argument(2, 'string', 'int', 'float')		//argument 2 must be a string, integer or float
+			->argument(3, 'string');					//argument 3 must be a string	
+			
 		//populate paramenter
 		$query = array(
-			'origin'		=> $this->_origins,			//required
-			'sensor'		=> $this->_sensor,			//required
-			'destination'	=> $this->_destinations,	//required
-			'alternatives'	=> $this->_alternatives,
-			'region'		=> $this->_region,
-			'departureTime'	=> $this->_departureTime,
-			'arrivalTime'	=> $this->_arrivalTime,
-			'language'		=> $this->_language,
-			'avoid'			=> $this->_avoid,
-			'units'			=> $this->_units);	
+			'origin'		=> $origin,			
+			'sensor'		=> $sensor,	
+			'destination'	=> $destination,	
+			'alternatives'	=> $this->_alternatives,	//optional
+			'region'		=> $this->_region,			//optional
+			'departureTime'	=> $this->_departureTime,	//optional
+			'arrivalTime'	=> $this->_arrivalTime,		//optional
+			'language'		=> $this->_language,		//optional
+			'avoid'			=> $this->_avoid,			//optional
+			'units'			=> $this->_units);			//optional
 		
 
 		return $this->_getResponse(self::URL_MAP_DIRECTION, $query);

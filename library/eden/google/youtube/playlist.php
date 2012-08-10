@@ -27,15 +27,6 @@ class Eden_Google_Youtube_Playlist extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_userId 		= 'default';
-	protected $_title		= NULL;
-	protected $_summary		= NULL;
-	protected $_developerId	= NULL;
-	protected $_position	= NULL;
-	protected $_playlistId	= NULL;
-	protected $_videoId		= NULL;
-	protected $_entryId		= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -57,194 +48,146 @@ class Eden_Google_Youtube_Playlist extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set youtube user id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUserId($userId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userId = $userId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set playlist entry id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setPlaylistEntryId($entryId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_entryId = $entryId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set youtube playlist id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setPlaylistId($playlistId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_playlistId = $playlistId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set youtube playlist id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setVideoId($videoId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_videoId = $videoId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set video position in the playlist
-	 *
-	 * @param integer
-	 * @return this
-	 */
-	public function setVideoPosition($position) {
-		//argument 1 must be a integer
-		Eden_Google_Error::i()->argument(1, 'int');
-		$this->_position = $position;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set playlist title
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setTitle($title) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_title = $title;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set playlist summary
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setSummary($summary) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_summary = $summary;
-		
-		return $this;
-	}
-	
-	/**
 	 * Returns user playlist
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function getList() {
+	public function getList($userId = self::DEFAULT_VALUE) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
 		//populate fields
 		$query  = array(self::RESPONSE => self::JSON_FORMAT);	
 				
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_PLAYLIST, $this->_userId), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_PLAYLIST, $userId), $query);
 	}
 	
 	/**
 	 * Create a playlist
 	 *
+	 * @param string
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function create() {
+	public function create($title, $summary, $userId = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string');	//argument 3 must be a string
 	
 		//make a xml template
 		$query = Eden_Template::i()
-			->set(self::TITLE, $this->_title)
-			->set(self::SUMMARY, $this->_summary)
+			->set(self::TITLE, $title)
+			->set(self::SUMMARY, $summary)
 			->parsePHP(dirname(__FILE__).'/template/createplaylist.php');
 		
-		return $this->_post(sprintf(self::URL_YOUTUBE_PLAYLIST, $this->_userId), $query);
+		return $this->_post(sprintf(self::URL_YOUTUBE_PLAYLIST, $userId), $query);
 	}
 	
 	/**
 	 * Create a playlist
 	 *
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function update() {
+	public function update($title, $summary, $playlistId, $userId = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string')		//argument 3 must be a string
+			->argument(4, 'string');	//argument 4 must be a string
 		
 		//make a xml template
 		$query = Eden_Template::i()
-			->set(self::TITLE, $this->_title)
-			->set(self::SUMMARY, $this->_summary)
+			->set(self::TITLE, $title)
+			->set(self::SUMMARY, $summary)
 			->parsePHP(dirname(__FILE__).'/template/createplaylist.php');
 		
-		return $this->_put(sprintf(self::URL_YOUTUBE_PLAYLIST_UPDATE, $this->_userId, $this->_playlistId), $query);
+		return $this->_put(sprintf(self::URL_YOUTUBE_PLAYLIST_UPDATE, $userId, $playlistId), $query);
 	}
 	
 	/**
 	 * Add video to a playlist
 	 *
+	 * @param string
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function addVideo() {
+	public function addVideo($videoId, $position, $playlistId) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string');	//argument 3 must be a string
 
 		//make a xml template
 		$query = Eden_Template::i()
-			->set(self::VIDEO_ID, $this->_videoId)
-			->set(self::POSITION, $this->_position)
+			->set(self::VIDEO_ID, $videoId)
+			->set(self::POSITION, $position)
 			->parsePHP(dirname(__FILE__).'/template/addvideo.php');
 		
-		return $this->_post(sprintf(self::URL_YOUTUBE_PLAYLIST_GET, $this->_playlistId), $query);
+		return $this->_post(sprintf(self::URL_YOUTUBE_PLAYLIST_GET, $playlistId), $query);
 	}
 	
 	/**
 	 * Add video to a playlist
 	 *
+	 * @param string
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function updateVideo() {
+	public function updateVideo($position, $playlistId, $entryId) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string');	//argument 3 must be a string
 		
 		//make a xml template
 		$query = Eden_Template::i()
-			->set(self::POSITION, $this->_position)
+			->set(self::POSITION, $position)
 			->parsePHP(dirname(__FILE__).'/template/addvideo.php');
 		
-		return $this->_put(sprintf(self::URL_YOUTUBE_PLAYLIST_VIDEO, $this->_playlistId, $this->_entryId), $query);
+		return $this->_put(sprintf(self::URL_YOUTUBE_PLAYLIST_VIDEO, $playlistId, $entryId), $query);
 	}
 	
 	/**
 	 * Remove a video in the playlist 
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function removeVideo() {
+	public function removeVideo($playlistId, $entryId) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
-		return $this->_delete(sprintf(self::URL_YOUTUBE_PLAYLIST_VIDEO, $this->_playlistId, $this->_entryId));
+		return $this->_delete(sprintf(self::URL_YOUTUBE_PLAYLIST_VIDEO, $playlistId, $entryId));
 	}
 	
 	/**
 	 * Delete a playlist 
 	 *
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function delete() {
+	public function delete($playlistId, $userId = self::DEFAULT_VALUE) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
 		
 		return $this->_delete(sprintf(self::URL_YOUTUBE_PLAYLIST_DELETE, $this->_userId, $this->_playlistId));
 	}

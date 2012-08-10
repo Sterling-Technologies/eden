@@ -25,12 +25,9 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/ 
-	protected $_userId			= 'me';
-	protected $_queryString		= NULL;
 	protected $_pageToken		= NULL;
 	protected $_maxResults		= NULL;
-	protected $_activityId		= NULL;
-	protected $_collection		= NULL;
+	protected $_orderBy			= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -47,19 +44,7 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
-	/**
-	 * Collection of all public activities
-	 * of the user
-	 *
-	 * @return this
-	 */
-	public function setCollectionToPublic() {
-		$this->_collection = 'public';
-		
-		return $this;
-	}
-	
+	-------------------------------*/	
 	/**
 	 * Set page token
 	 *
@@ -75,20 +60,6 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Set Activity Id
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setUserId($userId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userId = $userId;
-		
-		return $this;
-	}
-	
-	/**
 	 * The maximum number of people to include in the response, 
 	 * used for paging.
 	 *
@@ -99,34 +70,6 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 		//argument 1 must be a integer
 		Eden_Google_Error::i()->argument(1, 'int');
 		$this->_maxResults = $maxResults;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set Activity Id
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setActivityId($id) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_activityId = $id;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set query string
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setQueryString($queryString) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_queryString = $queryString;
 		
 		return $this;
 	}
@@ -156,41 +99,50 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	/**
 	 * Get activity list of user
 	 *
+	 * @param string
 	 * @return array
 	 */
-	 public function getList() {
-		//populate fields
-		$query = array(
-			self::COLLECTION	=> $this->_collection,
-			self::USER_ID		=> $this->_userId,
-			self::MAX_RESULTS	=> $this->_maxResults,
-			SELF::PAGE_TOKEN	=> $this->_pageToken);
+	 public function getList($userId = self::ME) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
 		
-		return $this->_getResponse(sprintf(self::URL_ACTIVITY_LIST, $this->_userId, $this->_collection) , $query);
+		//populate fields
+		$query = array(	
+			self::MAX_RESULTS	=> $this->_maxResults,	//optional
+			SELF::PAGE_TOKEN	=> $this->_pageToken);	//optional
+		
+		return $this->_getResponse(sprintf(self::URL_ACTIVITY_LIST, $userId, self::PUBLIC_DATA), $query);
 	 }
 	
 	/**
 	 * Get an activity
 	 *
+	 * @param string
 	 * @return array
 	 */
-	 public function getSpecific() {
+	 public function getSpecific($activityId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
 		 
-		 return $this->_getResponse(sprintf(self::URL_ACTIVITY_GET, $this->_activityId));
+		 return $this->_getResponse(sprintf(self::URL_ACTIVITY_GET, $activityId));
 	 } 
 	 
 	/**
 	 * Search public activities
 	 *
+	 * @param string|integer
 	 * @return array
 	 */
-	public function search() {
+	public function search($queryString) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string', 'int');
+		
 		//populate fields
 		$query = array(
-			self::QUERY_STRING	=> $this->_queryString,
-			self::PAGE_TOKEN	=> $this->_pageToken,
-			self::MAX_RESULTS	=> $this->_maxResults,
-			self::ORDER			=> $this->_orderBy);
+			self::QUERY_STRING	=> $queryString,
+			self::PAGE_TOKEN	=> $this->_pageToken,	//optional
+			self::MAX_RESULTS	=> $this->_maxResults,	//optional
+			self::ORDER			=> $this->_orderBy);	//optional
 		
 		return $this->_getResponse(self::URL_ACTIVITY_SEARCH, $query);
 	}
