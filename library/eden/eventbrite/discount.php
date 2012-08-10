@@ -57,7 +57,7 @@ class Eden_Eventbrite_Discount extends Eden_Eventbrite_Base {
 	 * @param float|int
 	 * @return this
 	 */
-	public function setAmount($amount) {
+	public function setAmountOff($amount) {
 		//Argument 1 must be int
 		Eden_Eventbrite_Error::i()->argument(1, 'float', 'int');
 		
@@ -108,7 +108,7 @@ class Eden_Eventbrite_Discount extends Eden_Eventbrite_Base {
 	 * @param float|int
 	 * @return this
 	 */
-	public function setPercent($percent) {
+	public function setPercentOff($percent) {
 		//Argument 1 must be int
 		Eden_Eventbrite_Error::i()->argument(1, 'int', 'float');
 		
