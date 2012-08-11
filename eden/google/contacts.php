@@ -8,17 +8,15 @@
  */
 
 /**
- *  Google Contacts
+ * Google Contacts
  *
  * @package    Eden
  * @category   google
- * @author     Christian Blanquera cblanquera@openovate.com
- */
+ * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
+ */ 
 class Eden_Google_Contacts extends Eden_Google_Base {
 	/* Constants
 	-------------------------------*/
-	const SCOPE = 'https://www.google.com/m8/feeds';
-	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -31,19 +29,53 @@ class Eden_Google_Contacts extends Eden_Google_Base {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	public function __construct($key, $secret) {
+	public function __construct($token) {
 		//argument test
-		Eden_Google_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string');	//Argument 2 must be a string
-			
-		$this->_key 	= $key; 
-		$this->_secret 	= $secret;
-		$this->_scope	= self::SCOPE;
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_token = $token; 
 	}
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Returns Google contacts batch
+	 *
+	 * @return Eden_Google_Contacts_Batch
+	 */
+	public function batch() {
+			
+		return Eden_Google_Contacts_Batch::i($this->_token);
+	}
+	
+	/**
+	 * Returns Google contacts data
+	 *
+	 * @return Eden_Google_Contacts_Batch
+	 */
+	public function data() {
+			
+		return Eden_Google_Contacts_Data::i($this->_token);
+	}
+	
+	/**
+	 * Returns Google contacts groups
+	 *
+	 * @return Eden_Google_Contacts_Groups
+	 */
+	public function groups() {
+			
+		return Eden_Google_Contacts_Groups::i($this->_token);
+	}
+	
+	/**
+	 * Returns Google contacts photo
+	 *
+	 * @return Eden_Google_Contacts_Photo
+	 */
+	public function photo() {
+			
+		return Eden_Google_Contacts_Photo::i($this->_token);
+	}
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

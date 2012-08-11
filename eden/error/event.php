@@ -93,26 +93,6 @@ class Eden_Error_Event extends Eden_Event {
 	}
 	
 	/** 
-	 * Registers this class' error handler to PHP
-	 *
-	 * @return this
-	 */
-	public function setErrorHandler() {
-		set_error_handler(array($this, 'errorHandler'));
-		return $this;
-	}
-	
-	/** 
-	 * Returns default handler back to PHP
-	 *
-	 * @return this
-	 */
-	public function releaseErrorHandler() {
-		restore_error_handler();
-		return $this;
-	}
-	
-	/** 
 	 * Called when a PHP exception has occured. Must
 	 * use setExceptionHandler() first.
 	 *
@@ -147,12 +127,12 @@ class Eden_Error_Event extends Eden_Event {
 	}
 	
 	/** 
-	 * Registers this class' exception handler to PHP
+	 * Returns default handler back to PHP
 	 *
 	 * @return this
 	 */
-	public function setExceptionHandler() {
-		set_exception_handler(array($this, 'exceptionHandler'));
+	public function releaseErrorHandler() {
+		restore_error_handler();
 		return $this;
 	}
 	
@@ -163,6 +143,26 @@ class Eden_Error_Event extends Eden_Event {
 	 */
 	public function releaseExceptionHandler() {
 		restore_exception_handler();
+		return $this;
+	}
+	
+	/** 
+	 * Registers this class' error handler to PHP
+	 *
+	 * @return this
+	 */
+	public function setErrorHandler() {
+		set_error_handler(array($this, 'errorHandler'));
+		return $this;
+	}
+	
+	/** 
+	 * Registers this class' exception handler to PHP
+	 *
+	 * @return this
+	 */
+	public function setExceptionHandler() {
+		set_exception_handler(array($this, 'exceptionHandler'));
 		return $this;
 	}
 	

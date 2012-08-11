@@ -53,7 +53,18 @@ class Eden_Sqlite extends Eden_Sql_Database {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
+	/**
+	 * Returns the alter query builder
+	 *
+	 * @return Eden_Sql_Alter
+	 */ 
+	public function alter($name = NULL) {
+		//Argument 1 must be a string or null
+		Eden_Sqlite_Error::i()->argument(1, 'string', 'null');
+		
+		return Eden_Sqlite_Alter::i($name);
+	}
 	/**
 	 * Connects to the database
 	 * 
@@ -69,18 +80,6 @@ class Eden_Sqlite extends Eden_Sql_Database {
 	}
 	
 	/**
-	 * Returns the alter query builder
-	 *
-	 * @return Eden_Sql_Alter
-	 */ 
-	public function alter($name = NULL) {
-		//Argument 1 must be a string or null
-		Eden_Sqlite_Error::i()->argument(1, 'string', 'null');
-		
-		return Eden_Sqlite_Alter::i($name);
-	}
-	
-	/**
 	 * Returns the create query builder
 	 *
 	 * @return Eden_Sql_Create
@@ -90,30 +89,6 @@ class Eden_Sqlite extends Eden_Sql_Database {
 		Eden_Sqlite_Error::i()->argument(1, 'string', 'null');
 		
 		return Eden_Sqlite_Create::i($name);
-	}
-	
-	/**
-	 * Returns the alter query builder
-	 *
-	 * @return Eden_Sql_Utility
-	 */ 
-	public function utility() {
-		return Eden_Sqlite_Utility::i();
-	}
-	
-	/**
-	 * Peturns the primary key name given the table
-	 *
-	 * @param string table
-	 * @return string
-	 */
-	public function getPrimaryKey($table) {
-		//Argument 1 must be a string
-		Eden_Sqlite_Error::i()->argument(1, 'string');
-		
-		$query = $this->utility();
-		$results = $this->getColumns($table, "`Key` = 'PRI'");
-		return isset($results[0]['Field']) ? $results[0]['Field'] : NULL;
 	}
 	
 	/**
@@ -145,6 +120,37 @@ class Eden_Sqlite extends Eden_Sql_Database {
 		}
 		
 		return $columns;
+	}
+	
+	/**
+	 * Peturns the primary key name given the table
+	 *
+	 * @param string table
+	 * @return string
+	 */
+	public function getPrimaryKey($table) {
+		//Argument 1 must be a string
+		Eden_Sqlite_Error::i()->argument(1, 'string');
+		
+		$query = $this->utility();
+		$results = $this->getColumns($table, "`Key` = 'PRI'");
+		return isset($results[0]['Field']) ? $results[0]['Field'] : NULL;
+	}
+	
+	/**
+	 * Returns the whole enitre schema and rows
+	 * of the current databse
+	 *
+	 * @return string
+	 */
+	public function getSchema() {
+		$backup = array();
+		$tables = $this->getTables();
+		foreach($tables as $table) {
+			$backup[] = $this->getBackup();
+		}
+		
+		return implode("\n\n", $backup);
 	}
 	
 	/**
@@ -247,19 +253,24 @@ class Eden_Sqlite extends Eden_Sql_Database {
 	}
 	
 	/**
-	 * Returns the whole enitre schema and rows
-	 * of the current databse
+	 * Returns the select query builder
 	 *
-	 * @return string
-	 */
-	public function getSchema() {
-		$backup = array();
-		$tables = $this->getTables();
-		foreach($tables as $table) {
-			$backup[] = $this->getBackup();
-		}
+	 * @return Eden_Sql_Select
+	 */ 
+	public function select($select = 'ROWID,*') {
+		//Argument 1 must be a string or array
+		Eden_Sqlite_Error::i()->argument(1, 'string', 'array');
 		
-		return implode("\n\n", $backup);
+		return Eden_Sql_Select::i($select);
+	}
+	
+	/**
+	 * Returns the alter query builder
+	 *
+	 * @return Eden_Sql_Utility
+	 */ 
+	public function utility() {
+		return Eden_Sqlite_Utility::i();
 	}
 	
 	/* Protected Methods

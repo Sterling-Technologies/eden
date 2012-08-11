@@ -17,6 +17,13 @@
 class Eden_Google_Error extends Eden_Error {
 	/* Constants
 	-------------------------------*/
+	const INVALID_ROLE			= 'Argument 2 was expecting owner, reader, writer. %s was given';
+	const INVALID_TYPE			= 'Argument 3 was expecting user, group, domain, anyone. %s was given';
+	const INVALID_COLLECTION	= 'Argument 2 was expecting plusoners, resharers. %s was given';
+	const INVALID_FEEDS_TWO		= 'Argument 2 was expecting most_viewed, most_subscribed. %s was given';
+	const INVALID_FEEDS_ONE		= 'Argument 1 was expecting most_viewed, most_subscribed. %s was given';
+	const INVALID_STATUS		= 'Argument 2 was expecting accepted, rejected. %s was given';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties

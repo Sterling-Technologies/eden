@@ -41,17 +41,19 @@ class Eden_Sql_Insert extends Eden_Sql_Query {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set the table name in which you want to delete from
+	 * Returns the string version of the query 
 	 *
-	 * @param string name
-	 * @return this
+	 * @param  bool
+	 * @return string
+	 * @notes returns the query based on the registry
 	 */
-	public function setTable($table) {
-		//Argument 1 must be a string
-		Eden_Sql_Error::i()->argument(1, 'string');
+	public function getQuery() {
+		$multiValList = array();
+		foreach($this->_setVal as $val) {
+			$multiValList[] = '('.implode(', ', $val).')';
+		}
 		
-		$this->_table = $table;
-		return $this;
+		return 'INSERT INTO '. $this->_table . ' ('.implode(', ', $this->_setKey).") VALUES ".implode(", \n", $multiValList).';';
 	}
 	
 	/**
@@ -84,19 +86,17 @@ class Eden_Sql_Insert extends Eden_Sql_Query {
 	}
 	
 	/**
-	 * Returns the string version of the query 
+	 * Set the table name in which you want to delete from
 	 *
-	 * @param  bool
-	 * @return string
-	 * @notes returns the query based on the registry
+	 * @param string name
+	 * @return this
 	 */
-	public function getQuery() {
-		$multiValList = array();
-		foreach($this->_setVal as $val) {
-			$multiValList[] = '('.implode(', ', $val).')';
-		}
+	public function setTable($table) {
+		//Argument 1 must be a string
+		Eden_Sql_Error::i()->argument(1, 'string');
 		
-		return 'INSERT INTO '. $this->_table . ' ('.implode(', ', $this->_setKey).") VALUES ".implode(", \n", $multiValList).';';
+		$this->_table = $table;
+		return $this;
 	}
 	
 	/* Protected Methods

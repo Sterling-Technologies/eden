@@ -73,25 +73,6 @@ class Eden_Debug extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Outputs anything
-	 *
-	 * @param *variable any data
-	 * @return Eden_Tool
-	 */
-	public function output($variable) {
-		if($variable === true) {
-			$variable = '*TRUE*';
-		} else if($variable === false) {
-			$variable = '*FALSE*';
-		} else if(is_null($variable)) {
-			$variable = '*NULL*';
-		}
-		
-		echo '<pre>'.print_r($variable, true).'</pre>';
-		return $this;
-	}
-	
-	/**
 	 * Hijacks the class and reports the results of the next
 	 * method call
 	 *
@@ -107,6 +88,25 @@ class Eden_Debug extends Eden_Class {
 		$this->_scope 	= $scope;
 		$this->_name	= $name;
 		
+		return $this;
+	}
+	
+	/**
+	 * Outputs anything
+	 *
+	 * @param *variable any data
+	 * @return Eden_Tool
+	 */
+	public function output($variable) {
+		if($variable === true) {
+			$variable = '*TRUE*';
+		} else if($variable === false) {
+			$variable = '*FALSE*';
+		} else if(is_null($variable)) {
+			$variable = '*NULL*';
+		}
+		
+		echo '<pre>'.print_r($variable, true).'</pre>';
 		return $this;
 	}
 	

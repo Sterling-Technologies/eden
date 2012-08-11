@@ -50,18 +50,7 @@ class Eden_When extends Eden_Class implements ArrayAccess, Iterator {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
-	
-	/**
-	 * Rewinds the position
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-	public function rewind() {
-        $this->_scope->rewind();
-    }
-
+	-------------------------------*/	
 	/**
 	 * Returns the current item
 	 * For Iterator interface
@@ -93,13 +82,23 @@ class Eden_When extends Eden_Class implements ArrayAccess, Iterator {
     }
 
 	/**
-	 * Validates whether if the index is set
-	 * For Iterator interface
+	 * isset using the ArrayAccess interface
 	 *
-	 * @return void
+	 * @param number
+	 * @return bool
 	 */
-    public function valid() {
-        return $this->_scope->valid();
+    public function offsetExists($offset) {
+        return $this->_scope->offsetExists($offset);
+    }
+    
+	/**
+	 * returns data using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+	public function offsetGet($offset) {
+        return $this->_scope->offsetGet($offset);
     }
 	
 	/**
@@ -112,16 +111,6 @@ class Eden_When extends Eden_Class implements ArrayAccess, Iterator {
 	public function offsetSet($offset, $value) {}
 	
 	/**
-	 * isset using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-    public function offsetExists($offset) {
-        return $this->_scope->offsetExists($offset);
-    }
-    
-	/**
 	 * unsets using the ArrayAccess interface
 	 *
 	 * @param number
@@ -130,13 +119,23 @@ class Eden_When extends Eden_Class implements ArrayAccess, Iterator {
 	public function offsetUnset($offset) {}
     
 	/**
-	 * returns data using the ArrayAccess interface
+	 * Rewinds the position
+	 * For Iterator interface
 	 *
-	 * @param number
-	 * @return bool
+	 * @return void
 	 */
-	public function offsetGet($offset) {
-        return $this->_scope->offsetGet($offset);
+	public function rewind() {
+        $this->_scope->rewind();
+    }
+	
+	/**
+	 * Validates whether if the index is set
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+    public function valid() {
+        return $this->_scope->valid();
     }
 	
 	/* Protected Methods

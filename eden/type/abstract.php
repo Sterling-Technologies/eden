@@ -33,11 +33,7 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 	/* Get
 	-------------------------------*/
 	/* Magic
-	-------------------------------*/
-	public function __construct($data) {
-		$this->_original = $this->_data = $data;
-	}
-	
+	-------------------------------*/	
 	public function __call($name, $args) {
 		$type = $this->_getMethodType($name);
 		
@@ -101,16 +97,23 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 		return $result;
 	}
 	
+	public function __construct($data) {
+		$this->_original = $this->_data = $data;
+	}
+	
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Sets data
+	 * Returns the value
 	 *
-	 * @return this
+	 * @param bool whether to get the modified or original version
+	 * @return string
 	 */
-	public function set($value) {
-		$this->_data = $value;
-		return $this;
+	public function get($modified = true) {
+		//argument 1 must be a bool
+		Eden_Type_Error::i()->argument(1, 'bool');
+		
+		return $modified ? $this->_data : $this->_original;
 	}
 	
 	/**
@@ -124,16 +127,13 @@ abstract class Eden_Type_Abstract extends Eden_Class {
 	}
 	
 	/**
-	 * Returns the value
+	 * Sets data
 	 *
-	 * @param bool whether to get the modified or original version
-	 * @return string
+	 * @return this
 	 */
-	public function get($modified = true) {
-		//argument 1 must be a bool
-		Eden_Type_Error::i()->argument(1, 'bool');
-		
-		return $modified ? $this->_data : $this->_original;
+	public function set($value) {
+		$this->_data = $value;
+		return $this;
 	}
 	
 	/* Protected Methods

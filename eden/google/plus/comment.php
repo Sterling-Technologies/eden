@@ -8,7 +8,7 @@
  */
 
 /**
- * Google Plus
+ * Google Plus comment
  *
  * @package    Eden
  * @category   google
@@ -17,13 +17,16 @@
 class Eden_Google_Plus_Comment extends Eden_Google_Base {
 	/* Constants
 	-------------------------------*/
+	const URL_COMMENTS_LIST	= 'https://www.googleapis.com/plus/v1/activities/%s/comments';
+	const URL_COMMENTS_GET	= 'https://www.googleapis.com/plus/v1/comments/%s';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/ 
-	protected $_activityId	= NULL;
 	protected $_pageToken	= NULL;
-	protected $_commentId 	= NULL;
+	protected $_maxResults	= NULL;
+	protected $_sortOrder 	= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -42,25 +45,15 @@ class Eden_Google_Plus_Comment extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set activity Id
+	 * The continuation token, used to page through large result sets. 
+	 * To get the next page of results, set this parameter to the 
+	 * value of "nextPageToken" from the previous response. 
 	 *
 	 * @param string
-	 * @return array
-	 */
-	public function setActivityId($activityId) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_activityId = $activityId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set activity Id
-	 *
-	 * @param string
-	 * @return array
+	 * @return this
 	 */
 	public function setPageToken($pageToken) {
+		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		$this->_pageToken = $pageToken;
 		
@@ -68,63 +61,65 @@ class Eden_Google_Plus_Comment extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Set comment Id
+	 * The maximum number of people to include in the response, 
+	 * used for paging.
+	 *
+	 * @param integer
+	 * @return this
+	 */
+	public function setMaxResults($maxResults) {
+		//argument 1 must be a integer
+		Eden_Google_Error::i()->argument(1, 'int');
+		$this->_maxResults = $maxResults;
+		
+		return $this;
+	}
+	
+	/** 
+	 * Sort newest comments first.
 	 *
 	 * @param string
 	 * @return array
 	 */
-	public function setCommentId($commentId) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_commentId = $commentId;
+	public function descendingOrder() {
+		$this->_sortOrder = 'descending';
 		
 		return $this;
 	}
 	
 	/**
-	 * get comment list of activity
+	 * List all of the comments for an activity.
 	 *
-	 * @param string|null
-	 * @param string|null
+	 * @param string
 	 * @return array
 	 */
-	public function getList($activityId = NULL, $pageToken = NULL) {
-		Eden_Google_Error::i()
-			->argument(1, 'string', 'null')
-			->argument(2, 'string', 'null');
+	public function getList($activityId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
 		
-		if($activityId) {
-			$this->_activityId = $activityId;
-		}
+		//populate fields
+		$query = array(
+			self::MAX_RESULTS	=> $this->_maxResults,		//optional
+			self::PAGE_TOKEN	=> $this->_pageToken,		//optional
+			self::SORT			=> $this->_sortOrder);		//optional
 		
-		if($pageToken) {
-			$this->_pageToken = $pageToken;
-		}
-		
-		$url = sprintf(Eden_Google_Plus::URL_ACTIVITY, $this->_activityId);
-		$query = array();
-		$query[Eden_Google_Plus::PAGE_TOKEN] = ($this->_pageToken) ? $this->_pageToken : NULL;
-		
-		return $this->_getResponse($url, $query);
+		return $this->_getResponse(sprintf(self::URL_COMMENTS_LIST, $activityId), $query);
 	}
 	
 	/**
-	 * get comment
+	 * Get a comment
 	 *
-	 * @param string|null
+	 * @param string
 	 * @return array
 	 */
-	public function get($commentId = NULL) {
-		Eden_Google_Error::i()->argument(1, 'string', 'null');
-		if($commentId) {
-			$this->_commentId = $commentId;
-		}
+	public function getSpecific($commentId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
 		
-		$url = sprintf(Eden_Google_Plus::URL_COMMENT, $this->_commentId);
-		$query = array();
-		$query[Eden_Google_Plus::PAGE_TOKEN] = ($this->_pageToken) ? $this->_pageToken : NULL;
-		
-		return $this->_getResponse($url, $query);
+		return $this->_getResponse(sprintf(self::URL_COMMENTS_GET, $commentId));
 	}
+	
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

@@ -37,33 +37,6 @@ class Eden_Twitter_Saved extends Eden_Twitter_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns the authenticated user's 
-	 * saved search queries.
-	 *
-	 * @return array
-	 */
-	public function getSavedSearches() {
-		return $this->_getResponse(self::URL_SAVED_SEARCHES);
-	}
-	
-	/**
-	 * Retrieve the information for the saved search represented 
-	 * by the given id. The authenticating user must be the 
-	 * owner of saved search ID being requested.
-	 *
-	 * @param integer
-	 * @return array
-	 */
-	public function getDetail($id) {
-		//Argument 1 must be a integer
-		Eden_Twitter_Error::i()->argument(1, 'int');	
-		
-		$query  = array('id' => $id);
-		
-		return $this->_getResponse(self::URL_GET_DETAIL, $query);
-	}
-	
-	/**
 	 * Create a new saved search for the authenticated user.
 	 * A user may only have 25 saved searches.
 	 *
@@ -81,11 +54,38 @@ class Eden_Twitter_Saved extends Eden_Twitter_Base {
 	}
 	
 	/**
+	 * Retrieve the information for the saved search represented 
+	 * by the given id. The authenticating user must be the 
+	 * owner of saved search ID being requested.
+	 *
+	 * @param int search ID
+	 * @return array
+	 */
+	public function getDetail($id) {
+		//Argument 1 must be a integer
+		Eden_Twitter_Error::i()->argument(1, 'int');	
+		
+		$query  = array('id' => $id);
+		
+		return $this->_getResponse(self::URL_GET_DETAIL, $query);
+	}
+	
+	/**
+	 * Returns the authenticated user's 
+	 * saved search queries.
+	 *
+	 * @return array
+	 */
+	public function getSavedSearches() {
+		return $this->_getResponse(self::URL_SAVED_SEARCHES);
+	}
+	
+	/**
 	 * Destroys a saved search for the authenticating user.
 	 * The authenticating user must be the owner of 
 	 * saved search id being destroyed.
 	 *
-	 * @param integer
+	 * @param int search ID
 	 * @return array
 	 */
 	public function remove($id) {

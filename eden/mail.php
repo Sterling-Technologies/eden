@@ -39,25 +39,6 @@ class Eden_Mail extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns Mail SMTP
-	 *
-	 * @param string
-	 * @param string
-	 * @return Eden_Mail_Smtp
-	 */
-	public function smtp($host, $user, $pass, $port = NULL, $ssl = false, $tls = false) {
-		Eden_Mail_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string')
-			->argument(3, 'string')
-			->argument(4, 'int', 'null')
-			->argument(5, 'bool')
-			->argument(6, 'bool');
-			
-		return Eden_Mail_Smtp::i($host, $user, $pass, $port, $ssl, $tls);
-	}
-	
-	/**
 	 * Returns Mail IMAP
 	 *
 	 * @param string
@@ -95,8 +76,25 @@ class Eden_Mail extends Eden_Class {
 		return Eden_Mail_Pop3::i($host, $user, $pass, $port, $ssl, $tls);
 	}
 	
-	
-	
+	/**
+	 * Returns Mail SMTP
+	 *
+	 * @param string
+	 * @param string
+	 * @return Eden_Mail_Smtp
+	 */
+	public function smtp($host, $user, $pass, $port = NULL, $ssl = false, $tls = false) {
+		Eden_Mail_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string')
+			->argument(3, 'string')
+			->argument(4, 'int', 'null')
+			->argument(5, 'bool')
+			->argument(6, 'bool');
+			
+		return Eden_Mail_Smtp::i($host, $user, $pass, $port, $ssl, $tls);
+	}
+		
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

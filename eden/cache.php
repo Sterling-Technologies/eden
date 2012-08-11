@@ -52,35 +52,6 @@ class Eden_Cache extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Sets a cache key file
-	 *
-	 * @param *string the name of the key file
-	 * @return Eden_CacheModel
-	 */
-	public function setKey($key) {
-		//argument 1 must be a string
-		Eden_Cache_Error::i()->argument(1, 'string');
-		
-		$this->_key = $key;
-		return $this;
-	}
-	
-	/**
-	 * Sets a cache path root
-	 *
-	 * @param string the root path
-	 * @return Eden_CacheModel
-	 */
-	public function setRoot($root) {
-		//argument 1 must be a string
-		Eden_Cache_Error::i()->argument(1, 'string');
-		
-		$this->_path = (string) Eden_Path::i($root)->absolute();
-		
-		return $this;
-	}
-	
-	/**
 	 * Builds the cache into memory
 	 *
 	 * @return Eden_CacheModel
@@ -91,32 +62,6 @@ class Eden_Cache extends Eden_Class {
 		} catch(Eden_Path_Error $e) {
 			$this->_cache = array();
 		}
-		return $this;
-	}
-	
-	/**
-	 * Sets a data cache
-	 *
-	 * @param *string the key to the data
-	 * @param *string the path of the cache
-	 * @param *mixed the data to be cached
-	 * @return Eden_CacheModel
-	 */
-	public function set($key, $path, $data) {
-		//argument test
-		Eden_Cache_Error::i()
-			->argument(1, 'string')		//argument 1 must be a string
-			->argument(2, 'string');	//argument 2 must be a string
-		
-		//get the proper path format
-		$path = $this->_path.Eden_Path::i($path);
-		//set the data to the file
-		Eden_File::i($path)->setData($data);
-		//store this data in memory by keyword
-		$this->_cache[$key] = $path;
-		//now we want to store the key and data file correlation
-		Eden_File::i($this->_path.'/'.$this->_key)->setData($this->_cache);
-		
 		return $this;
 	}
 	
@@ -138,26 +83,6 @@ class Eden_Cache extends Eden_Class {
 		
 		//return the defauit
 		return $default;
-	}
-	
-	/**
-	 * Sets a data cache
-	 *
-	 * @param *string the key to the data
-	 * @return this
-	 */
-	public function remove($key) {
-		//argument test
-		Eden_Cache_Error::i()->argument(1, 'string');		//argument 1 must be a string
-		
-		if(isset($this->_cache[$key])) {
-			unset($this->_cache[$key]);
-		}
-		
-		//now we want to store the key and data file correlation
-		Eden_File::i($this->_path.'/'.$this->_key)->setData($this->_cache);
-		
-		return $this;
 	}
 	
 	/**
@@ -200,6 +125,81 @@ class Eden_Cache extends Eden_Class {
 		Eden_Cache_Error::i()->argument(1, 'string');
 		
 		return isset($this->_cache[$key]) && file_exists($this->_cache[$key]);
+	}
+	
+	/**
+	 * Sets a data cache
+	 *
+	 * @param *string the key to the data
+	 * @return this
+	 */
+	public function remove($key) {
+		//argument test
+		Eden_Cache_Error::i()->argument(1, 'string');		//argument 1 must be a string
+		
+		if(isset($this->_cache[$key])) {
+			unset($this->_cache[$key]);
+		}
+		
+		//now we want to store the key and data file correlation
+		Eden_File::i($this->_path.'/'.$this->_key)->setData($this->_cache);
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets a data cache
+	 *
+	 * @param *string the key to the data
+	 * @param *string the path of the cache
+	 * @param *mixed the data to be cached
+	 * @return Eden_CacheModel
+	 */
+	public function set($key, $path, $data) {
+		//argument test
+		Eden_Cache_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
+		
+		//get the proper path format
+		$path = $this->_path.Eden_Path::i($path);
+		//set the data to the file
+		Eden_File::i($path)->setData($data);
+		//store this data in memory by keyword
+		$this->_cache[$key] = $path;
+		//now we want to store the key and data file correlation
+		Eden_File::i($this->_path.'/'.$this->_key)->setData($this->_cache);
+		
+		return $this;
+	}
+	
+	/**
+	 * Sets a cache key file
+	 *
+	 * @param *string the name of the key file
+	 * @return Eden_CacheModel
+	 */
+	public function setKey($key) {
+		//argument 1 must be a string
+		Eden_Cache_Error::i()->argument(1, 'string');
+		
+		$this->_key = $key;
+		return $this;
+	}
+	
+	/**
+	 * Sets a cache path root
+	 *
+	 * @param string the root path
+	 * @return Eden_CacheModel
+	 */
+	public function setRoot($root) {
+		//argument 1 must be a string
+		Eden_Cache_Error::i()->argument(1, 'string');
+		
+		$this->_path = (string) Eden_Path::i($root)->absolute();
+		
+		return $this;
 	}
 	
 	/* Protected Methods

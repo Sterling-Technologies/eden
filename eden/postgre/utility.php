@@ -36,25 +36,6 @@ class Eden_Postgre_Utility extends Eden_Sql_Query
 	
 	/* Public Methods
 	-------------------------------*/
-	public function setSchema($schema)  {
-		$this->_query = 'SET search_path TO '.$schema;
-		return $this;
-	}
-	
-	/**
-	 * Query for truncating a table
-	 *
-	 * @param string the name of the table
-	 * @return this
-	 */
-	public function truncate($table) {
-		//Argument 1 must be a string
-		Eden_Postgre_Error::i()->argument(1, 'string');
-		
-		$this->_query = 'TRUNCATE "' . $table .'"';
-		return $this;
-	}
-	
 	/**
 	 * Query for dropping a table
 	 *
@@ -67,6 +48,15 @@ class Eden_Postgre_Utility extends Eden_Sql_Query
 		
 		$this->_query = 'DROP TABLE "' . $table .'"';
 		return $this;
+	}
+	
+	/**
+	 * Returns the string version of the query 
+	 *
+	 * @return string
+	 */
+	public function getQuery() {
+		return $this->_query.';';
 	}
 	
 	/**
@@ -84,13 +74,23 @@ class Eden_Postgre_Utility extends Eden_Sql_Query
 		return $this;
 	}
 	
+	public function setSchema($schema)  {
+		$this->_query = 'SET search_path TO '.$schema;
+		return $this;
+	}
+	
 	/**
-	 * Returns the string version of the query 
+	 * Query for truncating a table
 	 *
-	 * @return string
+	 * @param string the name of the table
+	 * @return this
 	 */
-	public function getQuery() {
-		return $this->_query.';';
+	public function truncate($table) {
+		//Argument 1 must be a string
+		Eden_Postgre_Error::i()->argument(1, 'string');
+		
+		$this->_query = 'TRUNCATE "' . $table .'"';
+		return $this;
 	}
 	
 	/* Protected Methods

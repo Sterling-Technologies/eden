@@ -37,23 +37,15 @@ class Eden_File extends Eden_Path {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns the file name
+	 * Checks to see if this 
+	 * path is a real file
 	 *
-	 * @return string
+	 * @return bool
 	 */
-	public function getName() {
-		return basename($this->_data);
+	public function isFile() {
+		return file_exists($this->_data);
 	}
-	
-	/**
-	 * Returns the file path
-	 *
-	 * @return string
-	 */
-	public function getFolder() {
-		return dirname($this->_data);
-	}
-	
+		
 	/**
 	 * Returns the base file name with out the extension
 	 *
@@ -63,33 +55,7 @@ class Eden_File extends Eden_Path {
 		$pathInfo = pathinfo($this->_data);
 		return $pathInfo['filename'];
 	}
-	
-	/**
-	 * Returns the base file name extension
-	 *
-	 * @return string
-	 */
-	public function getExtension() {
-		$pathInfo = pathinfo($this->_data);
 		
-		if(!isset($pathInfo['extension'])) {
-			return NULL;	
-		}
-		
-		return $pathInfo['extension'];
-	}
-	
-	/**
-	 * Returns the executes the specified file and returns the final value
-	 *
-	 * @return *
-	 */
-	public function getData() {
-		$this->absolute();
-		
-		return include($this->_data);
-	}
-	
 	/**
 	 * Returns the contents of a file given the path
 	 *
@@ -109,6 +75,41 @@ class Eden_File extends Eden_Path {
 		}
 		
 		return file_get_contents($this->_data);
+	}
+	
+	/**
+	 * Returns the executes the specified file and returns the final value
+	 *
+	 * @return *
+	 */
+	public function getData() {
+		$this->absolute();
+		
+		return include($this->_data);
+	}
+		
+	/**
+	 * Returns the base file name extension
+	 *
+	 * @return string
+	 */
+	public function getExtension() {
+		$pathInfo = pathinfo($this->_data);
+		
+		if(!isset($pathInfo['extension'])) {
+			return NULL;	
+		}
+		
+		return $pathInfo['extension'];
+	}
+		
+	/**
+	 * Returns the file path
+	 *
+	 * @return string
+	 */
+	public function getFolder() {
+		return dirname($this->_data);
 	}
 	
 	/**
@@ -152,6 +153,15 @@ class Eden_File extends Eden_Path {
 	}
 	
 	/**
+	 * Returns the file name
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return basename($this->_data);
+	}
+
+	/**
 	 * Returns the size of a file in bytes
 	 *
 	 * @return string
@@ -172,17 +182,7 @@ class Eden_File extends Eden_Path {
 		
 		return filemtime($this->_data);
 	}
-	
-	/**
-	 * Checks to see if this 
-	 * path is a real file
-	 *
-	 * @return bool
-	 */
-	public function isFile() {
-		return file_exists($this->_data);
-	}
-	
+		
 	/**
 	 * Creates a file and puts specified content into that file
 	 *
@@ -213,19 +213,7 @@ class Eden_File extends Eden_Path {
 	public function setData($variable) {
 		return $this->setContent("<?php //-->\nreturn ".var_export($variable, true).";");
 	}
-	
-	/**
-	 * Touches a file (effectively creates the file if
-	 * it doesn't exist and updates the date if it does)
-	 *
-	 * @return bool
-	 */
-	public function touch() {
-		touch($this->_data);
 		
-		return $this;
-	}
-	
 	/**
 	 * Removes a file
 	 *
@@ -245,6 +233,18 @@ class Eden_File extends Eden_Path {
 		return $this;
 	}
 	
+	/**
+	 * Touches a file (effectively creates the file if
+	 * it doesn't exist and updates the date if it does)
+	 *
+	 * @return bool
+	 */
+	public function touch() {
+		touch($this->_data);
+		
+		return $this;
+	}
+
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

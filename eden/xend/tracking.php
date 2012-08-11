@@ -39,20 +39,6 @@ class Eden_Xend_Tracking extends Eden_Xend_Base{
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set way bill number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setWayBillNumber($wayBillNumber) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');	
-		
-		$this->_wayBillNo = $wayBillNumber;
-		return $this;
-	}
-	
-	/**
 	 * Retrieving tracking information given the waybill number of the
 	 * shipment.
 	 *
@@ -83,6 +69,20 @@ class Eden_Xend_Tracking extends Eden_Xend_Base{
 			return $error[0][1];			
 		}
 		return $result;	
+	}
+	
+	/**
+	 * Set way bill number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setWayBillNumber($wayBillNumber) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');	
+		
+		$this->_wayBillNo = $wayBillNumber;
+		return $this;
 	}
 	
 	/* Protected Methods

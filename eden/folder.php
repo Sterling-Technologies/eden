@@ -58,47 +58,6 @@ class Eden_Folder extends Eden_Path {
 	}
 	
 	/**
-	 * Removes a folder given the path
-	 *
-	 * @return this
-	 */
-	public function remove() {
-		//get absolute path
-		$path = $this->absolute();
-		
-		//if it's a directory
-		if(is_dir($path)) {
-			//remove it
-			rmdir($path);
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Removes files and folder given a path
-	 *
-	 * @return this
-	 */
-	public function truncate() {
-		$this->removeFolders();
-		$this->removeFiles();
-		
-		return $this;
-	}
-	
-	
-	/**
-	 * Returns the name of the directory.. just the name
-	 *
-	 * @return string the name
-	 */
-	public function getName() {
-		$pathArray = $this->getArray();
-		return array_pop($pathArray);
-	}
-	
-	/**
 	 * Returns a list of files given the path and optionally the pattern
 	 *
 	 * @param string regular expression
@@ -175,28 +134,58 @@ class Eden_Folder extends Eden_Path {
 		
 		return $folders;
 	}
+		
+	/**
+	 * Returns the name of the directory.. just the name
+	 *
+	 * @return string the name
+	 */
+	public function getName() {
+		$pathArray = $this->getArray();
+		return array_pop($pathArray);
+	}
 	
 	/**
-	 * Removes a folder given the path and optionally the regular expression
+	 * Checks to see if this 
+	 * path is a real file
 	 *
-	 * @param string regular expression
 	 * @return bool
 	 */
-	public function removeFolders($regex = NULL) {
+	public function isFile() {
+		return file_exists($this->_data);
+	}
+
+	/**
+	 * Checks to see if this 
+	 * path is a real file
+	 *
+	 * @return bool
+	 */
+	public function isFolder($path = NULL) {
 		Eden_Folder_Error::i()->argument(1, 'string', 'null');	//argument 1 must be a string
 		
-		$this->absolute();
-		
-		$folders = $this->getFolders($regex);
-		
-		if(empty($folders)) {
-			return $this;
+		//if path is string
+		if(is_string($path)) {
+			//return path appended
+			return is_dir($this->_data.'/'.$path);
 		}
 		
-		//walk directory
-		foreach($folders as $folder) {
-			//remove directory
-			$folder->remove();
+		return is_dir($this->_data);
+	}
+
+	/**
+	 * Removes a folder given the path
+	 *
+	 * @return this
+	 */
+	public function remove() {
+		//get absolute path
+		$path = $this->absolute();
+		
+		//if it's a directory
+		if(is_dir($path)) {
+			//remove it
+			rmdir($path);
 		}
 		
 		return $this;
@@ -228,33 +217,43 @@ class Eden_Folder extends Eden_Path {
 	}
 	
 	/**
-	 * Checks to see if this 
-	 * path is a real file
+	 * Removes a folder given the path and optionally the regular expression
 	 *
+	 * @param string regular expression
 	 * @return bool
 	 */
-	public function isFolder($path = NULL) {
+	public function removeFolders($regex = NULL) {
 		Eden_Folder_Error::i()->argument(1, 'string', 'null');	//argument 1 must be a string
 		
-		//if path is string
-		if(is_string($path)) {
-			//return path appended
-			return is_dir($this->_data.'/'.$path);
+		$this->absolute();
+		
+		$folders = $this->getFolders($regex);
+		
+		if(empty($folders)) {
+			return $this;
 		}
 		
-		return is_dir($this->_data);
+		//walk directory
+		foreach($folders as $folder) {
+			//remove directory
+			$folder->remove();
+		}
+		
+		return $this;
 	}
 	
 	/**
-	 * Checks to see if this 
-	 * path is a real file
+	 * Removes files and folder given a path
 	 *
-	 * @return bool
+	 * @return this
 	 */
-	public function isFile() {
-		return file_exists($this->_data);
+	public function truncate() {
+		$this->removeFolders();
+		$this->removeFiles();
+		
+		return $this;
 	}
-	
+		
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

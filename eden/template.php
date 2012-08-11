@@ -43,7 +43,7 @@ class Eden_Template extends Eden_Class {
 	 * @return this
 	 */
 	public function set($data, $value = NULL) {
-		Eden_Template_Error::i()->argument(0, 'array', 'string');
+		Eden_Template_Error::i()->argument(1, 'array', 'string');
 		
 		if(is_array($data)) {
 			$this->_data = $data;
@@ -62,7 +62,7 @@ class Eden_Template extends Eden_Class {
 	 * @return string
 	 */
 	public function parseString($string) {
-		Eden_Template_Error::i()->argument(0, 'string');
+		Eden_Template_Error::i()->argument(1, 'string');
 		foreach($this->_data as $key => $value) {
 			$string = str_replace($key, $value, $string);
 		}
@@ -73,13 +73,21 @@ class Eden_Template extends Eden_Class {
 	/**
 	 * For PHP templates, this will transform the given document to an actual page or partial
 	 *
-	 * @param *string template file
+	 * @param *string template file or PHP template string
+	 * @param bool whether to evaluate the first argument
 	 * @return string
 	 */
-	public function parsePhp($____file) {
-		Eden_Template_Error::i()->argument(0, $____file, 'string');
+	public function parsePhp($____file, $___evalString = false) {
+		Eden_Template_Error::i()
+			->argument(1, $____file, 'string')
+			->argument(2, $___evalString, 'bool');
 		
 		extract($this->_data, EXTR_SKIP); 	// Extract the values to a local namespace
+		
+		if($___evalString) {
+			return eval('?>'.$___file.'<?php;');
+		}
+		
 		ob_start();							// Start output buffering
 		include $____file;					// Include the template file
 		$____contents = ob_get_contents();	// Get the contents of the buffer

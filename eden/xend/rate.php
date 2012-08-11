@@ -48,169 +48,6 @@ class Eden_Xend_Rate extends Eden_Xend_Base{
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set service type to metro manila express
-	 *
-	 * @return this
-	 */
-	public function setMetroManilaExpress() {
-		$this->_serviceType = self::METRO_MANILA_EXPRESS;
-		return $this;
-	}
-	
-	/**
-	 * Set service type to provincial express
-	 *
-	 * @return this
-	 */
-	public function setProvincialExpress() {
-		$this->_serviceType = self::PROVINCIAL_EXPRESS;
-		return $this;
-	}
-	
-	/**
-	 * Set service type to international postal
-	 *
-	 * @return this
-	 */
-	public function setInternationalPostal() {
-		$this->_serviceType = self::INTERNATIONAL_POSTAL;
-		return $this;
-	}
-	
-	/**
-	 * Set service type to international EMS
-	 *
-	 * @return this
-	 */
-	public function setInternationalEms() {
-		$this->_serviceType = self::INTERNATIONAL_EMS;
-		return $this;
-	}
-	
-	/**
-	 * Set service type to international Express
-	 *
-	 * @return this
-	 */
-	public function setInternationalExpress() {
-		$this->_serviceType = self::INTERNATIONAL_EXPRESS;
-		return $this;
-	}
-	
-	/**
-	 * Set service type to rizal metro manila express
-	 *
-	 * @return this
-	 */
-	public function setRizalMetroManilaExpress() {
-		$this->_serviceType = self::RIZAL_METRO_MANILA_EXPRESS;
-		return $this;
-	}
-	
-	/**
-	 * Set shipment type to document
-	 *
-	 * @return this
-	 */
-	public function setDocument() {
-		$this->_shipmentType = self::DOCUMENT;
-		return $this;
-	}
-	
-	/**
-	 * Set shipment type to parcel
-	 *
-	 * @return this
-	 */
-	public function setParcel() {
-		$this->_shipmentType = self::PARCEL;
-		return $this;
-	}
-	
-	/* Set item weight
-	 *
-	 * @param *integer|float In kilogram
-	 * @return this
-	 */
-	public function setWeight($weight) {
-		//Argument 1 must be an integer or float
-		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_weight = $weight;
-		return $this;
-	}
-	
-	/**
-	 * Set item length
-	 *
-	 * @param *integer|float In centimeter
-	 * @return this
-	 */
-	public function setLenght($length) {
-		//Argument 1 must be an integer or float
-		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_length = $length;
-		return $this;
-	}
-	
-	/**
-	 * Set item width
-	 *
-	 * @param *integer|float In centimeter
-	 * @return this
-	 */
-	public function setWidth($width) {
-		//Argument 1 must be an integer or float
-		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_width = $width;
-		return $this;
-	}
-	
-	/**
-	 * Set item height
-	 *
-	 * @param *integer|float In centimeter
-	 * @return this
-	 */
-	public function setHeight($height) {
-		//Argument 1 must be an integer or float
-		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_height = $height;
-		return $this;
-	}
-	
-	/**
-	 * Set item declared value
-	 *
-	 * @param *integer|float
-	 * @return this
-	 */
-	public function setDeclaredValue($declaredValue) {
-		//Argument 1 must be an integer or float
-		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_declaredValue = $declaredValue;
-		return $this;
-	}
-	
-	/**
-	 * Set item destination
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setDestinationValue($destinationValue) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');	
-		
-		$this->_destinationValue = $destinationValue;
-		return $this;
-	}
-	
-	/**
 	 * Retrieves the calculated rate based on the shipment information.
 	 *
 	 * @return integer|float
@@ -250,6 +87,169 @@ class Eden_Xend_Rate extends Eden_Xend_Base{
 		}
 		
 		return $result->CalculateResult;
+	}
+	
+	/**
+	 * Set item declared value
+	 *
+	 * @param *integer|float
+	 * @return this
+	 */
+	public function setDeclaredValue($declaredValue) {
+		//Argument 1 must be an integer or float
+		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_declaredValue = $declaredValue;
+		return $this;
+	}
+	
+	/**
+	 * Set item destination
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setDestinationValue($destinationValue) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');	
+		
+		$this->_destinationValue = $destinationValue;
+		return $this;
+	}
+	
+	/**
+	 * Set shipment type to document
+	 *
+	 * @return this
+	 */
+	public function setDocument() {
+		$this->_shipmentType = self::DOCUMENT;
+		return $this;
+	}
+	
+	/**
+	 * Set item height
+	 *
+	 * @param *integer|float In centimeter
+	 * @return this
+	 */
+	public function setHeight($height) {
+		//Argument 1 must be an integer or float
+		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_height = $height;
+		return $this;
+	}
+	
+	/**
+	 * Set service type to international EMS
+	 *
+	 * @return this
+	 */
+	public function setInternationalEms() {
+		$this->_serviceType = self::INTERNATIONAL_EMS;
+		return $this;
+	}
+	
+	/**
+	 * Set service type to international Express
+	 *
+	 * @return this
+	 */
+	public function setInternationalExpress() {
+		$this->_serviceType = self::INTERNATIONAL_EXPRESS;
+		return $this;
+	}
+	
+	/**
+	 * Set service type to international postal
+	 *
+	 * @return this
+	 */
+	public function setInternationalPostal() {
+		$this->_serviceType = self::INTERNATIONAL_POSTAL;
+		return $this;
+	}
+	
+	/**
+	 * Set item length
+	 *
+	 * @param *integer|float In centimeter
+	 * @return this
+	 */
+	public function setLenght($length) {
+		//Argument 1 must be an integer or float
+		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_length = $length;
+		return $this;
+	}
+	
+	/**
+	 * Set service type to metro manila express
+	 *
+	 * @return this
+	 */
+	public function setMetroManilaExpress() {
+		$this->_serviceType = self::METRO_MANILA_EXPRESS;
+		return $this;
+	}
+	
+	/**
+	 * Set shipment type to parcel
+	 *
+	 * @return this
+	 */
+	public function setParcel() {
+		$this->_shipmentType = self::PARCEL;
+		return $this;
+	}
+	
+	/**
+	 * Set service type to provincial express
+	 *
+	 * @return this
+	 */
+	public function setProvincialExpress() {
+		$this->_serviceType = self::PROVINCIAL_EXPRESS;
+		return $this;
+	}
+	
+	/**
+	 * Set service type to rizal metro manila express
+	 *
+	 * @return this
+	 */
+	public function setRizalMetroManilaExpress() {
+		$this->_serviceType = self::RIZAL_METRO_MANILA_EXPRESS;
+		return $this;
+	}
+	
+	/* Set item weight
+	 *
+	 * @param *integer|float In kilogram
+	 * @return this
+	 */
+	public function setWeight($weight) {
+		//Argument 1 must be an integer or float
+		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_weight = $weight;
+		return $this;
+	}
+	
+	/**
+	 * Set item width
+	 *
+	 * @param *integer|float In centimeter
+	 * @return this
+	 */
+	public function setWidth($width) {
+		//Argument 1 must be an integer or float
+		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_width = $width;
+		return $this;
 	}
 	
 	/* Protected Methods

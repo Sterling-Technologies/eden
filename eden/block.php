@@ -45,6 +45,30 @@ abstract class Eden_Block extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * returns location of template file
+	 *
+	 * @return string
+	 */
+	abstract public function getTemplate();
+	
+	/**
+	 * returns variables used for templating
+	 *
+	 * @return array
+	 */
+	abstract public function getVariables();
+	
+	/**
+	 * Transform block to string
+	 *
+	 * @param array
+	 * @return string
+	 */
+	public function render() {
+		return Eden_Template::i()->set($this->getVariables())->parsePhp($this->getTemplate());
+	}
+	
+	/**
 	 * For one file Eden, you can set the default
 	 * location of Eden's template to another location.
 	 *
@@ -55,30 +79,6 @@ abstract class Eden_Block extends Eden_Class {
 		Eden_Error::i()->argument(1, 'folder');
 		self::$_blockRoot = $root;
 		return $this;
-	}
-	
-	/**
-	 * returns variables used for templating
-	 *
-	 * @return array
-	 */
-	abstract public function getVariables();
-	
-	/**
-	 * returns location of template file
-	 *
-	 * @return string
-	 */
-	abstract public function getTemplate();
-	
-	/**
-	 * Transform block to string
-	 *
-	 * @param array
-	 * @return string
-	 */
-	public function render() {
-		return Eden_Template::i()->set($this->getVariables())->parsePhp($this->getTemplate());
 	}
 	
 	/* Protected Methods

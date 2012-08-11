@@ -51,16 +51,32 @@ class Eden_Eventbrite extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns Eventbrite Discount
+	 * Returns Eventbrite Oauth
 	 *
-	 * @param string
-	 * @param string
+	 * @param string client ID
+	 * @param string app secret
 	 * @return Eden_Eventbrite_Discount
 	 */
-	public function discount($user, $api) {
+	public function auth($clientId, $appSecret) {
 		Eden_Eventbrite_Error::i()
 			->argument(1, 'string')
 			->argument(1, 'string');
+			
+		return Eden_Eventbrite_Oauth::i($clientId, $appSecret);
+	}
+	
+	/**
+	 * Returns Eventbrite Discount
+	 *
+	 * @param string
+	 * @param string|null
+	 * @return Eden_Eventbrite_Discount
+	 */
+	public function discount($user, $api = NULL) {
+		//argument test
+		Eden_Eventbrite_Error::i()
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
 			
 		return Eden_Eventbrite_Discount::i($user, $api);
 	}
@@ -69,13 +85,14 @@ class Eden_Eventbrite extends Eden_Class {
 	 * Returns Eventbrite Event
 	 *
 	 * @param string
-	 * @param string
+	 * @param string|null
 	 * @return Eden_Eventbrite_Event
 	 */
-	public function event($user, $api) {
+	public function event($user, $api = NULL) {
+		//argument test
 		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')
-			->argument(1, 'string');
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
 			
 		return Eden_Eventbrite_Event::i($user, $api);
 	}
@@ -84,13 +101,14 @@ class Eden_Eventbrite extends Eden_Class {
 	 * Returns Eventbrite Organizer
 	 *
 	 * @param string
-	 * @param string
+	 * @param string|null
 	 * @return Eden_Eventbrite_Organizer
 	 */
-	public function organizer($user, $api) {
+	public function organizer($user, $api = NULL) {
+		//argument test
 		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')
-			->argument(1, 'string');
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
 			
 		return Eden_Eventbrite_Organizer::i($user, $api);
 	}
@@ -99,73 +117,30 @@ class Eden_Eventbrite extends Eden_Class {
 	 * Returns Eventbrite Payment
 	 *
 	 * @param string
-	 * @param string
+	 * @param string|null
 	 * @return Eden_Eventbrite_Payment
 	 */
-	public function payment($user, $api) {
+	public function payment($user, $api = NULL) {
+		//argument test
 		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')
-			->argument(1, 'string');
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
 			
 		return Eden_Eventbrite_Payment::i($user, $api);
-	}
-	
-	/**
-	 * Returns Eventbrite Ticket
-	 *
-	 * @param string
-	 * @param string
-	 * @return Eden_Eventbrite_Ticket
-	 */
-	public function ticket($user, $api) {
-		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')
-			->argument(1, 'string');
-			
-		return Eden_Eventbrite_Ticket::i($user, $api);
-	}
-	
-	/**
-	 * Returns Eventbrite User
-	 *
-	 * @param string
-	 * @param string
-	 * @return Eden_Eventbrite_User
-	 */
-	public function user($user, $api) {
-		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')
-			->argument(1, 'string');
-			
-		return Eden_Eventbrite_User::i($user, $api);
-	}
-	
-	/**
-	 * Returns Eventbrite Venue
-	 *
-	 * @param string
-	 * @param string
-	 * @return Eden_Eventbrite_Venue
-	 */
-	public function venue($user, $api) {
-		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')
-			->argument(1, 'string');
-			
-		return Eden_Eventbrite_Venue::i($user, $api);
 	}
 	
 	/**
 	 * Returns Eventbrite Search
 	 *
 	 * @param string
-	 * @param string
+	 * @param string|null
 	 * @return Eden_Eventbrite_Venue
 	 */
-	public function search($user, $api) {
+	public function search($user, $api = NULL) {
+		//argument test
 		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')
-			->argument(1, 'string');
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
 			
 		return Eden_Eventbrite_Event_Search::i($user, $api);
 	}
@@ -174,15 +149,64 @@ class Eden_Eventbrite extends Eden_Class {
 	 * Returns Eventbrite Set
 	 *
 	 * @param string
-	 * @param string
+	 * @param string|null
 	 * @return Eden_Eventbrite_Venue
 	 */
-	public function set($user, $api) {
+	public function set($user, $api = NULL) {
+		//argument test
 		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')
-			->argument(1, 'string');
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
 			
 		return Eden_Eventbrite_Event_Set::i($user, $api);
+	}
+	
+	/**
+	 * Returns Eventbrite Ticket
+	 *
+	 * @param string
+	 * @param string|null
+	 * @return Eden_Eventbrite_Ticket
+	 */
+	public function ticket($user, $api = NULL) {
+		//argument test
+		Eden_Eventbrite_Error::i()
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
+			
+		return Eden_Eventbrite_Ticket::i($user, $api);
+	}
+	
+	/**
+	 * Returns Eventbrite User
+	 *
+	 * @param string
+	 * @param string|null
+	 * @return Eden_Eventbrite_User
+	 */
+	public function user($user, $api = NULL) {
+		//argument test
+		Eden_Eventbrite_Error::i()
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
+			
+		return Eden_Eventbrite_User::i($user, $api);
+	}
+	
+	/**
+	 * Returns Eventbrite Venue
+	 *
+	 * @param string
+	 * @param string|null
+	 * @return Eden_Eventbrite_Venue
+	 */
+	public function venue($user, $api = NULL) {
+		//argument test
+		Eden_Eventbrite_Error::i()
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
+			
+		return Eden_Eventbrite_Venue::i($user, $api);
 	}
 	
 	/* Protected Methods

@@ -52,24 +52,16 @@ class Eden_Apc extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Sets a data cache
+	 * Flushes the cache
 	 *
-	 * @param string the key to the data
-	 * @param variable the data to be cached
-	 * @param int expire 
-	 * @return bool
+	 * @return this
 	 */
-	public function set($key, $data, $expire = NULL) {
-		//argument test
-		Eden_Apc_Error::i()
-			->argument(1, 'string')			//Argument 1 must be a string or array
-			->argument(3, 'int', 'null');	//Argument 2 must be an integer or null
-		
-		apc_store($key, $data, $expire);
+	public function clear() {
+		apc_clear_cache();
 		
 		return $this;
 	}
-
+	
 	/**
 	 * Gets a data cache
 	 *
@@ -100,16 +92,24 @@ class Eden_Apc extends Eden_Class {
 	}
 	
 	/**
-	 * Flushes the cache
+	 * Sets a data cache
 	 *
-	 * @return this
+	 * @param string the key to the data
+	 * @param variable the data to be cached
+	 * @param int expire 
+	 * @return bool
 	 */
-	public function clear() {
-		apc_clear_cache();
+	public function set($key, $data, $expire = NULL) {
+		//argument test
+		Eden_Apc_Error::i()
+			->argument(1, 'string')			//Argument 1 must be a string or array
+			->argument(3, 'int', 'null');	//Argument 2 must be an integer or null
+		
+		apc_store($key, $data, $expire);
 		
 		return $this;
 	}
-	
+
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

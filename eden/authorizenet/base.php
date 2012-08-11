@@ -74,28 +74,16 @@ class Eden_Authorizenet_Base extends Eden_Class {
 		
 		return $this;
     }
-	
-	protected function _sendRequest($post){
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+	 
+	protected function _getFingerprint($amount){
+		//Argument 1 must be an integer or float
+		Eden_Authorizenet_Error::i()->argument(1, 'float','int');		
+
+		$signature = sprintf('%s^%s^%s^%s^', $this->_apiLogin, $this->_sequence, $this->_time, $amount);
 		
-		//if it is in live mode
-		if($this->_isLive) {
-			$this->_url = self::LIVE_URL;
-		}
-		//Execute curl 
-		$curl = $this->Eden_Curl()
-			->setUrl($this->_url)			
-			->setPostFields($post)			
-			->setHeader(false)
-			->setTimeout(45)
-			->verifyHost(true)
-			->setCaInfo($this->_certificate)	
-			->setPost(true);
-			
-		return $curl->getResponse();
-    }
-	
+		return hash_hmac('md5', $signature, $this->_transactionKey); 
+	}
+
 	protected function _process($xml) {
 		//Argument 1 must be a string
 		Eden_Authorizenet_Error::i()->argument(1, 'string');	
@@ -105,7 +93,7 @@ class Eden_Authorizenet_Base extends Eden_Class {
 			$this->_xmlUrl = self::LIVE_XML_URL;
 		}		
 		//Execute curl 
-		$curl = $this->Eden_Curl()
+		$curl = Eden_Curl::i()
 			->setUrl($this->_xmlUrl)			
 			->setPostFields($xml)			
 			->setHeader(false)
@@ -133,16 +121,28 @@ class Eden_Authorizenet_Base extends Eden_Class {
 			'ids'				=> (int) 	$xml->ids,
 			'paymentProfileId' 	=> (int) 	$xml->customerPaymentProfileId);
     }
-	 
-	protected function _getFingerprint($amount){
-		//Argument 1 must be an integer or float
-		Eden_Authorizenet_Error::i()->argument(1, 'float','int');		
-
-		$signature = sprintf('%s^%s^%s^%s^', $this->_apiLogin, $this->_sequence, $this->_time, $amount);
+	
+	protected function _sendRequest($post){
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
 		
-		return hash_hmac('md5', $signature, $this->_transactionKey); 
-	}
-
+		//if it is in live mode
+		if($this->_isLive) {
+			$this->_url = self::LIVE_URL;
+		}
+		//Execute curl 
+		$curl = Eden_Curl::i()
+			->setUrl($this->_url)			
+			->setPostFields($post)			
+			->setHeader(false)
+			->setTimeout(45)
+			->verifyHost(true)
+			->setCaInfo($this->_certificate)	
+			->setPost(true);
+			
+		return $curl->getResponse();
+    }
+	
 	/* Private Methods
 	-------------------------------*/
 }

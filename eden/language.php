@@ -47,6 +47,16 @@ class Eden_Language extends Eden_Class implements ArrayAccess, Iterator {
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Returns the current item
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+    public function current() {
+        return current($this->_language);
+    }
+	
 	/** 
 	 * Returns the translated key.
 	 * if the key is not set it will set 
@@ -66,23 +76,6 @@ class Eden_Language extends Eden_Class implements ArrayAccess, Iterator {
 	}
 	
 	/** 
-	 * Sets the translated value to the specified key
-	 *
-	 * @param string
-	 * @param string
-	 * @return this
-	 */
-	public function translate($key, $value) {
-		Eden_Language_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string');
-			
-		$this->_language[$key] = $value;
-		
-		return $this;
-	}
-	
-	/** 
 	 * Return the language set
 	 *
 	 * @return array
@@ -91,6 +84,77 @@ class Eden_Language extends Eden_Class implements ArrayAccess, Iterator {
 		return $this->_language;
 	}
 	
+	/**
+	 * Returns th current position
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+    public function key() {
+        return key($this->_language);
+    }
+
+	/**
+	 * Increases the position
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+    public function next() {
+        next($this->_language);
+    }
+
+	/**
+	 * isset using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+    public function offsetExists($offset) {
+        return isset($this->_language[$offset]);
+    }
+    
+	/**
+	 * returns data using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+	public function offsetGet($offset) {
+        return $this->get($offset);
+    }
+	
+	/**
+	 * Sets data using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @param mixed
+	 * @return void
+	 */
+	public function offsetSet($offset, $value) {
+		$this->translate($offset, $value);
+    }
+	
+	/**
+	 * unsets using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+	public function offsetUnset($offset) {
+		unset($this->_language[$offset]);
+    }
+   
+	/**
+	 * Rewinds the position
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+	public function rewind() {
+        reset($this->_language);
+    }
+
 	/** 
 	 * Saves the language to a file
 	 *
@@ -120,46 +184,23 @@ class Eden_Language extends Eden_Class implements ArrayAccess, Iterator {
 		return $this;
 	}
 	
-	/**
-	 * Rewinds the position
-	 * For Iterator interface
+	/** 
+	 * Sets the translated value to the specified key
 	 *
-	 * @return void
+	 * @param string
+	 * @param string
+	 * @return this
 	 */
-	public function rewind() {
-        reset($this->_language);
-    }
-
-	/**
-	 * Returns the current item
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-    public function current() {
-        return current($this->_language);
-    }
-
-	/**
-	 * Returns th current position
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-    public function key() {
-        return key($this->_language);
-    }
-
-	/**
-	 * Increases the position
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-    public function next() {
-        next($this->_language);
-    }
-
+	public function translate($key, $value) {
+		Eden_Language_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string');
+			
+		$this->_language[$key] = $value;
+		
+		return $this;
+	}
+	
 	/**
 	 * Validates whether if the index is set
 	 * For Iterator interface
@@ -169,48 +210,7 @@ class Eden_Language extends Eden_Class implements ArrayAccess, Iterator {
     public function valid() {
         return isset($this->_language[key($this->_language)]);
     }
-	
-	/**
-	 * Sets data using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @param mixed
-	 * @return void
-	 */
-	public function offsetSet($offset, $value) {
-		$this->translate($offset, $value);
-    }
-	
-	/**
-	 * isset using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-    public function offsetExists($offset) {
-        return isset($this->_language[$offset]);
-    }
-    
-	/**
-	 * unsets using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-	public function offsetUnset($offset) {
-		unset($this->_language[$offset]);
-    }
-    
-	/**
-	 * returns data using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-	public function offsetGet($offset) {
-        return $this->get($offset);
-    }
-	
+	 	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

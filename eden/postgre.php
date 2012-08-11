@@ -71,7 +71,19 @@ class Eden_Postgre extends Eden_Sql_Database {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
+	/**
+	 * Returns the alter query builder
+	 *
+	 * @return Eden_Sql_Alter
+	 */ 
+	public function alter($name = NULL) {
+		//Argument 1 must be a string or null
+		Eden_Postgre_Error::i()->argument(1, 'string', 'null');
+		
+		return Eden_Postgre_Alter::i($name);
+	}
+	
 	/**
 	 * Connects to the database
 	 * 
@@ -96,67 +108,7 @@ class Eden_Postgre extends Eden_Sql_Database {
 		
 		return $this;
 	}
-	
-	/**
-	 * Returns the delete query builder
-	 *
-	 * @return Eden_Sql_Delete
-	 */ 
-	public function delete($table = NULL) {
-		//Argument 1 must be a string or null
-		Eden_Postgre_Error::i()->argument(1, 'string', 'null');
 		
-		return Eden_Postgre_Delete::i($table);
-	}
-	
-	/**
-	 * Returns the insert query builder
-	 *
-	 * @return Eden_Sql_Insert
-	 */ 
-	public function insert($table = NULL) {
-		//Argument 1 must be a string or null
-		Eden_Postgre_Error::i()->argument(1, 'string', 'null');
-		
-		return Eden_Postgre_Insert::i($table);
-	}
-	
-	/**
-	 * Returns the select query builder
-	 *
-	 * @return Eden_Sql_Select
-	 */ 
-	public function select($select = '*') {
-		//Argument 1 must be a string or array
-		Eden_Postgre_Error::i()->argument(1, 'string', 'array');
-		
-		return Eden_Postgre_Select::i($select);
-	}
-	
-	/**
-	 * Returns the update query builder
-	 *
-	 * @return Eden_Sql_Update
-	 */ 
-	public function update($table = NULL) {
-		//Argument 1 must be a string or null
-		Eden_Postgre_Error::i()->argument(1, 'string', 'null');
-		
-		return Eden_Postgre_Update::i($table);
-	}
-	
-	/**
-	 * Returns the alter query builder
-	 *
-	 * @return Eden_Sql_Alter
-	 */ 
-	public function alter($name = NULL) {
-		//Argument 1 must be a string or null
-		Eden_Postgre_Error::i()->argument(1, 'string', 'null');
-		
-		return Eden_Postgre_Alter::i($name);
-	}
-	
 	/**
 	 * Returns the create query builder
 	 *
@@ -170,39 +122,16 @@ class Eden_Postgre extends Eden_Sql_Database {
 	}
 	
 	/**
-	 * Returns the alter query builder
+	 * Returns the delete query builder
 	 *
-	 * @return Eden_Sql_Utility
+	 * @return Eden_Sql_Delete
 	 */ 
-	public function utility() {
-		return Eden_Postgre_Utility::i();
+	public function delete($table = NULL) {
+		//Argument 1 must be a string or null
+		Eden_Postgre_Error::i()->argument(1, 'string', 'null');
+		
+		return Eden_Postgre_Delete::i($table);
 	}
-	
-	/**
-	 * Set schema search paths
-	 *
-	 * @string
-	 */
-	public function setSchema($schema) {
-		$schema = array($schema);
-		if(func_num_args() > 0) {
-			$schema = func_get_args();
-		}
-		
-		$error = Eden_Postgre_Error::i();
-		foreach($schema as $i => $name) {
-			$error->argument($i + 1, 'string');
-		}
-		
-		$schema = implode(',', $schema);
-		
-		$query = $this->utility()->setSchema($schema);
-		$this->query($query);
-		
-		return $this;
-	}
-	
-	
 	
 	/**
 	 * Query for showing all columns of a table
@@ -350,6 +279,75 @@ class Eden_Postgre extends Eden_Sql_Database {
 			->getQuery();
 		
 		return $this->query($query);
+	}
+	
+	/**
+	 * Returns the insert query builder
+	 *
+	 * @return Eden_Sql_Insert
+	 */ 
+	public function insert($table = NULL) {
+		//Argument 1 must be a string or null
+		Eden_Postgre_Error::i()->argument(1, 'string', 'null');
+		
+		return Eden_Postgre_Insert::i($table);
+	}
+	
+	/**
+	 * Returns the select query builder
+	 *
+	 * @return Eden_Sql_Select
+	 */ 
+	public function select($select = '*') {
+		//Argument 1 must be a string or array
+		Eden_Postgre_Error::i()->argument(1, 'string', 'array');
+		
+		return Eden_Postgre_Select::i($select);
+	}
+	
+	/**
+	 * Set schema search paths
+	 *
+	 * @string
+	 */
+	public function setSchema($schema) {
+		$schema = array($schema);
+		if(func_num_args() > 0) {
+			$schema = func_get_args();
+		}
+		
+		$error = Eden_Postgre_Error::i();
+		foreach($schema as $i => $name) {
+			$error->argument($i + 1, 'string');
+		}
+		
+		$schema = implode(',', $schema);
+		
+		$query = $this->utility()->setSchema($schema);
+		$this->query($query);
+		
+		return $this;
+	}
+	
+	/**
+	 * Returns the update query builder
+	 *
+	 * @return Eden_Sql_Update
+	 */ 
+	public function update($table = NULL) {
+		//Argument 1 must be a string or null
+		Eden_Postgre_Error::i()->argument(1, 'string', 'null');
+		
+		return Eden_Postgre_Update::i($table);
+	}
+
+	/**
+	 * Returns the alter query builder
+	 *
+	 * @return Eden_Sql_Utility
+	 */ 
+	public function utility() {
+		return Eden_Postgre_Utility::i();
 	}
 	
 	/* Protected Methods

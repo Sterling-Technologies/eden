@@ -74,74 +74,18 @@ class Eden_Authorizenet_Block_Post extends Eden_Block {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
 	/**
-	 * Set card number label
+	 * Set customer address 
 	 *
 	 * @param *string
 	 * @return this
 	 */
-	public function setCardNumberLabel($cardNumberLabel) {
+	public function setAddress($address) {
 		//Argument 1 must be a string
 		Eden_Authorizenet_Error::i()->argument(1, 'string');	
 		
-		$this->_cardNumberLabel = $cardNumberLabel;
-		return $this;
-	}
-	
-	/**
-	 * Set expiration date label 
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setExpirationLabel($expirationLabel) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_expirationLabel = $expirationLabel;
-		return $this;
-	}
-	
-	/**
-	 * Set cvv label 
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setCvvLabel($cvvLabel) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_cvvLabel = $cvvLabel;
-		return $this;
-	}
-	
-	/**
-	 * Set first name label 
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setFirstNameLabel($firstNameLabel) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_firstNameLabel = $firstNameLabel;
-		return $this;
-	}
-	
-	/**
-	 * Set last name label 
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setLastNameLabel($lastNameLabel) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_lastNameLabel = $lastNameLabel;
+		$this->_address = $address;
 		return $this;
 	}
 	
@@ -160,76 +104,6 @@ class Eden_Authorizenet_Block_Post extends Eden_Block {
 	}
 	
 	/**
-	 * Set city label
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setCityLabel($cityLabel) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_cityLabel = $cityLabel;
-		return $this;
-	}
-	
-	/**
-	 * Set state label 
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setStateLabel($stateLabel) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_stateLabel = $stateLabel;
-		return $this;
-	}
-	
-	/**
-	 * Set zip label 
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setZipLabel($zipLabel) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_zipLabel = $zipLabel;
-		return $this;
-	}
-	
-	/**
-	 * Set country label 
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setCountryLabel($countryLabel) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->__countryLabel = $countryLabel;
-		return $this;
-	}
-	
-	/**
-	 * Set submit button value
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setSubmitButton($submitButton) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_submitButton = $submitButton;
-		return $this;
-	}
-	
-	/**
 	 * Set customer card number
 	 *
 	 * @param *string
@@ -242,74 +116,17 @@ class Eden_Authorizenet_Block_Post extends Eden_Block {
 		$this->_cardNumber = $cardNumber;
 		return $this;
 	}
-	
 	/**
-	 * Set customer exipiration date 
+	 * Set card number label
 	 *
 	 * @param *string
 	 * @return this
 	 */
-	public function setExpiration($date) {
+	public function setCardNumberLabel($cardNumberLabel) {
 		//Argument 1 must be a string
 		Eden_Authorizenet_Error::i()->argument(1, 'string');	
 		
-		$this->_date = $date;
-		return $this;
-	}
-	
-	/**
-	 * Set customer cvv
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setCvv($cvv) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_cvvr = $cvv;
-		return $this;
-	}
-	
-	/**
-	 * Set customer first name 
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setFirstName($firstName) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_firstName = $firstName;
-		return $this;
-	}
-	
-	/**
-	 * Set customer last name
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setLastName($lastName) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_lastName = $lastName;
-		return $this;
-	}
-	
-	/**
-	 * Set customer address 
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setAddress($address) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_address = $address;
+		$this->_cardNumberLabel = $cardNumberLabel;
 		return $this;
 	}
 	
@@ -328,30 +145,16 @@ class Eden_Authorizenet_Block_Post extends Eden_Block {
 	}
 	
 	/**
-	 * Set customer state 
+	 * Set city label
 	 *
 	 * @param *string
 	 * @return this
 	 */
-	public function setState($state) {
+	public function setCityLabel($cityLabel) {
 		//Argument 1 must be a string
 		Eden_Authorizenet_Error::i()->argument(1, 'string');	
 		
-		$this->_state = $state;
-		return $this;
-	}
-	
-	/**
-	 * Set customer zip
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setZip($zip) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_zip = $zip;
+		$this->_cityLabel = $cityLabel;
 		return $this;
 	}
 	
@@ -367,6 +170,183 @@ class Eden_Authorizenet_Block_Post extends Eden_Block {
 		
 		$this->_country = $country;
 		return $this;
+	}
+	
+	/**
+	 * Set country label 
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setCountryLabel($countryLabel) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->__countryLabel = $countryLabel;
+		return $this;
+	}
+	
+	/**
+	 * Set customer cvv
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setCvv($cvv) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_cvvr = $cvv;
+		return $this;
+	}
+	
+	/**
+	 * Set cvv label 
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setCvvLabel($cvvLabel) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_cvvLabel = $cvvLabel;
+		return $this;
+	}
+	
+	/**
+	 * Set customer exipiration date 
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setExpiration($date) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_date = $date;
+		return $this;
+	}
+	
+	/**
+	 * Set expiration date label 
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setExpirationLabel($expirationLabel) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_expirationLabel = $expirationLabel;
+		return $this;
+	}
+	
+	/**
+	 * Set customer first name 
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setFirstName($firstName) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_firstName = $firstName;
+		return $this;
+	}
+	
+	/**
+	 * Set first name label 
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setFirstNameLabel($firstNameLabel) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_firstNameLabel = $firstNameLabel;
+		return $this;
+	}
+	
+	/**
+	 * Set customer last name
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setLastName($lastName) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_lastName = $lastName;
+		return $this;
+	}
+	
+	/**
+	 * Set last name label 
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setLastNameLabel($lastNameLabel) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_lastNameLabel = $lastNameLabel;
+		return $this;
+	}
+	
+	/**
+	 * Set customer state 
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setState($state) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_state = $state;
+		return $this;
+	}
+	
+	/**
+	 * Set state label 
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setStateLabel($stateLabel) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_stateLabel = $stateLabel;
+		return $this;
+	}
+	
+	/**
+	 * Set submit button value
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setSubmitButton($submitButton) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_submitButton = $submitButton;
+		return $this;
+	}
+	
+	/**
+	 * Returns a template file
+	 * 
+	 * @return string
+	 */
+	public function getTemplate() {
+		return realpath(dirname(__FILE__).'/template/post.php');
 	}
 	
 	/**
@@ -416,12 +396,31 @@ class Eden_Authorizenet_Block_Post extends Eden_Block {
 	}
 	
 	/**
-	 * Returns a template file
-	 * 
-	 * @return string
+	 * Set customer zip
+	 *
+	 * @param *string
+	 * @return this
 	 */
-	public function getTemplate() {
-		return realpath(dirname(__FILE__).'/template/post.php');
+	public function setZip($zip) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_zip = $zip;
+		return $this;
+	}
+	
+	/**
+	 * Set zip label 
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setZipLabel($zipLabel) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_zipLabel = $zipLabel;
+		return $this;
 	}
 	
 	/* Protected Methods

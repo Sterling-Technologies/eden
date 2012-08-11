@@ -40,42 +40,12 @@ class Eden_GetSatisfaction_Product extends Eden_GetSatisfaction_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Sets company URL
+	 * Returns a list of companies
 	 *
-	 * @param string|int
-	 * @return this
+	 * @return array
 	 */
-	public function searchByCompany($company) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
-		
-		$this->_url = sprintf(self::URL_COMPANY, $company);
-		return $this;
-	}
-	
-	/**
-	 * Sets user URL
-	 * 
-	 * @param int|string
-	 * @return this
-	 */
-	public function searchByUser($user) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
-		
-		$this->_url = sprintf(self::URL_PEOPLE, $user);
-		return $this;
-	}
-	
-	/**
-	 * Sets topic URL
-	 *
-	 * @param string|int
-	 * @return this
-	 */
-	public function searchByTopic($topic) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
-		
-		$this->_url = sprintf(self::URL_TOPIC, $topic);
-		return $this;
+	public function getResults() {
+		return $this->_getResponse($this->_url, $this->_query);
 	}
 	
 	/**
@@ -93,32 +63,41 @@ class Eden_GetSatisfaction_Product extends Eden_GetSatisfaction_Base {
 	}
 	
 	/**
-	 * Sort by popular
+	 * Sets company URL
 	 *
+	 * @param string|int
 	 * @return this
 	 */
-	public function sortByMostPopular() {
-		$this->_query['sort'] = 'most_popular';
+	public function searchByCompany($company) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
+		
+		$this->_url = sprintf(self::URL_COMPANY, $company);
 		return $this;
 	}
 	
 	/**
-	 * Sort by lame
+	 * Sets topic URL
 	 *
+	 * @param string|int
 	 * @return this
 	 */
-	public function sortByLeastPopular() {
-		$this->_query['sort'] = 'least_popular';
+	public function searchByTopic($topic) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
+		
+		$this->_url = sprintf(self::URL_TOPIC, $topic);
 		return $this;
 	}
 	
 	/**
-	 * Sort by letters
-	 *
+	 * Sets user URL
+	 * 
+	 * @param int|string
 	 * @return this
 	 */
-	public function sortByAlphabet() {
-		$this->_query['sort'] = 'alpha';
+	public function searchByUser($user) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
+		
+		$this->_url = sprintf(self::URL_PEOPLE, $user);
 		return $this;
 	}
 	
@@ -159,12 +138,33 @@ class Eden_GetSatisfaction_Product extends Eden_GetSatisfaction_Base {
 	}
 	
 	/**
-	 * Returns a list of companies
+	 * Sort by letters
 	 *
-	 * @return array
+	 * @return this
 	 */
-	public function getResults() {
-		return $this->_getResponse($this->_url, $this->_query);
+	public function sortByAlphabet() {
+		$this->_query['sort'] = 'alpha';
+		return $this;
+	}
+	
+	/**
+	 * Sort by lame
+	 *
+	 * @return this
+	 */
+	public function sortByLeastPopular() {
+		$this->_query['sort'] = 'least_popular';
+		return $this;
+	}
+	
+	/**
+	 * Sort by popular
+	 *
+	 * @return this
+	 */
+	public function sortByMostPopular() {
+		$this->_query['sort'] = 'most_popular';
+		return $this;
 	}
 	
 	/* Protected Methods

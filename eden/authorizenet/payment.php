@@ -78,244 +78,7 @@ class Eden_Authorizenet_Payment extends Eden_Authorizenet_Base {
 	
 	/* Public Methods
 	-------------------------------*/
-	/**
-     * Set authorize only transaction
-     *
-     * @return this
-     */
-	public function setToAuthorizeOnly() {
-		$this->_type = self::AUTH_ONLY;
-		return $this;
-	}
 	
-	/**
-     * Set capture only transaction
-     *
-     * @return this
-     */
-	public function setToCaptureOnly() {
-		$this->_type = self::CAPTURE_ONLY;
-		return $this;
-	}
-	
-	/**
-     * Set prior and capture only transaction
-     *
-     * @return this
-     */
-	public function setToPrior() {
-		$this->_type = self::PRIOR_AUTH_CAPTURE;
-		return $this;
-	}
-	
-	/**
-     * Set void transaction
-     *
-     * @return this
-     */
-	public function setToVoid() {
-		$this->_type = self::VOID;
-		return $this;
-	}
-	
-	/**
-     * Set credit transaction
-     *
-     * @return this
-     */
-	public function setToCredit() {
-		$this->_type = self::CREDIT;
-		return $this;
-	}
-	
-	/**
-     * Set transaction amount 
-     *
-	 * @param *integer|float Transaction amount
-     * @return this
-     */
-	public function setAmount($amount) {
-		//Argument 1 must be an integer or float
-		Eden_Authorizenet_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_amount = $amount;
-		return $this;
-	}
-	
-	/**
-     * Set cardholder card number 
-     *
-	 * @param *string Card number
-     * @return this
-     */
-	public function setCardNumber($cardNumber) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_cardNumber = $cardNumber;
-		return $this;
-	}
-	
-	/**
-     * Set cardholder card expiration date 
-     *
-	 * @param *string Card expirartion date
-     * @return this
-     */
-	public function setExpiration($expiration) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_expiration = $expiration;
-		return $this;
-	}
-	
-	/**
-     * Set cardholder first name
-     *
-	 * @param *string First name	
-     * @return this
-     */
-	public function setFirstName($firstName) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_firstName = $firstName;
-		return $this;
-	}
-	
-	/**
-     * Set cardholder last name
-     *
-	 * @param *string Last name	
-     * @return this
-     */
-	public function setLastName($lastName) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_lastName = $lastName;
-		return $this;
-	}
-	
-	/**
-     * Set cardholder address 
-     *
-	 * @param *string address	
-     * @return this
-     */
-	public function setAddress($address) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_address = $address;
-		return $this;
-	}
-	
-	/**
-     * Set cardholder state
-     *
-	 * @param *string state	
-     * @return this
-     */
-	public function setState($state) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_state = $state;
-		return $this;
-	}
-	
-	/**
-     * Set cardholder zip
-     *
-	 * @param *string zip code	
-     * @return this
-     */
-	public function setZip($zip) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_zip = $zip;
-		return $this;
-	}
-	
-	/**
-     * Set transaction id 
-     *
-	 * @param *string Valid transaction id
-     * @return this
-     */
-	public function setTrasactionId($id) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_transactionId = $id;
-		return $this;
-	}
-	
-	/**
-     * Set authentication code 
-     *
-	 * @param *string Authentication code
-     * @return this
-     */
-	public function setAuthentication($code) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_code = $code;
-		return $this;
-	}
-	/**
-     * Set item Description 
-     *
-	 * @param *string item description
-     * @return this
-     */
-	public function setDescription($description) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');
-		
-		$this->_description = $description;
-		return $this;
-	}
-	
-	/**
-     * Set customer email address
-     *
-	 * @param *string customer email address
-     * @return this
-     */
-	public function setEmail($email) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');
-		
-		$this->_email = $email;
-		return $this;
-	}
-	/**
-     * Do not email receipt to customer
-     *
-     * @return this
-     */
-	public function setReceiptOff() {
-		$this->_emailCustomer = false;
-		return $this;
-	}
-	/**
-     * Set merchant email address
-     *
-	 * @param *string merchant email address
-     * @return this
-     */
-	public function setMerchantEmail($email) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');
-		
-		$this->_merchantEmail = $email;
-		return $this;
-	}
 	/**
      * Do Transactions
      *
@@ -377,6 +140,248 @@ class Eden_Authorizenet_Payment extends Eden_Authorizenet_Base {
 		$response = $this->_sendRequest($query);
 		//explode the response
 		return explode('|', $response);
+	}
+	
+	/**
+     * Set cardholder address 
+     *
+	 * @param *string address	
+     * @return this
+     */
+	public function setAddress($address) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_address = $address;
+		return $this;
+	}
+	
+	/**
+     * Set transaction amount 
+     *
+	 * @param *integer|float Transaction amount
+     * @return this
+     */
+	public function setAmount($amount) {
+		//Argument 1 must be an integer or float
+		Eden_Authorizenet_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_amount = $amount;
+		return $this;
+	}
+	
+	/**
+     * Set authentication code 
+     *
+	 * @param *string Authentication code
+     * @return this
+     */
+	public function setAuthentication($code) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_code = $code;
+		return $this;
+	}
+	
+	/**
+     * Set cardholder card number 
+     *
+	 * @param *string Card number
+     * @return this
+     */
+	public function setCardNumber($cardNumber) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_cardNumber = $cardNumber;
+		return $this;
+	}
+	
+	/**
+     * Set item Description 
+     *
+	 * @param *string item description
+     * @return this
+     */
+	public function setDescription($description) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');
+		
+		$this->_description = $description;
+		return $this;
+	}
+	
+	/**
+     * Set customer email address
+     *
+	 * @param *string customer email address
+     * @return this
+     */
+	public function setEmail($email) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');
+		
+		$this->_email = $email;
+		return $this;
+	}
+	
+	/**
+     * Set cardholder card expiration date 
+     *
+	 * @param *string Card expirartion date
+     * @return this
+     */
+	public function setExpiration($expiration) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_expiration = $expiration;
+		return $this;
+	}
+	
+	/**
+     * Set cardholder first name
+     *
+	 * @param *string First name	
+     * @return this
+     */
+	public function setFirstName($firstName) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_firstName = $firstName;
+		return $this;
+	}
+	
+	/**
+     * Set cardholder last name
+     *
+	 * @param *string Last name	
+     * @return this
+     */
+	public function setLastName($lastName) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_lastName = $lastName;
+		return $this;
+	}
+	
+	/**
+     * Set merchant email address
+     *
+	 * @param *string merchant email address
+     * @return this
+     */
+	public function setMerchantEmail($email) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');
+		
+		$this->_merchantEmail = $email;
+		return $this;
+	}
+	
+	/**
+     * Do not email receipt to customer
+     *
+     * @return this
+     */
+	public function setReceiptOff() {
+		$this->_emailCustomer = false;
+		return $this;
+	}
+	
+	/**
+     * Set cardholder state
+     *
+	 * @param *string state	
+     * @return this
+     */
+	public function setState($state) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_state = $state;
+		return $this;
+	}
+	
+	/**
+     * Set authorize only transaction
+     *
+     * @return this
+     */
+	public function setToAuthorizeOnly() {
+		$this->_type = self::AUTH_ONLY;
+		return $this;
+	}
+	
+	/**
+     * Set capture only transaction
+     *
+     * @return this
+     */
+	public function setToCaptureOnly() {
+		$this->_type = self::CAPTURE_ONLY;
+		return $this;
+	}
+	
+	/**
+     * Set credit transaction
+     *
+     * @return this
+     */
+	public function setToCredit() {
+		$this->_type = self::CREDIT;
+		return $this;
+	}
+	
+	/**
+     * Set prior and capture only transaction
+     *
+     * @return this
+     */
+	public function setToPrior() {
+		$this->_type = self::PRIOR_AUTH_CAPTURE;
+		return $this;
+	}
+	
+	/**
+     * Set void transaction
+     *
+     * @return this
+     */
+	public function setToVoid() {
+		$this->_type = self::VOID;
+		return $this;
+	}
+	
+	/**
+     * Set transaction id 
+     *
+	 * @param *string Valid transaction id
+     * @return this
+     */
+	public function setTrasactionId($id) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_transactionId = $id;
+		return $this;
+	}
+	
+	/**
+     * Set cardholder zip
+     *
+	 * @param *string zip code	
+     * @return this
+     */
+	public function setZip($zip) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_zip = $zip;
+		return $this;
 	}
 	
 	/* Protected Methods

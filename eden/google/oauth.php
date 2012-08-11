@@ -34,14 +34,43 @@ class Eden_Google_Oauth extends Eden_Class {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_key 		= NULL;
-	protected $_secret 		= NULL;
-	protected $_redirect 	= NULL;
-	protected $_apiKey		= NULL;
+	protected $_clientId 		= NULL;
+	protected $_clientSecret 	= NULL;
+	protected $_redirect 		= NULL;
+	protected $_apiKey			= NULL;
 	
 	protected $_online 	= self::ONLINE;
 	protected $_renew 	= self::AUTO;
 	protected $_state 	= NULL;
+	
+	protected $_scopes = array(	
+		'analytics' 	=> 'https://www.googleapis.com/auth/analytics.readonly',
+		'base' 			=> 'https://www.google.com/base/feeds/',
+		'buzz' 			=> 'https://www.googleapis.com/auth/buzz',
+		'book' 			=> 'https://www.google.com/books/feeds/',
+		'blogger'		=> 'https://www.blogger.com/feeds/',
+		'calendar' 		=> 'https://www.google.com/calendar/feeds/',
+		'contacts' 		=> 'https://www.google.com/m8/feeds/',
+		'chrome' 		=> 'https://www.googleapis.com/auth/chromewebstore.readonly',
+		'documents'		=> 'https://docs.google.com/feeds/',
+		'finance'		=> 'https://finance.google.com/finance/feeds/',
+		'gmail'			=> 'https://mail.google.com/mail/feed/atom',
+		'health' 		=> 'https://www.google.com/health/feeds/',
+		'h9' 			=> 'https://www.google.com/h9/feeds/',
+		'maps'			=> 'https://maps.google.com/maps/feeds/',
+		'moderator' 	=> 'https://www.googleapis.com/auth/moderator',
+		'opensocial'	=> 'https://www-opensocial.googleusercontent.com/api/people/',
+		'orkut' 		=> 'https://www.googleapis.com/auth/orkut',
+		'orkut'			=> 'https://orkut.gmodules.com/social/rest',
+		'picasa'		=> 'https://picasaweb.google.com/data/',
+		'sidewiki' 		=> 'https://www.google.com/sidewiki/feeds/',
+		'sites'			=> 'https://sites.google.com/feeds/',
+		'spreadsheets'	=> 'https://spreadsheets.google.com/feeds/',
+		'tasks'			=> 'https://www.googleapis.com/auth/tasks',
+		'shortener' 	=> 'https://www.googleapis.com/auth/urlshortener',
+		'wave'			=> 'http://wave.googleusercontent.com/api/rpc',
+		'webmaster' 	=> 'https://www.google.com/webmasters/tools/feeds/',
+		'youtube' 		=> 'https://gdata.youtube.com');
 	
 	/* Private Properties
 	-------------------------------*/
@@ -51,7 +80,7 @@ class Eden_Google_Oauth extends Eden_Class {
 		return self::_getSingleton(__CLASS__);
 	}
 	
-	public function __construct($key, $secret, $redirect, $apiKey) {
+	public function __construct($clientId, $clientSecret, $apiKey, $redirect) {
 		//argument test
 		Eden_Google_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
@@ -60,14 +89,88 @@ class Eden_Google_Oauth extends Eden_Class {
 			->argument(4, 'string');			//Argument 4 must be a string
 
 			
-		$this->_key 		= $key; 
-		$this->_secret 		= $secret;
-		$this->_redirect 	= $redirect;
-		$this->_apiKey		= $apiKey;
+		$this->_clientId 		= $clientId; 
+		$this->_clientSecret 	= $clientSecret;
+		$this->_redirect 		= $redirect;
+		$this->_apiKey			= $apiKey;
 	}
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Returns the access token 
+	 * 
+	 * @param string
+	 * @return string
+	 */
+	public function getAccessToken($code) {
+		Eden_Google_Error::i()->argument(1, 'string');	
+			
+		$query = array(
+			'code' 				=> $code,
+			'client_id'			=> $this->_clientId,
+			'client_secret'		=> $this->_clientSecret,
+			'redirect_uri'		=> $this->_redirect,
+			'grant_type'		=> self::AUTH_CODE);
+		
+		
+		return Eden_Curl::i()
+			->setUrl(self::ACCESS_URL)
+			->verifyHost(false)
+			->verifyPeer(false)
+			->setPost(true)
+			->setPostFields(http_build_query($query))
+			->setTimeout(60)
+			->getJsonResponse();
+	}
+	
+	/**
+	 * Returns the API KEY 
+	 * 
+	 * @return string
+	 */
+	public function getApiKey() {
+		return $this->_apiKey;
+	}
+	
+	/**
+	 * Returns the URL used for login. 
+	 * 
+	 * @param array|string[,string]
+	 * @return string
+	 */
+	public function getLoginUrl($scope) {
+		//Argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string', 'array');
+		
+		if(!is_array($scope)) {
+			$scope = func_get_args();
+		}
+		
+		foreach($scope as $i => $url) {
+			if(isset($this->_scopes[$url])) {
+				$scope[$i] = $this->_scopes[$url];
+			}
+		}
+		
+		$scope = implode(' ', $scope);
+		
+		$query = array(
+			'response_type'		=> self::CODE,
+			'client_id'			=> $this->_clientId,
+			'redirect_uri'		=> $this->_redirect,
+			'scope'				=> $scope,
+			'access_type'		=> $this->_online, 
+			'state'				=> $this->_state,
+			'approval_prompt'	=> $this->_renew);
+		
+		if(!$this->_state) {
+			unset($query['state']);
+		} 
+		
+		return self::REQUEST_URL.'?'.http_build_query($query);
+	}
+	
 	/**
 	 * Access token is sete to offline, long lived 
 	 * 
@@ -99,68 +202,6 @@ class Eden_Google_Oauth extends Eden_Class {
 		Eden_Google_Error::i()->argument(1, 'string');
 		$this->_state = $state;
 		return $this;
-	}
-	
-	/**
-	 * Returns the URL used for login. 
-	 * 
-	 * @param string
-	 * @return string
-	 */
-	public function getLoginUrl($scope) {
-		//Argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string', 'array');
-		
-		if(is_array($scope)) {
-			$scope = implode(' ', $scope);
-		}
-		
-		$query = array(
-			'response_type'		=> self::CODE,
-			'client_id'			=> $this->_key,
-			'redirect_uri'		=> $this->_redirect,
-			'scope'				=> $scope,
-			'access_type'		=> $this->_online, 
-			'state'				=> $this->_state,
-			'approval_prompt'	=> $this->_renew);
-		
-		return self::REQUEST_URL.'?'.http_build_query($query);
-	}
-	
-	/**
-	 * Returns the access token 
-	 * 
-	 * @param string
-	 * @return string
-	 */
-	public function getAccessToken($code) {
-		Eden_Google_Error::i()->argument(1, 'string');	
-			
-		$query = array(
-			'code' 				=> $code,
-			'client_id'			=> $this->_key,
-			'client_secret'		=> $this->_secret,
-			'redirect_uri'		=> $this->_redirect,
-			'grant_type'		=> self::AUTH_CODE);
-		
-		
-		return $this->Eden_Curl()
-			->setUrl(self::ACCESS_URL)
-			->verifyHost(false)
-			->verifyPeer(false)
-			->setPost(true)
-			->setPostFields(http_build_query($query))
-			->setTimeout(60)
-			->getJsonResponse();
-	}
-	
-	/**
-	 * Returns the API KEY 
-	 * 
-	 * @return string
-	 */
-	public function getApiKey() {
-		return $this->_apiKey;
 	}
 	
 	/* Protected Methods

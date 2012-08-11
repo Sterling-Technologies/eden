@@ -45,21 +45,22 @@ class Eden_Google_Shortener extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns the short url version for a long url
+	 * Returns full analytics of this short url
 	 *
-	 * @param string long url
-	 * @return string | false
+	 * @param string short url
+	 * @return array
 	 */
-	public function getShortUrl($url) {
-		$query = array('longUrl' => $url);
-		$response = $this->_post(self::URL, $query);
-		$response = json_decode($response, true);
+	public function getAnalytics($url) {
 		
-		if(!is_array($response) || !isset($response['id'])) {
-			return false;	
+		if(strpos($url, self::SERVICE_URL) !== 0) {
+			$url  = self::SERVICE_URL.$url;
 		}
 		
-		return $response['id'];
+		$query = array('shortUrl' => $url, 'projection'=>'FULL');
+		
+		$response = $this->_getResponse(self::URL, $query);
+		
+		return json_decode($response, true);
 	} 
 	
 	/**
@@ -95,25 +96,6 @@ class Eden_Google_Shortener extends Eden_Class {
 	} 
 	
 	/**
-	 * Returns full analytics of this short url
-	 *
-	 * @param string short url
-	 * @return array
-	 */
-	public function getAnalytics($url) {
-		
-		if(strpos($url, self::SERVICE_URL) !== 0) {
-			$url  = self::SERVICE_URL.$url;
-		}
-		
-		$query = array('shortUrl' => $url, 'projection'=>'FULL');
-		
-		$response = $this->_getResponse(self::URL, $query);
-		
-		return json_decode($response, true);
-	} 
-	
-	/**
 	 * Returns the meta of the last call
 	 *
 	 * @return array
@@ -127,6 +109,24 @@ class Eden_Google_Shortener extends Eden_Class {
 		
 		return $this->_meta;
 	}
+	
+	/**
+	 * Returns the short url version for a long url
+	 *
+	 * @param string long url
+	 * @return string | false
+	 */
+	public function getShortUrl($url) {
+		$query = array('longUrl' => $url);
+		$response = $this->_post(self::URL, $query);
+		$response = json_decode($response, true);
+		
+		if(!is_array($response) || !isset($response['id'])) {
+			return false;	
+		}
+		
+		return $response['id'];
+	} 
 	
 	/* Protected Methods
 	-------------------------------*/

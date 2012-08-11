@@ -8,7 +8,7 @@
  */
 
 /**
- * Google Plus
+ * Google Plus activity
  *
  * @package    Eden
  * @category   google
@@ -17,15 +17,17 @@
 class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	/* Constants
 	-------------------------------*/
+	const URL_ACTIVITY_LIST		= 'https://www.googleapis.com/plus/v1/people/%s/activities/%s';
+	const URL_ACTIVITY_GET		= 'https://www.googleapis.com/plus/v1/activities/%s';
+	const URL_ACTIVITY_SEARCH	= 'https://www.googleapis.com/plus/v1/activities';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/ 
-	protected $_queryString		= NULL;
 	protected $_pageToken		= NULL;
-	protected $_activityId		= NULL;
-	protected $_userId			= Eden_Google_Plus::DEFAULT_USERID;
-	protected $_collection		= Eden_Google_Plus::DEFAULT_ACTIVITY_COLLECTION;
+	protected $_maxResults		= NULL;
+	protected $_orderBy			= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -42,20 +44,7 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
-	/**
-	 * Set query string
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function setQueryString($queryString) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_queryString = $queryString;
-		
-		return $this;
-	}
-	
+	-------------------------------*/	
 	/**
 	 * Set page token
 	 *
@@ -63,6 +52,7 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	 * @return array
 	 */
 	public function setPageToken($pageToken) {
+		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		$this->_pageToken = $pageToken;
 		
@@ -70,121 +60,93 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Set Activity Id
+	 * The maximum number of people to include in the response, 
+	 * used for paging.
 	 *
-	 * @param string
-	 * @return array
+	 * @param integer
+	 * @return this
 	 */
-	public function setActivityId($id) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_activityId = $id;
+	public function setMaxResults($maxResults) {
+		//argument 1 must be a integer
+		Eden_Google_Error::i()->argument(1, 'int');
+		$this->_maxResults = $maxResults;
 		
 		return $this;
 	}
 	
 	/**
-	 * Set Activity Id
+	 * Sort activities by relevance to the user, most relevant first.
 	 *
-	 * @param string
-	 * @return array
+	 * @return this
 	 */
-	public function setUserId($userId) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userId = $userId;
+	public function orderByBest() {
+		$this->_orderBy = 'best';
 		
 		return $this;
 	}
 	
 	/**
-	 * Set Activity Id
+	 * Sort activities by published date, most recent first.
 	 *
-	 * @param string
-	 * @return array
+	 * @return this
 	 */
-	public function setCollection($collection) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_collection = $collection;
+	public function orderByRecent() {
+		$this->_orderBy = 'recent';
 		
 		return $this;
-	}
-	
-	/**
-	 * Returns activity that matches the queryString
-	 *
-	 * @param string|null
-	 * @param string|null
-	 * @return array
-	 */
-	public function search($queryString = NULL, $pageToken = NULL) {
-		Eden_Google_Error::i()
-			->argument(1, 'string', 'null')
-			->argument(2, 'string', 'null');
-		
-		if($queryString) {
-			$this->_queryString = $queryString;
-		}
-		
-		if($pageToken) {
-			$this->_pageToken = $pageToken;
-		}
-		
-		$url = Eden_Google_Plus::URL_ACTIVITY;
-		$query = array();
-		$query[Eden_Google_Plus::QUERY] = urlencode($this->_queryString);
-		$query[Eden_Google_Plus::PAGE_TOKEN] = ($this->_pageToken) ? $this->_pageToken : NULL;
-		
-		return $this->_getResponse($url, $query);
 	}
 	
 	/**
 	 * Get activity list of user
 	 *
-	 * @param string|null
-	 * @param string|null
-	 * @param string|null
+	 * @param string
 	 * @return array
 	 */
-	 public function getList($userId = NULL, $collection = NULL, $pageToken = NULL) {
-		 Eden_Google_Error::i()
-		 	->argument(1, 'string', 'null')
-			->argument(2, 'string', 'null')
-			->argument(3, 'string', 'null');
+	 public function getList($userId = self::ME) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
 		
-		if($userId) {
-			$this->_userId = $userId;
-		}
+		//populate fields
+		$query = array(	
+			self::MAX_RESULTS	=> $this->_maxResults,	//optional
+			SELF::PAGE_TOKEN	=> $this->_pageToken);	//optional
 		
-		if($collection) {
-			$this->_collection = $collection;
-		}
-		
-		if($pageToken) {
-			$this->_pageToken = $pageToken;
-		}
-		
-		$url = sprintf(Eden_Google_Plus::URL_LIST_ACTIVITY, $this->_userId, $this->_collection);
-		$query = array();
-		$query[Eden_Google_Plus::PAGE_TOKEN] = ($this->_pageToken) ? $this->_pageToken : NULL;
-		return $this->_getResponse($url, $query);
+		return $this->_getResponse(sprintf(self::URL_ACTIVITY_LIST, $userId, self::PUBLIC_DATA), $query);
 	 }
 	
 	/**
-	 * Set page token
+	 * Get an activity
 	 *
-	 * @param string|null
+	 * @param string
 	 * @return array
 	 */
-	 public function get($activityId = NULL) {
-		 Eden_Google_Error::i()->argument(1, 'string', 'null');
-		 if($activityId) {
-			$this->_activityId = $activityId;
-		 }
+	 public function getSpecific($activityId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
 		 
-		 $url = sprintf(Eden_Google_Plus::URL_ACTIVITY, $this->_activityId);
-		 
-		 return $this->_getResponse($url);
-	 }
+		 return $this->_getResponse(sprintf(self::URL_ACTIVITY_GET, $activityId));
+	 } 
 	 
+	/**
+	 * Search public activities
+	 *
+	 * @param string|integer
+	 * @return array
+	 */
+	public function search($queryString) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string', 'int');
+		
+		//populate fields
+		$query = array(
+			self::QUERY_STRING	=> $queryString,
+			self::PAGE_TOKEN	=> $this->_pageToken,	//optional
+			self::MAX_RESULTS	=> $this->_maxResults,	//optional
+			self::ORDER			=> $this->_orderBy);	//optional
+		
+		return $this->_getResponse(self::URL_ACTIVITY_SEARCH, $query);
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

@@ -7,7 +7,7 @@
  * distributed with this package.
  */
  
-require_once 'eden/event.php';
+require_once dirname(__FILE__).'/eden/event.php';
 
 /**
  * The starting point of every framework call.

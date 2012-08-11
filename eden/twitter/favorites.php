@@ -34,15 +34,40 @@ class Eden_Twitter_Favorites extends Eden_Twitter_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/ 
+	/**
+	 * Favorites the status specified in the ID parameter as
+	 * the authenticating user.
+	 *
+	 * @param int the tweet ID
+	 * @param bool
+	 * @return array
+	 */
+	public function add($id, $entities = false) {
+		//Argument Test
+		Eden_Twitter_Error::i()
+			->argument(1, 'int')	//Argument 1 must be an integer
+			->argument(2, 'bool');	//Argument 2 must be a boolean
+
+		$query = array('id' => $id);
+		
+		//if entities
+		if($entities) {
+			$query['include_entities'] = 1;
+		}
+		
+		$url = sprintf(self::URL_FAVORITE_STATUS, $id);
+		return $this->_post($url, $query);
+	}
+	
 	/**
 	 * Returns the 20 most recent favorite statuses for the authenticating 
 	 * user or user specified by the ID parameter in the requested format.
 	 *
-	 * @param boolean
-	 * @param string|integer|null
-	 * @param integer|null
-	 * @param integer|null
+	 * @param bool
+	 * @param string|int|null
+	 * @param int|null
+	 * @param int|null
 	 * @return array
 	 */
 	public function getList($entities = false, $id = NULL, $since = NULL, $page = NULL) {
@@ -82,35 +107,10 @@ class Eden_Twitter_Favorites extends Eden_Twitter_Base {
 	 }
 	 
 	/**
-	 * Favorites the status specified in the ID parameter as
-	 * the authenticating user.
-	 *
-	 * @param integer
-	 * @param boolean
-	 * @return array
-	 */
-	public function add($id, $entities = false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int')	//Argument 1 must be an integer
-			->argument(2, 'bool');	//Argument 2 must be a boolean
-
-		$query = array('id' => $id);
-		
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		$url = sprintf(self::URL_FAVORITE_STATUS, $id);
-		return $this->_post($url, $query);
-	}
-	 
-	/**
 	 * Un-favorites the status specified in the ID 
 	 * parameter as the authenticating user. 
 	 *
-	 * @param integer
+	 * @param int the tweet ID
 	 * @return array
 	 */
 	public function remove($id) {

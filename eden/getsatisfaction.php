@@ -163,29 +163,6 @@ class Eden_Getsatisfaction extends Eden_Class {
 	}
 	
 	/**
-	 * Returns Getsatisfaction reply
-	 *
-	 * @param string
-	 * @param string
-	 * @param string
-	 * @param string
-	 * @return Eden_Getsatisfaction_Reply
-	 */
-	public function reply($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
-		Eden_Getsatisfaction_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string')
-			->argument(3, 'string')
-			->argument(4, 'string');
-			
-		return Eden_Getsatisfaction_Reply::i(
-			$consumerKey, 
-			$consumerSecret, 
-			$accessToken, 
-			$accessSecret);
-	}
-	
-	/**
 	 * Returns Getsatisfaction Product
 	 *
 	 * @param string
@@ -230,7 +207,30 @@ class Eden_Getsatisfaction extends Eden_Class {
 			$accessToken, 
 			$accessSecret);
 	}
-	
+
+	/**
+	 * Returns Getsatisfaction reply
+	 *
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @return Eden_Getsatisfaction_Reply
+	 */
+	public function reply($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
+		Eden_Getsatisfaction_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string')
+			->argument(3, 'string')
+			->argument(4, 'string');
+			
+		return Eden_Getsatisfaction_Reply::i(
+			$consumerKey, 
+			$consumerSecret, 
+			$accessToken, 
+			$accessSecret);
+	}
+		
 	/**
 	 * Returns Getsatisfaction Tags
 	 *

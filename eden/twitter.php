@@ -6,6 +6,30 @@
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
+ 
+require_once dirname(__FILE__).'/curl.php';
+require_once dirname(__FILE__).'/twitter/error.php';
+require_once dirname(__FILE__).'/twitter/base.php';
+require_once dirname(__FILE__).'/twitter/oauth.php';
+require_once dirname(__FILE__).'/twitter/accounts.php';
+require_once dirname(__FILE__).'/twitter/block.php';
+require_once dirname(__FILE__).'/twitter/directmessage.php';
+require_once dirname(__FILE__).'/twitter/favorites.php';
+require_once dirname(__FILE__).'/twitter/friends.php';
+require_once dirname(__FILE__).'/twitter/geo.php';
+require_once dirname(__FILE__).'/twitter/help.php';
+require_once dirname(__FILE__).'/twitter/legal.php';
+require_once dirname(__FILE__).'/twitter/list.php';
+require_once dirname(__FILE__).'/twitter/localtrends.php';
+require_once dirname(__FILE__).'/twitter/notification.php';
+require_once dirname(__FILE__).'/twitter/saved.php';
+require_once dirname(__FILE__).'/twitter/search.php';
+require_once dirname(__FILE__).'/twitter/spam.php';
+require_once dirname(__FILE__).'/twitter/suggestions.php';
+require_once dirname(__FILE__).'/twitter/timeline.php';
+require_once dirname(__FILE__).'/twitter/trends.php';
+require_once dirname(__FILE__).'/twitter/tweets.php';
+require_once dirname(__FILE__).'/twitter/users.php';
 
 /**
  * Twitter API factory. This is a factory class with 
@@ -37,23 +61,7 @@ class Eden_Twitter extends Eden_Class {
 	/* Magic
 	-------------------------------*/
 	/* Public Methods
-	-------------------------------*/
-	/**
-	 * Returns twitter oauth method
-	 *
-	 * @param *string 
-	 * @param *string 
-	 * @return Eden_Twitter_Oauth
-	 */
-	public function auth($key, $secret) {
-		//Argument test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string');	//Argument 2 must be a string
-		
-		return Eden_Twitter_Oauth::i($key, $secret);
-	}
-	
+	-------------------------------*/	
 	/**
 	 * Returns twitter account method
 	 *
@@ -72,6 +80,22 @@ class Eden_Twitter extends Eden_Class {
 			->argument(4, 'string');	//Argument 4 must be a string
 		
 		return Eden_Twitter_Accounts::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
+	}
+	
+	/**
+	 * Returns twitter oauth method
+	 *
+	 * @param *string 
+	 * @param *string 
+	 * @return Eden_Twitter_Oauth
+	 */
+	public function auth($key, $secret) {
+		//Argument test
+		Eden_Twitter_Error::i()
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string');	//Argument 2 must be a string
+		
+		return Eden_Twitter_Oauth::i($key, $secret);
 	}
 	
 	/**
@@ -361,9 +385,9 @@ class Eden_Twitter extends Eden_Class {
 	 * @param *string 
 	 * @param *string 
 	 * @param *string 
-	 * @return Eden_Twitter_Timelines
+	 * @return Eden_Twitter_Timeline
 	 */
-	public function timelines($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
+	public function timeline($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//Argument test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -371,7 +395,7 @@ class Eden_Twitter extends Eden_Class {
 			->argument(3, 'string')		//Argument 3 must be a string
 			->argument(4, 'string');	//Argument 4 must be a string
 		
-		return Eden_Twitter_Timelines::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
+		return Eden_Twitter_Timeline::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**

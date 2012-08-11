@@ -89,361 +89,34 @@ class Eden_Xend_Shipment extends Eden_Xend_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set purpose of export
+	 * Retrieves the information of a shipment given a waybill number
 	 *
-	 * @param *string
-	 * @return this
+	 * return array
 	 */
-	public function setPurpose($purpose) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');
-		$this->_purpose = $purpose;
-		return $this;
-	}
-	
-	/**
-	 * Set company
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setCompany($company) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');
-		$this->_company = $company;
-		return $this;
-	}
-	
-	/**
-	 * Set way bill number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setWayBillNumber($wayBillNo) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');	
+	public function getDetail() {
+		$exceptionFlag = false;
 		
-		$this->_wayBillNo = $wayBillNo;
-		return $this;
-	}
-	
-	/**
-	 * Set postal code
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setPostalCode($postalCode) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');	
+		// initialize SOAP client
+		$client	= new SoapClient($this->_url, array());
+		$funcs	= $client->__getFunctions();
 		
-		$this->_postalCode	= $postalCode;
-		return $this;
-	}
-	
-	/**
-	 * Set phone number
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setPhoneNumber($phoneNumber) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');	
+		// initialize SOAP header
+		$headerbody	= array(self::USER_TOKEN => $this->_userToken);
+		$header = new SoapHeader($this->_header, self::AUTH_HEADER, $headerbody);
+		$client->__setSoapHeaders($header);
 		
-		$this->_phoneNumber	= $phoneNumber;
-		return $this;
-	}
-	
-	/**
-	 * Set email
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setEmail($email) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');	
-		
-		$this->_email	= $email;
-		return $this;
-	}
-	
-	/**
-	 * Set service type to metro manila express
-	 *
-	 * @return this
-	 */
-	public function setMetroManilaExpress() {
-		$this->_serviceType = self::METRO_MANILA_EXPRESS;
-		return $this;
-	}
-	
-	/**
-	 * Set service type to provincial express
-	 *
-	 * @return this
-	 */
-	public function setProvincialExpress() {
-		$this->_serviceType = self::PROVINCIAL_EXPRESS;
-		return $this;
-	}
-	
-	/**
-	 * Set service type to international postal
-	 *
-	 * @return this
-	 */
-	public function setInternationalPostal() {
-		$this->_serviceType = self::INTERNATIONAL_POSTAL;
-		return $this;
-	}
-	
-	/**
-	 * Set service type to international EMS
-	 *
-	 * @return this
-	 */
-	public function setInternationalEMS() {
-		$this->_serviceType = self::INTERNATIONAL_EMS;
-		return $this;
-	}
-	
-	/**
-	 * Set service type to international Express
-	 *
-	 * @return this
-	 */
-	public function setInternationalExpress() {
-		$this->_serviceType = self::INTERNATIONAL_EXPRESS;
-		return $this;
-	}
-	
-	/**
-	 * Set service type to rizal metro manila express
-	 *
-	 * @return this
-	 */
-	public function setRizalMetroManilaExpress() {
-		$this->_serviceType = self::RIZAL_METRO_MANILA_EXPRESS;
-		return $this;
-	}
-	
-	/**
-	 * Set shipment type to document
-	 *
-	 * @return this
-	 */
-	public function setDocument() {
-		$this->_shipmentType = self::DOCUMENT;
-		return $this;
-	}
-	
-	/**
-	 * Set shipment type to parcel
-	 *
-	 * @return this
-	 */
-	public function setParcel() {
-		$this->_shipmentType = self::PARCEL;
-		return $this;
-	}
-	
-	/**
-	 * Set item weight
-	 *
-	 * @param *integer|float In kilogram
-	 * @return this
-	 */
-	public function setWeight($weight) {
-		//Argument 1 must be an integer or float
-		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_weight = $weight;
-		return $this;
-	}
-	
-	/**
-	 * Set item length
-	 *
-	 * @param *integer|float In centimeter
-	 * @return this
-	 */
-	public function setLength($length) {
-		//Argument 1 must be an integer or float
-		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_length = $length;
-		return $this;
-	}
-	
-	/**
-	 * Set item width
-	 *
-	 * @param *integer|float In centimeter
-	 * @return this
-	 */
-	public function setWidth($width) {
-		//Argument 1 must be an integer or float
-		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_width = $width;
-		return $this;
-	}
-	
-	/**
-	 * Set item height
-	 *
-	 * @param *integer|float In centimeter
-	 * @return this
-	 */
-	public function setHeight($height) {
-		//Argument 1 must be an integer or float
-		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_height = $height;
-		return $this;
-	}
-	
-	/**
-	 * Set item declared value
-	 *
-	 * @param *integer|float
-	 * @return this
-	 */
-	public function setDeclaredValue($declaredValue) {
-		//Argument 1 must be an integer or float
-		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
-		
-		$this->_declaredValue = $declaredValue;
-		return $this;
-	}
-	
-	/**
-	 * Set recipient name
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setName($name) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');	
-		
-		$this->_name = $name;
-		return $this;
-	}
-	
-	/**
-	 * Set recipient address1
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setAddress1($address1) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');	
-		
-		$this->_address1 = $address1;
-		return $this;
-	}
-	
-	/**
-	 * Set recipient address2
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setAddress2($address2) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');	
-		
-		$this->_address1 = $address2;
-		return $this;
-	}
-	
-	/**
-	 * Set recipient city
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setCity($city) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');	
-		
-		$this->_city = $city;
-		return $this;
-	}
-	
-	/**
-	 * Set recipient provice
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setProvince($province) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');	
-		
-		$this->province = $province;
-		return $this;
-	}
-	
-	/**
-	 * Set recipient country
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setCountry($country) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');	
-		
-		$this->_country = $country;
-		return $this;
-	}
-	
-	/**
-	 * Set shipping feee
-	 *
-	 * @param *integer|float
-	 * @return this
-	 */
-	public function setShippingFee($fee) {
-		//Argument 1 must be an integer or float
-		Eden_Xend_Error::i()->argument(1, 'int','float');	
-		
-		$this->_fee = $fee;
-		return $this;
-	}
-	
-	/**
-	 * Set item special instruction
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setSpecialInstruction($specialInstruction) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');	
-		
-		$this->_specialInstruction = $specialInstruction;
-		return $this;
-	}
-	
-	/**
-	 * Set item description
-	 *
-	 * @param *string
-	 * @return this
-	 */
-	public function setDescription($description) {
-		//Argument 1 must be a string
-		Eden_Xend_Error::i()->argument(1, 'string');	
-		
-		$this->_description = $description;
-		return $this;
+		// execute SOAP method
+		try {
+			$result = $client->Get(array(self::WAY_BILL_NO => $this->_wayBill));
+		} catch(SoapFault $soapfault) {
+			$this->_exceptionFlag = true;
+			$exception = $soapfault->getMessage();
+			preg_match_all('/: (.*?). at/s', $exception, $error, PREG_SET_ORDER);
+			//Print error
+			return $error[0][1];
+		}
+			
+		return $result->GetResult;
 	}
 	
 	/**
@@ -452,12 +125,6 @@ class Eden_Xend_Shipment extends Eden_Xend_Base {
 	 * return array
 	 */
 	public function getResponse() {
-		//if it is in test mode
-		if($this->_test) {
-			$this->_url		= self::TEST_SHIPMENT_WSDL;
-			$this->_header	= self::TEST_HEADER;
-		}
-		
 		// initialize SOAP client
 		$client = new SoapClient($this->_url, array());
 		$funcs = $client->__getFunctions();
@@ -519,40 +186,363 @@ class Eden_Xend_Shipment extends Eden_Xend_Base {
 	}
 	
 	/**
-	 * Retrieves the information of a shipment given a waybill number
+	 * Set recipient address1
 	 *
-	 * return array
+	 * @param *string
+	 * @return this
 	 */
-	public function getDetail() {
-		$exceptionFlag = false;
-		//if it is in test mode
-		if($this->_test) {
-			$this->_url		= self::TEST_SHIPMENT_WSDL;
-			$this->_header	= self::TEST_HEADER;
-		}
+	public function setAddress1($address1) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');	
 		
-		// initialize SOAP client
-		$client	= new SoapClient($this->_url, array());
-		$funcs	= $client->__getFunctions();
-		
-		// initialize SOAP header
-		$headerbody	= array(self::USER_TOKEN => $this->_userToken);
-		$header = new SoapHeader($this->_header, self::AUTH_HEADER, $headerbody);
-		$client->__setSoapHeaders($header);
-		
-		// execute SOAP method
-		try {
-			$result = $client->Get(array(self::WAY_BILL_NO => $this->_wayBill));
-		} catch(SoapFault $soapfault) {
-			$this->_exceptionFlag = true;
-			$exception = $soapfault->getMessage();
-			preg_match_all('/: (.*?). at/s', $exception, $error, PREG_SET_ORDER);
-			//Print error
-			return $error[0][1];
-		}
-			
-		return $result->GetResult;
+		$this->_address1 = $address1;
+		return $this;
 	}
+	
+	/**
+	 * Set recipient address2
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setAddress2($address2) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');	
+		
+		$this->_address1 = $address2;
+		return $this;
+	}
+	
+	/**
+	 * Set recipient city
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setCity($city) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');	
+		
+		$this->_city = $city;
+		return $this;
+	}
+	
+	/**
+	 * Set company
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setCompany($company) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');
+		$this->_company = $company;
+		return $this;
+	}
+	
+	/**
+	 * Set recipient country
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setCountry($country) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');	
+		
+		$this->_country = $country;
+		return $this;
+	}
+	
+	/**
+	 * Set item declared value
+	 *
+	 * @param *integer|float
+	 * @return this
+	 */
+	public function setDeclaredValue($declaredValue) {
+		//Argument 1 must be an integer or float
+		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_declaredValue = $declaredValue;
+		return $this;
+	}
+	
+	/**
+	 * Set item description
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setDescription($description) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');	
+		
+		$this->_description = $description;
+		return $this;
+	}
+	
+	/**
+	 * Set shipment type to document
+	 *
+	 * @return this
+	 */
+	public function setDocument() {
+		$this->_shipmentType = self::DOCUMENT;
+		return $this;
+	}
+	
+	/**
+	 * Set email
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setEmail($email) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');	
+		
+		$this->_email	= $email;
+		return $this;
+	}
+	
+	/**
+	 * Set item height
+	 *
+	 * @param *integer|float In centimeter
+	 * @return this
+	 */
+	public function setHeight($height) {
+		//Argument 1 must be an integer or float
+		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_height = $height;
+		return $this;
+	}
+	
+	/**
+	 * Set service type to international EMS
+	 *
+	 * @return this
+	 */
+	public function setInternationalEMS() {
+		$this->_serviceType = self::INTERNATIONAL_EMS;
+		return $this;
+	}
+	
+	/**
+	 * Set service type to international Express
+	 *
+	 * @return this
+	 */
+	public function setInternationalExpress() {
+		$this->_serviceType = self::INTERNATIONAL_EXPRESS;
+		return $this;
+	}
+	
+	/**
+	 * Set service type to international postal
+	 *
+	 * @return this
+	 */
+	public function setInternationalPostal() {
+		$this->_serviceType = self::INTERNATIONAL_POSTAL;
+		return $this;
+	}
+	
+	/**
+	 * Set item length
+	 *
+	 * @param *integer|float In centimeter
+	 * @return this
+	 */
+	public function setLength($length) {
+		//Argument 1 must be an integer or float
+		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_length = $length;
+		return $this;
+	}
+	
+	/**
+	 * Set service type to metro manila express
+	 *
+	 * @return this
+	 */
+	public function setMetroManilaExpress() {
+		$this->_serviceType = self::METRO_MANILA_EXPRESS;
+		return $this;
+	}
+	
+	/**
+	 * Set recipient name
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setName($name) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');	
+		
+		$this->_name = $name;
+		return $this;
+	}
+	
+	/**
+	 * Set shipment type to parcel
+	 *
+	 * @return this
+	 */
+	public function setParcel() {
+		$this->_shipmentType = self::PARCEL;
+		return $this;
+	}
+	
+	/**
+	 * Set phone number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setPhoneNumber($phoneNumber) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');	
+		
+		$this->_phoneNumber	= $phoneNumber;
+		return $this;
+	}
+	
+	/**
+	 * Set postal code
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setPostalCode($postalCode) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');	
+		
+		$this->_postalCode	= $postalCode;
+		return $this;
+	}
+	
+	/**
+	 * Set recipient provice
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setProvince($province) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');	
+		
+		$this->province = $province;
+		return $this;
+	}
+	
+	/**
+	 * Set service type to provincial express
+	 *
+	 * @return this
+	 */
+	public function setProvincialExpress() {
+		$this->_serviceType = self::PROVINCIAL_EXPRESS;
+		return $this;
+	}
+	
+	/**
+	 * Set purpose of export
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setPurpose($purpose) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');
+		$this->_purpose = $purpose;
+		return $this;
+	}
+	
+	/**
+	 * Set service type to rizal metro manila express
+	 *
+	 * @return this
+	 */
+	public function setRizalMetroManilaExpress() {
+		$this->_serviceType = self::RIZAL_METRO_MANILA_EXPRESS;
+		return $this;
+	}
+	
+	/**
+	 * Set shipping feee
+	 *
+	 * @param *integer|float
+	 * @return this
+	 */
+	public function setShippingFee($fee) {
+		//Argument 1 must be an integer or float
+		Eden_Xend_Error::i()->argument(1, 'int','float');	
+		
+		$this->_fee = $fee;
+		return $this;
+	}
+	
+	/**
+	 * Set item special instruction
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setSpecialInstruction($specialInstruction) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');	
+		
+		$this->_specialInstruction = $specialInstruction;
+		return $this;
+	}
+	
+	/**
+	 * Set way bill number
+	 *
+	 * @param *string
+	 * @return this
+	 */
+	public function setWayBillNumber($wayBillNo) {
+		//Argument 1 must be a string
+		Eden_Xend_Error::i()->argument(1, 'string');	
+		
+		$this->_wayBillNo = $wayBillNo;
+		return $this;
+	}
+	
+	/**
+	 * Set item weight
+	 *
+	 * @param *integer|float In kilogram
+	 * @return this
+	 */
+	public function setWeight($weight) {
+		//Argument 1 must be an integer or float
+		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_weight = $weight;
+		return $this;
+	}
+	
+	/**
+	 * Set item width
+	 *
+	 * @param *integer|float In centimeter
+	 * @return this
+	 */
+	public function setWidth($width) {
+		//Argument 1 must be an integer or float
+		Eden_Xend_Error::i()->argument(1, 'int', 'float');	
+		
+		$this->_width = $width;
+		return $this;
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

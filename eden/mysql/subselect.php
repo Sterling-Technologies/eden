@@ -42,17 +42,6 @@ class Eden_Mysql_Subselect extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Sets the parent Query
-	 *
-	 * @param object usually the parent query object
-	 * @return this
-	 */
-	public function setParentQuery(Eden_Sql_Select $parentQuery) {
-		$this->_parentQuery = $parentQuery;
-		return $this;
-	}
-	
-	/**
 	 * Returns the string version of the query 
 	 *
 	 * @param  bool
@@ -62,6 +51,17 @@ class Eden_Mysql_Subselect extends Eden_Class {
 	public function getQuery() {
 		
 		return '('.substr(parent::getQuery(), 0, -1).')';
+	}
+	
+	/**
+	 * Sets the parent Query
+	 *
+	 * @param object usually the parent query object
+	 * @return this
+	 */
+	public function setParentQuery(Eden_Sql_Select $parentQuery) {
+		$this->_parentQuery = $parentQuery;
+		return $this;
 	}
 	
 	/* Protected Methods

@@ -8,24 +8,25 @@
  */
 
 /**
- *  Class for adding Event on Google Calendar
+ * Google Calendar Freebusy Class
  *
  * @package    Eden
  * @category   google
- * @author     Clark Galgo cgalgo@openovate.com
+ * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Google_Calendar_Freebusy extends Eden_Google_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_FREEBUSY_TIME	= 'https://www.googleapis.com/calendar/v3/freebusy';
+	const URL_CALENDAR_FREEBUSY = 'https://www.googleapis.com/calendar/v3/freeBusy';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
-	-------------------------------*/ 
-	protected $_timeMin = NULL;
-	protected $_timeMax = NULL;
-	protected $_items	= array();
+	-------------------------------*/
+	protected $_timeZone				= NULL;
+	protected $_groupExpansionMax		= NULL;
+	protected $_calendarExpansionMax	= NULL;
+	protected $_items					= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -38,71 +39,85 @@ class Eden_Google_Calendar_Freebusy extends Eden_Google_Base {
 	public function __construct($token) {
 		//argument test
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_token 	= $token; 
+		$this->_token = $token; 
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
 	/**
-	 * sets timeMin
+	 * Returns free/busy information 
+	 * for a set of calendars
 	 *
-	 * @param string| int
-	 * @return this
-	 */
-	public function setTimeMin($time) {
-		Eden_Google_Error::i()->argument(1, 'string', 'int');
-		if(is_string($time)) {
-			$time = strtotime($time);
-		}
-		
-		$this->_timeMin = $time;
-		
-		return $this;
-	}
-	
-	/**
-	 * sets timeMax
-	 *
-	 * @param string| int
-	 * @return this
-	 */
-	public function setTimeMax($time) {
-		Eden_Google_Error::i()->argument(1, 'string', 'int');
-		if(is_string($time)) {
-			$time = strtotime($time);
-		}
-		
-		$this->_timeMax = $time;
-		
-		return $this;
-	}
-	
-	/**
-	 * add emails
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function addItem($email) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_items[] = array(Eden_Google_Calendar::ID	=> $email);
-		
-		return $this;
-	}
-	
-	/**
-	 * get Free Busy Time
-	 *
-	 * @param string| int
+	 * @param string|integer The start of the interval
+	 * @param string|integer The end of the interval
 	 * @return array
 	 */
-	public function get() {
-		$query = array(
-			Eden_Google_Calendar::TIMEMIN	=> $this->_timeMin,
-			Eden_Google_Calendar::TIMEMAX	=> $this->_timeMax,
-			Eden_Google_Calendar::ITEMS		=> $this->_items);
+	public function query($startTime, $endTime) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string', 'int')		//argument 1 must be a string or integer
+			->argument(2, 'string', 'int');		//argument 2 must be a string or integer
 		
-		return $this->_post(self::URL_FREEBUSY_TIME, $query);
+		if(is_string($startTime)) {
+			$startTime = strtotime($startTime);
+		}
+		
+		if(is_string($endTime)) {
+			$endTime = strtotime($endTime);
+		}
+		
+		//populate fields
+		$query = array(
+			self::TIMEMIN				=> $startTime,
+			self::TIMEMAX				=> $endTime,
+			self::TIMEZONE				=> $this->_timeZone,
+			self::GROUP_EXPANSION		=> $this->_groupExpansionMax,
+			self::CALENDAR_EXPANSION	=> $this->_calendarExpansionMax,
+			self::ITEMS					=> $id = array(self::ID => $this->_items));
+		
+		return $this->_post(self::URL_CALENDAR_FREEBUSY, $query);
+	}
+	
+	/**
+	 * Set calendar expansion max
+	 *
+	 * @param intger
+	 * @return this
+	 */
+	public function setCalendarExpansionMax($calendarExpansionMax) {
+		//argument 1 must be a integer
+		Eden_Google_Error::i()->argument(1, 'int');
+		$this->_calendarExpansionMax = $calendarExpansionMax;
+		
+		return $this;
+	}
+	
+	/**
+	 * Set group expansion max
+	 *
+	 * @param intger
+	 * @return this
+	 */
+	public function setGroupExpansionMax($groupExpansionMax) {
+		//argument 1 must be a integer
+		Eden_Google_Error::i()->argument(1, 'int');
+		$this->_groupExpansionMax = $groupExpansionMax;
+		
+		return $this;
+	}
+	 
+	/**
+	 * Set items
+	 *
+	 * @param string|intger
+	 * @return this
+	 */
+	public function setItem($item) {
+		//argument 1 must be a string or integer
+		Eden_Google_Error::i()->argument(1, 'string', 'int');
+		$this->_items = $item;
+		
+		return $this;
 	}
 	
 	/* Protected Methods

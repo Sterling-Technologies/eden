@@ -19,7 +19,7 @@ class Eden_Paypal_Base extends Eden_Class {
 	-------------------------------*/
 	const VERSION		= '84.0';
 	const TEST_URL		= 'https://api-3t.sandbox.paypal.com/nvp';
-	const LIVE_URL		= 'https://secure.authorize.net/gateway/transact.dll';
+	const LIVE_URL		= 'https://api-3t.paypal.com/nvp';
     const SANDBOX_URL	= 'https://test.authorize.net/gateway/transact.dll';
 	
 	/* Public Properties
@@ -43,11 +43,13 @@ class Eden_Paypal_Base extends Eden_Class {
 		$this->_user		= $user;
 		$this->_password	= $password;
 		$this->_signature	= $signature;
-		$this->_certificate	= $certificate;
+		$this->_certificate	= $certificate; 
 		
 		$this->_url	= self::TEST_URL;
+		$this->_baseUrl = self::TEST_URL;
 		if($live) {
 			$this->_url = self::LIVE_URL;
+			$this->_baseUrl = self::LIVE_URL;
 		}
 	}
 	
@@ -64,30 +66,49 @@ class Eden_Paypal_Base extends Eden_Class {
 	
 	/* Protected Methods
 	-------------------------------*/
-	protected function _request($method, array $query = array()) {
+	protected function _accessKey($array) {
+		foreach($array as $key => $val) {
+			if(is_array($val)) {
+				$array[$key] = $this->_accessKey($val);
+			}
+			
+			if($val == false || $val == NULL || empty($val) || !$val) {
+				unset($array[$key]);
+			}
+			
+		}
+		
+		return $array;
+	}
+	
+	protected function _request($method, array $query = array(), $post = true) {
       	//Argument 1 must be a string
 		Eden_Paypal_Error::i()->argument(1, 'string');
 		
 		//Our request parameters
 		$default = array(
-			'METHOD'	=> $method,
-			'VERSION'	=> self::VERSION,
 			'USER'		=> $this->_user,
 			'PWD'		=> $this->_password,
-			'SIGNATURE' => $this->_signature);
-	
+			'SIGNATURE' => $this->_signature,
+			'VERSION'	=> self::VERSION,
+			'METHOD'	=> $method);
+		
 		//generate URL-encoded query string to build our NVP string
 		$query = http_build_query($query + $default);
-  	
-  		$curl = $this->Eden_Curl()
-			->setUrl($this->_url)
+		
+		$curl = Eden_Curl::i()
+			->setUrl($this->_baseUrl)
 			->setVerbose(true)
 			->setCaInfo($this->_certificate)
 			->setPost(true)
 			->setPostFields($query);
 			
 		$response = $curl->getQueryResponse();
-  		$this->_meta = $curl->getMeta();
+		
+		$this->_meta['url']			= $this->_baseUrl;
+		$this->_meta['query']		= $query;
+		$this->_meta['curl']		= $curl->getMeta();
+		$this->_meta['response']	= $response;
 		
 		return $response;
 	}

@@ -39,31 +39,6 @@ class Eden_Getsatisfaction_Replies extends Eden_Getsatisfaction_Base {
 	
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Sets user URL
-	 * 
-	 * @param int|string
-	 * @return this
-	 */
-	public function searchByUser($user) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
-		
-		$this->_url = sprintf(self::URL_PEOPLE, $user);
-		return $this;
-	}
-	
-	/**
-	 * Sets topic URL
-	 *
-	 * @param string|int
-	 * @return this
-	 */
-	public function searchByTopic($topic) {
-		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
-		
-		$this->_url = sprintf(self::URL_TOPIC, $topic);
-		return $this;
-	}
 	
 	/**
 	 * Filter by best
@@ -72,17 +47,6 @@ class Eden_Getsatisfaction_Replies extends Eden_Getsatisfaction_Base {
 	 */
 	public function filterByBest() {
 		$this->_query['filter'] = 'best';
-		
-		return $this;
-	}
-	
-	/**
-	 * Filter by star promoted
-	 *
-	 * @return this
-	 */
-	public function filterByStarPromoted() {
-		$this->_query['filter'] = 'star_promoted';
 		
 		return $this;
 	}
@@ -106,6 +70,51 @@ class Eden_Getsatisfaction_Replies extends Eden_Getsatisfaction_Base {
 	public function filterByFlatPromoted() {
 		$this->_query['filter'] = 'flat_promoted';
 		
+		return $this;
+	}
+	
+	/**
+	 * Filter by star promoted
+	 *
+	 * @return this
+	 */
+	public function filterByStarPromoted() {
+		$this->_query['filter'] = 'star_promoted';
+		
+		return $this;
+	}
+	
+	/**
+	 * Returns a list of companies
+	 *
+	 * @return array
+	 */
+	public function getResults() {
+		return $this->_getResponse($this->_url, $this->_query);
+	}
+	
+	/**
+	 * Sets topic URL
+	 *
+	 * @param string|int
+	 * @return this
+	 */
+	public function searchByTopic($topic) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
+		
+		$this->_url = sprintf(self::URL_TOPIC, $topic);
+		return $this;
+	}
+	/**
+	 * Sets user URL
+	 * 
+	 * @param int|string
+	 * @return this
+	 */
+	public function searchByUser($user) {
+		Eden_Getsatisfaction_Error::i()->argument(1, 'string', 'int');
+		
+		$this->_url = sprintf(self::URL_PEOPLE, $user);
 		return $this;
 	}
 	
@@ -143,15 +152,6 @@ class Eden_Getsatisfaction_Replies extends Eden_Getsatisfaction_Base {
 		$this->_query['limit'] = $limit;
 		
 		return $this;
-	}
-	
-	/**
-	 * Returns a list of companies
-	 *
-	 * @return array
-	 */
-	public function getResults() {
-		return $this->_getResponse($this->_url, $this->_query);
 	}
 	
 	/* Protected Methods

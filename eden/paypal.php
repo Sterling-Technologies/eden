@@ -37,54 +37,7 @@ class Eden_Paypal extends Eden_Class {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
-	/**
-	 * Returns paypal express checkout
-	 *
-	 * @param string
-	 * @param string API username
-	 * @param string API password
-	 * @param string API signature
-	 * @param string|null API certificate file
-	 * @return Eden_Paypal_Checkout
-	 */
-	public function checkout($user, $password, $signature, $certificate = NULL) {
-		Eden_Paypal_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string')
-			->argument(3, 'string')
-			->argument(4, 'string', 'null');
-			
-		if(!is_string($certificate)) {
-			$certificate = dirname(__FILE__).self::PEM;
-		}
-		
-		return Eden_Paypal_Checkout::i($user, $password, $signature, $certificate);
-	}
-	
-	/**
-	 * Returns paypal transaction
-	 *
-	 * @param string API username
-	 * @param string API password
-	 * @param string API signature
-	 * @param string API certificate file
-	 * @return Eden_Paypal_Transaction
-	 */
-	public function transaction($user, $password, $signature, $certificate = NULL) {
-		Eden_Paypal_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string')
-			->argument(3, 'string')
-			->argument(4, 'string', 'null');
-			
-		if(!is_string($certificate)) {
-			$certificate = dirname(__FILE__).self::PEM;
-		}
-		
-		return Eden_Paypal_Transaction::i($user, $password, $signature, $certificate);
-	}
-	
+	-------------------------------*/	
 	/**
 	 * Returns paypal authorization
 	 *
@@ -106,6 +59,70 @@ class Eden_Paypal extends Eden_Class {
 		}
 		
 		return Eden_Paypal_Authorization::i($user, $password, $signature, $certificate);
+	}
+	
+	/**
+	 * Returns paypal billing
+	 *
+	 * @param string	API username
+	 * @param string	API password
+	 * @param string	API signature
+	 * @param string	API certificate file
+	 * @return Eden_Paypal_Billing
+	 */
+	public function billing($user, $password, $signature, $certificate = NULL) {
+		if(!is_string($certificate)) {
+			$certificate = dirname(__FILE__).self::PEM;
+		}
+		
+		return Eden_Paypal_Billing::i($user, $password, $signature, $certificate);
+	}
+
+	/**
+	 * Returns paypal button
+	 *
+	 * @param string API username
+	 * @param string API password
+	 * @param string API signature
+	 * @param string API certificate file
+	 * @return Eden_Paypal_Button
+	 */
+	public function button($user, $password, $signature, $certificate = NULL) {
+		Eden_Paypal_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string')
+			->argument(3, 'string')
+			->argument(4, 'string', 'null');
+			
+		if(!is_string($certificate)) {
+			$certificate = dirname(__FILE__).self::PEM;
+		}
+		
+		return Eden_Paypal_Button::i($user, $password, $signature, $certificate);
+	}
+	
+	/**
+	 * Returns paypal express checkout
+	 *
+	 * @param string
+	 * @param string API username
+	 * @param string API password
+	 * @param string API signature
+	 * @param string|null API certificate file
+	 * @return Eden_Paypal_Checkout
+	 */
+	public function checkout($user, $password, $signature, $certificate = NULL, $live = false) {
+		Eden_Paypal_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string')
+			->argument(3, 'string')
+			->argument(4, 'string', 'null');
+			
+		if(!is_string($certificate)) {
+			$certificate = dirname(__FILE__).self::PEM;
+		}
+		
+		return Eden_Paypal_Checkout::i($user, $password, $signature, $certificate, $live);
 	}
 	
 	/**
@@ -155,15 +172,15 @@ class Eden_Paypal extends Eden_Class {
 	}
 	
 	/**
-	 * Returns paypal button
+	 * Returns paypal transaction
 	 *
 	 * @param string API username
 	 * @param string API password
 	 * @param string API signature
 	 * @param string API certificate file
-	 * @return Eden_Paypal_Button
+	 * @return Eden_Paypal_Transaction
 	 */
-	public function button($user, $password, $signature, $certificate = NULL) {
+	public function transaction($user, $password, $signature, $certificate = NULL) {
 		Eden_Paypal_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string')
@@ -174,25 +191,9 @@ class Eden_Paypal extends Eden_Class {
 			$certificate = dirname(__FILE__).self::PEM;
 		}
 		
-		return Eden_Paypal_Button::i($user, $password, $signature, $certificate);
+		return Eden_Paypal_Transaction::i($user, $password, $signature, $certificate);
 	}
 	
-	/**
-	 * Returns paypal billing
-	 *
-	 * @param string	API username
-	 * @param string	API password
-	 * @param string	API signature
-	 * @param string	API certificate file
-	 * @return Eden_Paypal_Billing
-	 */
-	public function billing($user, $password, $signature, $certificate = NULL) {
-		if(!is_string($certificate)) {
-			$certificate = dirname(__FILE__).self::PEM;
-		}
-		
-		return Eden_Paypal_Billing::i($user, $password, $signature, $certificate);
-	}
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

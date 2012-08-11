@@ -68,30 +68,6 @@ class Eden_Mysql extends Eden_Sql_Database {
 	
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Connects to the database
-	 * 
-	 * @param array the connection options
-	 * @return this
-	 */
-	public function connect(array $options = array()) {
-		$host = $port = NULL;
-		
-		if(!is_null($this->_host)) { 
-			$host = 'host='.$this->_host.';';
-			if(!is_null($this->_port)) { 
-				$port = 'port='.$this->_port.';';
-			}
-		}
-		
-		$connection = 'mysql:'.$host.$port.'dbname='.$this->_name;
-		
-		$this->_connection = new PDO($connection, $this->_user, $this->_pass, $options);
-		
-		$this->trigger();
-		
-		return $this;
-	}
 	
 	/**
 	 * Returns the alter query builder
@@ -118,6 +94,31 @@ class Eden_Mysql extends Eden_Sql_Database {
 	}
 	
 	/**
+	 * Connects to the database
+	 * 
+	 * @param array the connection options
+	 * @return this
+	 */
+	public function connect(array $options = array()) {
+		$host = $port = NULL;
+		
+		if(!is_null($this->_host)) { 
+			$host = 'host='.$this->_host.';';
+			if(!is_null($this->_port)) { 
+				$port = 'port='.$this->_port.';';
+			}
+		}
+		
+		$connection = 'mysql:'.$host.$port.'dbname='.$this->_name;
+		
+		$this->_connection = new PDO($connection, $this->_user, $this->_pass, $options);
+		
+		$this->trigger();
+		
+		return $this;
+	}
+	
+	/**
 	 * Returns the Subselect query builder
 	 *
 	 * @return Eden_Sql_Subselect
@@ -136,21 +137,6 @@ class Eden_Mysql extends Eden_Sql_Database {
 	 */ 
 	public function utility() {
 		return Eden_Mysql_Utility::i();
-	}
-	
-	/**
-	 * Peturns the primary key name given the table
-	 *
-	 * @param string table
-	 * @return string
-	 */
-	public function getPrimaryKey($table) {
-		//Argument 1 must be a string
-		Eden_Mysql_Error::i()->argument(1, 'string');
-		
-		$query = $this->utility();
-		$results = $this->getColumns($table, "`Key` = 'PRI'");
-		return isset($results[0]['Field']) ? $results[0]['Field'] : NULL;
 	}
 	
 	/**
@@ -176,6 +162,61 @@ class Eden_Mysql extends Eden_Sql_Database {
 		
 		$query->showColumns($table, $filters);
 		return $this->query($query, $this->getBinds());
+	}
+	
+	/**
+	 * Peturns the primary key name given the table
+	 *
+	 * @param string table
+	 * @return string
+	 */
+	public function getPrimaryKey($table) {
+		//Argument 1 must be a string
+		Eden_Mysql_Error::i()->argument(1, 'string');
+		
+		$query = $this->utility();
+		$results = $this->getColumns($table, "`Key` = 'PRI'");
+		return isset($results[0]['Field']) ? $results[0]['Field'] : NULL;
+	}
+	
+	/**
+	 * Returns the whole enitre schema and rows
+	 * of the current databse
+	 *
+	 * @return string
+	 */
+	public function getSchema() {
+		$backup = array();
+		$tables = $this->getTables();
+		foreach($tables as $table) {
+			$backup[] = $this->getBackup();
+		}
+		
+		return implode("\n\n", $backup);
+	}
+	
+	/**
+	 * Returns a listing of tables in the DB
+	 *
+	 * @param the like pattern
+	 * @return attay|false
+	 */
+	public function getTables($like = NULL) {
+		//Argument 1 must be a string or null
+		Eden_Mysql_Error::i()->argument(1, 'string', 'null');
+		
+		$query = $this->utility();
+		$like = $like ? $this->bind($like) : NULL;
+		$results = $this->query($query->showTables($like), $q->getBinds());
+		$newResults = array();
+		foreach($results as $result) {
+			foreach($result as $key => $value) {
+				$newResults[] = $value;
+				break;
+			}
+		}
+		
+		return $newResults;
 	}
 	
 	/**
@@ -248,46 +289,6 @@ class Eden_Mysql extends Eden_Sql_Database {
 			
 			//store the query but dont run it
 			$backup[] = $query->getQuery(true);
-		}
-		
-		return implode("\n\n", $backup);
-	}
-	
-	/**
-	 * Returns a listing of tables in the DB
-	 *
-	 * @param the like pattern
-	 * @return attay|false
-	 */
-	public function getTables($like = NULL) {
-		//Argument 1 must be a string or null
-		Eden_Mysql_Error::i()->argument(1, 'string', 'null');
-		
-		$query = $this->utility();
-		$like = $like ? $this->bind($like) : NULL;
-		$results = $this->query($query->showTables($like), $q->getBinds());
-		$newResults = array();
-		foreach($results as $result) {
-			foreach($result as $key => $value) {
-				$newResults[] = $value;
-				break;
-			}
-		}
-		
-		return $newResults;
-	}
-	
-	/**
-	 * Returns the whole enitre schema and rows
-	 * of the current databse
-	 *
-	 * @return string
-	 */
-	public function getSchema() {
-		$backup = array();
-		$tables = $this->getTables();
-		foreach($tables as $table) {
-			$backup[] = $this->getBackup();
 		}
 		
 		return implode("\n\n", $backup);

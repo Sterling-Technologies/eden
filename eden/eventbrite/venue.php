@@ -38,6 +38,35 @@ class Eden_Eventbrite_Venue extends Eden_Eventbrite_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
+	 * Creates the venue
+	 *
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @return array
+	 */
+	public function create($organizer, $venue, $country, $region) {
+		//argument test
+		Eden_Eventbrite_Error::i()
+			->argument(1, 'string', 'int')	//Argument must be a string
+			->argument(2, 'string')			//Argument msut be a string
+			->argument(3, 'string')			//Argument must be a string
+			->argument(4, 'string');		//Argument must be a string
+			
+		
+		$query = array(
+			'organizer_id'  => $organizer,
+			'venue'			=> $venue,
+			'country'		=> $country,
+			'region'		=> $region);
+		
+		$query = array_merge($query, $this->_query);
+		
+		return $this->_getJsonResponse(self::URL_NEW, $query);	
+	}
+	
+	/**
 	 * Set Address
 	 *
 	 * @param string
@@ -71,18 +100,6 @@ class Eden_Eventbrite_Venue extends Eden_Eventbrite_Base {
 	}
 	
 	/**
-	 * Set postal
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setPostal($code) {
-		Eden_Eventbrite_Error::i()->argument(1, 'string');
-		$this->_query['postal_code'] = $code;
-		return $this;
-	}
-	
-	/**
 	 * Set Country
 	 *
 	 * @param string
@@ -91,6 +108,18 @@ class Eden_Eventbrite_Venue extends Eden_Eventbrite_Base {
 	public function setCountry($country) {
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		$this->_query['country_code'] = $country;
+		return $this;
+	}
+	
+	/**
+	 * Set postal
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setPostal($code) {
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
+		$this->_query['postal_code'] = $code;
 		return $this;
 	}
 	
@@ -104,35 +133,6 @@ class Eden_Eventbrite_Venue extends Eden_Eventbrite_Base {
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		$this->_query['region'] = $region;
 		return $this;
-	}
-	
-	/**
-	 * Creates the venue
-	 *
-	 * @param string
-	 * @param string
-	 * @param string
-	 * @param string
-	 * @return array
-	 */
-	public function create($organizer, $venue, $country, $region) {
-		//argument test
-		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')		//Argument must be a string
-			->argument(2, 'string')		//Argument msut be a string
-			->argument(3, 'string')		//Argument must be a string
-			->argument(4, 'string');	//Argument must be a string
-			
-		
-		$query = array(
-			'organizer_id'  => $organizer,
-			'venue'			=> $venue,
-			'country'		=> $country_code,
-			'region'		=> $region);
-		
-		$query = array_merge($query, $this->_query);
-		
-		return $this->_getJsonResponse(self::URL_NEW, $query);	
 	}
 	
 	/**

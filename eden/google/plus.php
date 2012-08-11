@@ -16,29 +16,11 @@
  */
 class Eden_Google_Plus extends Eden_Google_Base {
 	/* Constants
-	-------------------------------*/
-	const URL_PEOPLE					= 'https://www.googleapis.com/plus/v1/people';
-	const URL_ACTIVITY					= 'https://www.googleapis.com/plus/v1/activities';
-	const URL_ACTIVITY_LIST				= 'https://www.googleapis.com/plus/v1/people/%s/activities/%s';
-	const URL_LIST_BY_ACTIVITY			= 'https://www.googleapis.com/plus/v1/activities/%s/people/%s';
-	const URL_COMMENT					= 'https://www.googleapis.com/plus/v1/comments/%s';
-	const URL_GET_USER					= 'https://www.googleapis.com/plus/v1/people/%s';
-	const URL_GET_ACTIVITY				= 'https://www.googleapis.com/plus/v1/activities/%s';
-	const URL_GET_COMMENTS				= 'https://www.googleapis.com/plus/v1/activities/%s/comments';
-	
-	const DEFAULT_USERID 				= 'me';
-	const DEFAULT_ACTIVITY_COLLECTION	= 'public';
-	const DEFAULT_USER_COLLECTION		= 'plusoners';
-	
-	const QUERY							= 'query';
-	const PAGE_TOKEN					= 'pageToken';
-	
+	-------------------------------*/	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/ 
-	protected $_userId = NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -56,20 +38,12 @@ class Eden_Google_Plus extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Factory method for Eden_Google_Plus_People Class
-	 *
-	 * @return Eden_Google_Plus_People
-	 */
-	public function people() {
-		return Eden_Google_Plus_People::i($this->_token);
-	}
-	
-	/**
 	 * Factory method for Eden_Google_Plus_Activity Class
 	 *
 	 * @return Eden_Google_Plus_Activity
 	 */
 	public function activity() {
+		
 		return Eden_Google_Plus_Activity::i($this->_token);
 	}
 	
@@ -79,7 +53,18 @@ class Eden_Google_Plus extends Eden_Google_Base {
 	 * @return Eden_Google_Plus_Activity
 	 */
 	public function comment() {
+		
 		return Eden_Google_Plus_Comment::i($this->_token);
+	}
+	
+	/**
+	 * Factory method for Eden_Google_Plus_People Class
+	 *
+	 * @return Eden_Google_Plus_People
+	 */
+	public function people() {
+		
+		return Eden_Google_Plus_People::i($this->_token);
 	}
 	
 	/* Protected Methods

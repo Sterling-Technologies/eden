@@ -50,90 +50,19 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Set limit
-	 *
-	 * @param integer
-	 * @return this
-	 */
-	public function setLimit($limit) {
-		//Argument 1 must be an integer
-		Eden_Tumblr_Error::i()->argument(1, 'int');
-		
-		$this->_limit = $limit;
-		return $this;
-	}
-	
-	/**
-	 * Set offset
-	 *
-	 * @param integer
-	 * @return this
-	 */
-	public function setOffset($offset) {
-		//Argument 1 must be an integer
-		Eden_Tumblr_Error::i()->argument(1, 'int');
-		
-		$this->_offset = $offset;
-		return $this;
-	}
-	
-	/**
-	 * Set type
+	 * Follow a blog 
 	 *
 	 * @param string
-	 * @return this
-	 */
-	public function setType($type) {
-		//Argument 1 must be a string
-		Eden_Tumblr_Error::i()->argument(1, 'string');
-		
-		$this->_type = $type;
-		return $this;
-	}
-	
-	/**
-	 * Set since
-	 *
-	 * @param integer
-	 * @return this
-	 */
-	public function setSince($since) {
-		//Argument 1 must be an integer
-		Eden_Tumblr_Error::i()->argument(1, 'int');
-		
-		$this->_since = $since;
-		return $this;
-	}
-	
-	/**
-	 * Set reblog
-	 *
-	 * @return this
-	 */
-	public function setReblog() {
-		$this->_reblog = false;
-		return $this;
-	}
-	
-	/**
-	 * Set notes
-	 *
-	 * @return this
-	 */
-	public function setNotes() {
-		$this->_notes = false;
-		return $this;
-	}
-	
-	/**
-	 * Use this method to retrieve the user's account information 
-	 * that matches the OAuth credentials submitted with the request.
-	 *
 	 * @return array
 	 */
-	public function getInfo() {
-		$url = self::URL_GET_INFO;
-		return $this->_getResponse($url);
+	public function follow($url) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');			
+			
+		$query = array('url' => $url);
+		
+		$url = sprintf(self::URL_FOLLOW, $url);
+		return $this->_post($url, $query);
 	}
 	
 	/**
@@ -156,21 +85,6 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	}
 	
 	/**
-	 * Use this method to retrieve the liked posts that 
-	 * match the OAuth credentials submitted with the request.
-	 *
-	 * @return array
-	 */
-	public function getLikes() {
-		//populate fields	
-		$query = array(
-			'limit'			=> $this->_limit,
-			'offset'		=> $this->_offset);
-		
-		return $this->_getResponse(self::URL_GET_LIKES, $query);
-	}
-	
-	/**
 	 * Use this method to retrieve the blogs followed by the user 
 	 * whose OAuth credentials are submitted with the request.
 	 *
@@ -186,35 +100,29 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 	}
 	
 	/**
-	 * Follow a blog 
+	 * Use this method to retrieve the user's account information 
+	 * that matches the OAuth credentials submitted with the request.
 	 *
-	 * @param string
 	 * @return array
 	 */
-	public function follow($url) {
-		//Argument 1 must be a string
-		Eden_Tumblr_Error::i()->argument(1, 'string');			
-			
-		$query = array('url' => $url);
-		
-		$url = sprintf(self::URL_FOLLOW, $url);
-		return $this->_post($url, $query);
+	public function getInfo() {
+		$url = self::URL_GET_INFO;
+		return $this->_getResponse($url);
 	}
 	
 	/**
-	 * Unfollow a blog 
+	 * Use this method to retrieve the liked posts that 
+	 * match the OAuth credentials submitted with the request.
 	 *
-	 * @param string
 	 * @return array
 	 */
-	public function unfollow($url) {
-		//Argument 1 must be a string
-		Eden_Tumblr_Error::i()->argument(1, 'string');			
-			
-		$query = array('url' => $url);
+	public function getLikes() {
+		//populate fields	
+		$query = array(
+			'limit'			=> $this->_limit,
+			'offset'		=> $this->_offset);
 		
-		$url = sprintf(self::URL_UNFOLLOW, $url);
-		return $this->_post($url, $query);
+		return $this->_getResponse(self::URL_GET_LIKES, $query);
 	}
 	
 	/**
@@ -233,6 +141,98 @@ class Eden_Tumblr_User extends Eden_Tumblr_Base {
 		$query = array('url' => $url, 'reblog_key' => $reblog);
 		
 		$url = sprintf(self::URL_LIKE, $url);
+		return $this->_post($url, $query);
+	}
+	
+	/**
+	 * Set limit
+	 *
+	 * @param integer
+	 * @return this
+	 */
+	public function setLimit($limit) {
+		//Argument 1 must be an integer
+		Eden_Tumblr_Error::i()->argument(1, 'int');
+		
+		$this->_limit = $limit;
+		return $this;
+	}
+	
+	/**
+	 * Set notes
+	 *
+	 * @return this
+	 */
+	public function setNotes() {
+		$this->_notes = false;
+		return $this;
+	}
+	
+	/**
+	 * Set offset
+	 *
+	 * @param integer
+	 * @return this
+	 */
+	public function setOffset($offset) {
+		//Argument 1 must be an integer
+		Eden_Tumblr_Error::i()->argument(1, 'int');
+		
+		$this->_offset = $offset;
+		return $this;
+	}
+	
+	/**
+	 * Set reblog
+	 *
+	 * @return this
+	 */
+	public function setReblog() {
+		$this->_reblog = false;
+		return $this;
+	}
+	
+	/**
+	 * Set since
+	 *
+	 * @param integer
+	 * @return this
+	 */
+	public function setSince($since) {
+		//Argument 1 must be an integer
+		Eden_Tumblr_Error::i()->argument(1, 'int');
+		
+		$this->_since = $since;
+		return $this;
+	}
+	
+	/**
+	 * Set type
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setType($type) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');
+		
+		$this->_type = $type;
+		return $this;
+	}
+	
+	/**
+	 * Unfollow a blog 
+	 *
+	 * @param string
+	 * @return array
+	 */
+	public function unfollow($url) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');			
+			
+		$query = array('url' => $url);
+		
+		$url = sprintf(self::URL_UNFOLLOW, $url);
 		return $this->_post($url, $query);
 	}
 	

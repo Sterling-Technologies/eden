@@ -49,36 +49,6 @@ class Eden_Sqlite_Alter extends Eden_Sql_Query {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Sets the name of the table you wish to create
-	 *
-	 * @param string name
-	 * @return this
-	 */
-	public function setName($name) {
-		//Argument 1 must be a string
-		Eden_Sqlite_Error::i()->argument(1, 'string');
-		
-		$this->_name = $name;
-		return $this;
-	}
-	
-	/**
-	 * Changes attributes of the table given 
-	 * the field name
-	 *
-	 * @param string name
-	 * @param array attributes
-	 * @return this
-	 */
-	public function changeField($name, array $attributes) {
-		//Argument 1 must be a string
-		Eden_Sqlite_Error::i()->argument(1, 'string');
-		
-		$this->_changeFields[$name] = $attributes;
-		return $this;
-	}
-	
-	/**
 	 * Adds a field in the table
 	 *
 	 * @param string name
@@ -90,20 +60,6 @@ class Eden_Sqlite_Alter extends Eden_Sql_Query {
 		Eden_Sqlite_Error::i()->argument(1, 'string');
 		
 		$this->_addFields[$name] = $attributes;
-		return $this;
-	}
-	
-	/**
-	 * Removes a field
-	 *
-	 * @param string name
-	 * @return this
-	 */
-	public function removeField($name) {
-		//Argument 1 must be a string
-		Eden_Sqlite_Error::i()->argument(1, 'string');
-		
-		$this->_removeFields[] = $name;
 		return $this;
 	}
 	
@@ -125,20 +81,6 @@ class Eden_Sqlite_Alter extends Eden_Sql_Query {
 	}
 	
 	/**
-	 * Removes an index key
-	 *
-	 * @param string name
-	 * @return this
-	 */
-	public function removeForeignKey($name) {
-		//Argument 1 must be a string
-		Eden_Sqlite_Error::i()->argument(1, 'string');
-		
-		$this->_removeKeys[] = $name;
-		return $this;
-	}
-	
-	/**
 	 * Adds a unique key
 	 *
 	 * @param string name
@@ -153,16 +95,18 @@ class Eden_Sqlite_Alter extends Eden_Sql_Query {
 	}
 	
 	/**
-	 * Removes a unique key
+	 * Changes attributes of the table given 
+	 * the field name
 	 *
 	 * @param string name
+	 * @param array attributes
 	 * @return this
 	 */
-	public function removeUniqueKey($name) {
+	public function changeField($name, array $attributes) {
 		//Argument 1 must be a string
 		Eden_Sqlite_Error::i()->argument(1, 'string');
 		
-		$this->_removeUniqueKeys[] = $name;
+		$this->_changeFields[$name] = $attributes;
 		return $this;
 	}
 	
@@ -269,6 +213,62 @@ class Eden_Sqlite_Alter extends Eden_Sql_Query {
 		return sprintf(
 			'ALTER TABLE %s %s;',
 			$table, $fields);
+	}
+	
+	/**
+	 * Removes a field
+	 *
+	 * @param string name
+	 * @return this
+	 */
+	public function removeField($name) {
+		//Argument 1 must be a string
+		Eden_Sqlite_Error::i()->argument(1, 'string');
+		
+		$this->_removeFields[] = $name;
+		return $this;
+	}
+	
+	/**
+	 * Removes an index key
+	 *
+	 * @param string name
+	 * @return this
+	 */
+	public function removeForeignKey($name) {
+		//Argument 1 must be a string
+		Eden_Sqlite_Error::i()->argument(1, 'string');
+		
+		$this->_removeKeys[] = $name;
+		return $this;
+	}
+	
+	/**
+	 * Removes a unique key
+	 *
+	 * @param string name
+	 * @return this
+	 */
+	public function removeUniqueKey($name) {
+		//Argument 1 must be a string
+		Eden_Sqlite_Error::i()->argument(1, 'string');
+		
+		$this->_removeUniqueKeys[] = $name;
+		return $this;
+	}
+	
+	/**
+	 * Sets the name of the table you wish to create
+	 *
+	 * @param string name
+	 * @return this
+	 */
+	public function setName($name) {
+		//Argument 1 must be a string
+		Eden_Sqlite_Error::i()->argument(1, 'string');
+		
+		$this->_name = $name;
+		return $this;
 	}
 	
 	/* Protected Methods

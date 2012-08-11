@@ -70,24 +70,6 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	public function __construct($data = array()) {
-		//if there is more arguments or data is not an array
-		if(func_num_args() > 1 || !is_array($data)) {
-			//just get the args
-			$data = func_get_args();
-		}
-		
-		parent::__construct($data);
-	}
-	
-	public function __toString() {
-		return json_encode($this->get());
-	}
-	
-	public function __set($name, $value) {
-		$this->_data[$name] = $value;
-	}
-	
 	public function __call($name, $args) {
 		//if the method starts with get
 		if(strpos($name, 'get') === 0) {
@@ -131,28 +113,26 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 		}
 	}
 	
+	public function __construct($data = array()) {
+		//if there is more arguments or data is not an array
+		if(func_num_args() > 1 || !is_array($data)) {
+			//just get the args
+			$data = func_get_args();
+		}
+		
+		parent::__construct($data);
+	}
+	
+	public function __set($name, $value) {
+		$this->_data[$name] = $value;
+	}
+	
+	public function __toString() {
+		return json_encode($this->get());
+	}
+	
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Sets data
-	 *
-	 * @return this
-	 */
-	public function set($value) {
-		Eden_Type_Error::i()->argument(1, 'array');
-		$this->_data = $value;
-		return $this;
-	}
-	
-	/**
-	 * Returns if the data is empty
-	 *
-	 * @return bool
-	 */
-	public function isEmpty() {
-		return empty($this->_data);
-	}
-	
 	/**
 	 * Copies the value of source key into destination key
 	 *
@@ -162,6 +142,15 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 	public function copy($source, $destination) {
 		$this->_data[$destination] = $this->_data[$source];
 		return $this;
+	}
+	
+	/**
+	 * returns size using the Countable interface
+	 *
+	 * @return string
+	 */
+	public function count() {
+		return count($this->_data);
 	}
 	
 	/**
@@ -187,6 +176,90 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 		return $this;
 	}
 	
+	/**
+	 * Returns the current item
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+    public function current() {
+        return current($this->_data);
+    }
+
+	/**
+	 * Returns if the data is empty
+	 *
+	 * @return bool
+	 */
+	public function isEmpty() {
+		return empty($this->_data);
+	}
+	
+	/**
+	 * Returns th current position
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+    public function key() {
+        return key($this->_data);
+    }
+
+	/**
+	 * Increases the position
+	 * For Iterator interface
+	 *
+	 * @return void
+	 */
+    public function next() {
+        next($this->_data);
+    }
+
+	/**
+	 * isset using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+    public function offsetExists($offset) {
+        return isset($this->_data[$offset]);
+    }
+    
+	/**
+	 * returns data using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+	public function offsetGet($offset) {
+        return isset($this->_data[$offset]) ? $this->_data[$offset] : NULL;
+    }
+	
+	/**
+	 * Sets data using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @param mixed
+	 * @return void
+	 */
+	public function offsetSet($offset, $value) {
+        if (is_null($offset)) {
+            $this->_data[] = $value;
+        } else {
+            $this->_data[$offset] = $value;
+        }
+    }
+	
+	/**
+	 * unsets using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+	public function offsetUnset($offset) {
+        unset($this->_data[$offset]);
+    }
+    
 	/**
 	 * Inserts a row in an array after the given index and adjusts all the indexes
 	 *
@@ -246,91 +319,6 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 	public function rewind() {
         reset($this->_data);
     }
-
-	/**
-	 * Returns the current item
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-    public function current() {
-        return current($this->_data);
-    }
-
-	/**
-	 * Returns th current position
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-    public function key() {
-        return key($this->_data);
-    }
-
-	/**
-	 * Increases the position
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-    public function next() {
-        next($this->_data);
-    }
-
-	/**
-	 * Validates whether if the index is set
-	 * For Iterator interface
-	 *
-	 * @return void
-	 */
-    public function valid() {
-        return isset($this->_data[$this->key()]);
-    }
-	
-	/**
-	 * Sets data using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @param mixed
-	 * @return void
-	 */
-	public function offsetSet($offset, $value) {
-        if (is_null($offset)) {
-            $this->_data[] = $value;
-        } else {
-            $this->_data[$offset] = $value;
-        }
-    }
-	
-	/**
-	 * isset using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-    public function offsetExists($offset) {
-        return isset($this->_data[$offset]);
-    }
-    
-	/**
-	 * unsets using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-	public function offsetUnset($offset) {
-        unset($this->_data[$offset]);
-    }
-    
-	/**
-	 * returns data using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-	public function offsetGet($offset) {
-        return isset($this->_data[$offset]) ? $this->_data[$offset] : NULL;
-    }
 	
 	/**
 	 * returns serialized data using the Serializable interface
@@ -340,6 +328,17 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
 	public function serialize() {
         return json_encode($this->_data);
     }
+	
+	/**
+	 * Sets data
+	 *
+	 * @return this
+	 */
+	public function set($value) {
+		Eden_Type_Error::i()->argument(1, 'array');
+		$this->_data = $value;
+		return $this;
+	}
 	
 	/**
 	 * sets data using the Serializable interface
@@ -353,13 +352,14 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
     }
 	
 	/**
-	 * returns size using the Countable interface
+	 * Validates whether if the index is set
+	 * For Iterator interface
 	 *
-	 * @return string
+	 * @return void
 	 */
-	public function count() {
-		return count($this->_data);
-	}
+    public function valid() {
+        return isset($this->_data[$this->key()]);
+    }
 	
 	/* Protected Methods
 	-------------------------------*/

@@ -43,81 +43,6 @@ class Eden_Route_Class extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Routes a class 
-	 *
-	 * @param *string the class route name
-	 * @param *string the name of the class to route to
-	 * @return Eden_Route
-	 */
-	public function route($route, $class) {
-		Eden_Route_Error::i()
-			->argument(1, 'string', 'object')	//argument 1 must be a string or object
-			->argument(2, 'string', 'object');	//argument 2 must be a string or object
-		
-		if(is_object($route)) {
-			$route = get_class($route);
-		}
-		
-		if(is_string($class)) {
-			$class = $this->getRoute($class);	
-		}
-		
-		$this->_route[strtolower($route)] = $class;
-		return $this;
-	}
-	
-	/**
-	 * Returns the class that will be routed to given the route.
-	 *
-	 * @param *string the class route name
-	 * @param string|null returns this variable if no route is found
-	 * @return string|variable
-	 */
-	public function getRoute($route) {
-		//argument 1 must be a string
-		Eden_Route_Error::i()->argument(1, 'string');
-		
-		if($this->isRoute($route)) {
-			return $this->_route[strtolower($route)];
-		}
-		
-		return $route;
-	}
-	
-	/**
-	 * Returns all class routes
-	 *
-	 * @return array
-	 */
-	public function getRoutes() {
-		return $this->_route;
-	}
-	
-	/**
-	 * Unsets the route
-	 *
-	 * @param *string the class route name
-	 * @return string|variable
-	 */
-	public function release($route) {
-		if($this->isRoute($route)) {
-			unset($this->_route[strtolower($route)]);
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Checks to see if a name is a route
-	 *
-	 * @param string
-	 * @return bool
-	 */
-	public function isRoute($route) {
-		return isset($this->_route[strtolower($route)]);
-	}
-	
-	/**
 	 * Calls a class considering all routes.
 	 *
 	 * @param *string class
@@ -159,12 +84,85 @@ class Eden_Route_Class extends Eden_Class {
 				->getDeclaringClass()
 				->getName();
 				
-			if(strtolower($declared) == strtolower($route)) {	
-				return Eden_Route_Method::i()->callStatic($class, 'i', $args);
-			}
+			return Eden_Route_Method::i()->callStatic($class, 'i', $args);
 		}
 		
 		return $reflect->newInstanceArgs($args);
+	}
+	
+	/**
+	 * Returns the class that will be routed to given the route.
+	 *
+	 * @param *string the class route name
+	 * @param string|null returns this variable if no route is found
+	 * @return string|variable
+	 */
+	public function getRoute($route) {
+		//argument 1 must be a string
+		Eden_Route_Error::i()->argument(1, 'string');
+		
+		if($this->isRoute($route)) {
+			return $this->_route[strtolower($route)];
+		}
+		
+		return $route;
+	}
+	
+	/**
+	 * Returns all class routes
+	 *
+	 * @return array
+	 */
+	public function getRoutes() {
+		return $this->_route;
+	}
+	
+	/**
+	 * Checks to see if a name is a route
+	 *
+	 * @param string
+	 * @return bool
+	 */
+	public function isRoute($route) {
+		return isset($this->_route[strtolower($route)]);
+	}
+	
+	/**
+	 * Unsets the route
+	 *
+	 * @param *string the class route name
+	 * @return string|variable
+	 */
+	public function release($route) {
+		if($this->isRoute($route)) {
+			unset($this->_route[strtolower($route)]);
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Routes a class 
+	 *
+	 * @param *string the class route name
+	 * @param *string the name of the class to route to
+	 * @return Eden_Route
+	 */
+	public function route($route, $class) {
+		Eden_Route_Error::i()
+			->argument(1, 'string', 'object')	//argument 1 must be a string or object
+			->argument(2, 'string', 'object');	//argument 2 must be a string or object
+		
+		if(is_object($route)) {
+			$route = get_class($route);
+		}
+		
+		if(is_string($class)) {
+			$class = $this->getRoute($class);	
+		}
+		
+		$this->_route[strtolower($route)] = $class;
+		return $this;
 	}
 	
 	/* Protected Methods

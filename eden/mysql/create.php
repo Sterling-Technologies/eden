@@ -45,78 +45,6 @@ class Eden_Mysql_Create extends Eden_Sql_Query {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Sets the name of the table you wish to create
-	 *
-	 * @param string name
-	 * @return this
-	 */
-	public function setName($name) {
-		//Argument 1 must be a string
-		Eden_Mysql_Error::i()->argument(1, 'string');
-		
-		$this->_name = $name;
-		return $this;
-	}
-	
-	/**
-	 * Sets comments
-	 *
-	 * @param string comments
-	 * @return this
-	 */
-	public function setComments($comments) {
-		//Argument 1 must be a string
-		Eden_Mysql_Error::i()->argument(1, 'string');
-		
-		$this->_comments = $comments;
-		return $this;
-	}
-	
-	/**
-	 * Sets a list of fields to the table
-	 *
-	 * @param array fields
-	 * @return this
-	 */
-	public function setFields(array $fields) {
-		$this->_fields = $fields;
-		return $this;
-	}
-	
-	/**
-	 * Sets a list of keys to the table
-	 *
-	 * @param array keys
-	 * @return this
-	 */
-	public function setKeys(array $keys) {
-		$this->_keys = $keys;
-		return $this;
-	}
-	
-	/**
-	 * Sets a list of unique keys to the table
-	 *
-	 * @param array uniqueKeys
-	 * @return this
-	 */
-	public function setUniqueKeys(array $uniqueKeys) {
-		$this->_uniqueKeys = $uniqueKeys;
-		return $this;
-	}
-	
-	/**
-	 * Sets a list of primary keys to the table
-	 *
-	 * @param array primaryKeys
-	 * @return this
-	 */
-	public function setPrimaryKeys(array $primaryKeys) {
-		$this->_primaryKeys = $primaryKeys;
-		return $this;
-	}
-	
-	/**
 	 * Adds a field in the table
 	 *
 	 * @param string name
@@ -147,6 +75,20 @@ class Eden_Mysql_Create extends Eden_Sql_Query {
 	}
 	
 	/**
+	 * Adds a primary key
+	 *
+	 * @param string name
+	 * @return this
+	 */
+	public function addPrimaryKey($name) {
+		//Argument 1 must be a string
+		Eden_Mysql_Error::i()->argument(1, 'string');
+		
+		$this->_primaryKeys[] = $name;
+		return $this;
+	}
+	
+	/**
 	 * Adds a unique key
 	 *
 	 * @param string name
@@ -158,20 +100,6 @@ class Eden_Mysql_Create extends Eden_Sql_Query {
 		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_uniqueKeys[$name] = $fields;
-		return $this;
-	}
-	
-	/**
-	 * Adds a primary key
-	 *
-	 * @param string name
-	 * @return this
-	 */
-	public function addPrimaryKey($name) {
-		//Argument 1 must be a string
-		Eden_Mysql_Error::i()->argument(1, 'string');
-		
-		$this->_primaryKeys[] = $name;
 		return $this;
 	}
 	
@@ -243,6 +171,78 @@ class Eden_Mysql_Create extends Eden_Sql_Query {
 			'CREATE TABLE %s (%s%s%s%s)',
 			$table, $fields, $primary,
 			$unique, $keys);
+	}
+	
+	/**
+	 * Sets comments
+	 *
+	 * @param string comments
+	 * @return this
+	 */
+	public function setComments($comments) {
+		//Argument 1 must be a string
+		Eden_Mysql_Error::i()->argument(1, 'string');
+		
+		$this->_comments = $comments;
+		return $this;
+	}
+	
+	/**
+	 * Sets a list of fields to the table
+	 *
+	 * @param array fields
+	 * @return this
+	 */
+	public function setFields(array $fields) {
+		$this->_fields = $fields;
+		return $this;
+	}
+	
+	/**
+	 * Sets a list of keys to the table
+	 *
+	 * @param array keys
+	 * @return this
+	 */
+	public function setKeys(array $keys) {
+		$this->_keys = $keys;
+		return $this;
+	}
+	
+	/**
+	 * Sets the name of the table you wish to create
+	 *
+	 * @param string name
+	 * @return this
+	 */
+	public function setName($name) {
+		//Argument 1 must be a string
+		Eden_Mysql_Error::i()->argument(1, 'string');
+		
+		$this->_name = $name;
+		return $this;
+	}
+	
+	/**
+	 * Sets a list of primary keys to the table
+	 *
+	 * @param array primaryKeys
+	 * @return this
+	 */
+	public function setPrimaryKeys(array $primaryKeys) {
+		$this->_primaryKeys = $primaryKeys;
+		return $this;
+	}
+	
+	/**
+	 * Sets a list of unique keys to the table
+	 *
+	 * @param array uniqueKeys
+	 * @return this
+	 */
+	public function setUniqueKeys(array $uniqueKeys) {
+		$this->_uniqueKeys = $uniqueKeys;
+		return $this;
 	}
 	
 	/* Protected Methods

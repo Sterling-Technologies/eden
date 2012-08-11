@@ -61,20 +61,6 @@ class Eden_Authorizenet_Direct extends Eden_Authorizenet_Base{
 	}
 	
 	/**
-     * Set return URL 
-     *
-	 * @param *string
-     * @return this
-     */
-	public function setReturnUrl($url) {
-		//Argument 1 must be a string
-		Eden_Authorizenet_Error::i()->argument(1, 'string');	
-		
-		$this->_returnUrl = $url;
-		return $this;
-	}
-	
-	/**
 	 * Demonstrates the Direct Post Method
 	 *
 	 * return this
@@ -89,7 +75,7 @@ class Eden_Authorizenet_Direct extends Eden_Authorizenet_Base{
 		$fingerPrint = 	$this->_getFingerprint($this->_amount);
 	
 		//Call block
-		return $this->Eden_Authorizenet_Block_Post($this->_postUrl, array(
+		return Eden_Authorizenet_Block_Post::i($this->_postUrl, array(
 			self::AMOUNT	=> $this->_amount,		
 			self::SEQUENCE	=> $this->_sequence,	
 			self::HASH		=> $fingerPrint,		
@@ -99,6 +85,20 @@ class Eden_Authorizenet_Direct extends Eden_Authorizenet_Base{
 			self::LOGIN		=> $this->_apiLogin));
     }
 		
+	/**
+     * Set return URL 
+     *
+	 * @param *string
+     * @return this
+     */
+	public function setReturnUrl($url) {
+		//Argument 1 must be a string
+		Eden_Authorizenet_Error::i()->argument(1, 'string');	
+		
+		$this->_returnUrl = $url;
+		return $this;
+	}
+	
 	/* Protected Methods
 	-------------------------------*/	
 	/* Private Methods

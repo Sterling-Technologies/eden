@@ -51,18 +51,28 @@ class Eden_Twitter_Oauth extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Return a request token
+	 * Returns the access token 
 	 * 
-	 * @return string
+	 * @param string the response key; from the url usually
+	 * @param string the request secret; from getRequestToken() usually
+	 * @return string the response verifier; from the url usually
 	 */
-	public function getRequestToken() {
+	public function getAccessToken($token, $secret, $verifier) {
+		//argument test
+		Eden_Twitter_Error::i()
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string')		//Argument 2 must be a string
+			->argument(3, 'string');	//Argument 3 must be a string
+		
 		return Eden_Oauth::i()
 			->getConsumer(
-				self::REQUEST_URL, 
+				self::ACCESS_URL, 
 				$this->_key, 
 				$this->_secret)
 			->useAuthorization()
 			->setMethodToPost()
+			->setToken($token, $secret)
+			->setVerifier($verifier)
 			->setSignatureToHmacSha1()
 			->getQueryResponse();
 	}
@@ -88,28 +98,18 @@ class Eden_Twitter_Oauth extends Eden_Class {
 	}
 	
 	/**
-	 * Returns the access token 
+	 * Return a request token
 	 * 
-	 * @param string the response key; from the url usually
-	 * @param string the request secret; from getRequestToken() usually
-	 * @return string the response verifier; from the url usually
+	 * @return string
 	 */
-	public function getAccessToken($token, $secret, $verifier) {
-		//argument test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string')		//Argument 2 must be a string
-			->argument(3, 'string');	//Argument 3 must be a string
-		
+	public function getRequestToken() {
 		return Eden_Oauth::i()
 			->getConsumer(
-				self::ACCESS_URL, 
+				self::REQUEST_URL, 
 				$this->_key, 
 				$this->_secret)
 			->useAuthorization()
 			->setMethodToPost()
-			->setToken($token, $secret)
-			->setVerifier($verifier)
 			->setSignatureToHmacSha1()
 			->getQueryResponse();
 	}

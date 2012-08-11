@@ -28,9 +28,9 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_entities	= false;
-	protected $_status		= false;
-	protected $_use			= false;
+	protected $_entities	= NULL;
+	protected $_status		= NULL;
+	protected $_use			= NULL;
 	protected $_name		= NULL;
 	protected $_url			= NULL;
 	protected $_location	= NULL;
@@ -53,6 +53,44 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	
 	/* Public Methods
 	-------------------------------*/
+	
+	/**
+	 * Returns an HTTP 200 OK response code and
+	 * a representation of the requesting user 
+	 * if authentication was successful 
+	 *
+	 * @return array
+	 */
+	public function getCredentials() {
+		//populate fields
+		$query = array(
+			'include_entities'	=> $this->_entities,
+			'skip_status'		=> $this->_status);
+			
+		return $this->_getResponse(self::URL_VERIFY_CREDENTIALS, $query);
+	}
+	
+	/**
+	 * Returns the remaining number of API 
+	 * requests available to the requesting 
+	 * user before the API limit is reached 
+	 * for the current hour.
+	 *
+	 * @return array
+	 */
+	public function getLimit() {
+		return $this->_getResponse(self::URL_LIMIT_STATUS);
+	} 
+	 
+	/**
+	 * Ends the session of the authenticating user, returning a null cookie. 
+	 * Use this method to sign users out of client-facing applications like widgets.
+	 *
+	 * @return string
+	 */
+	public function logOut() {
+		return $this->_post(self::URL_END_SESSION);
+	}
 	/**
 	 * Set profile background color
 	 *
@@ -64,20 +102,6 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 		Eden_Twitter_Error::i()->argument(1, 'string');
 		
 		$this->_background = $background;
-		return $this;
-	}
-	
-	/**
-	 * Set profile link color
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setLinkColor($link) {
-		//Argument 3 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$this->_link = $link;
 		return $this;
 	}
 	
@@ -96,6 +120,31 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	}
 	
 	/**
+	 * Set description
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setDescriptione($description) {
+		//Argument 1 must be a string or null
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		$this->_description = $description;
+		return $this;
+	
+	}
+	
+	/**
+	 * Set include entities
+	 *
+	 * @return this
+	 */
+	public function setEntities() {
+		$this->_entities = true;
+		return $this;
+	}
+	
+	/**
 	 * Set profile sibebar fill color
 	 *
 	 * @param string
@@ -106,20 +155,6 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 		Eden_Twitter_Error::i()->argument(1, 'string');
 		
 		$this->_fill = $fill;
-		return $this;
-	}
-	
-	/**
-	 * Set profile text color
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setTextColor($text) {
-		//Argument 3 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$this->_text = $text;
 		return $this;
 	}
 	
@@ -138,47 +173,17 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	}
 	
 	/**
-	 * Set tile
+	 * Set profile link color
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setTile($tile) {
-		//Argument 1 must be a string or null
+	public function setLinkColor($link) {
+		//Argument 3 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');
 		
-		$this->_tile = $tile;
+		$this->_link = $link;
 		return $this;
-	}
-	
-	/**
-	 * Set name
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setName($name) {
-		//Argument 1 must be a string or null
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$this->_name = $name;
-		return $this;
-	
-	}
-	
-	/**
-	 * Set url
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUrl($url) {
-		//Argument 1 must be a string or null
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
-		$this->_url = $url;
-		return $this;
-	
 	}
 	
 	/**
@@ -197,38 +202,18 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	}
 	
 	/**
-	 * Set description
+	 * Set name
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setDescriptione($description) {
+	public function setName($name) {
 		//Argument 1 must be a string or null
 		Eden_Twitter_Error::i()->argument(1, 'string');
 		
-		$this->_description = $description;
+		$this->_name = $name;
 		return $this;
 	
-	}
-	
-	/**
-	 * Set use
-	 *
-	 * @return this
-	 */
-	public function setUse() {
-		$this->_use = true;
-		return $this;
-	}
-	
-	/**
-	 * Set include entities
-	 *
-	 * @return this
-	 */
-	public function setEntities() {
-		$this->_entities = true;
-		return $this;
 	}
 	
 	/**
@@ -242,62 +227,56 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	}
 	
 	/**
-	 * Returns the remaining number of API 
-	 * requests available to the requesting 
-	 * user before the API limit is reached 
-	 * for the current hour.
+	 * Set profile text color
 	 *
-	 * @return array
+	 * @param string
+	 * @return this
 	 */
-	public function getLimit() {
-		return $this->_getResponse(self::URL_LIMIT_STATUS);
-	} 
-	 
-	/**
-	 * Returns an HTTP 200 OK response code and
-	 * a representation of the requesting user 
-	 * if authentication was successful 
-	 *
-	 * @return array
-	 */
-	public function getCredentials() {
-		//populate fields
-		$query = array(
-			'include_entities'	=> $this->_entities,
-			'skip_status'		=> $this->_status);
-			
-		return $this->_getResponse(self::URL_VERIFY_CREDENTIALS, $query);
-	}
-	 
-	/**
-	 * Ends the session of the authenticating user, returning a null cookie. 
-	 * Use this method to sign users out of client-facing applications like widgets.
-	 *
-	 * @return string
-	 */
-	public function logOut() {
-		return $this->_post(self::URL_END_SESSION);
-	}
-	 
-	/**
-	 * Sets values that users are able to set 
-	 * under the "Account" tab of their settings 
-	 * page. Only the parameters specified 
-	 * will be updated.
-	 *
-	 * @return array
-	 */
-	public function updateProfile() {
-		//populate fields
-		$query = array(
-			'include_entities'	=> $this->_entities,
-			'skip_status'		=> $this->_status,
-			'name'				=> $this->_name,
-			'url'				=> $this->_url,
-			'location'			=> $this->_location,
-			'description'		=> $this->_description);
+	public function setTextColor($text) {
+		//Argument 3 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
 		
-		return $this->_post(self::URL_UPDATE_PROFILE, $query);
+		$this->_text = $text;
+		return $this;
+	}
+	
+	/**
+	 * Set tile
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setTile($tile) {
+		//Argument 1 must be a string or null
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		$this->_tile = $tile;
+		return $this;
+	}
+	
+	/**
+	 * Set url
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setUrl($url) {
+		//Argument 1 must be a string or null
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+		$this->_url = $url;
+		return $this;
+	
+	}
+	
+	/**
+	 * Determines whether to display the profile background image or not
+	 *
+	 * @return this
+	 */
+	public function show() {
+		$this->_use = true;
+		return $this;
 	}
 	 
 	/**
@@ -341,7 +320,28 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 		return $this->_post(self::URL_UPDATE_PROFILE_COLOR, $query);
 		
 	}
-	
+	 
+	/**
+	 * Sets values that users are able to set 
+	 * under the "Account" tab of their settings 
+	 * page. Only the parameters specified 
+	 * will be updated.
+	 *
+	 * @return array
+	 */
+	public function updateProfile() {
+		//populate fields
+		$query = array(
+			'include_entities'	=> $this->_entities,
+			'skip_status'		=> $this->_status,
+			'name'				=> $this->_name,
+			'url'				=> $this->_url,
+			'location'			=> $this->_location,
+			'description'		=> $this->_description);
+		
+		return $this->_post(self::URL_UPDATE_PROFILE, $query);
+	}
+	 
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

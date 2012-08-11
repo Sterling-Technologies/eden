@@ -43,42 +43,6 @@ class Eden_Postgre_Create extends Eden_Sql_Query {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Sets the name of the table you wish to create
-	 *
-	 * @param string name
-	 * @return this
-	 */
-	public function setName($name) {
-		//Argument 1 must be a string
-		Eden_Mysql_Error::i()->argument(1, 'string');
-		
-		$this->_name = $name;
-		return $this;
-	}
-	
-	/**
-	 * Sets a list of fields to the table
-	 *
-	 * @param array fields
-	 * @return this
-	 */
-	public function setFields(array $fields) {
-		$this->_fields = $fields;
-		return $this;
-	}
-	
-	/**
-	 * Sets a list of primary keys to the table
-	 *
-	 * @param array primaryKeys
-	 * @return this
-	 */
-	public function setPrimaryKeys(array $primaryKeys) {
-		$this->_primaryKeys = $primaryKeys;
-		return $this;
-	}
-	
-	/**
 	 * Adds a field in the table
 	 *
 	 * @param string name
@@ -104,14 +68,6 @@ class Eden_Postgre_Create extends Eden_Sql_Query {
 		Eden_Mysql_Error::i()->argument(1, 'string');
 		
 		$this->_primaryKeys[] = $name;
-		return $this;
-	}
-	
-	public function withOids($oids) {
-		//Argument 1 must be a boolean
-		Eden_Mysql_Error::i()->argument(1, 'bool');
-		
-		$this->_oids = $oids;
 		return $this;
 	}
 	
@@ -168,6 +124,50 @@ class Eden_Postgre_Create extends Eden_Sql_Query {
 		$fields = !empty($fields) ? implode(', ', $fields) : '';
 		$primary = !empty($this->_primaryKeys) ? ', PRIMARY KEY ("'.implode('", ""', $this->_primaryKeys).'")' : '';
 		return sprintf('CREATE TABLE %s (%s%s) %s', $table, $fields, $primary, $oids);
+	}
+	
+	/**
+	 * Sets a list of fields to the table
+	 *
+	 * @param array fields
+	 * @return this
+	 */
+	public function setFields(array $fields) {
+		$this->_fields = $fields;
+		return $this;
+	}
+	
+	/**
+	 * Sets the name of the table you wish to create
+	 *
+	 * @param string name
+	 * @return this
+	 */
+	public function setName($name) {
+		//Argument 1 must be a string
+		Eden_Mysql_Error::i()->argument(1, 'string');
+		
+		$this->_name = $name;
+		return $this;
+	}
+	
+	/**
+	 * Sets a list of primary keys to the table
+	 *
+	 * @param array primaryKeys
+	 * @return this
+	 */
+	public function setPrimaryKeys(array $primaryKeys) {
+		$this->_primaryKeys = $primaryKeys;
+		return $this;
+	}
+	
+	public function withOids($oids) {
+		//Argument 1 must be a boolean
+		Eden_Mysql_Error::i()->argument(1, 'bool');
+		
+		$this->_oids = $oids;
+		return $this;
 	}
 	
 	/* Protected Methods

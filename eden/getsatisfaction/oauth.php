@@ -38,7 +38,29 @@ class Eden_Getsatisfaction_Oauth extends Eden_Class {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
+	/**
+	 * Returns the access token 
+	 * 
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
+	public function getAccessToken($token, $secret) {
+		//argument test
+		Eden_Getsatisfaction_Error::i()
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string');	//Argument 2 must be a string
+			
+		return Eden_Oauth::i()
+			->getConsumer(self::ACCESS_URL, $this->_key, $this->_secret)
+			->useAuthorization()
+			->setMethodToPost()
+			->setToken($token, $secret)
+			->setSignatureToHmacSha1()
+			->getQueryResponse();
+	}
+	
 	/**
 	 * Returns the URL used for login. 
 	 * 
@@ -82,28 +104,6 @@ class Eden_Getsatisfaction_Oauth extends Eden_Class {
 		
 		$query = http_build_query($query);
 		return self::AUTHORIZE_URL.'?'.$query;
-	}
-	
-	/**
-	 * Returns the access token 
-	 * 
-	 * @param string
-	 * @param string
-	 * @return string
-	 */
-	public function getAccessToken($token, $secret) {
-		//argument test
-		Eden_Getsatisfaction_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string');	//Argument 2 must be a string
-			
-		return Eden_Oauth::i()
-			->getConsumer(self::ACCESS_URL, $this->_key, $this->_secret)
-			->useAuthorization()
-			->setMethodToPost()
-			->setToken($token, $secret)
-			->setSignatureToHmacSha1()
-			->getQueryResponse();
 	}
 	
 	/* Protected Methods

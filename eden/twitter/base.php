@@ -65,10 +65,31 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 	
 	/* Protected Methods
 	-------------------------------*/
+	protected function _accessKey($array) {
+		foreach($array as $key => $val) {
+			if(is_array($val)) {
+				$array[$key] = $this->_accessKey($val);
+			}
+			//if value is null
+			if(is_null($val) || empty($val)) {
+				unset($array[$key]);
+			} else if($val === false) {
+				$array[$key] = 0;
+			} else if($val === true) {			
+				$array[$key] = 1;
+			}
+			
+		}
+		
+		return $array;
+	}
+	
 	protected function _getResponse($url, array $query = array()) {
+		//prevent sending fields with no value
+		$query = $this->_accessKey($query);
+		
 		$rest = Eden_Oauth::i()
 			->getConsumer($url, $this->_consumerKey, $this->_consumerSecret)
-			//->setHeaders(self::VERSION_HEADER, self::GDATA_VERSION)
 			->setToken($this->_accessToken, $this->_accessSecret)
 			->setSignatureToHmacSha1();
 		
@@ -79,7 +100,10 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 		return $response;
 	}
 	
-	protected function _post($url, $query = array()) {
+	protected function _post($url, array $query = array()) {
+		//prevent sending fields with no value
+		$query = $this->_accessKey($query);
+		
 		$headers = array();
 		$headers[] = Eden_Oauth_Consumer::POST_HEADER;
 		

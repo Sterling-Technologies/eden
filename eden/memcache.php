@@ -95,7 +95,49 @@ class Eden_Memcache extends Eden_Class {
 		
 		return $this;
 	}
+		
+	/**
+	 * Flushes the cache
+	 *
+	 * return this
+	 */
+	public function clear() {
+		$this->_memcache->flush();
+		
+		return $this;
+	}
 	
+	/**
+	 * Gets a data cache
+	 *
+	 * @param string|array the key to the data
+	 * @param int MemCache flag
+	 * @return variable
+	 */
+	public function get($key, $flag = NULL) {
+		//argument test
+		Eden_Memcache_Error::i()
+			->argument(1, 'string', 'array')	//Argument 1 must be a string or array
+			->argument(2, 'int', 'null');	//Argument 2 must be an integer or null
+		
+		return $this->_memcache->get($key, $flag);
+	}
+
+	/**
+	 * deletes data of a cache
+	 *
+	 * @param string the key to the data
+	 * @return this
+	 */
+	public function remove($key) {
+		//Argument 1 must be a string or array
+		Eden_Memcache_Error::i()->argument(1, 'string', 'array');
+		
+		$this->_memcache->delete($key);
+		
+		return $this;
+	}
+
 	/**
 	 * Sets a data cache
 	 *
@@ -116,49 +158,7 @@ class Eden_Memcache extends Eden_Class {
 		
 		return $this;
 	}
-
-	/**
-	 * Gets a data cache
-	 *
-	 * @param string|array the key to the data
-	 * @param int MemCache flag
-	 * @return variable
-	 */
-	public function get($key, $flag = NULL) {
-		//argument test
-		Eden_Memcache_Error::i()
-			->argument(1, 'string', 'array')	//Argument 1 must be a string or array
-			->argument(2, 'int', 'null');	//Argument 2 must be an integer or null
 		
-		return $this->_memcache->get($key, $flag);
-	}
-	
-	/**
-	 * deletes data of a cache
-	 *
-	 * @param string the key to the data
-	 * @return this
-	 */
-	public function remove($key) {
-		//Argument 1 must be a string or array
-		Eden_Memcache_Error::i()->argument(1, 'string', 'array');
-		
-		$this->_memcache->delete($key);
-		
-		return $this;
-	}
-	
-	/**
-	 * Flushes the cache
-	 *
-	 * return this
-	 */
-	public function clear() {
-		$this->_memcache->flush();
-		
-		return $this;
-	}
-	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

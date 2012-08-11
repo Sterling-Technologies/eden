@@ -8,7 +8,7 @@
  */
 
 /**
- * Google Plus
+ * Google Plus people
  *
  * @package    Eden
  * @category   google
@@ -17,15 +17,16 @@
 class Eden_Google_Plus_People extends Eden_Google_Base {
 	/* Constants
 	-------------------------------*/
+	const URL_GET_USER			= 'https://www.googleapis.com/plus/v1/people/%s';
+	const URL_PEOPLE_SEARCH		= 'https://www.googleapis.com/plus/v1/people';
+	const URL_PEOPLE_ACTIVITY	= 'https://www.googleapis.com/plus/v1/activities/%s/people/%s';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/ 
-	protected $_userId		= Eden_Google_Plus::DEFAULT_USERID;
-	protected $_queryString	= NULL;
+	protected $_maxResults	= NULL;
 	protected $_pageToken	= NULL;
-	protected $_activityId	= NULL;
-	protected $_collection	= Eden_Google_Plus::DEFAULT_USER_COLLECTION;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -44,66 +45,32 @@ class Eden_Google_Plus_People extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * set useId
+	 * The continuation token, used to page through large result sets. 
+	 * To get the next page of results, set this parameter to the 
+	 * value of "nextPageToken" from the previous response. 
 	 *
-	 * @param string|null
+	 * @param string
 	 * @return this
 	 */
-	public function setUserId($userId) {
+	public function setPageToken($pageToken) {
+		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userId = $userId;
+		$this->_pageToken = $pageToken;
 		
 		return $this;
 	}
 	
 	/**
-	 * set query string for search
+	 * The maximum number of people to include in the response, 
+	 * used for paging.
 	 *
-	 * @param string|null
+	 * @param integer
 	 * @return this
 	 */
-	public function setQuery($query) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_queryString = $query;
-		
-		return $this;
-	}
-	
-	/**
-	 * set page token
-	 *
-	 * @param string|null
-	 * @return this
-	 */
-	public function setPageToken($token) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_pageToken = $token;
-		
-		return $this;
-	}
-	
-	/**
-	 * set activity id
-	 *
-	 * @param string|null
-	 * @return this
-	 */
-	public function setActivityId($activityId) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_activityId = $activityId;
-		
-		return $this;
-	}
-	
-	/**
-	 * set activity id
-	 *
-	 * @param string|null
-	 * @return this
-	 */
-	public function setCollection($collection) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_collection = $collection;
+	public function setMaxResults($maxResults) {
+		//argument 1 must be a integer
+		Eden_Google_Error::i()->argument(1, 'int');
+		$this->_maxResults = $maxResults;
 		
 		return $this;
 	}
@@ -111,80 +78,67 @@ class Eden_Google_Plus_People extends Eden_Google_Base {
 	/**
 	 * Returns user info
 	 *
-	 * @param string|null
+	 * @param string
 	 * @return array
 	 */
-	public function get($userId = NULL) {
-		Eden_Google_Error::i()->argument(1, 'string', 'null');
-		if($userId) {
-			$this->_userId = $userId;
-		}
-		
-		return $this->_getResponse(sprintf(Eden_Google_Plus::URL_GET_USER,$this->_userId));
+	public function getUserInfo($userId = self::ME) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+			
+		return $this->_getResponse(sprintf(self::URL_GET_USER,$userId));
 	}
 	
-		
 	/**
 	 * Returns people that matches the queryString
 	 *
-	 * @param string|null
-	 * @param string|null
+	 * @param string|integer Full text search of public text in all profiles.
 	 * @return array
 	 */
-	public function search($queryString = NULL, $pageToken = NULL) {
-		Eden_Google_Error::i()
-			->argument(1, 'string', 'null')
-			->argument(2, 'string', 'null');
+	public function search($queryString) {
+		//argument 1 must be a string or integer
+		Eden_Google_Error::i()->argument(1, 'string', 'int');
 		
-		if($queryString) {
-			$this->_queryString = $queryString;
-		}
+		//populate fields
+		$query = array(
+			self::QUERY_STRING	=> $queryString,
+			self::PAGE_TOKEN	=> $this->_pageToken,		//optional
+			self::MAX_RESULTS	=> $this->_maxResults);		//optional
 		
-		if($pageToken) {
-			$this->_pageToken = $pageToken;
-		}
-		
-		$url = Eden_Google_Plus::URL_PEOPLE;
-		$query = array();
-		$query[Eden_Google_Plus::QUERY] = urlencode($this->_queryString);
-		$query[Eden_Google_Plus::PAGE_TOKEN] = ($this->_pageToken) ? $this->_pageToken : NULL;
-		
-		return $this->_getResponse($url, $query);
+		return $this->_getResponse(self::URL_PEOPLE_SEARCH, $query);
 	}
 	
 	/**
 	 * List all of the people in the specified 
 	 * collection for a particular activity
 	 *
-	 * @param string|null
-	 * @param string|null
-	 * @param string|null
+	 * @param string
+	 * @param string
 	 * @return array
 	 */
-	public function listByActivity($activityId = NULL, $collection = NULL, $pageToken = NULL) {
+	public function getActivityList($activityId, $collection) {
+		//argument test
 		Eden_Google_Error::i()
-			->argument(1, 'string', 'null')
-			->argument(2, 'string', 'null')
-			->argument(3, 'string', 'null');
-		
-		if($activityId) {
-			$this->_activityId = $activityId;
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 1 must be a string
+			
+		//if the input value is not allowed
+		if(!in_array($collection, array('plusoners', 'resharers'))) {
+			//throw error
+			Eden_Google_Error::i()
+				->setMessage(Eden_Google_Error::INVALID_COLLECTION) 
+				->addVariable($collection)
+				->trigger();
 		}
 		
-		if($collection) {
-			$this->_collection = $collection;
-		}
+		//populate fields
+		$query = array(
+			self::ACTIVITY_ID	=> $activityId,
+			self::COLLECTION	=> $collection,
+			self::MAX_RESULTS	=> $this->_maXResults,		//optional
+			self::PAGE_TOKEN	=> $this->_pageToken);		//optional
 		
-		if($pageToken) {
-			$this->_pageToken = $pageToken;
-		}
-		
-		$url = sprintf(Eden_Google_Plus::URL_LIST_BY_ACTIVITY, $this->_activityId, $this->_collection);
-		$query = array();
-		$query[Eden_Google_Plus::PAGE_TOKEN] = ($this->_pageToken) ? $this->_pageToken : NULL;
-		
-		return $this->_getResponse($url, $query);
-	}
+		return $this->_getResponse(sprintf(self::URL_PEOPLE_ACTIVITY, $activityId, $collection), $query);
+	}	
 	
 	/* Protected Methods
 	-------------------------------*/

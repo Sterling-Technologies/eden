@@ -70,31 +70,7 @@ class Eden_Unit {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
-	public function setPackage($name) {
-		//Argument 1 must be a string
-		Eden_Unit_Error::i()->argument(1, 'string');
-		
-		$this->_package = $name;
-		return $this;
-	}
-	
-	public function getTotalTests($package = NULL) {
-		//Argument 1 must be a string or null
-		Eden_Unit_Error::i()->argument(1, 'string', 'null');
-		
-		if(isset($this->_report[$package])) {
-			return count($this->_report[$package]);
-		}
-		
-		$total = 0;
-		foreach($this->_report as $package => $tests) {
-			$total += $tests;
-		}
-		
-		return $tests;
-	}
-	
+	-------------------------------*/	
 	public function getPassFail($package = NULL) {
 		//Argument 1 must be a string or null
 		Eden_Unit_Error::i()->argument(1, 'string', 'null');
@@ -123,6 +99,30 @@ class Eden_Unit {
 	
 	public function getReport() {
 		return $this->_report;
+	}
+	
+	public function getTotalTests($package = NULL) {
+		//Argument 1 must be a string or null
+		Eden_Unit_Error::i()->argument(1, 'string', 'null');
+		
+		if(isset($this->_report[$package])) {
+			return count($this->_report[$package]);
+		}
+		
+		$total = 0;
+		foreach($this->_report as $package => $tests) {
+			$total += $tests;
+		}
+		
+		return $tests;
+	}
+
+	public function setPackage($name) {
+		//Argument 1 must be a string
+		Eden_Unit_Error::i()->argument(1, 'string');
+		
+		$this->_package = $name;
+		return $this;
 	}
 	
 	/* Protected Methods

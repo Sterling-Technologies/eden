@@ -44,14 +44,6 @@ class Eden_Timezone extends Eden_Class {
 	
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Returns timezone's validation methods
-	 *
-	 * @return Eden_Timezone_Validation
-	 */
-	public function validation() {
-		return Eden_Timezone_Validation::i();
-	}
 	
 	/**
 	 * Convert current time set here to another time zone
@@ -76,19 +68,40 @@ class Eden_Timezone extends Eden_Class {
 	}
 	
 	/**
-	 * Sets a new time
+	 * Returns the GMT Format
 	 *
-	 * @param int|string
-	 * @return this
+	 * @return string
 	 */
-	public function setTime($time) {
-		Eden_Timezone_Error::i()->argument(1, 'int', 'string');
-		if(is_string($time)) {
-			$time = strtotime($time);
+	public function getGMT($prefix = self::GMT) {
+		Eden_Timezone_Error::i()->argument(1, 'string');
+		list($hour, $minute, $sign) = $this->_getUtcParts($this->_offset);
+		return $prefix.$sign.$hour.$minute;
+	}
+	
+	/**
+	 * Returns a list of GMT formats and dates in a 24 hour period
+	 *
+	 * @param string
+	 * @param int
+	 * @param string|null
+	 * @return array
+	 */
+	public function getGMTDates($format, $interval = 30, $prefix = self::GMT) {
+		Eden_Timezone_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'int')
+			->argument(3, 'string', 'null');
+			
+		$offsets 	= $this->getOffsetDates($format, $interval);
+		$dates 		= array();
+		
+		foreach($offsets as $offset => $date) {
+			list($hour, $minute, $sign) = $this->_getUtcParts($offset);
+			$gmt = $prefix.$sign.$hour.$minute;
+			$dates[$gmt] = $date;
 		}
 		
-		$this->_time = $time - $this->_offset;
-		return $this;
+		return $dates;
 	}
 	
 	/**
@@ -98,6 +111,29 @@ class Eden_Timezone extends Eden_Class {
 	 */
 	public function getOffset() {
 		return $this->_offset;
+	}
+	
+	/**
+	 * Returns a list of offsets and dates in a 24 hour period
+	 *
+	 * @param string
+	 * @param int
+	 * @return array
+	 */
+	public function getOffsetDates($format, $interval = 30) {
+		Eden_Timezone_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'int');
+			
+		$dates = array();
+		$interval *= 60;
+		
+		for($i=-12*3600; $i <= (12*3600); $i+=$interval) {
+			$time = $this->_time + $i;
+			$dates[$i] = date($format, $time);
+		}
+		
+		return $dates;
 	}
 	
 	/**
@@ -129,40 +165,6 @@ class Eden_Timezone extends Eden_Class {
 	}
 	
 	/**
-	 * Returns the GMT Format
-	 *
-	 * @return string
-	 */
-	public function getGMT($prefix = self::GMT) {
-		Eden_Timezone_Error::i()->argument(1, 'string');
-		list($hour, $minute, $sign) = $this->_getUtcParts($this->_offset);
-		return $prefix.$sign.$hour.$minute;
-	}
-	
-	/**
-	 * Returns a list of offsets and dates in a 24 hour period
-	 *
-	 * @param string
-	 * @param int
-	 * @return array
-	 */
-	public function getOffsetDates($format, $interval = 30) {
-		Eden_Timezone_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'int');
-			
-		$dates = array();
-		$interval *= 60;
-		
-		for($i=-12*3600; $i <= (12*3600); $i+=$interval) {
-			$time = $this->_time + $i;
-			$dates[$i] = date($format, $time);
-		}
-		
-		return $dates;
-	}
-	
-	/**
 	 * Returns a list of UTC formats and dates in a 24 hour period
 	 *
 	 * @param string
@@ -189,29 +191,28 @@ class Eden_Timezone extends Eden_Class {
 	}
 	
 	/**
-	 * Returns a list of GMT formats and dates in a 24 hour period
+	 * Sets a new time
 	 *
-	 * @param string
-	 * @param int
-	 * @param string|null
-	 * @return array
+	 * @param int|string
+	 * @return this
 	 */
-	public function getGMTDates($format, $interval = 30, $prefix = self::GMT) {
-		Eden_Timezone_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'int')
-			->argument(3, 'string', 'null');
-			
-		$offsets 	= $this->getOffsetDates($format, $interval);
-		$dates 		= array();
-		
-		foreach($offsets as $offset => $date) {
-			list($hour, $minute, $sign) = $this->_getUtcParts($offset);
-			$gmt = $prefix.$sign.$hour.$minute;
-			$dates[$gmt] = $date;
+	public function setTime($time) {
+		Eden_Timezone_Error::i()->argument(1, 'int', 'string');
+		if(is_string($time)) {
+			$time = strtotime($time);
 		}
 		
-		return $dates;
+		$this->_time = $time - $this->_offset;
+		return $this;
+	}
+	
+	/**
+	 * Returns timezone's validation methods
+	 *
+	 * @return Eden_Timezone_Validation
+	 */
+	public function validation() {
+		return Eden_Timezone_Validation::i();
 	}
 	
 	/* Protected Methods
@@ -232,16 +233,16 @@ class Eden_Timezone extends Eden_Class {
 		return 0;
 	}
 	
+	protected function _getOffsetFromAbbr($zone) {
+		$zone = timezone_name_from_abbr(strtolower($zone));
+		return $this->_getOffsetFromLocation($zone);
+	}
+	
 	protected function _getOffsetFromLocation($zone) {
 		$zone = new DateTimeZone($zone);
 		$gmt = new DateTimeZone(self::GMT);
 		
 		return $zone->getOffset(new DateTime('now', $gmt));
-	}
-	
-	protected function _getOffsetFromAbbr($zone) {
-		$zone = timezone_name_from_abbr(strtolower($zone));
-		return $this->_getOffsetFromLocation($zone);
 	}
 	
 	protected function _getOffsetFromUtc($zone) {

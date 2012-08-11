@@ -92,21 +92,6 @@ class Eden_Type_String extends Eden_Type_Abstract {
 	}
 	
 	/**
-	 * Uncamelizes a string
-	 *
-	 * @param string prefix
-	 * @return this
-	 */
-	public function uncamelize($prefix = '-') {
-		//argument 1 must be a string
-		Eden_Type_Error::i()->argument(1, 'string');
-		
-		$this->_data = strtolower(preg_replace("/([A-Z])/", $prefix."$1", $this->_data));
-		
-		return $this;
-	}
-	
-	/**
 	 * Transforms a string with caps and 
 	 * space to a lower case dash string 
 	 *
@@ -132,6 +117,21 @@ class Eden_Type_String extends Eden_Type_Abstract {
 		Eden_Type_Error::i()->argument(1, 'string');
 		
 		$this->_data = ucwords(str_replace($prefix, ' ', $this->_data));
+		
+		return $this;
+	}
+	
+	/**
+	 * Uncamelizes a string
+	 *
+	 * @param string prefix
+	 * @return this
+	 */
+	public function uncamelize($prefix = '-') {
+		//argument 1 must be a string
+		Eden_Type_Error::i()->argument(1, 'string');
+		
+		$this->_data = strtolower(preg_replace("/([A-Z])/", $prefix."$1", $this->_data));
 		
 		return $this;
 	}

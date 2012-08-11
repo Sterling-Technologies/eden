@@ -38,24 +38,24 @@ class Eden_Country extends Eden_Class {
 	
 	/* Public Methods
 	-------------------------------*/
-	public function us() {
-		return Eden_Country_Us::i();
+	public function au() {
+		return Eden_Country_Au::i();
 	}
 	
 	public function ca() {
 		return Eden_Country_Ca::i();
 	}
 	
+	public function getList() {
+		return self::$_countries;
+	}
+	
 	public function uk() {
 		return Eden_Country_Uk::i();
 	}
 	
-	public function au() {
-		return Eden_Country_Au::i();
-	}
-	
-	public function getList() {
-		return self::$_countries;
+	public function us() {
+		return Eden_Country_Us::i();
 	}
 	
 	/* Protected Methods

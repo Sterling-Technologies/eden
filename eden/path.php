@@ -108,6 +108,81 @@ class Eden_Path extends Eden_Type_String implements ArrayAccess {
 	}
 	
 	/**
+	 * Returns the path array
+	 * 
+	 * @return array
+	 */
+	public function getArray() {
+		return explode('/', $this->_data);
+	}
+	
+	/**
+	 * isset using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+    public function offsetExists($offset) {
+        return in_array($offset, $this->getArray());
+    }
+    
+	/**
+	 * returns data using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+	public function offsetGet($offset) {
+		$pathArray = $this->getArray();
+		
+		if($offset == 'first') {
+           $offset = 0;
+		}
+		
+		if($offset == 'last') {
+           $offset = count($pathArray) - 1;
+		}
+		
+		if(is_numeric($offset)) {
+			
+			return isset($pathArray[$offset]) ? $pathArray[$offset] : NULL;	
+		}
+		
+		return NULL;
+    }
+	
+	/**
+	 * Sets data using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @param mixed
+	 * @return void
+	 */
+	public function offsetSet($offset, $value) {
+        if (is_null($offset)) {
+            $this->append($value);
+        } else if($offset == 'prepend') {
+            $this->prepend($value);
+        } else if($offset == 'replace') {
+			$this->replace($value);
+		} else {
+			$pathArray = $this->getArray();
+			if($offset > 0 && $offset < count($pathArray)) {
+				$pathArray[$offset] = $value;
+				$this->_data = implode('/', $pathArray);
+			}
+		}
+    }
+	
+	/**
+	 * unsets using the ArrayAccess interface
+	 *
+	 * @param number
+	 * @return bool
+	 */
+	public function offsetUnset($offset) {}
+    
+	/**
 	 * Adds a path before the existing one
 	 * 
 	 * @param string[,string..]
@@ -129,6 +204,24 @@ class Eden_Path extends Eden_Type_String implements ArrayAccess {
 		}
 		
 		return $this;
+	}
+	
+	/**
+	 * Remove the last path
+	 *
+	 * @return this
+	 */
+	public function pop(){
+		//get the path array
+		$pathArray = $this->getArray();
+		
+		//remove the last
+		$path = array_pop($pathArray);
+		
+		//set path
+		$this->_data = implode('/', $pathArray);
+		
+		return $path;
 	}
 	
 	/**
@@ -155,99 +248,6 @@ class Eden_Path extends Eden_Type_String implements ArrayAccess {
 		
 		return $this;
 	}
-	
-	/**
-	 * Remove the last path
-	 *
-	 * @return this
-	 */
-	public function pop(){
-		//get the path array
-		$pathArray = $this->getArray();
-		
-		//remove the last
-		$path = array_pop($pathArray);
-		
-		//set path
-		$this->_data = implode('/', $pathArray);
-		
-		return $path;
-	}
-	
-	/**
-	 * Returns the path array
-	 * 
-	 * @return array
-	 */
-	public function getArray() {
-		return explode('/', $this->_data);
-	}
-	
-	/**
-	 * Sets data using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @param mixed
-	 * @return void
-	 */
-	public function offsetSet($offset, $value) {
-        if (is_null($offset)) {
-            $this->append($value);
-        } else if($offset == 'prepend') {
-            $this->prepend($value);
-        } else if($offset == 'replace') {
-			$this->replace($value);
-		} else {
-			$pathArray = $this->getArray();
-			if($offset > 0 && $offset < count($pathArray)) {
-				$pathArray[$offset] = $value;
-				$this->_data = implode('/', $pathArray);
-			}
-		}
-    }
-	
-	/**
-	 * isset using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-    public function offsetExists($offset) {
-        return in_array($offset, $this->getArray());
-    }
-    
-	/**
-	 * unsets using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-	public function offsetUnset($offset) {}
-    
-	/**
-	 * returns data using the ArrayAccess interface
-	 *
-	 * @param number
-	 * @return bool
-	 */
-	public function offsetGet($offset) {
-		$pathArray = $this->getArray();
-		
-		if($offset == 'first') {
-           $offset = 0;
-		}
-		
-		if($offset == 'last') {
-           $offset = count($pathArray) - 1;
-		}
-		
-		if(is_numeric($offset)) {
-			
-			return isset($pathArray[$offset]) ? $pathArray[$offset] : NULL;	
-		}
-		
-		return NULL;
-    }
 	
 	/* Protected Methods
 	-------------------------------*/

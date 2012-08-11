@@ -34,18 +34,39 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
 	/**
-	 * Filters by keywords
+	 * Only return the number of results found
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setKeywords($keywords) {
+	public function countOnly() {
+		$query['count_only'] = 'true';
+		
+		return $this;
+	}
+	
+	/**
+	 * Retrieves response
+	 *
+	 * @return array
+	 */
+	public function send() {
+		return $this->_getJsonResponse(self::URL, $this->_query);
+	}
+	
+	/**
+	 * Filters by address
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setAddress($address) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
-		$query['keywords'] = $keywords;
+		$query['address'] = $address;
 		
 		return $this;
 	}
@@ -70,66 +91,6 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	}
 	
 	/**
-	 * Filters by address
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setAddress($address) {
-		//Argument 1 must be a string
-		Eden_Eventbrite_Error::i()->argument(1, 'string');
-		
-		$query['address'] = $address;
-		
-		return $this;
-	}
-	
-	/**
-	 * Filters by city
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setCity($city) {
-		//Argument 1 must be a string
-		Eden_Eventbrite_Error::i()->argument(1, 'string');
-		
-		$query['city'] = $city;
-		
-		return $this;
-	}
-	
-	/**
-	 * Filters by region
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setRegion($region) {
-		//Argument 1 must be a string
-		Eden_Eventbrite_Error::i()->argument(1, 'string');
-		
-		$query['region'] = $region;
-		
-		return $this;
-	}
-	
-	/**
-	 * Filters by postal/zip code
-	 *
-	 * @param string|int
-	 * @return this
-	 */
-	public function setPostal($postal) {
-		//Argument 1 must be a string or integer
-		Eden_Eventbrite_Error::i()->argument(1, 'string', 'int');
-		
-		$query['postal_code'] = $postal;
-		
-		return $this;
-	}
-	
-	/**
 	 * Filters by country
 	 *
 	 * @param string
@@ -145,61 +106,16 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	}
 	
 	/**
-	 * Filters within a specified area
-	 *
-	 * @param int
-	 * @return this
-	 */
-	public function setWithin($within) {
-		//Argument 1 must be a int
-		Eden_Eventbrite_Error::i()->argument(1, 'int');
-		
-		$query['within'] = $within;
-		
-		return $this;
-	}
-	
-	/**
-	 * Filters within an area unit
+	 * Filters by city
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setWithinUnit($unit) {
+	public function setCity($city) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
-		$query['within_unit'] = $unit;
-		
-		return $this;
-	}
-	
-	/**
-	 * Filters by latitude
-	 *
-	 * @param float
-	 * @return this
-	 */
-	public function setLatitude($latitude) {
-		//Argument 1 must be a float
-		Eden_Eventbrite_Error::i()->argument(1, 'float');
-		
-		$query['latitude'] = $latitude;
-		
-		return $this;
-	}
-	
-	/**
-	 * Filters by longitude
-	 *
-	 * @param float
-	 * @return this
-	 */
-	public function setLongitude($longitude) {
-		//Argument 1 must be a float
-		Eden_Eventbrite_Error::i()->argument(1, 'float');
-		
-		$query['longitude'] = $longitude;
+		$query['city'] = $city;
 		
 		return $this;
 	}
@@ -270,16 +186,46 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	}
 	
 	/**
-	 * Filters by organizer
+	 * Filters by keywords
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setOrganizer($organizer) {
+	public function setKeywords($keywords) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
-		$query['organizer'] = $organizer;
+		$query['keywords'] = $keywords;
+		
+		return $this;
+	}
+	
+	/**
+	 * Filters by latitude
+	 *
+	 * @param float
+	 * @return this
+	 */
+	public function setLatitude($latitude) {
+		//Argument 1 must be a float
+		Eden_Eventbrite_Error::i()->argument(1, 'float');
+		
+		$query['latitude'] = $latitude;
+		
+		return $this;
+	}
+	
+	/**
+	 * Filters by longitude
+	 *
+	 * @param float
+	 * @return this
+	 */
+	public function setLongitude($longitude) {
+		//Argument 1 must be a float
+		Eden_Eventbrite_Error::i()->argument(1, 'float');
+		
+		$query['longitude'] = $longitude;
 		
 		return $this;
 	}
@@ -304,27 +250,90 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	}
 	
 	/**
-	 * Only return the number of results found
+	 * Filters by organizer
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function countOnly() {
-		$query['count_only'] = 'true';
+	public function setOrganizer($organizer) {
+		//Argument 1 must be a string
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
+		
+		$query['organizer'] = $organizer;
 		
 		return $this;
 	}
 	
 	/**
-	 * Sort by event id
+	 * Filters by postal/zip code
 	 *
+	 * @param string|int
 	 * @return this
 	 */
-	public function sortById() {
+	public function setPostal($postal) {
+		//Argument 1 must be a string or integer
+		Eden_Eventbrite_Error::i()->argument(1, 'string', 'int');
+		
+		$query['postal_code'] = $postal;
+		
+		return $this;
+	}
+	
+	/**
+	 * Filters by region
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setRegion($region) {
 		//Argument 1 must be a string
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
-		$query['sort_by'] = 'id';
+		$query['region'] = $region;
+		
+		return $this;
+	}
+	
+	/**
+	 * Filters within a specified area
+	 *
+	 * @param int
+	 * @return this
+	 */
+	public function setWithin($within) {
+		//Argument 1 must be a int
+		Eden_Eventbrite_Error::i()->argument(1, 'int');
+		
+		$query['within'] = $within;
+		
+		return $this;
+	}
+	
+	/**
+	 * Filters within an area unit
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setWithinUnit($unit) {
+		//Argument 1 must be a string
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
+		
+		$query['within_unit'] = $unit;
+		
+		return $this;
+	}
+	
+	/**
+	 * Sort by city
+	 *
+	 * @return this
+	 */
+	public function sortByCity() {
+		//Argument 1 must be a string
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
+		
+		$query['sort_by'] = 'city';
 		
 		return $this;
 	}
@@ -344,6 +353,20 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 	}
 	
 	/**
+	 * Sort by event id
+	 *
+	 * @return this
+	 */
+	public function sortById() {
+		//Argument 1 must be a string
+		Eden_Eventbrite_Error::i()->argument(1, 'string');
+		
+		$query['sort_by'] = 'id';
+		
+		return $this;
+	}
+	
+	/**
 	 * Sort by event name
 	 *
 	 * @return this
@@ -353,20 +376,6 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		Eden_Eventbrite_Error::i()->argument(1, 'string');
 		
 		$query['sort_by'] = 'name';
-		
-		return $this;
-	}
-	
-	/**
-	 * Sort by city
-	 *
-	 * @return this
-	 */
-	public function sortByCity() {
-		//Argument 1 must be a string
-		Eden_Eventbrite_Error::i()->argument(1, 'string');
-		
-		$query['sort_by'] = 'city';
 		
 		return $this;
 	}
@@ -414,15 +423,6 @@ class Eden_Eventbrite_Event_Search extends Eden_Eventbrite_Base {
 		$query['tracking_link'] = $tracking;
 		
 		return $this;
-	}
-	
-	/**
-	 * Retrieves response
-	 *
-	 * @return array
-	 */
-	public function send() {
-		return $this->_getJsonResponse(self::URL, $this->_query);
 	}
 	
 	/* Protected Methods

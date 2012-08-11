@@ -8,28 +8,27 @@
  */
 
 /**
- *  Class for adding Event on Google Calendar
+ * Google Calendar Acl Class
  *
  * @package    Eden
  * @category   google
- * @author     Clark Galgo cgalgo@openovate.com
+ * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */
 class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_ADD_ACCESS_RULE 			= 'https://www.googleapis.com/calendar/v3/calendars/%s/acl';
+	const URL_CALENDAR_ACL_GET		= 'https://www.googleapis.com/calendar/v3/calendars/%s/acl';
+	const URL_CALENDAR_ACL_SPECIFIC	= 'https://www.googleapis.com/calendar/v3/calendars/%s/acl/%s';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
-	-------------------------------*/ 
-	protected $_type		= NULL;
-	protected $_value		= NULL;
-	protected $_role		= NULL;
-	protected $_kind		= NULL;
-	protected $_tag			= NULL;
-	protected $_ruleId		= NULL;
-	protected $_calendarId	= Eden_Google_Calendar::DEFAULT_CALENDAR;
+	-------------------------------*/
+	protected $_role	= NULL;
+	protected $_type	= NULL; 
+	protected $_etag	= NULL;
+	protected $_id		= NULL;
+	protected $_kind	= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -42,70 +41,119 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	public function __construct($token) {
 		//argument test
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_token 	= $token; 
+		$this->_token = $token; 
 	}
 	
 	/* Public Methods
-	-------------------------------*/
+	-------------------------------*/	
 	/**
-	 * set scope type
+	 * Creates a secondary calendar.
 	 *
-	 * @param string
+	 * @param string The role assigned to the scope
+	 * @param string The type of the scope
+	 * @param string Calendar identifier
+	 * @return array
+	 */
+	public function create($role, $type, $calendarId = self::PRIMARY) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string');	//argument 3 must be a string
+		
+		//populate fields
+		$query = array(
+			self::ROLE	=> $role,
+			self::ETAG	=> $this->_etag,	//optional
+			self::ID	=> $this->_id,		//optional
+			self::KIND	=> $this->_kind,	//optional
+			self::SCOPE	=> array(self::TYPE => $type));
+		
+		return $this->_post(sprintf(self::URL_CALENDAR_ACL_GET, $calendarId), $query);
+	}
+	
+	/**
+	 * Deletes an access control rule
+	 *
+	 * @param string ACL rule identifier
+	 * @param string Calendar identifier
+	 * @return null
+	 */
+	public function delete($ruleId, $calendarId = self::PRIMARY) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 1 must be a string
+		
+		return $this->_delete(sprintf(self::URL_CALENDAR_ACL_SPECIFIC, $calendarId, $ruleId));
+	}
+	
+	/**
+	 * Returns the rules in the access 
+	 * control list for the calendar. 
+	 *
+	 * @param string Calendar identifier
+	 * @return array
+	 */
+	public function getList($calendarId = self::PRIMARY) {
+		//argument test
+		Eden_Google_Error::i()->argument(1, 'string');
+		
+		return $this->_getResponse(sprintf(self::URL_CALENDAR_ACL_GET, $calendarId));
+	}
+	
+	/**
+	 * Returns an access control rule. 
+	 *
+	 * @param string ACL rule identifier
+	 * @param string Calendar identifier
+	 * @return array
+	 */
+	public function getSpecific($ruleId, $calendarId = self::PRIMARY) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 1 must be a string
+		
+		return $this->_getResponse(sprintf(self::URL_CALENDAR_ACL_SPECIFIC, $calendarId, $ruleId));
+	}
+	
+	/**
+	 * Set etag
+	 *
+	 * @param string ETag of the resource.
 	 * @return this
 	 */
-	public function setType($type) {
+	public function setEtag($etag) {
+		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_type = $type;
+		$this->_etag = $etag;
 		
 		return $this;
 	}
 	
 	/**
-	 * set scope alue
+	 * Set id
 	 *
-	 * @param string
+	 * @param string|integer Identifier of the ACL rule.
 	 * @return this
 	 */
-	public function setValue($value) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_value = $value;
+	public function setId($id) {
+		//argument 1 must be a string or integer
+		Eden_Google_Error::i()->argument(1, 'string', 'int');
+		$this->_id = $id;
 		
 		return $this;
 	}
 	
 	/**
-	 * set ruleId
+	 * Set calendar kind
 	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setRuleId($ruleId) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_ruleId = $ruleId;
-		
-		return $this;
-	}
-	
-	/**
-	 * set role
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setRole($role) {
-			Eden_Google_Error::i()->argument(1, 'string');
-			$this->_role= $role;
-			
-			return $this;
-	}
-	
-	/**
-	 * set kind
-	 *
-	 * @param string
+	 * @param string Type of the resource ("calendar#aclRule").
 	 * @return this
 	 */
 	public function setKind($kind) {
+		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		$this->_kind = $kind;
 		
@@ -113,127 +161,122 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	}
 	
 	/**
-	 * set tag
+	 * Provides read access to free/busy information.
 	 *
-	 * @param string
 	 * @return this
 	 */
-	public function setTag($tag) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_tag = $tag;
+	public function setRoleToFreeBusyReader() {
+		$this->_role = 'freeBusyReader';
 		
 		return $this;
 	}
 	
 	/**
-	 * set rule Id
+	 * Provides no access role.
 	 *
-	 * @param string
 	 * @return this
 	 */
-	public function setId($id) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_id = $id;
+	public function setRoleToNone() {
+		$this->_role = 'none';
 		
 		return $this;
 	}
 	
 	/**
-	 * set calendar Id
+	 * Provides read access to the calendar. 
+	 * 1Private events will appear to users 
+	 * with reader access, but event details 
+	 * will be hidden.
 	 *
-	 * @param string
 	 * @return this
 	 */
-	public function setCalendarId($id = Eden_Google_Calendar::DEFAULT_CALENDAR) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_calendarId = $id;
+	public function setRoleToReader() {
+		$this->_role = 'reader';
 		
 		return $this;
 	}
 	
 	/**
-	 * Creates new access rules
+	 * Provides read and write access to 
+	 * the calendar. Private events will 
+	 * appear to users with writer access, 
+	 * and event details will be visible.
 	 *
 	 * @return this
 	 */
-	public function create() {
-		$query = array(
-			Eden_Google_Calendar::SCOPE 	=> array(
-				Eden_Google_Calendar::TYPE		=> $this->_type,
-				Eden_Google_Calendar::VALUE		=> $this->_value),
-			Eden_Google_Calendar::ROLE		=> $this->_role);
+	public function setRoleToWriter() {
+		$this->_role = 'writer';
 		
-		return $this->_post(sprintf(self::URL_ADD_ACCESS_RULE, $this->_calendarId), $query);
+		return $this;
 	}
 	
 	/**
-	 * Update access rules
-	 *
-	 * TODO: fix update
-	 * @return this
-	 */
-	public function update() {
-		$query = array(
-			Eden_Google_Calendar::KIND		=> $this->_kind,
-			Eden_Google_Calendar::ETAG		=> $this->_tag,
-			Eden_Google_Calendar::ID		=> $this->_id,
-			Eden_Gdu oogle_Calendar::SCOPE 	=> array(
-							Eden_Google_Calendar::TYPE	=> $this->_type,
-							Eden_Google_Calendar::VALUE	=> $this->_value),
-			Eden_Google_Calendar::ROLE		=> $this->_role);
-		
-		$url = sprintf(self::URL_ADD_ACCESS_RULE, $this->_calendarId).'/'.$this->_id;
-		
-		return $this->_put($url, $query);
-	}
-	
-	/**
-	 * Delete access rules
+	 * Provides ownership of the calendar. 
+	 * This role has all of the permissions 
+	 * of the writer role with the additional 
+	 * ability to see and manipulate ACLs.
 	 *
 	 * @return this
 	 */
-	public function delete($ruleId = NULL, $calendarId = NULL) {
-		Eden_Google_Error::i()->argument(1, 'string');
-		if($ruleId) {
-			$this->_ruleId = $ruleId;
-		}
+	public function setRoleToOwner() {
+		$this->_role = 'owner';
 		
-		if($calendarId) {
-			$this->_calendarId = $calendarId;
-		}
-		
-		$url = sprintf(self::URL_ADD_ACCESS_RULE, $this->_calendarId).'/'.$this->_ruleId;
-		
-		return $this->_delete($url);
+		return $this;
 	}
 	
 	/**
-	 * Retrieving access control
+	 * Set rule id
 	 *
-	 * @param string|bool
 	 * @param string
+	 * @return this
+	 */
+	public function setRuleId($ruleId) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_ruleId= $ruleId;
+		
+		return $this;
+	}
+	
+	/**
+	 * The type of the scope. Possible values are:
+	 * "default" - The public scope. This is the default value.
+	 * "user" - Limits the scope to a single user.
+ 	 * "group" - Limits the scope to a group.
+	 * "domain" - Limits the scope to a domain.
+	 *
+	 * @return this
+	 */
+	public function setType($type) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_type = $type;
+		
+		return $this;
+	}
+	
+	/**
+	 * Updates an access control rule
+	 *
+	 * @param string ACL rule identifier
+	 * @param string Calendar identifier
 	 * @return array
 	 */
-	public function get($ruleId = NULL, $calendarId = NULL) {
+	public function update($ruleId, $calendarId = self::PRIMARY) {
+		//argument test
 		Eden_Google_Error::i()
-			->argument(1, 'string', 'null')
-			->argument(2, 'string', 'null');
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 1 must be a string
 			
-		if($ruleId) {
-			$this->_ruleId = $ruleId;
-		}
+		//populate fields
+		$query = array(
+			self::ETAG	=> $this->_etag,
+			self::ID	=> $this->_id,
+			self::KIND	=> $this->_kind,
+			self::ROLE	=> $this->_role,
+			self::SCOPE	=> $scope = array(self::TYPE => $this->_type));
 		
-		if(!$calendarId) {
-			$calendarId = Eden_Google_Calendar::DEFAULT_CALENDAR;
-		}
-		
-		$this->_calendarId = $calendarId;
-		$url = sprintf(self::URL_ADD_ACCESS_RULE, $this->_calendarId);
-		if( $this->_ruleId ){
-			$url = $url.'/'.$this->_ruleId;
-		}
-		
-		return $this->_getResponse($url);
+		return $this->_put(sprintf(self::URL_CALENDAR_ACL_SPECIFIC, $calendarId, $ruleId), $query);
 	}
 	
 	/* Protected Methods
