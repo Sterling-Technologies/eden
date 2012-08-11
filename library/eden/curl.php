@@ -447,7 +447,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	 */
 	public function verifyPeer($on = true) {
 		Eden_Curl_Error::i()->argument(1, 'bool');
-		$this->options[CURLOPT_SSL_VERIFYPEER] = $on;
+		$this->_options[CURLOPT_SSL_VERIFYPEER] = $on;
 		return $this;
 	}
 	
