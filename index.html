@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html class="home">
+	
+<head>
+	<title>Eden PHP Library</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	
+	        <meta name="title" content="Eden PHP Library" />
+        <meta name="subject" content="Eden PHP Library" />
+        <meta name="copyright" content="Openovate Labs 2012-2013" />
+        <meta name="keywords" content="eden, php library, facebook connect, twitter api, google api, php 5.3, foursquare, mysql, mongodb, authorize.net, paypal, yql, jabber" />
+        <meta name="classification" content="eden, php library, facebook connect, twitter api, google api, php 5.3, foursquare, mysql, mongodb, authorize.net, paypal, yql, jabber" />
+        <meta name="revisit" content="7 days" />
+        <meta name="revisit-after" content="7 days" />
+        <meta name="description" content="Eden takes advantage of PHP 5.3 with the tools available to get products made faster." />
+        <meta name="abstract" content="Eden takes advantage of PHP 5.3 with the tools available to get products made faster." />
+        	
+    <link rel="stylesheet" type="text/css" media="screen" href="http://eden.openovate.com/assets/styles/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="http://eden.openovate.com/assets/styles/responsive.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="http://eden.openovate.com/assets/front/style.css" />
+</head>
+
+<body>
+	<div class="page">
+		<div class="head"><div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="brand" href="http://eden.openovate.com/">Eden</a>
+			<ul class="nav">			
+				<li class="active"><a href="http://eden.openovate.com/">Home</a></li>
+				<li><a href="http://eden.openovate.com/download">Download</a></li>
+				<li><a href="http://eden.openovate.com/documentation/start">Documentation</a></li>
+				<li><a href="http://eden.openovate.com/api/eden.php">API</a></li>
+			</ul>
+		</div>
+	</div>
+</div></div>
+		<div class="body container"><div class="hero-unit">
+	<h2>Eden is a PHP Library designed for rapid prototyping, with less code.</h2>
+	
+	<p>At Openovate Labs, we use Eden for all of our internal products which in turn keeps Eden updated, evolving and 
+	constantly expanding. Eden takes advantage of PHP 5.3 with the tools available to get products made faster.
+	Eden works with major players including:<br /><br /><img src="http://eden.openovate.com/assets/images/web-services-filled.png" /><br /></p>
+	
+	<div class="row-fluid">
+		<div class="span4"><h3><img src="http://eden.openovate.com/assets/images/group.png" /> Web Service Driven</h3><h6>Out of the box.</h6>
+		<p>The library is separated into different sections covering databases, 
+		i18n, file system, etc. which is common in most frameworks, but Eden also covers web services, payment 
+		gateways, shipping and cloud technologies out of the box.</p></div>
+		
+		<div class="span4"><h3><img src="http://eden.openovate.com/assets/images/simple.png" /> Simple Interface</h3><h6>Small Learning Curve.</h6>
+		<p>It's not enough to say Eden works. We focus on end developer usage; 
+		getting results or performing actions with less code. We challenge PHP beginners to see if they can make 
+		sense of Eden within 3 hours!</p></div>
+		
+		<div class="span4"><h3><img src="http://eden.openovate.com/assets/images/rapid.png" /> Rapid Prototyping</h3><h6>Getter done, faster.</h6>
+		<p>Eden is designed for rapidly producing sites with minimal effort. 
+		There are no rules to building a site with Eden. Just do what you know and use Eden to help you get it 
+		done faster.</p></div>
+	
+	</div>
+	
+	<p>
+		<a href="http://eden.openovate.com/download?all=one" class="btn btn-primary btn-large">Download Now!</a>
+		<a href="http://eden.openovate.com/download" class="btn btn-large">More Downloads</a>
+		<a href="http://eden.openovate.com/documentation/start" class="btn btn-large">Get Started</a>
+	</p>
+</div>
+
+<hr class="soften" />
+<div class="snippet">
+	<h1>Database Code Snippet</h1>
+	<div class="example"><pre class="brush: php;">//load database
+eden('mysql', MYSQL_HOST, MYSQL_NAME, MYSQL_USER, MYSQL_PASS)
+	//search user table
+	->search('user')
+	//WHERE user_gender = $_get['gender']
+	->filterByUserGender($_GET['gender'])
+	//ORDER BY user_id
+	->sortByUserId('ASC')
+	//LIMIT 75, 25
+	->setStart(75)->setRange(25)
+	//get a collection object
+	->getCollection()
+	//sets all users to active
+	->setUserActive(1)
+	//Set a new column post_title
+	->setPostTitle('A '.$_GET['gender'].'\'s Post')
+	//Set a new column post_detail
+	->setPostDetail('Content is King')
+	//Copy the contents of user_id to a new column post_user
+	->copy('user_id', 'post_user')
+	//Set a new column post_created
+	->setPostCreated(time())
+	->formatTime('post_created', 'Y-m-d H:i:s')
+	//save to user table
+	->save('user')
+	//save to post table
+	->save('post');</pre></div>
+</div>
+<hr class="soften" />
+<div class="client">
+	<h1>Built with Eden</h1>
+	<p>In the last two months we built two e-commerce websites from the ground up.</p>
+	<div class="row-fluid">
+		<div class="span4">
+			<a class="thumbnail" href="http://expresso.ph/" target="_blank"><img src="http://eden.openovate.com/assets/images/expresso.jpg" /></a>
+		</div>
+		<div class="span4">
+			<a class="thumbnail" href="http://alpha.galleon.ph/" target="_blank"><img src="http://eden.openovate.com/assets/images/galleon.jpg" /></a>
+		</div>
+		<div class="span4">
+			<a class="thumbnail" href="http://kolibo.com/" target="_blank"><img src="http://eden.openovate.com/assets/images/kolibo.jpg" /></a>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="http://eden.openovate.com/assets/brushes/shCore.js"></script>
+<script type="text/javascript" src="http://eden.openovate.com/assets/brushes/shBrushPhp.js"></script>
+<script type="text/javascript" src="http://eden.openovate.com/assets/brushes/shBrushXml.js"></script>
+<link type="text/css" rel="stylesheet" href="http://eden.openovate.com/assets/brushes/shCoreDefault.css"/>
+<script type="text/javascript">SyntaxHighlighter.all();</script></div>
+		<div class="foot well"><div class="navbar">
+	<div class="navbar-inner">
+		<div class="container">
+			<ul class="nav">
+				<li class="active"><a href="http://openovate.com/">Openovate Labs</a></li>
+				<li><a href="http://openovate.com/blog">Blog</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="row-fluid menu">
+	<div class="span2">
+		<ul>
+		<li><a href="http://eden.openovate.com/">Home</a></li>
+		<li><a href="http://eden.openovate.com/download">Download</a></li>
+		<li><a href="http://eden.openovate.com/documentation/start">Documentation</a></li>
+		<li><a href="http://eden.openovate.com/api">API</a></li>
+		<li><a href="http://eden.openovate.com/documentation/library/features">Features</a></li>
+		<li><a href="http://eden.openovate.com/documentation/library/classes">Writing Classes</a></li>
+		<li><a href="http://eden.openovate.com/documentation/standards">Standards</a></li>
+		<li><a href="http://eden.openovate.com/license">License</a></li>
+		</ul>
+	</div>
+	<div class="span2">
+		<ul>
+		<li><a href="http://eden.openovate.com/documentation/library/autoloading">Autoloading</a></li>
+		<li><a href="http://eden.openovate.com/documentation/library/errors">Error Handling</a></li>
+		<li><a href="http://eden.openovate.com/documentation/library/events">Event Driven</a></li>
+		<li><a href="http://eden.openovate.com/documentation/library/types">Data Types</a></li>
+		<li><a href="http://eden.openovate.com/documentation/library/files">Files &amp; Folders</a></li>
+		<li><a href="http://eden.openovate.com/documentation/library/sessions">Sessions</a></li>
+		<li><a href="http://eden.openovate.com/documentation/library/registry">The Registry</a></li>
+		<li><a href="http://eden.openovate.com/documentation/library/templating">Templating</a></li>
+		<li><a href="http://eden.openovate.com/documentation/library/countries">Countries</a></li>
+		<li><a href="http://eden.openovate.com/documentation/library/languages">Languages</a></li>
+		<li><a href="http://eden.openovate.com/documentation/library/images">Images</a></li>
+		<li><a href="http://eden.openovate.com/documentation/library/dom">DOM</a></li>
+		<li><a href="http://eden.openovate.com/documentation/library/testing">Unit Testing</a></li>
+		</ul>
+	</div>
+	<div class="span2">
+		<ul>
+		<li><a href="http://eden.openovate.com/documentation/mailing/imap">IMAP</a></li>
+		<li><a href="http://eden.openovate.com/documentation/mailing/smtp">SMTP</a></li>
+		<li><a href="http://eden.openovate.com/documentation/mailing/pop3">POP3</a></li>
+		<li><a href="http://eden.openovate.com/documentation/database/mysql">MySQL</a></li>
+		<li><a href="http://eden.openovate.com/documentation/database/sqlite">SQLite</a></li>
+		<li><a href="http://eden.openovate.com/documentation/database/posgres">PosgreSQL</a></li>
+		<li><a href="http://eden.openovate.com/documentation/database/mongo">MongoDB</a></li>
+		<li><a href="http://eden.openovate.com/documentation/cache/file">File Cache</a></li>
+		<li><a href="http://eden.openovate.com/documentation/cache/memcache">Memcache</a></li>
+		<li><a href="http://eden.openovate.com/documentation/cache/apc">APC</a></li>
+		</ul>
+	</div>
+	<div class="span2">
+		<ul>
+		<li><a href="http://eden.openovate.com/documentation/social/google">Google</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/google/anaylytics">Analytics</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/google/checkout">Checkout</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/google/calendar">Calendar</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/google/drive">Drive</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/google/youtube">YouTube</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/google/contacts">Contacts</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/google/maps">Maps</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/google/plus">Google+</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/google/shopping">Shopping</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/google/shortner">Shortner</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/facebook">Facebook</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/twitter">Twitter</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/tumblr">Tumblr</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/yql">YQL</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/getsatisfaction">Get Satisfaction</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/eventbrite">Eventbrite</a></li>
+		<li><a href="http://eden.openovate.com/documentation/social/zappos">Zappos</a></li>
+		</ul>
+	</div>
+	<div class="span2">
+		<ul>
+		<li><a href="http://eden.openovate.com/documentation/payment/webcharge">Web Charge</a></li>
+		<li><a href="http://eden.openovate.com/documentation/payment/paypal">Paypal</a></li>
+		<li><a href="http://eden.openovate.com/documentation/payment/authorizenet">Authorize.net</a></li>
+		<li><a href="http://eden.openovate.com/documentation/payment/asiapay">AsiaPay</a></li>
+		<li><a href="http://eden.openovate.com/documentation/shipping/fedex">FedEx</a></li>
+		<li><a href="http://eden.openovate.com/documentation/shipping/ups">UPS</a></li>
+		<li><a href="http://eden.openovate.com/documentation/shipping/dhl">DHL</a></li>
+		<li><a href="http://eden.openovate.com/documentation/shipping/lbc">LBC</a></li>
+		<li><a href="http://eden.openovate.com/documentation/shipping/xend">Xend</a></li>
+		</ul>
+	</div>
+	<div class="span2">
+		<ul>
+		<li><a href="http://eden.openovate.com/documentation/server/amazon">Amazon</a></li>
+		<li><a href="http://eden.openovate.com/documentation/server/rackspace">Rackspace</a></li>
+		<li><a href="http://eden.openovate.com/documentation/server/jabber">Jabber</a></li>
+		<li><a href="http://eden.openovate.com/documentation/mvc">MVC</a></li>
+		<li><a href="http://eden.openovate.com/documentation/mvc/controller">The Controller</a></li>
+		<li><a href="http://eden.openovate.com/documentation/mvc/models">Modeling</a></li>
+		<li><a href="http://eden.openovate.com/documentation/mvc/responses">Responses</a></li>
+		<li><a href="http://eden.openovate.com/documentation/mvc/templating">Templating</a></li>
+		<li><a href="http://eden.openovate.com/documentation/mvc/blocks">Blocks</a></li>
+		<li><a href="http://eden.openovate.com/documentation/mvc/events">Events</a></li>
+		</ul>
+	</div>
+</div>
+<hr class="soften" />
+<a class="copy" href="javascript:void(0)">&copy; 2012 Openovate Labs. All rights reserved.</a></div>
+    </div>
+	<script type="text/javascript" src="http://eden.openovate.com/assets/library/eve/jquery.js"></script>	<script type="text/javascript" src="http://eden.openovate.com/assets/library/eve/jquery/jqueryui.js"></script>
+<link rel="stylesheet" type="text/css" href="http://eden.openovate.com/assets/library/eve/jquery/jqueryui/redmond.css" />
+	<script type="text/javascript" src="http://eden.openovate.com/assets/scripts/bootstrap.js"></script>
+	<script type="text/javascript" src="http://eden.openovate.com/assets/front/script.js"></script>
+	<script type="text/javascript">
+	
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-31454605-1']);
+	  _gaq.push(['_setDomainName', 'eden.openovate.com']);
+	  _gaq.push(['_trackPageview']);
+	
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	
+	</script>
+</body>
+</html>
