@@ -24,6 +24,8 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	-------------------------------*/
 	const PUT 		= 'PUT';
 	const DELETE 	= 'DELETE';
+	const GET 		= 'GET';
+	const POST 		= 'POST';
 	
 	/* Public Properties
 	-------------------------------*/
@@ -385,6 +387,54 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 		curl_close($curl);
 		unset($curl);
 		
+		return $this;
+	}
+	
+	/**
+	 * Curl has problems handling custom request types
+	 * from misconfigured end points or vice versa. 
+	 * When default cURL fails, try a custom GET instead
+	 *
+	 * @return this
+	 */
+	public function setCustomGet() {
+		$this->setCustomRequest(self::GET);
+		return $this;
+	}
+	
+	/**
+	 * Curl has problems handling custom request types
+	 * from misconfigured end points or vice versa. 
+	 * When default cURL fails, try a custom POST instead
+	 *
+	 * @return this
+	 */
+	public function setCustomPost() {
+		$this->setCustomRequest(self::POST);
+		return $this;
+	}
+	
+	/**
+	 * Curl has problems handling custom request types
+	 * from misconfigured end points or vice versa. 
+	 * When default cURL fails, try a custom PUT instead
+	 *
+	 * @return this
+	 */
+	public function setCustomPut() {
+		$this->setCustomRequest(self::PUT);
+		return $this;
+	}
+	
+	/**
+	 * Curl has problems handling custom request types
+	 * from misconfigured end points or vice versa. 
+	 * When default cURL fails, try a custom DELETE instead
+	 *
+	 * @return this
+	 */
+	public function setCustomDelete() {
+		$this->setCustomRequest(self::DELETE);
 		return $this;
 	}
 	

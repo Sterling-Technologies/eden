@@ -43,7 +43,6 @@ class Eden_Google_Analytics extends Eden_Google_Base {
 	 * @return Eden_Google_Analytics_Management
 	 */
 	public function management() {
-			
 		return Eden_Google_Analytics_Management::i($this->_token);
 	}
 	
@@ -53,7 +52,6 @@ class Eden_Google_Analytics extends Eden_Google_Base {
 	 * @return Eden_Google_Analytics_Reporting
 	 */
 	public function reporting() {
-			
 		return Eden_Google_Analytics_Reporting::i($this->_token);
 	}
 	
@@ -63,7 +61,6 @@ class Eden_Google_Analytics extends Eden_Google_Base {
 	 * @return Eden_Google_Analytics_Multichannel
 	 */
 	public function multiChannel() {
-			
 		return Eden_Google_Analytics_Multichannel::i($this->_token);
 	}
 	
