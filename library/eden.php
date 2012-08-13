@@ -7,7 +7,7 @@
  * distributed with this package.
  */
  
-require_once 'eden/event.php';
+require_once dirname(__FILE__).'/eden/event.php';
 
 /**
  * The starting point of every framework call.
@@ -50,6 +50,14 @@ class Eden extends Eden_Event {
 		return self::_getSingleton(__CLASS__);
 	}
 	
+	public function __construct() {
+		if(!self::$_active) {
+			self::$_active = $this;
+		}
+		
+		$this->_root = dirname(__FILE__);
+	}
+	
 	public function __call($name, $args) {
 		//first try to call the parent call
 		try {
@@ -61,16 +69,35 @@ class Eden extends Eden_Event {
 		}
 	}
 	
-	public function __construct() {
-		if(!self::$_active) {
-			self::$_active = $this;
-		}
-		
-		$this->_root = dirname(__FILE__);
-	}
-	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Sets the root path
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setRoot($root) {
+		Eden_Error::i()->argument(1, 'string');
+		
+		if(!class_exists('Eden_Path')) {
+			Eden_Loader::i()->load('Eden_Path');
+		}
+		
+		$this->_root = (string) Eden_Path::i($root);
+		
+		return $this;
+	}
+	
+	/**
+	 * Returns the root path
+	 *
+	 * @return string
+	 */
+	public function getRoot() {
+		return $this->_root;
+	}
+	
 	/**
 	 * Get Active Application
 	 *
@@ -81,12 +108,64 @@ class Eden extends Eden_Event {
 	}
 	
 	/**
-	 * Returns the root path
+	 * Sets up Autoloading
 	 *
-	 * @return string
+	 * @param string|array path
+	 * @return this
 	 */
-	public function getRoot() {
-		return $this->_root;
+	public function setLoader() { 
+		if(!class_exists('Eden_Loader')) {
+			//require autoload
+			require_once dirname(__FILE__).'/eden/loader.php';	
+		}
+		
+		//set autoload class as the autoload handler
+		spl_autoload_register(array(Eden_Loader::i(), 'handler'));
+		
+		//we need Eden_Path to fix the path formatting
+		if(!class_exists('Eden_Path')) {
+			Eden_Loader::i()->addRoot(dirname(__FILE__))->load('Eden_Path');
+		}
+		
+		//get paths
+		$paths = func_get_args();
+		
+		//if no paths
+		if(empty($paths)) {
+			//do nothing more
+			return $this;
+		}
+		
+		//no dupes
+		$paths = array_unique($paths);
+		
+		//for each path 
+		foreach($paths as $i => $path) {
+			if(!is_string($path) && !is_null($path)) {
+				continue;
+			}
+			
+			if($path) {
+				//format the path
+				$path = (string) Eden_Path::i($path);
+			} else {
+				$path = $this->_root;
+			}
+			
+			//if path is not a real path
+			if(!is_dir($path)) {
+				//append the root
+				$path = $this->_root.$path;	
+			}
+			
+			//if the path is still a real path
+			if(is_dir($path)) {
+				//add the root
+				Eden_Loader::i()->addRoot($path);
+			}
+		}
+		
+		return $this;
 	}
 	
 	/**
@@ -174,80 +253,13 @@ class Eden extends Eden_Event {
 	}
 	
 	/**
-	 * Sets up Autoloading
+	 * Starts a session
 	 *
-	 * @param string|array path
 	 * @return this
 	 */
-	public function setLoader() { 
-		if(!class_exists('Eden_Loader')) {
-			//require autoload
-			require_once dirname(__FILE__).'/eden/loader.php';	
-		}
-		
-		//set autoload class as the autoload handler
-		spl_autoload_register(array(Eden_Loader::i(), 'handler'));
-		
-		//we need Eden_Path to fix the path formatting
-		if(!class_exists('Eden_Path')) {
-			Eden_Loader::i()->addRoot(dirname(__FILE__))->load('Eden_Path');
-		}
-		
-		//get paths
-		$paths = func_get_args();
-		
-		//if no paths
-		if(empty($paths)) {
-			//do nothing more
-			return $this;
-		}
-		
-		//no dupes
-		$paths = array_unique($paths);
-		
-		//for each path 
-		foreach($paths as $i => $path) {
-			if(!is_string($path) && !is_null($path)) {
-				continue;
-			}
-			
-			if($path) {
-				//format the path
-				$path = (string) Eden_Path::i($path);
-			} else {
-				$path = $this->_root;
-			}
-			
-			//if path is not a real path
-			if(!is_dir($path)) {
-				//append the root
-				$path = $this->_root.$path;	
-			}
-			
-			//if the path is still a real path
-			if(is_dir($path)) {
-				//add the root
-				Eden_Loader::i()->addRoot($path);
-			}
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Sets the root path
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setRoot($root) {
-		Eden_Error::i()->argument(1, 'string');
-		
-		if(!class_exists('Eden_Path')) {
-			Eden_Loader::i()->load('Eden_Path');
-		}
-		
-		$this->_root = (string) Eden_Path::i($root);
+	public function startSession() {
+		//get the session class
+		Eden_Session::i()->start();
 		
 		return $this;
 	}
@@ -261,18 +273,6 @@ class Eden extends Eden_Event {
 		Eden_Error::i()->argument(1, 'string');
 		
 		date_default_timezone_set($zone);
-		
-		return $this;
-	}
-	
-	/**
-	 * Starts a session
-	 *
-	 * @return this
-	 */
-	public function startSession() {
-		//get the session class
-		Eden_Session::i()->start();
 		
 		return $this;
 	}
