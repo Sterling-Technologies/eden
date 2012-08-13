@@ -408,6 +408,22 @@ class Eden_Error extends Exception {
 		'-9_-]*(?:.[A-Z0-9][A-Z0-9_-]*)+):?(d+)?\/?/i', $value);
 	}
 	
+	public function _alphaNum($value) {
+		return preg_match('/^[a-zA-Z0-9]+$/', $value);
+	}
+	
+	public function _alphaNumScore($value) {
+		return preg_match('/^[a-zA-Z0-9_]+$/', $value);
+	}
+	
+	public function _alphaNumHyphen($value) {
+		return preg_match('/^[a-zA-Z0-9-]+$/', $value);
+	}
+	
+	public function _alphaNumLine($value) {
+		return preg_match('/^[a-zA-Z0-9-_]+$/', $value);
+	}
+	
 	protected function _isValid($type, $data) {
 		$type = $this->_getTypeName($type);
 		
@@ -432,6 +448,14 @@ class Eden_Error extends Exception {
 				return (is_string($data) || is_int($data)) && $this->_isCreditCard($data);
 			case 'hex':
 				return is_string($data) && $this->_isHex($data);
+			case 'alphanum':
+				return is_string($data) && $this->_alphaNum($data);
+			case 'alphanumscore':
+				return is_string($data) && $this->_alphaNumScore($data);
+			case 'alphanumhyphen':
+				return is_string($data) && $this->_alphaNumHyphen($data);
+			case 'alphanumline':
+				return is_string($data) && $this->_alphaNumLine($data);
 			default: break;
 		}
 		

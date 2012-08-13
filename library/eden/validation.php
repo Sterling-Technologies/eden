@@ -125,6 +125,22 @@ class Eden_Validation extends Eden_Class {
 	public function startsWithLetter() {
 		return !preg_match("/^[a-zA-Z]/i", $this->_value);
 	}
+	
+	public function alphaNumeric() {
+		return preg_match('/^[a-zA-Z0-9]+$/', (string) $this->_value);
+	}
+	
+	public function alphaNumericUnderScore() {
+		return preg_match('/^[a-zA-Z0-9_]+$/', (string) $this->_value);
+	}
+	
+	public function alphaNumericHyphen() {
+		return preg_match('/^[a-zA-Z0-9-]+$/', (string) $this->_value);
+	}
+	
+	public function alphaNumericLine() {
+		return preg_match('/^[a-zA-Z0-9-_]+$/', (string) $this->_value);
+	}
 		
 	/* Protected Methods
 	-------------------------------*/
