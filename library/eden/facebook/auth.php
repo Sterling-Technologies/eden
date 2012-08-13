@@ -43,15 +43,20 @@ class Eden_Facebook_Auth extends Eden_Class {
 	
 	/* Public Methods
 	-------------------------------*/
-	public function getLoginUrl($redirect, array $scope = array(), $state = NULL) {
+	 public function getLoginUrl($redirect, array $scope = array(), $state = NULL, $display = NULL) {
 		$parameters = array(
 			'client_id'		=> $this->_key,
 			'redirect_uri'	=> $redirect,
 			'scope'			=> implode(',',$scope),
-			'state'			=> $state);
+			'state'			=> $state,
+			'display'    	=> $display);
 		
 		if(empty($scope)) {
 			unset($parameters['scope']);
+		}
+		
+		if(!$display) {
+			unset($parameters['display']);
 		}
 		
 		if(!$state) {

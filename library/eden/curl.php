@@ -435,7 +435,7 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	 */
 	public function verifyHost($on = true) {
 		Eden_Curl_Error::i()->argument(1, 'bool');
-		$this->options[CURLOPT_SSL_VERIFYHOST] = $on ? 1 : 2;
+		$this->_options[CURLOPT_SSL_VERIFYHOST] = $on ? 1 : 2;
 		return $this;
 	}
 	
