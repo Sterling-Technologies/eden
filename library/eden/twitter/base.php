@@ -90,6 +90,7 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 		
 		$rest = Eden_Oauth::i()
 			->getConsumer($url, $this->_consumerKey, $this->_consumerSecret)
+			->setMethodToPost()
 			->setToken($this->_accessToken, $this->_accessSecret)
 			->setSignatureToHmacSha1();
 		
