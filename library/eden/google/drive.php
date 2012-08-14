@@ -114,7 +114,7 @@ class Eden_Google_Drive extends Eden_Google_Base {
 	 *
 	 * @return Eden_Google_Drive_Permissions
 	 */
-	public function permissions($token) {
+	public function permissions() {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 			
