@@ -166,7 +166,7 @@ class Eden_Foursquare_Pageupdates extends Eden_Foursquare_Base {
 	 * Allows you to get the page's venues.
 	 *  
 	 * @param string The page id for which venues are being requested.
-	 * @return this
+	 * @return array
 	 */
 	public function addPage() {
 		
@@ -185,7 +185,7 @@ class Eden_Foursquare_Pageupdates extends Eden_Foursquare_Base {
 	/**
 	 * Returns a list of page updates created by the current user.
 	 *  
-	 * @return this
+	 * @return array
 	 */
 	public function getList() {
 			
@@ -196,7 +196,7 @@ class Eden_Foursquare_Pageupdates extends Eden_Foursquare_Base {
 	 * Delete a page update created by the current user.
 	 *  
 	 * @param string The ID of the update to delete.
-	 * @return this
+	 * @return array
 	 */
 	public function delete($pageId) {
 		//argument test
@@ -211,7 +211,7 @@ class Eden_Foursquare_Pageupdates extends Eden_Foursquare_Base {
 	 * the like will propagate to the special as well.
 	 *  
 	 * @param string The ID of the update to like.
-	 * @return this
+	 * @return array
 	 */
 	public function like($pageId) {
 		//argument test

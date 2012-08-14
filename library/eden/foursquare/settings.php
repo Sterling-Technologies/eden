@@ -57,7 +57,7 @@ class Eden_Foursquare_Settings extends Eden_Foursquare_Base {
 	 * sendMayorshipsToTwitter, sendBadgesToTwitter, sendToFacebook, 
 	 * sendMayorshipsToFacebook, sendBadgesToFacebook, receivePings, receiveCommentPings.
 	 * @param integer 1 for true, and 0 for false.
-	 * @return this
+	 * @return array
 	 */
 	public function changeSettings($settingId, $value) {
 		//argument test
@@ -76,8 +76,8 @@ class Eden_Foursquare_Settings extends Eden_Foursquare_Base {
 		}
 		
 		$query = array(
-				'SETTING_ID'		=> $settingId,
-				'value' => $value);
+				'SETTING_ID'	=> $settingId,
+				'value' 		=> $value);
 		
 		return $this->_post(sprintf(self::URL_SETTINGS_CHANGE, $settingId), $query);
 	}

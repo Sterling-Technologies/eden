@@ -184,7 +184,7 @@ class Eden_Foursquare_Pages extends Eden_Foursquare_Base {
 	 * Returns a list of pages matching the search term.  
 	 *  
 	 * @param string A search term to be applied against page names.
-	 * @return this
+	 * @return array
 	 */
 	public function search($name) {
 		//argument test
@@ -203,7 +203,7 @@ class Eden_Foursquare_Pages extends Eden_Foursquare_Base {
 	 *  
 	 * @param string The page whose venues to get timeseries data for
 	 * @param string The start of the time range to retrieve stats for
-	 * @return this
+	 * @return array
 	 */
 	public function getTimeSeries($pageId, $startAt) {
 		//argument test
@@ -223,7 +223,7 @@ class Eden_Foursquare_Pages extends Eden_Foursquare_Base {
 	 * Allows you to get the page's venues.
 	 *  
 	 * @param string The page id for which venues are being requested.
-	 * @return this
+	 * @return array
 	 */
 	public function getVenue($pageId) {
 		//argument 1 must be a string

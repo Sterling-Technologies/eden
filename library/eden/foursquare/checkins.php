@@ -130,7 +130,7 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	 * 
 	 * @param string The venue where the user is checking in
 	 * @param string Who to broadcast this check-in to
-	 * @return this
+	 * @return array
 	 */
 	public function checkin($venueId, $broadcast) {
 		//argument test
@@ -159,7 +159,7 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	/**
 	 * Returns a list of recent checkins from friends.
 	 * 
-	 * @return this
+	 * @return array
 	 */
 	public function getRecentCheckins() {
 		
@@ -175,7 +175,7 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	 * 
 	 * @param string The ID of the checkin to add a comment to.
 	 * @param string The text of the comment, up to 200 characters.
-	 * @return this
+	 * @return array
 	 */
 	public function addComment($checkinId, $text) {
 		//argument test
@@ -195,7 +195,7 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	 * 
 	 * @param string The ID of the checkin to add a comment to.
 	 * @param string The text of the comment, up to 200 characters.
-	 * @return this
+	 * @return array
 	 */
 	public function addPost($checkinId, $text) {
 		//argument test
@@ -217,7 +217,7 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	 * 
 	 * @param string The ID of the checkin to remove a comment from.
 	 * @param string The id of the comment to remove.
-	 * @return this
+	 * @return array
 	 */
 	public function deleteComment($checkinId, $commentId) {
 		//argument test
@@ -236,7 +236,7 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	 * 
 	 * @param string The ID of the checkin to remove a comment from.
 	 * @param string The id of the comment to remove.
-	 * @return this
+	 * @return array
 	 */
 	public function replyToCheckin($checkinId, $text) {
 		//argument test

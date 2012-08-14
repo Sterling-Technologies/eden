@@ -157,7 +157,7 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 	 * @param string|null required (unless campaignId has been provided). Special ID
 	 * @param string|null required (unless venueId has been provided)
 	 * @param string|null required (unless groupId has been provided)
-	 * @return this
+	 * @return array
 	 */
 	public function creatCampaign($specialId = NULL, $groupId = NULL, $venueId = NULL) {
 		//argument test
@@ -181,7 +181,7 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 	/**
 	 * List all campaigns matching the given criteria.
 	 *  
-	 * @return this
+	 * @return array
 	 */
 	public function getList() {
 		
@@ -198,7 +198,7 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 	 * Get daily campaign stats over a given time range.
 	 *  
 	 * @param string The campaign id to retrieve stats for.
-	 * @return this
+	 * @return array
 	 */
 	public function getTimeSeries($campaignId) {
 		//argument 1 must be a string
@@ -216,7 +216,7 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 	 * Delete a campaign that has never been activated.
 	 *  
 	 * @param string The ID of the campaign to delete.
-	 * @return this
+	 * @return array
 	 */
 	public function deleteCampaign($campaignId) {
 		//argument 1 must be a string
@@ -229,7 +229,7 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 	 * End a campaign.
 	 *  
 	 * @param string The ID of the campaign to end.
-	 * @return this
+	 * @return array
 	 */
 	public function endCampaign($campaignId) {
 		//argument 1 must be a string
@@ -242,7 +242,7 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 	 * Start a campaign.
 	 *  
 	 * @param string The ID of the campaign to start.
-	 * @return this
+	 * @return array
 	 */
 	public function startCampaign($campaignId) {
 		//argument 1 must be a string

@@ -185,7 +185,7 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 	 * 
 	 * @param string The venue where the user is checking in
 	 * @param string The text of the tip, up to 200 characters.
-	 * @return this
+	 * @return array
 	 */
 	public function checkin($venueId, $text) {
 		//argument test
@@ -207,7 +207,7 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 	 * 
 	 * @param string The venue where the user is checking in
 	 * @param string Who to broadcast this check-in to
-	 * @return this
+	 * @return array
 	 */
 	public function search($near) {
 		//argument 1 must be a string
@@ -230,7 +230,7 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 	 * Returns an array of users have done this tip.
 	 * 
 	 * @param string Identity of a tip to get users who have marked the tip as done.
-	 * @return this
+	 * @return array
 	 */
 	public function getTips($tipId) {
 		//argument 1 must be a string
@@ -248,7 +248,7 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 	 * Returns lists that this tip appears on
 	 * 
 	 * @param string Identity of a tip to get lists for.
-	 * @return this
+	 * @return array
 	 */
 	public function getTipsList($tipId) {
 		//argument 1 must be a string
@@ -264,7 +264,7 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 	 * Allows the acting user to mark a tip done.
 	 * 
 	 * @param string The tip you want to mark done.
-	 * @return this
+	 * @return array
 	 */
 	public function markDone($tipId) {
 		//argument 1 must be a string
@@ -277,7 +277,7 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 	 * Allows you to mark a tip to-do. 
 	 * 
 	 * @param string The tip you want to mark done.
-	 * @return this
+	 * @return array
 	 */ 
 	public function markToDo($tipId) {
 		//argument 1 must be a string
@@ -290,7 +290,7 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 	 * Allows you to remove a tip from your to-do list or done list. 
 	 * 
 	 * @param string The tip you want to mark done.
-	 * @return this
+	 * @return array
 	 */
 	public function unmark($tipId) {
 		//argument 1 must be a string

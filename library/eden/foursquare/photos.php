@@ -43,7 +43,7 @@ class Eden_Foursquare_Photos extends Eden_Foursquare_Base {
 	 * Get details of a photo.
 	 * 
 	 * @param string The ID of the photo to retrieve additional information for.
-	 * @return this
+	 * @return array
 	 */
 	public function getDetail($photoId) {
 		//argument 1 must be a string

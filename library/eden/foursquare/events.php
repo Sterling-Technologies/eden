@@ -42,7 +42,7 @@ class Eden_Foursquare_Events extends Eden_Foursquare_Base {
 	/**
 	 * Returns a hierarchical list of categories applied to events. 
 	 *  
-	 * @return this
+	 * @return array
 	 */
 	public function getList() {
 		
