@@ -113,7 +113,7 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 			->setSignatureToHmacSha1();
 		
 		//get the authorization parameters as an array
-		$signature 		= $rest->getSignature();
+		$signature 		= $rest->getSignature($query);
 		$authorization 	= $rest->getAuthorization($signature, false);
 		$authorization 	= $this->_buildQuery($authorization);
 		
