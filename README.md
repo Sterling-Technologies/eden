@@ -1,4 +1,0 @@
-eden
-====
-
-Eden PHP library
