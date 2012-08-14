@@ -64,7 +64,7 @@ class Eden_Foursquare_Updates extends Eden_Foursquare_Base {
 	/**
 	 * Retrieve a user's notification tray notifications
 	 * 
-	 * @return this
+	 * @return array
 	 */
 	public function getNotification() {
 		
@@ -77,7 +77,7 @@ class Eden_Foursquare_Updates extends Eden_Foursquare_Base {
 	 * Mark notification tray notifications as read up, to a certain timestamp.
 	 * 
 	 * @param string|integer The timestamp of the most recent notification that the user viewed.
-	 * @return this
+	 * @return array
 	 */
 	public function markAsRead($highWatermark) {
 		//argument 1 must be a string or integer

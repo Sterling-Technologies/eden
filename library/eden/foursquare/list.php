@@ -280,7 +280,7 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 * Allows users to create a new list. 
 	 * 
 	 * @param string The name of the list.
-	 * @return this
+	 * @return array
 	 */
 	public function addlist($name) {
 		//argument test
@@ -299,7 +299,7 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 * Returns a count and items of users following this list. 
 	 * 
 	 * @param string Id for a user-created list
-	 * @return this
+	 * @return array
 	 */
 	public function getFollowers($listId) {
 		//argument test
@@ -313,7 +313,7 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 * 
 	 * @param string Id for a user-created list
 	 * @param string Id of item on this list.
-	 * @return this
+	 * @return array
 	 */
 	public function suggestPhoto($listId, $itemId) {
 		//argument test
@@ -330,7 +330,7 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 * 
 	 * @param string Id for a user-created list
 	 * @param string Id of item on this list.
-	 * @return this
+	 * @return array
 	 */
 	public function suggestTips($listId, $itemId) {
 		//argument test
@@ -346,7 +346,7 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 * Suggests venues may be appropriate for this item.  
 	 * 
 	 * @param string Id for a user-created list
-	 * @return this
+	 * @return array
 	 */
 	public function suggestVenues($listId) {
 		//argument test
@@ -360,7 +360,7 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 * one of the following must be specified: venueId, tipId, listId and itemId
 	 * 
 	 * @param string Id for a user-created list
-	 * @return this
+	 * @return array
 	 */
 	public function addItem($listId) {
 		//argument test
@@ -383,7 +383,7 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 * 
 	 * @param string Id for a user-created list
 	 * @param string The id of an item on this list.
-	 * @return this
+	 * @return array
 	 */
 	public function updateItem($listId, $itemId) {
 		//argument test
@@ -408,7 +408,7 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 * @param string Id for a user-created list or followed list or one of 
 	 * USER_ID/tips, USER_ID/todos, or USER_ID/dones.
 	 * @param string Id of the item to delete.
-	 * @return this
+	 * @return array
 	 */
 	public function deleteItem($listId, $itemId) {
 		//argument test
@@ -427,7 +427,7 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 * 
 	 * @param string Id for a user-created list 
 	 * @param string Id of the item to delete.
-	 * @return this
+	 * @return array
 	 */
 	public function moveItem($listId, $itemId) {
 		//argument test
@@ -448,7 +448,7 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 * Allows you to follow a list. 
 	 * 
 	 * @param string Id for a user-created list 
-	 * @return this
+	 * @return array
 	 */
 	public function followList($listId) {
 		//argument test
@@ -461,7 +461,7 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 * Allows you to unfollow a list. 
 	 * 
 	 * @param string Id for a user-created list 
-	 * @return this
+	 * @return array
 	 */
 	public function unfollowList($listId) {
 		//argument test
@@ -474,7 +474,7 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 * Share a user-created list to twitter or facebook. 
 	 * 
 	 * @param string Id for a user-created list 
-	 * @return this
+	 * @return array
 	 */
 	public function shareList($listId) {
 		//argument test

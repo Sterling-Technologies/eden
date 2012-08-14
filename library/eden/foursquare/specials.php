@@ -309,7 +309,7 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 *  
 	 * @param string Maximum length of 200 characters.
 	 * @param string Maximum length of 200 characters. Special text that is shown when the user has unlocked the special.
-	 * @return this
+	 * @return array
 	 */
 	public function createSpecial($text, $unlockedText) {
 		//argument test
@@ -335,7 +335,7 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	/**
 	 * List available specials.
 	 *  
-	 * @return this
+	 * @return array
 	 */
 	public function getSpecial() {
 		
@@ -351,7 +351,7 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 *  
 	 * @param string|integer|float Longtitude
 	 * @param string|integer|float Latitude
-	 * @return this
+	 * @return array
 	 */
 	public function search($longtitude, $latitude) {
 		//argument test
@@ -371,7 +371,7 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 * Get special configuration details.
 	 *  
 	 * @param string The ID of the special to retrieve configuration details for.
-	 * @return this
+	 * @return array
 	 */
 	public function getSpecialDetail($specialId) {
 		//argument 1 must be a string
@@ -386,7 +386,7 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 * @param string The ID of the special being flagged
 	 * @param string The id of the venue running the special.
 	 * @param string One of not_redeemable, not_valuable, other
-	 * @return this
+	 * @return array
 	 */
 	public function flag($specialId, $venueId, $problem) {
 		//argument test
@@ -419,7 +419,7 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 * active campaigns associated with the special.
 	 *  
 	 * @param string The ID of the special to retire
-	 * @return this
+	 * @return array
 	 */
 	public function retire($specialId) {
 		//argument 1 must be a string
