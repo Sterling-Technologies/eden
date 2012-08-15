@@ -29,10 +29,10 @@ Eden is purely a library packed with core concepts and web services. You can use
 
 1. Before anything, make sure to update the main Eden repository. (git checkout master; git pull origin master)
 2. Once updated with the latest code, create a new branch with a branch name describing what your changes are (git checkout -b bugfix/fix-twitter-auth)
-Possible types:
-- bugfix
-- feature
-- improvement
+    Possible types:
+    - bugfix
+    - feature
+    - improvement
 3. Make your code changes. Always make sure to sign-off on all commits made (git commit -s -m "Commit message")
 4. Once you've committed all the code to this branch, push the branch to your FORKED EDEN REPOSITORY (git push fork bugfix/fix-twitter-auth)
 5. Go back to your FORKED EDEN REPOSITORY on GitHub and submit a pull request.
