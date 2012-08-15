@@ -27,7 +27,7 @@ require_once dirname(__FILE__).'/getsatisfaction/topic.php';
  * replies, tag, topics. 
  *
  * @package    Eden
- * @category   tool
+ * @category   getsatisfaction
  * @author     Christian Blanquera cblanquera@openovate.com
  */
 class Eden_Getsatisfaction extends Eden_Class {
@@ -102,7 +102,7 @@ class Eden_Getsatisfaction extends Eden_Class {
 	 * @param string
 	 * @return Eden_Getsatisfaction_Oauth
 	 */
-	public function oauth($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
+	public function auth($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string')
