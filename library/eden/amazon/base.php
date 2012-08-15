@@ -21,12 +21,12 @@ class Eden_Amazon_Base extends Eden_Class {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_publicKey				= NULL;
-	protected $_privateKey				= NULL;
 	protected $_host					= 'ecs.amazonaws.';
 	protected $_uri						= '/onca/xml';
 	protected $_params 					= array();
 	protected $_method					= 'GET';
+	protected $_publicKey				= NULL;
+	protected $_privateKey				= NULL;
 	protected $_canonicalizedQuery		= NULL;
 	protected $_stringToSign			= NULL;
 	protected $_signature				= NULL;
@@ -41,31 +41,58 @@ class Eden_Amazon_Base extends Eden_Class {
 	}
 	
 	public function __construct($privateKey, $publicKey) {
+		//argument testing
 		Eden_Amazon_Error::i()
 			->argument(1, 'string')
 			->argument(2, 'string');
 		
-		$this->_privateKey = $privateKey;
-		$this->_publicKey = $publicKey;
+		$this->_privateKey	= $privateKey;
+		$this->_publicKey	= $publicKey;
 	}
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Returns the meta of the last call
+	 *
+	 * @return array
+	 */
+	public function getMeta() {
+	
+		return $this->_meta;
+	}
+	
+	/* Set timestamp
+	 * 
+	 * @param string|null
+	 * @return this
+	 */
 	public function setTimestamp($time = NULL) {
+		//argument 1 must be a string, integer or null
 		Eden_Amazon_Error::i()->argument(1, 'string', 'int', 'null');
+		//if they dont set time
 		if($time == NULL) {
+			//set the time for crrent time
 			$time = time();
 		}
-		
+		//if it is string
 		if(is_string($time)) {
+			//comvert it to integer
 			$time = strtotime($time);
 		}
-		
+		//well format time
 		$this->_params['Timestamp'] = gmdate("Y-m-d\TH:i:s\Z", $time);
+		
 		return $this;
 	}
 	
+	/* Set api version
+	 * 
+	 * @param string
+	 * @return this
+	 */
 	public function setVersion($version) {
+		//argument 1 must be a string
 		Eden_Amazon_Error::i()->argument(1, 'string');
 		$this->_params['Version'] = $version;
 		
@@ -75,7 +102,7 @@ class Eden_Amazon_Base extends Eden_Class {
 	/* Protected Methods
 	-------------------------------*/
 	protected function _sendRequest() {
-		//return file_get_contents($this->_requestUrl);
+		//set curl
 		return $this->Eden_Curl()
 			->setUrl($this->_requestUrl)
 			->verifyHost(false)
@@ -84,25 +111,73 @@ class Eden_Amazon_Base extends Eden_Class {
 			->getResponse();
 	}
 	
-	protected function _setSignature() {
-		$this->_signature = base64_encode(hash_hmac("sha256", $this->_stringToSign, $this->_privateKey, True));
-		$this->_signature = str_replace("%7E", "~", rawurlencode($this->_signature));
+	protected function _setSignature($date = NULL) {
+		//if date is not set
+		if(is_null($date) || empty($date)) {
+			$this->_signature = base64_encode(hash_hmac("sha256", $this->_stringToSign, $this->_privateKey, True));
+			$this->_signature = str_replace("%7E", "~", rawurlencode($this->_signature));
+		//else date is set
+		} else {
+			//encode signature using HmacSHA256 for SES
+			$this->_signature = base64_encode(hash_hmac('sha256', $date, $this->_privateKey, true));
 		
+		}
 		return $this;
 	}
 	
 	protected function _postRequest($query, $headers = array()) {
-		
+		//set url
+		$url = 'https://'.$this->_host.'/';
+		//set curl
 		$curl = Eden_Curl::i()
 			->verifyHost(false)
 			->verifyPeer(false)
-			->setUrl('https://'.$this->_host.'/')
+			->setUrl($url)
 			->setPost(true)
 			->setHeaders($headers)
 			->setPostFields($query);
 		
-		die($curl->getResponse());
-		return $curl->getResponse();
+		$response = $curl->getResponse());
+		//get curl infomation
+		$this->_meta['url']			= $url;
+		$this->_meta['query']		= $query;
+		$this->_meta['curl']		= $curl->getMeta();
+		$this->_meta['response']	= $response;
+		
+		return $response;
+
 	}
 	
+	protected function _getResponse() {
+		//each params
+		foreach ($this->_params as $param => $value) {
+			//this is my custom url encode
+			if(is_array($value)) {
+				foreach($value as $k => $v) {
+					$canonicalizedQuery[] = str_replace("%7E", "~", rawurlencode($param.'.'.$k)).'='.str_replace("%7E", "~", rawurlencode($v));
+				}
+				
+			} else {
+				$canonicalizedQuery[] = str_replace("%7E", "~", rawurlencode($param)).'='.str_replace("%7E", "~", rawurlencode($value));
+			}
+		}
+		
+		//sort parameter query
+		sort($canonicalizedQuery, SORT_STRING);
+		$date = gmdate('D, d M Y H:i:s e');
+		//implode it to make a string of query
+		$this->_canonicalizedQuery = implode("&", $canonicalizedQuery);
+		//set signature
+		$this->_setSignature($date);
+		$query = $this->_canonicalizedQuery;
+		//auth is the authentication string. we'll use that on the header of our curl request
+		$auth = 'AWS3-HTTPS AWSAccessKeyId='.$this->_publicKey;
+		$auth .= ',Algorithm=HmacSHA256,Signature='.$this->_signature;
+		
+		//assigning header variables including the authentication string
+		$headers = array('X-Amzn-Authorization: '.$auth, 'Date: '.$date, 'Host: '.$this->_host);
+		
+		//send post request
+		return $this->_postRequest($query, $headers);
+	}
 }
