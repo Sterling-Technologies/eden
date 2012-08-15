@@ -137,7 +137,7 @@ class Eden_Amazon_Base extends Eden_Class {
 			->setHeaders($headers)
 			->setPostFields($query);
 		
-		$response = $curl->getResponse());
+		$response = $curl->getResponse();
 		//get curl infomation
 		$this->_meta['url']			= $url;
 		$this->_meta['query']		= $query;
