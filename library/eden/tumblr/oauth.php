@@ -64,7 +64,7 @@ class Eden_Tumblr_Oauth extends Eden_Class {
 			->argument(2, 'string')		//Argument 2 must be a string
 			->argument(3, 'string');	//Argument 3 must be a string
 		
-		return Eden_Oauth::i()
+		$oauth =  Eden_Oauth::i()
 			->getConsumer(
 				self::ACCESS_URL, 
 				$this->_key, 
@@ -73,8 +73,13 @@ class Eden_Tumblr_Oauth extends Eden_Class {
 			->setMethodToPost()
 			->setToken($token, $secret)
 			->setVerifier($verifier)
-			->setSignatureToHmacSha1()
-			->getQueryResponse();
+			->setSignatureToHmacSha1();
+			//->debug()
+		$response = $oauth->getQueryResponse();
+		//$oauth->debug(true)->getMeta();
+		return $response;
+	
+		
 	}
 	
 	/**
@@ -113,6 +118,7 @@ class Eden_Tumblr_Oauth extends Eden_Class {
 			->setSignatureToHmacSha1()
 			->getQueryResponse();
 	}
+	
 	
 	/* Protected Methods
 	-------------------------------*/
