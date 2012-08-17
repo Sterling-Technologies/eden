@@ -253,7 +253,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 *
 	 * @param string The standard or custom blog hostname
 	 * @return this
-	 */
+	 */ 
 	public function getInfo($baseHostName) {
 		//Argument 1 must be a string
 		Eden_Tumblr_Error::i()->argument(1, 'string');
@@ -290,7 +290,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	}
 	
 	/**
-	 * Returns users Avatar
+	 * Retrieve Published Posts
 	 *
 	 * @param string The standard or custom blog hostname
 	 * @return this
