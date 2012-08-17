@@ -8,7 +8,7 @@
  */
 
 /**
- * Tumblr blog
+ * Tumblr blog 
  *
  * @package    Eden
  * @category   tumblr
@@ -17,42 +17,39 @@
 class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_GET_LIST		= 'http://api.tumblr.com/v2/blog/%s/info'; 
-	const URL_GET_AVATAR	= 'http://api.tumblr.com/v2/blog/%s/avatar/';
-	const URL_GET_FOLLOWER	= 'http://api.tumblr.com/v2/blog/%s/followers';
-	const URL_GET_POST		= 'http://api.tumblr.com/v2/blog/posts.json'; 
-	const URL_GET_DRAFT		= 'http://api.tumblr.com/v2/blog/%s/posts/draft';
-	const URL_GET_SUBMISION	= 'http://api.tumblr.com/v2/blog/posts/submission.json';
-	const URL_ADD_BLOG		= 'http://api.tumblr.com/v2/blog/posts.json';
-	const URL_UPDATE		= 'http://api.tumblr.com/v2/blog/edit.json';
-	const URL_REBLOG		= 'http://api.tumblr.com/v2/blog/reblog.json';
-	const URL_REMOVE		= 'http://api.tumblr.com/v2/blog/%s/post/delete';
+	const URL_BLOG_GET				= 'http://api.tumblr.com/v2/blog/%s/info';
+	const URL_BLOG_GET_AVATAR 		= 'http://api.tumblr.com/v2/blog/%s/avatar/%s';
+	const URL_BLOG_GET_FOLLOWER		= 'http://api.tumblr.com/v2/blog/%s/followers';
+	const URL_BLOG_GET_POST			= 'http://api.tumblr.com/v2/blog/%s/posts/%s';
+	const URL_BLOG_GET_QUEUE		= 'http://api.tumblr.com/v2/blog/%s/posts/queue';
+	const URL_BLOG_GET_DRAFT		= 'http://api.tumblr.com/v2/blog/%s/posts/draft';
+	const URL_BLOG_GET_SUBMISSION	= 'http://api.tumblr.com/v2/blog/%s/posts/submission';
 	
+	const URL_BLOG_CREATE_POST		= 'http://api.tumblr.com/v2/blog/%s/post';
+	const URL_BLOG_DELETE_POST		= 'http://api.tumblr.com/v2/blog/%s/post/delete';
+	const URL_BLOG_EDIT_POST		= 'api.tumblr.com/v2/blog/%s/post/edit';
+	const URL_BLOG_REBLOG_POST		= 'api.tumblr.com/v2/blog/%s/post/reblog';
+
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_hostname		= NULL;
-	protected $__apiKey			= NULL;
-	protected $__size			= NULL;
-	protected $__limit			= NULL;
-	protected $__offset			= NULL;
-	protected $__type			= NULL;
-	protected $__id				= NULL;
-	protected $__tag			= NULL;
-	protected $__format			= NULL;
-	protected $__state			= NULL;
-	protected $__tweets			= NULL;
-	protected $__date			= NULL;
-	protected $__slug			= NULL;
-	protected $__title			= NULL;
-	protected $__caption		= NULL;
-	protected $__link			= NULL;
-	protected $__source			= NULL;
-	protected $__description	= NULL;
-	protected $__reblog			= true;
-	protected $__notes			= true;
-	protected $__markdown		= true;
+	protected $_size			= 64;
+	protected $_postType		= 'text';
+	protected $_limit			= NULL;
+	protected $_offset			= NULL;
+	protected $_postId			= NULL;
+	protected $_tag				= NULL;
+	protected $_reblogInfo		= NULL;
+	protected $_notesInfo		= NULL;
+	protected $_state			= NULL;
+	protected $_format			= NULL;
+	protected $_slug			= NULL;
+	protected $_caption			= NULL;
+	protected $_link			= NULL;
+	protected $_source			= NULL;
+	protected $_data			= NULL;
+	protected $_description		= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -65,549 +62,87 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Add or create a blog
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function add($type) {
-		 //Argument 1 must be a string
-		 Eden_Tumblr_Error::i()->argument(1, 'string');				
-			
-		//populate fields
-		$query = array(
-			'type' 		=> $type,
-			'state'		=> $this->_state,
-			'tag'		=> $this->_tag,
-			'tweets'	=> $this->_tweets,
-			'date'		=> $this->_date,
-			'slug'		=> $this->_slug,
-			'markdown'	=> $this->_markdown);
-		
-		$url = sprintf(self::URL_ADD_BLOG, $type);
-		return $this->_post($url, $query);
-	}
-	
-	/**
-	 * Add audio
-	 *
-	 * @param string
-	 * @param string
-	 * @return array
-	 */
-	public function addAudio($data, $external) {
-		 //Argument Test
-		 Eden_Tumblr_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string');	//Argument 2 must be a string	
-		
-		//populate fields
-		$query = array(
-			'data'			=> $data, 
-			'external_url'	=> $external,
-			'caption'		=> $this->_caption);
-		
-		$url = sprintf(self::URL_ADD_BLOG, $data);
-		return $this->_post($url, $query);
-	}
-	
-	/**
-	 * Add chat
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function addChat($conversation) {
-		 //Argument 1 must be a string
-		 Eden_Tumblr_Error::i()->argument(1, 'string');				
-		
-		//populate fields	
-		$query = array(
-			'conversation'	=> $conversation,
-			'title'			=> $this->_title);
-		
-		$url = sprintf(self::URL_ADD_BLOG, $conversation);
-		return $this->_post($url, $query);
-	}
-	
-	/**
-	 * Add link
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function addLink($url) {
-		 //Argument 1 must be a string
-		 Eden_Tumblr_Error::i()->argument(1, 'string');				
-		
-		//populate fields
-		$query = array(
-			'url' 			=> $url,
-			'title'			=> $this->_title,
-			'description'	=> $this->_description);
-		
-		$url = sprintf(self::URL_ADD_BLOG, $url);
-		return $this->_post($url, $query);
-	}
-	
-	/**
-	 * Add photo
-	 *
-	 * @param string
-	 * @param array
-	 * @return array
-	 */
-	public function addPhoto($source, $data) {
-		 //Argument Test
-		 Eden_Tumblr_Error::i()
-			->argument(1, 'string')	//Argument 1 must be a string
-			->argument(2, 'array');	//Argument 2 must be a array
-		
-		//populate fields
-		$query = array(
-			'body' 		=> $body,
-			'data' 		=> $data,
-			'caption'	=> $this->_caption,
-			'link'		=> $this->_link);
-		
-		$url = sprintf(self::URL_ADD_BLOG, $source);
-		return $this->_post($url, $query);
-	}
-	
-	/**
-	 * Add quote
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function addQuote($quote) {
-		 //Argument 1 must be a string
-		 Eden_Tumblr_Error::i()->argument(1, 'string');				
-		
-		//populate fields
-		$query = array(
-			'qoute' 	=> $qoute,
-			'source'	=> $this->_source);
-		
-		$url = sprintf(self::URL_ADD_BLOG, $qoute);
-		return $this->_post($url, $query);
-	}
-	
-	/**
-	 * Add text
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function addText($body) {
-		//Argument 1 must be a string
-		 Eden_Tumblr_Error::i()->argument(1, 'string');				
-			
-		$query = array(
-			'body' 	=> $body,
-			'title'	=> $this->_title);
-		
-		$url = sprintf(self::URL_ADD_BLOG, $body);
-		return $this->_post($url, $query);
-	}
-	 
-	/**
-	 * Add video
-	 *
-	 * @param string
-	 * @param string
-	 * @return array
-	 */
-	public function addVideo($data, $embed) {
-		 //Argument Test
-		 Eden_Tumblr_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string');	//Argument 2 must be a string
-			
-		$query = array(
-			'data'		=> $data,
-			'embed' 	=> $embed,
-			'caption'	=> $this->_caption);
-		
-		$url = sprintf(self::URL_ADD_BLOG, $data);
-		return $this->_post($url, $query);
-	}
-	
-	/**
-	 * You can get a blog's avatar in 9 different sizes. 	
-	 * The default size is 64x64. 
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function getAvatar($hostName) {
-		//Argument 1 must be a string
-		Eden_Tumblr_Error::i()->argument(1, 'string');				
-		
-		//populate fields
-		$query = array(
-			'base-hostname' => $hostName,
-			'size'			=> $this->_size);
-		
-		return $this->_getResponse(self::URL_GET_AVATAR, $query);
-	}
-	
-	/**
-	 * Get complete set draft post
-	 *
-	 * @return array
-	 */
-	public function getDraft() {
-		return $this->_getResponse(self::URL_GET_DRAFT);
-	}
-	
-	/**
-	 * Get followers
-	 *
-	 * @param string
-	 * @return array
-	 */
-	public function getFollower($hostName) {
-		//Argument 1 must be a string
-		Eden_Tumblr_Error::i()->argument(1, 'string');				
-		
-		//populate fields
-		$query = array(
-			'base-hostname' => $hostName,
-			'limit'			=> $this->_limit,
-			'offset'		=> $this->_offset);
-		
-		return $this->_getResponse(self::URL_GET_FOLLOWER, $query);
-	}
-	
-	/**
-	 * This method returns general information about the blog,  	
-	 * such as the title, number of posts, and other high-level data.
-	 *
-	 * @param string
-	 * @param string
-	 * @return array
-	 */
-	public function getList($hostName, $apiKey) {
-		//Argument Test
-		Eden_Tumblr_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string');	//Argument 2 must be a string
-			
-		$query = array('base-hostname' => $hostName, 'api_key' => $apiKey);
-		
-		return $this->_getResponse(self::URL_GET_LIST, $query);
-	}
-	
-	/**
-	 * Retrieve published post such as text, photo, quote, link
-	 * Chat, Audio, Video and Answer
-	 *
-	 * @param string
-	 * @param string
-	 * @return array
-	 */
-	public function getPost($hostName, $apiKey) {
-		//Argument Test
-		Eden_Tumblr_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string');	//Argument 2 must be a string
-			
-		//populate fields	
-		$query = array(
-			'base-hostname' => $hostName, 
-			'api_key'		=> $apiKey,
-			'type'			=> $this->_type,
-			'id'			=> $this->_id,
-			'tag'			=> $this->_tag,
-			'limit'			=> $this->_limit,
-			'offset'		=> $this->_offset,
-			'format'		=> $this->_format,
-			'reblog_info'	=> $this->_reblog,
-			'notes_info'	=> $this->_notes);
-		
-		return $this->_getResponse(self::URL_GET_POST, $query);
-	}
-	
-	/**
-	 * Get complete set submmision post
-	 *
-	 * @return array
-	 */
-	public function getSubmission() {
-		return $this->_getResponse(self::URL_GET_SUBMISION);
-	}
-	
-	/**
-	 * Reblog a post
-	 *
-	 * @param integer
-	 * @param integer
-	 * @param string
-	 * @return array
-	 */
-	public function reblog($Id, $reblog, $comment) {
-		 //Argument Test
-		 Eden_Tumblr_Error::i()
-			->argument(1, 'integer')	//Argument 1 must be an integer
-			->argument(2, 'integer')	//Argument 2 must be an integer
-			->argument(3, 'string');	//Argument 3 must be a string
-			
-		$query = array('Id' => $Id, 'reblog_key' => $reblog);
-		
-		//if it is not empty
-		if(!is_null($comment)) {
-			$query['comment'] = $comment;
-		}
-		
-		$url = sprintf(self::URL_REBLOG, $Id);
-		return $this->_post($url, $query);
-	}
-	
-	/**
-	 * Delete a post
-	 *
-	 * @param integer
-	 * @return array
-	 */
-	public function remove($Id) {
-		 //Argument 1 must be an integer 
-		 Eden_Tumblr_Error::i()->argument(1, 'integer');				
-			
-		$query = array('Id' => $Id);
-		
-		$url = sprintf(self::URL_REMOVE, $Id);
-		return $this->_post($url, $query);
-	}
-	
-	/**
-	 * Set api key
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setApiKey($apiKey) {
-		//Argument 1 must be a string
-		Eden_Tumblr_Error::i()->argument(1, 'string');
-		
-		$this->_apiKey = $apiKey;
-		return $this;
-	}
-	
-	/**
-	 * Set caption
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setCaption($caption) {
-		//Argument 1 must be a string
-		Eden_Tumblr_Error::i()->argument(1, 'string');
-		
-		$this->_caption = $caption;
-		return $this;
-	}
-	
-	/**
-	 * Set date
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setDate($date) {
-		//Argument 1 must be a string
-		Eden_Tumblr_Error::i()->argument(1, 'string');
-		
-		$this->_date = $date;
-		return $this;
-	}
-	
-	/**
-	 * Set description
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setDescription($description) {
-		//Argument 1 must be a string
-		Eden_Tumblr_Error::i()->argument(1, 'string');
-		
-		$this->_description = $description;
-		return $this;
-	}
-	
-	/**
-	 * Set format
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setFormat($format) {
-		//Argument 1 must be a string
-		Eden_Tumblr_Error::i()->argument(1, 'string');
-		
-		$this->_format = $format;
-		return $this;
-	}
-	
-	/**
-	 * Set hostname
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setHostname($hostname) {
-		//Argument 1 must be a string
-		Eden_Tumblr_Error::i()->argument(1, 'string');
-		
-		$this->_hostname = $hostname;
-		return $this;
-	}
-	
-	/**
-	 * Set id
+	 * The size of the avatar (square, 
+	 * one value for both length and width). 
+	 * Must be one of the values:
+     * 16, 24, 30, 40, 48, 64, 96, 128, 512
 	 *
 	 * @param integer
 	 * @return this
 	 */
-	public function setId($id) {
-		//Argument 1 must be an integer
+	public function setSize($size) {
+		//Argument 1 must be a integer
 		Eden_Tumblr_Error::i()->argument(1, 'int');
+		$this->_size = $size;
 		
-		$this->_id = $id;
 		return $this;
+		
 	}
 	
 	/**
-	 * Set limit
+	 * The number of results to return: 1–20, inclusive
 	 *
 	 * @param integer
 	 * @return this
 	 */
 	public function setLimit($limit) {
-		//Argument 1 must be an integer
+		//Argument 1 must be a integer
 		Eden_Tumblr_Error::i()->argument(1, 'int');
-		
 		$this->_limit = $limit;
-		return $this;
-	}
-	
-	/**
-	 * Set link
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setLink($link) {
-		//Argument 1 must be a string
-		Eden_Tumblr_Error::i()->argument(1, 'string');
 		
-		$this->_link = $link;
 		return $this;
+		
 	}
 	
 	/**
-	 * Set markdown
-	 *
-	 * @return this
-	 */
-	public function setMarkdown() {
-		$this->_markdown = false;
-		return $this;
-	}
-	
-	/**
-	 * Set notes
-	 *
-	 * @return this
-	 */
-	public function setNotes() {
-		$this->_notes = false;
-		return $this;
-	}
-	
-	/**
-	 * Set offset
+	 * Result to start at
 	 *
 	 * @param integer
 	 * @return this
 	 */
 	public function setOffset($offset) {
-		//Argument 1 must be an integer
+		//Argument 1 must be a integer
 		Eden_Tumblr_Error::i()->argument(1, 'int');
-		
 		$this->_offset = $offset;
+		
 		return $this;
+		
 	}
 	
 	/**
-	 * Set reblog
+	 * A specific post ID. Returns the single post 
+	 * specified or (if not found) a 404 error.
 	 *
+	 * @param integer
 	 * @return this
 	 */
-	public function setReblog() {
-		$this->_reblog = false;
+	public function setPostId($postId) {
+		//Argument 1 must be a integer
+		Eden_Tumblr_Error::i()->argument(1, 'int');
+		$this->_postId = $postId;
+		
 		return $this;
+		
 	}
 	
 	/**
-	 * Set size
+	 * The type of post to return. Specify one of the following:  
+	 * "text, quote, link, answer, video, audio, photo, chat"
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setSize($size) {
+	public function setPostType($postType) {
 		//Argument 1 must be a string
 		Eden_Tumblr_Error::i()->argument(1, 'string');
+		$this->_postType = $postType;
 		
-		$this->_size = $size;
 		return $this;
+		
 	}
 	
 	/**
-	 * Set slug
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setSlug($slug) {
-		//Argument 1 must be a string
-		Eden_Tumblr_Error::i()->argument(1, 'string');
-		
-		$this->_slug = $slug;
-		return $this;
-	}
-	
-	/**
-	 * Set source
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setSource($source) {
-		//Argument 1 must be a string
-		Eden_Tumblr_Error::i()->argument(1, 'string');
-		
-		$this->_source = $source;
-		return $this;
-	}
-	
-	/**
-	 * Set state
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setState($state) {
-		//Argument 1 must be a string
-		Eden_Tumblr_Error::i()->argument(1, 'string');
-		
-		$this->_state = $state;
-		return $this;
-	}
-	
-	/**
-	 * Set tag
+	 * Limits the response to posts with the specified tag
 	 *
 	 * @param string
 	 * @return this
@@ -615,69 +150,444 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	public function setTag($tag) {
 		//Argument 1 must be a string
 		Eden_Tumblr_Error::i()->argument(1, 'string');
-		
 		$this->_tag = $tag;
+		
 		return $this;
+		
 	}
 	
 	/**
-	 * Set title
+	 * The state of the post. Specify one of the following:  
+	 * published, draft, queue, private
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setTitle($title) {
+	public function setState($state) {
 		//Argument 1 must be a string
 		Eden_Tumblr_Error::i()->argument(1, 'string');
+		$this->_state = $state;
 		
-		$this->_title = $title;
 		return $this;
+		
 	}
 	
 	/**
-	 * Set tweets
+	 * Sets the format type of post. Supported formats 
+	 * are: html & markdown
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setTweets($tweets) {
+	public function setFormat($format) {
 		//Argument 1 must be a string
 		Eden_Tumblr_Error::i()->argument(1, 'string');
+		$this->_format = $format;
 		
-		$this->_tweets = $tweets;
 		return $this;
+		
 	}
 	
 	/**
-	 * Set type
+	 * Add a short text summary to the end of the post URL
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setType($type) {
+	public function setSlug($slug) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');
+		$this->_slug = $slug;
+		
+		return $this;
+		
+	}
+	
+	/**
+	 * The user-supplied caption, HTML allowed
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setCaption($caption) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');
+		$this->_caption = $caption;
+		
+		return $this;
+		
+	}
+	
+	/**
+	 * The "click-through URL" for the photo
+	 *
+	 * @param url
+	 * @return this
+	 */
+	public function setLink($link) {
+		//Argument 1 must be a url
+		Eden_Tumblr_Error::i()->argument(1, 'url');
+		$this->_link = $link;
+		
+		return $this;
+		
+	}
+	
+	/**
+	 * A user-supplied description, HTML allowed
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setDescription($description) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');
+		$this->_description = $description;
+		
+		return $this;
+		
+	}
+	/**
+	 * Returns general information about the blog, 
+	 * such as the title, number of posts, and other high-level data.
+	 *
+	 * @param string The standard or custom blog hostname
+	 * @return this
+	 */ 
+	public function getInfo($baseHostName) {
 		//Argument 1 must be a string
 		Eden_Tumblr_Error::i()->argument(1, 'string');
 		
-		$this->_type = $type;
-		return $this;
+		return $this->_getResponse(sprintf(self::URL_BLOG_GET, $baseHostName));
 	}
-	 
+		
 	/**
-	 * Update blog post
+	 * Returns users Avatar
 	 *
-	 * @param integer
-	 * @return array
+	 * @param string The standard or custom blog hostname
+	 * @return this
 	 */
-	public function update($Id) {
-		//Argument 1 must be a integer
-		 Eden_Tumblr_Error::i()->argument(1, 'integer');					
+	public function getAvatar($baseHostName) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');
+		
+		return $this->_getResponse(sprintf(self::URL_BLOG_GET_AVATAR, $baseHostName, $this->_size));
+	}
+	
+	/**
+	 * Returns users follower
+	 *
+	 * @param string The standard or custom blog hostname
+	 * @return this
+	 */
+	public function getFollower($baseHostName) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');
+		
+		//populate fields
+		$query = array(
+			'limit'		=> $this->_limit,	//optional
+			'offset'	=> $this->_offset);	//optional
+		
+		return $this->_getAuthResponse(sprintf(self::URL_BLOG_GET_FOLLOWER, $baseHostName));
+	}
+	
+	/**
+	 * Retrieve Published Posts
+	 *
+	 * @param string The standard or custom blog hostname
+	 * @return this
+	 */
+	public function getPost($baseHostName) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');
+		
+		//populate fields
+		$query = array(
+			'id'			=> $this->_postId,		//optional
+			'tag'			=> $this->_tag,			//optional
+			'limit'			=> $this->_limit,		//optional
+			'offset'		=> $this->_offset,		//optional
+			'reblog_info'	=> $this->_reblogInfo,	//optional
+			'notes_info'	=> $this->_notesInfo);	//optional
+		
+		return $this->_getResponse(sprintf(self::URL_BLOG_GET_POST, $baseHostName, $this->_postType), $query);
+	}
+	
+	/**
+	 * Retrieve Queued Posts
+	 *
+	 * @param string The standard or custom blog hostname
+	 * @return this
+	 */
+	public function getQueuedPost($baseHostName) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');
+		
+		return $this->_getAuthResponse(sprintf(self::URL_BLOG_GET_QUEUE, $baseHostName));
+	}
+	
+	/**
+	 * Retrieve Draft Posts
+	 *
+	 * @param string The standard or custom blog hostname
+	 * @return this
+	 */
+	public function getDraftPost($baseHostName) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');
+		
+		return $this->_getAuthResponse(sprintf(self::URL_BLOG_GET_DRAFT, $baseHostNamee));
+	}
+	
+	/**
+	 * Retrieve Submission Posts
+	 *
+	 * @param string The standard or custom blog hostname
+	 * @return this
+	 */
+	public function getSubmissionPost($baseHostName) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');
+		
+		return $this->_getAuthResponse(sprintf(self::URL_BLOG_GET_SUBMISSION, $baseHostName));
+	}
+	
+	/**
+	 * Create a New Blog Text Post
+	 *
+	 * @param string The standard or custom blog hostname
+	 * @param string The full post body, HTML allowed
+	 * @param string|null Title of the post, HTML entities must be escaped
+	 * @return this
+	 */
+	public function postText($baseHostName, $body, $title = NULL) {
+		//Argument test
+		Eden_Tumblr_Error::i()
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string')				//Argument 2 must be a string
+			->argument(3, 'string', 'null');	//Argument 3 must be a string or null
+		
+		$query = array(
+			'type'		=> 'text',
+			'body'		=> $body,
+			'title'		=> $title,			//optional	
+			'state'		=> $this->_state,	//optional
+			'tags'		=> $this->_tag,		//optional
+			'format'	=> $this->_format,	//optional
+			'slug'		=> $this->_slug);	//optional
+		
+		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName),$query);
+	}
+	
+	/**
+	 * Create a New Blog Photo Post
+	 * Either source or data is required
+	 *
+	 * @param string The standard or custom blog hostname
+	 * @param string|null The photo source URL
+	 * @param string|null One or more image files (submit multiple times to create a slide show)
+	 * @return this
+	 */
+	public function postPhoto($baseHostName, $source = NULL, $data = NULL) {
+		//Argument test
+		Eden_Tumblr_Error::i()
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string', 'null')		//Argument 2 must be a string or null
+			->argument(3, 'string', 'null');	//Argument 3 must be a string or null
+		
+		$query = array(
+			'type'		=> 'photo',	
+			'source'	=> $source,
+			'data'		=> $data,
+			'caption'	=> $this->_caption,	//optional
+			'link'		=> $this->_link,	//optional
+			'state'		=> $this->_state,	//optional
+			'tags'		=> $this->_tag,		//optional
+			'format'	=> $this->_format,	//optional
+			'slug'		=> $this->_slug);	//optional
+		
+		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName),$query);
+	}
+	
+	/**
+	 * Create a New Blog Quote Post
+	 *
+	 * @param string The standard or custom blog hostname
+	 * @param string The full text of the quote, HTML entities must be escpaed
+	 * @param string|null One or more image files (submit multiple times to create a slide show)
+	 * @return this
+	 */
+	public function postQuote($baseHostName ,$quote, $source = NULL) {
+		//Argument test
+		Eden_Tumblr_Error::i()
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string')				//Argument 2 must be a string 
+			->argument(3, 'string', 'null');	//Argument 3 must be a string or null
+		
+		$query = array(
+			'type'		=> 'quote',	
+			'source'	=> $source,
+			'quote'		=> $quote,
+			'state'		=> $this->_state,	//optional
+			'tags'		=> $this->_tag,		//optional
+			'format'	=> $this->_format,	//optional
+			'slug'		=> $this->_slug);	//optional
+		
+		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName),$query);
+	}
+	
+	/**
+	 * Create a New Blog link Post
+	 *
+	 * @param string The standard or custom blog hostname
+	 * @param string The link
+	 * @return this
+	 */
+	public function postLink($baseHostName ,$url) {
+		//Argument test
+		Eden_Tumblr_Error::i()
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string');	//Argument 2 must be a string 
+		
+		$query = array(
+			'type'			=> 'link',	
+			'url'			=> $url,
+			'title'			=> $this->_title,		//optional
+			'description'	=> $this->_description,	//optional
+			'state'			=> $this->_state,		//optional
+			'tags'			=> $this->_tag,			//optional
+			'format'		=> $this->_format,		//optional
+			'slug'			=> $this->_slug);		//optional
+		
+		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName),$query);
+	}
+	
+	/**
+	 * Create a New Blog Chat Post
+	 *
+	 * @param string The standard or custom blog hostname
+	 * @param string The text of the conversation/chat, with dialogue labels (no HTML)
+	 * @return this
+	 */
+	public function postChat($baseHostName ,$conversation) {
+		//Argument test
+		Eden_Tumblr_Error::i()
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string');	//Argument 2 must be a string 
+		
+		$query = array(
+			'type'			=> 'chat',	
+			'conversation'	=> $conversation,
+			'state'			=> $this->_state,		//optional
+			'tags'			=> $this->_tag,			//optional
+			'format'		=> $this->_format,		//optional
+			'slug'			=> $this->_slug);		//optional
+		
+		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName),$query);
+	}
+	
+	/**
+	 * Create a New Blog Audio Post
+	 * either external_url or data is requred
+	 *
+	 * @param string The standard or custom blog hostname
+	 * @param string|null The URL of the site that hosts the audio file (not tumblr)
+	 * @param string|null An audio file
+	 * @return this
+	 */
+	public function postAudio($baseHostName ,$externalUrl = NULL, $data = NULL) {
+		//Argument test
+		Eden_Tumblr_Error::i()
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string', 'null')		//Argument 2 must be a string or null
+			->argument(3, 'string', 'null');	//Argument 3 must be a string or null 
+		
+		$query = array(
+			'type'			=> 'audio',	
+			'external_url'	=> $externalUrl,
+			'data'			=> $data,
+			'caption'		=> $this->_caption,
+			'state'			=> $this->_state,		//optional
+			'tags'			=> $this->_tag,			//optional
+			'format'		=> $this->_format,		//optional
+			'slug'			=> $this->_slug);		//optional
+		
+		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName),$query);
+	}
+	
+	/**
+	 * Create a New Blog Video Post
+	 * either external_url or data is requred
+	 *
+	 * @param string The standard or custom blog hostname
+	 * @param string|null HTML embed code for the video
+	 * @param string|null An audio file
+	 * @return this
+	 */
+	public function postVideo($baseHostName ,$embed = NULL, $data = NULL) {
+		//Argument test
+		Eden_Tumblr_Error::i()
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string', 'null')		//Argument 2 must be a string or null
+			->argument(3, 'string', 'null');	//Argument 3 must be a string or null 
+		
+		$query = array(
+			'type'			=> 'video',	
+			'embed'			=> $embed,
+			'data'			=> $data,
+			'caption'		=> $this->_caption,
+			'state'			=> $this->_state,		//optional
+			'tags'			=> $this->_tag,			//optional
+			'format'		=> $this->_format,		//optional
+			'slug'			=> $this->_slug);		//optional
+		
+		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName),$query);
+	}
+	
+	/**
+	 * Reblog a Post
+	 *
+	 * @param string The standard or custom blog hostname
+	 * @param string The ID of the reblogged post on tumblelog
+	 * @param string The reblog key for the reblogged post – get the reblog key with a /posts request
+	 * @param string|null A comment added to the reblogged post
+	 * @return this
+	 */
+	public function editPost($baseHostName ,$postId, $reblogKey, $comment = NULL) {
+		//Argument test
+		Eden_Tumblr_Error::i()
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string')				//Argument 2 must be a string 
+			->argument(3, 'string')				//Argument 3 must be a string 
+			->argument(4, 'string', 'null');	//Argument 4 must be a string or null 
+		
+		$query = array(
+			'id' 			=> $postId,
+			'reblog_key'	=> $reblogKey,
+			'comment'		=> $comment);
 			
-		$query = array('Id' => $Id);
-		
-		$url = sprintf(self::URL_UPDATE, $Id);
-		return $this->_post($url, $query);
+		return $this->_post(sprintf(self::URL_BLOG_REBLOG_POST, $baseHostName),$query);
 	}
 	
+	/**
+	 * Delete Post
+	 *
+	 * @param string The ID of the post to delete
+	 * @param string The standard or custom blog hostname
+	 * @return this
+	 */
+	public function delete($baseHostName, $postId) {
+		//Argument test
+		Eden_Tumblr_Error::i()
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string');	//Argument 2 must be a string
+		
+		//populate fields
+		$query = array('id'	=> $postId);
+		
+		return $this->_post(sprintf(self::URL_BLOG_DELETE_POST, $baseHostName), $query);
+	}
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

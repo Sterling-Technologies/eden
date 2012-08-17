@@ -8,13 +8,13 @@
  */
 
 /**
- *  Oauth server methods
+ * Oauth2 server methods
  *
  * @package    Eden
- * @category   oauth
+ * @category   oauth2
  * @author     Christian Blanquera cblanquera@openovate.com
  */
-class Eden_Oauth_Server extends Eden_Oauth_Base {
+class Eden_Oauth2_Server extends Eden_Oauth_Base {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties

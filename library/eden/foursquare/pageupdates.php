@@ -163,9 +163,8 @@ class Eden_Foursquare_Pageupdates extends Eden_Foursquare_Base {
 	}
 	
 	/**
-	 * Allows you to get the page's venues.
+	 * Allows you to add the page's venues.
 	 *  
-	 * @param string The page id for which venues are being requested.
 	 * @return array
 	 */
 	public function addPage() {

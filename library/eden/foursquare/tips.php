@@ -206,7 +206,6 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 	 * Returns a list of tips near the area specified. 
 	 * 
 	 * @param string The venue where the user is checking in
-	 * @param string Who to broadcast this check-in to
 	 * @return array
 	 */
 	public function search($near) {
