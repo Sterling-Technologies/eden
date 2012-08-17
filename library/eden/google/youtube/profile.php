@@ -51,7 +51,7 @@ class Eden_Google_Youtube_Profile extends Eden_Google_Base {
 	 * @param string
 	 * @return array
 	 */
-	public function getlist($userId = self::DEFAULT_VALUE) {
+	public function getList($userId = self::DEFAULT_VALUE) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		

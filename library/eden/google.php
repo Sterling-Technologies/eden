@@ -7,6 +7,7 @@
  * distributed with this package.
  */
 require_once dirname(__FILE__).'/curl.php';
+require_once dirname(__FILE__).'/template.php';
 require_once dirname(__FILE__).'/google/error.php';
 require_once dirname(__FILE__).'/google/base.php';
 require_once dirname(__FILE__).'/google/calendar/acl.php';

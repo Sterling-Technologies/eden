@@ -14,19 +14,19 @@
  * @category   facebook
  * @author     Christian Blanquera cblanquera@openovate.com
  */
-class Eden_Facebook_Auth extends Eden_Class {
+class Eden_Facebook_Auth extends Eden_Oauth2_Client {
 	/* Constants
 	-------------------------------*/
-	const AUTHENTICATION_USER_URL 	= 'https://www.facebook.com/dialog/oauth';
-	const AUTHENTICATION_APP_URL	= 'https://graph.facebook.com/oauth/access_token';
-	const USER_AGENT				= 'facebook-php-3.1';
+	const REQUEST_URL 	= 'https://www.facebook.com/dialog/oauth';
+	const ACCESS_URL	= 'https://graph.facebook.com/oauth/access_token';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_key 			= NULL;
-	protected $_secret 			= NULL;
+	protected $_key 		= NULL;
+	protected $_secret 		= NULL;
+	protected $_redirect 	= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -36,60 +36,18 @@ class Eden_Facebook_Auth extends Eden_Class {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	public function __construct($key, $secret) {
-		$this->_key 		= $key;
-		$this->_secret 		= $secret;
+	public function __construct($key, $secret, $redirect) {
+		//argument test
+		Eden_Facebook_Error::i()
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'string')				//Argument 2 must be a string
+			->argument(3, 'string');			//Argument 4 must be a string
+		
+		parent::__construct($key, $secret, $redirect, self::REQUEST_URL, self::ACCESS_URL);
 	}
 	
 	/* Public Methods
 	-------------------------------*/
-	 public function getLoginUrl($redirect, array $scope = array(), $state = NULL, $display = NULL) {
-		$parameters = array(
-			'client_id'		=> $this->_key,
-			'redirect_uri'	=> $redirect,
-			'scope'			=> implode(',',$scope),
-			'state'			=> $state,
-			'display'    	=> $display);
-		
-		if(empty($scope)) {
-			unset($parameters['scope']);
-		}
-		
-		if(!$display) {
-			unset($parameters['display']);
-		}
-		
-		if(!$state) {
-			unset($parameters['state']);
-		}
-		
-		$parameters = http_build_query($parameters);
-		
-		return self::AUTHENTICATION_USER_URL.'?'.$parameters;
-	}
-	
-	public function getToken($code, $redirect) {
-		$parameters = array(
-			'client_id'		=> $this->_key,
-			'client_secret'	=> $this->_secret,
-			'redirect_uri'	=> $redirect,
-			'code'			=> $code);
-		
-		$parameters = http_build_query($parameters);
-		$url 		= self::AUTHENTICATION_APP_URL.'?'.$parameters;
-		
-		$response = Eden_Curl::i()
-			->setUrl($url)
-			->setConnectTimeout(10)
-			->setTimeout(60)
-			->setUserAgent(self::USER_AGENT)
-			->setHeaders('Expect')
-			->verifyPeer(false)
-			->getQueryResponse();
-		
-		return $response['access_token'];
-	}
-	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods
