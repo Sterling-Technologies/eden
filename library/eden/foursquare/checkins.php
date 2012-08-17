@@ -33,6 +33,7 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	protected $_limit 				= NULL;
 	protected $_contentId			= NULL;
 	protected $_url					= NULL;
+	protected $_shout				= NULL;
 	
 	/* Private Properties
 	-------------------------------*/

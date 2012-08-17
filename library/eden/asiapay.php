@@ -6,8 +6,7 @@
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
-require_once dirname(__FILE__).'/class.php';
-require_once dirname(__FILE__).'/error.php';
+require_once dirname(__FILE__).'/template.php';
 require_once dirname(__FILE__).'/asiapay/error.php';
 require_once dirname(__FILE__).'/asiapay/base.php';
 require_once dirname(__FILE__).'/asiapay/client.php';
