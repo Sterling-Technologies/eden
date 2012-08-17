@@ -489,6 +489,49 @@ class Eden_Facebook_Graph extends Eden_Class {
 		
 		return $results['id'];
 	}
+    
+    /**
+	 * Subscribes to Facebook real-time updates
+	 *
+	 * @param $app_id string Facebook app_id (We need to get this from a different place somehow, doesn't seem right making it a variable)
+	 * @param $object string type of Facebook object (user, permissions, page)
+	 * @param $fields string comma-deliminated list of fields to subscribe to (e.g. "name,picture,friends,feed")
+	 * @param $callback_url - callback-url for the real-time updates
+	 */
+	public function subscribe($app_id, $object, $fields, $callback_url)
+	{
+		Eden_Facebook_Error::i()
+			->argument(1, 'string')
+			->argument(2, 'string')
+			->argument(3, 'string');
+
+		$url 		= self::GRAPH_URL . "{$app_id}/subscriptions";
+		$query 		= array('access_token' => $this->_token);
+		$url .= '?'.http_build_query($query);
+
+		$verify_token = sha1($app_id.$object.$callback_url);
+		$post = array(
+			'object' => $object,
+			'fields' => $fields,
+			'callback_url' => $callback_url,
+			'verify_token' => $verify_token
+		);
+
+		//send it off
+		$results = Eden_Curl::i()
+			->setUrl($url)
+			->setConnectTimeout(10)
+			->setFollowLocation(true)
+			->setTimeout(60)
+			->verifyPeer(false)
+			->setUserAgent(Eden_Facebook_Auth::USER_AGENT)
+			->setHeaders('Expect')
+			->setPost(true)
+			->setPostFields($post)
+			->getJsonResponse();
+		
+		return $verify_token;
+	}
 	
 	/* Protected Methods
 	-------------------------------*/
