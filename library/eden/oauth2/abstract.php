@@ -116,12 +116,12 @@ abstract class Eden_Oauth2_Abstract extends Eden_Class {
 	/**
 	 * Set scope
 	 *
-	 * @param string
+	 * @param string|array
 	 * @return this
 	 */
 	public function setScope($scope) {
-		//argument 1 must be a string
-		Eden_Oauth2_Error::i()->argument(1, 'string');
+		//argument 1 must be a string or array
+		Eden_Oauth2_Error::i()->argument(1, 'string', 'array');
 		$this->_scope = $scope;
 		
 		return $this;
@@ -130,12 +130,12 @@ abstract class Eden_Oauth2_Abstract extends Eden_Class {
 	/**
 	 * Set display
 	 *
-	 * @param string
+	 * @param string|array
 	 * @return this
 	 */
 	public function setDisplay($display) {
-		//argument 1 must be a string
-		Eden_Oauth2_Error::i()->argument(1, 'string');
+		//argument 1 must be a string or array
+		Eden_Oauth2_Error::i()->argument(1, 'string', 'array');
 		$this->_display = $display;
 		
 		return $this;
@@ -149,7 +149,7 @@ abstract class Eden_Oauth2_Abstract extends Eden_Class {
 	 */
 	public function isJson($string) {
 		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
+		Eden_Oauth2_Error::i()->argument(1, 'string');
 		
  		json_decode($string);
  		return (json_last_error() == JSON_ERROR_NONE);

@@ -66,20 +66,16 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	}
 	
 	/**
-	 * Set location by setting longtitide 
-	 * and latitude
+	 * Set shout
 	 * 
-	 * @param int|float
-	 * @param int|float
+	 * @param string
 	 * @return this
 	 */
-	public function setLocation($longtitude, $latitude) {
-		//argument test
-		Eden_Foursquare_Error::i()
-			->argument(1, 'int', 'float')	//argument 1 must be an integer or float
-			->argument(2, 'int', 'float');	//argument 2 must be an integer or float
+	public function setShout($shout) {
+		//argument 1 must be a string
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
 			
-		$this->_location  = $longtitude.', '.$latitude; 
+		$this->_shout  = $shout; 
 		
 		return $this;
 	}
@@ -113,7 +109,7 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	}
 	
 	/**
-	 * The url of the homepage of the venue.
+	 * Set Content id.
 	 * 
 	 * @param string
 	 * @return this

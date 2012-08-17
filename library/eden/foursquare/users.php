@@ -301,7 +301,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	}
 	
 	/**
-	 * Returns users saerch
+	 * Returns users search
 	 * 
 	 * @return array
 	 */

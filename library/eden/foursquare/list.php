@@ -253,7 +253,6 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	/**
 	 * Set to can be edited by friends.
 	 * 
-	 * @param string
 	 * @return this
 	 */
 	public function setCollaborative() {

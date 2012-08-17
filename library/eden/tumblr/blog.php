@@ -236,12 +236,12 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	/**
 	 * A user-supplied description, HTML allowed
 	 *
-	 * @param url
+	 * @param string
 	 * @return this
 	 */
 	public function setDescription($description) {
-		//Argument 1 must be a url
-		Eden_Tumblr_Error::i()->argument(1, 'url');
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');
 		$this->_description = $description;
 		
 		return $this;
@@ -281,6 +281,9 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 * @return this
 	 */
 	public function getFollower($baseHostName) {
+		//Argument 1 must be a string
+		Eden_Tumblr_Error::i()->argument(1, 'string');
+		
 		//populate fields
 		$query = array(
 			'limit'		=> $this->_limit,	//optional
