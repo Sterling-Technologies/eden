@@ -54,14 +54,16 @@ class Eden_Facebook extends Eden_Class {
 	 *
 	 * @param string
 	 * @param string
+	 * @param string
 	 * @return Eden_Facebook_Auth
 	 */
-	public function auth($key, $secret) {
+	public function auth($key, $secret, $redirect) {
 		Eden_Facebook_Error::i()
 			->argument(1, 'string')
-			->argument(2, 'string');
+			->argument(2, 'string')
+			->argument(3, 'string');
 			
-		return Eden_Facebook_Auth::i($key, $secret);
+		return Eden_Facebook_Auth::i($key, $secret, $redirect);
 	}
 	
 	/**

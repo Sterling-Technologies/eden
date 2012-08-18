@@ -39,7 +39,7 @@ class Eden_Eventbrite_Oauth extends Eden_Oauth2_Client {
 		Eden_Eventbrite_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string')		//Argument 2 must be a string
-			->argument(3, 'string');	//Argument 4 must be a string
+			->argument(3, 'string');	//Argument 3 must be a string
 			
 		parent::__construct($clientId, $appSecret, $redirect, self::REQUEST_URL, self::ACCESS_URL);
 	}

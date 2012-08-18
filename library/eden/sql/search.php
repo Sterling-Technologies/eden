@@ -323,6 +323,34 @@ class Eden_Sql_Search extends Eden_Class {
 	}
 	
 	/**
+	 * Returns the one result in a model
+	 *
+	 * @param int
+	 * @return Eden_Sql_Model
+	 */
+	public function getModel($index = 0) {
+		Eden_Sql_Error::i()->argument(1, 'int');
+		return $this->getCollection()->offsetGet($index);
+	}
+	
+	/**
+	 * Returns the one result
+	 *
+	 * @param int
+	 * @return array|null
+	 */
+	public function getRow($index = 0) {
+		Eden_Sql_Error::i()->argument(1, 'int');
+		$rows = $this->getRows();
+		
+		if(isset($rows[$index])) {
+			return $rows[$index];
+		}
+		
+		return NULL;
+	}
+	
+	/**
 	 * Returns the array rows
 	 *
 	 * @return array

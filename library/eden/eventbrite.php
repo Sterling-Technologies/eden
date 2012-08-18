@@ -57,12 +57,13 @@ class Eden_Eventbrite extends Eden_Class {
 	 * @param string app secret
 	 * @return Eden_Eventbrite_Discount
 	 */
-	public function auth($clientId, $appSecret) {
+	public function auth($clientId, $appSecret, $redirect) {
 		Eden_Eventbrite_Error::i()
-			->argument(1, 'string')
-			->argument(1, 'string');
+			->argument(1, 'string', 'int')
+			->argument(2, 'string')
+			->argument(3, 'string');
 			
-		return Eden_Eventbrite_Oauth::i($clientId, $appSecret);
+		return Eden_Eventbrite_Oauth::i((string) $clientId, $appSecret, $redirect);
 	}
 	
 	/**
