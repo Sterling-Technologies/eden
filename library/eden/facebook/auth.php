@@ -19,6 +19,7 @@ class Eden_Facebook_Auth extends Eden_Oauth2_Client {
 	-------------------------------*/
 	const REQUEST_URL 	= 'https://www.facebook.com/dialog/oauth';
 	const ACCESS_URL	= 'https://graph.facebook.com/oauth/access_token';
+	const USER_AGENT	= 'facebook-php-3.1';
 	
 	/* Public Properties
 	-------------------------------*/
