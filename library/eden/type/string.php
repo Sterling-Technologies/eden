@@ -136,6 +136,23 @@ class Eden_Type_String extends Eden_Type_Abstract {
 		return $this;
 	}
 	
+	/**
+	 * Summarizes a text
+	 *
+	 * @param int number of words
+	 * @return this
+	 */
+	public function summarize($words) {
+		//argument 1 must be a string
+		Eden_Type_Error::i()->argument(1, 'int');
+		
+		$this->_data = explode(' ', strip_tags($this->_data), $words);
+		array_pop($this->_data);
+		$this->_data = implode(' ', $this->_data);
+		
+		return $this;
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	protected function _getMethodType(&$name) {

@@ -336,14 +336,25 @@ class Eden_Sql_Search extends Eden_Class {
 	/**
 	 * Returns the one result
 	 *
-	 * @param int
+	 * @param int|string
+	 * @param string|null
 	 * @return array|null
 	 */
-	public function getRow($index = 0) {
-		Eden_Sql_Error::i()->argument(1, 'int');
+	public function getRow($index = 0, $column = NULL) {
+		Eden_Sql_Error::i()
+			->argument(1, 'int', 'string')
+			->argument(2, 'string', 'null');
+		
+		if(is_string($index)) {
+			$column = $index;
+			$index = 0;
+		}
+		
 		$rows = $this->getRows();
 		
-		if(isset($rows[$index])) {
+		if(!is_null($column) && isset($rows[$index][$column])) {
+			return $rows[$index][$column];
+		} else if(is_null($column) && isset($rows[$index])) {
 			return $rows[$index];
 		}
 		
