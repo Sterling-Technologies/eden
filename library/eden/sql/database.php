@@ -135,7 +135,11 @@ abstract class Eden_Sql_Database extends Eden_Event {
 			foreach($filters as $i => $filter) {
 				//array('post_id=%s AND post_title IN %s', 123, array('asd'));
 				$format = array_shift($filter);
-				$filter = $this->bind($filter);
+				
+				foreach($filter as $j => $value) {
+					$filter[$j] = $this->bind($value);
+				}
+				
 				$filters[$i] = vsprintf($format, $filter);
 			}
 		}
@@ -734,7 +738,11 @@ abstract class Eden_Sql_Database extends Eden_Event {
 			foreach($filters as $i => $filter) {
 				//array('post_id=%s AND post_title IN %s', 123, array('asd'));
 				$format = array_shift($filter);
-				$filter = $this->bind($filter);
+				
+				foreach($filter as $j => $value) {
+					$filter[$j] = $this->bind($value);
+				}
+				
 				$filters[$i] = vsprintf($format, $filter);
 			}
 		}

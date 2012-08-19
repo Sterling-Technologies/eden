@@ -84,7 +84,7 @@ class Eden_Sql_Model extends Eden_Model {
 	 * Inserts model to database
 	 *
 	 * @param string
-	 * @param Eden_Sql
+	 * @param Eden_Sql_Database
 	 * @return this
 	 */
 	public function insert($table = NULL, Eden_Sql_Database $database = NULL) {
@@ -135,7 +135,8 @@ class Eden_Sql_Model extends Eden_Model {
 	 * Removes model from database
 	 *
 	 * @param string
-	 * @param Eden_Sql
+	 * @param Eden_Sql_Database
+	 * @param string|array|null
 	 * @return this
 	 */
 	public function remove($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
@@ -199,7 +200,8 @@ class Eden_Sql_Model extends Eden_Model {
 	 * Inserts or updates model to database
 	 *
 	 * @param string
-	 * @param Eden_Sql
+	 * @param Eden_Sql_Database
+	 * @param string|array|null
 	 * @return this
 	 */
 	public function save($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
@@ -278,7 +280,8 @@ class Eden_Sql_Model extends Eden_Model {
 	 * Updates model to database
 	 *
 	 * @param string
-	 * @param Eden_Sql
+	 * @param Eden_Sql_Database
+	 * @param string|array|null
 	 * @return this
 	 */
 	public function update($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
