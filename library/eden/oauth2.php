@@ -78,7 +78,7 @@ class Eden_Oauth2 extends Eden_Class {
 			->argument(4, 'url')		//argument 4 must be a url
 			->argument(5, 'url');		//argument 5 must be a url
 	
-		return Eden_Oauth2_Desktop:i($client, $secret, $redirect, $requestUrl, $accessUrl);
+		return Eden_Oauth2_Desktop::i($client, $secret, $redirect, $requestUrl, $accessUrl);
 	}
 	/* Protected Methods
 	-------------------------------*/
