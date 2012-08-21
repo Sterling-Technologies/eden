@@ -74,7 +74,7 @@ class Eden_Oauth2_Desktop extends Eden_Oauth2_Abstract {
 	 * @param string*
 	 * @return array
 	 */
-	public function getToken($code) {
+	public function getAccess($code) {
 		//argument 1 must be a string
 		Eden_Oauth2_Error::i()->argument(1, 'string');	
 	 	
