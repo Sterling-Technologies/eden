@@ -128,7 +128,7 @@ class Eden_Google_Shopping extends Eden_Google_Base {
 	 *
 	 * @return json
 	 */
-	public function getRespond() {
+	public function getResponse() {
 		if(!empty($this->_restrictBy)) {
 			foreach($this->_restrictBy as $key => $restrict) {
 				$restrictBy[] = $restrict[self::NAME].':'.$restrict[self::VALUE];
