@@ -439,6 +439,22 @@ class Eden_Curl extends Eden_Class implements ArrayAccess {
 	}
 	
 	/**
+	 * CURLOPT_POSTFIELDS accepts array and string
+	 * arguments, this is a special case that __call 
+	 * does not handle 
+	 *
+	 * @param string|array
+	 * @return this
+	 */
+	public function setPostFields($fields) {
+		//argument 1 must be a string or array
+		Eden_Curl_Error::i()->argument(1, 'array', 'string');
+		$this->_options[CURLOPT_POSTFIELDS] = $fields;
+		
+		return $this;
+	}
+	
+	/**
 	 * Sets request headers
 	 *
 	 * @param array|string
