@@ -355,7 +355,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 		//Argument 1 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');
 		
-		$query = array('status', $status);
+		$query = array('status' => $status);
 		
 		if($this->_reply) {
 			$query['in_reply_to_status_id'] = $this->_reply;
@@ -400,7 +400,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	 * @param string
 	 * @return array
 	 */
-	 public function updateMedia($status, $media) {
+	 public function updateMedia($status, $media) {  
 		//Argument Test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
@@ -408,8 +408,8 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 	
 		//populate fields
 		$query = array(
-			'status' 				=> $status,
-			'media[]'				=> $media);
+			'media[]'				=> $media,
+			'status' 				=> $status);
 		
 		if($this->_reply) {
 			$query['in_reply_to_status_id'] = $this->_reply;
@@ -435,7 +435,7 @@ class Eden_Twitter_Tweets extends Eden_Twitter_Base {
 			$query['display_coordinates'] = 1;
 		}	
 		
-		return $this->_getResponse(self::URL_UPDATE_MEDIA, $query);
+		return $this->_upload(self::URL_UPDATE_MEDIA, $query);
 	}
 	
 	/**
