@@ -18,8 +18,6 @@ require_once dirname(__FILE__).'/google/calendar/freebusy.php';
 require_once dirname(__FILE__).'/google/calendar/list.php';
 require_once dirname(__FILE__).'/google/calendar/settings.php';
 require_once dirname(__FILE__).'/google/calendar.php';
-require_once dirname(__FILE__).'/google/drive/about.php';
-require_once dirname(__FILE__).'/google/drive/apps.php';
 require_once dirname(__FILE__).'/google/drive/changes.php';
 require_once dirname(__FILE__).'/google/drive/children.php';
 require_once dirname(__FILE__).'/google/drive/files.php';

@@ -44,12 +44,14 @@ class Eden_Error extends Exception {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_reporter	= NULL;
-	protected $_type 		= NULL;
-	protected $_level 		= NULL;
-	protected $_offset		= 1;
-	protected $_variables 	= array();
-	protected $_trace		= array();
+	protected $_reporter		= NULL;
+	protected $_type 			= NULL;
+	protected $_level 			= NULL;
+	protected $_offset			= 1;
+	protected $_variables 		= array();
+	protected $_trace			= array();
+	
+	protected static $_argumentTest	= true;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -88,6 +90,11 @@ class Eden_Error extends Exception {
 	 * @return this
 	 */
 	public function argument($index, $types) {
+		//if no test
+		if(!self::$_argumentTest) {
+			return $this;
+		}
+		
 		$trace 		= debug_backtrace();
 		$trace 		= $trace[1];
 		$types 		= func_get_args();
@@ -181,6 +188,19 @@ class Eden_Error extends Exception {
 	 */
 	public function getVariables() {
 		return $this->_variables;
+	}
+	
+	/**
+	 * In a perfect production environment, 
+	 * we can assume that arguments passed in
+	 * all methods are valid. To increase
+	 * performance call this method.
+	 *
+	 * @return this
+	 */
+	public function noArgTest() {
+		self::$_argumentTest = false;
+		return $this;
 	}
 	
 	/**
@@ -336,6 +356,11 @@ class Eden_Error extends Exception {
 	 * @return this
 	 */
 	public function vargument($method, $args, $index, $types) {
+		//if no test
+		if(!self::$_argumentTest) {
+			return $this;
+		}
+		
 		$trace   = debug_backtrace();
 		$trace   = $trace[1];
 		$types   = func_get_args();

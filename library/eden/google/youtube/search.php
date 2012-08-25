@@ -49,10 +49,10 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	 * @param integer
 	 * @return this
 	 */
-	public function setStartIndex($startIndex) {
+	public function setStart($start) {
 		//argument 1 must be a integer
 		Eden_Google_Error::i()->argument(1, 'integer');
-		$this->_startIndex = $startIndex;
+		$this->_startIndex = $start;
 		
 		return $this;
 	}
@@ -63,10 +63,10 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	 * @param integer
 	 * @return this
 	 */
-	public function setMaxResults($maxResults) {
+	public function setRange($range) {
 		//argument 1 must be a integer
 		Eden_Google_Error::i()->argument(1, 'integer');
-		$this->_maxResults = $maxResults;
+		$this->_maxResults = $range;
 		
 		return $this;
 	}
@@ -121,7 +121,7 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	 * @param string
 	 * @return array
 	 */
-	public function search($queryString) {
+	public function getResponse($queryString) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		

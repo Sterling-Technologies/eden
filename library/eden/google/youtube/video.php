@@ -50,7 +50,7 @@ class Eden_Google_Youtube_Video extends Eden_Google_Base {
 	 *
 	 * @return this
 	 */
-	public function setByTopRated() {
+	public function filterByTopRated() {
 		$this->_feeds = 'top_rated';
 		
 		return $this;
@@ -61,7 +61,7 @@ class Eden_Google_Youtube_Video extends Eden_Google_Base {
 	 *
 	 * @return this
 	 */
-	public function setByTopFavorites() {
+	public function filterByTopFavorites() {
 		$this->_feeds = 'top_favorites';
 		
 		return $this;
@@ -72,9 +72,8 @@ class Eden_Google_Youtube_Video extends Eden_Google_Base {
 	 *
 	 * @return this
 	 */
-	public function setByMostShared() {
+	public function filterByMostShared() {
 		$this->_feeds = 'most_shared';
-		
 		return $this;
 	}
 	
@@ -83,9 +82,8 @@ class Eden_Google_Youtube_Video extends Eden_Google_Base {
 	 *
 	 * @return this
 	 */
-	public function setByMostPopular() {
+	public function filterByMostPopular() {
 		$this->_feeds = 'most_popular';
-		
 		return $this;
 	}
 	
@@ -94,9 +92,8 @@ class Eden_Google_Youtube_Video extends Eden_Google_Base {
 	 *
 	 * @return this
 	 */
-	public function setByMostRecent() {
+	public function filterByMostRecent() {
 		$this->_feeds = 'most_recent';
-		
 		return $this;
 	}
 		
@@ -105,9 +102,8 @@ class Eden_Google_Youtube_Video extends Eden_Google_Base {
 	 *
 	 * @return this
 	 */
-	public function setByMostDiscussed() {
+	public function filterByMostDiscussed() {
 		$this->_feeds = 'most_discussed';
-		
 		return $this;
 	}
 	
@@ -116,9 +112,8 @@ class Eden_Google_Youtube_Video extends Eden_Google_Base {
 	 *
 	 * @return this
 	 */
-	public function setByMostResponded() {
+	public function filterByMostResponded() {
 		$this->_feeds = 'most_responded';
-		
 		return $this;
 	}
 	
@@ -127,9 +122,8 @@ class Eden_Google_Youtube_Video extends Eden_Google_Base {
 	 *
 	 * @return this
 	 */
-	public function setByRecentFeatured() {
+	public function filterByRecentFeatured() {
 		$this->_feeds = 'recently_featured';
-		
 		return $this;
 	}
 	
@@ -138,20 +132,9 @@ class Eden_Google_Youtube_Video extends Eden_Google_Base {
 	 *
 	 * @return this
 	 */
-	public function setByOnTheWeb() {
+	public function filterByOnTheWeb() {
 		$this->_feeds = 'on_the_web';
-		
 		return $this;
-	}
-	
-	/**
-	 * Returns a collection of videos that match the API request parameters.
-	 *
-	 * @return array
-	 */
-	public function getList() {
-	
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_FEEDS, $this->_feeds));
 	}
 	
 	/**
@@ -173,10 +156,18 @@ class Eden_Google_Youtube_Video extends Eden_Google_Base {
 	 * @return array
 	 */
 	public function getFavorites() {
-	//populate parameters
+		//populate parameters
 		$query = array(self::VERSION => self::VERSION_TWO);
-		
 		return $this->_getResponse(sprintf(self::URL_YOUTUBE_FAVORITES, $this->_feeds), $query);
+	}
+	
+	/**
+	 * Returns a collection of videos that match the API request parameters.
+	 *
+	 * @return array
+	 */
+	public function getList() {
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_FEEDS, $this->_feeds));
 	}
 	
 	/**
@@ -185,7 +176,7 @@ class Eden_Google_Youtube_Video extends Eden_Google_Base {
 	 * @param string
 	 * @return array
 	 */
-	public function getByCategory($category) {
+	public function getListByCategory($category) {
 		//argument test
 		Eden_Google_Error::i()->argument(1, 'string');
 		
