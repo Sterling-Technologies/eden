@@ -44,7 +44,7 @@ class Eden_Google_Contacts_Data extends Eden_Google_Base {
 	 * Retrieve all of a user's contacts
 	 *
 	 * @param string
-	 * return array
+	 * @return array
 	 */
 	public function getList($userEmail = self::DEFAULT_VALUE) {
 		//argument 1 must be a string
@@ -63,7 +63,7 @@ class Eden_Google_Contacts_Data extends Eden_Google_Base {
 	 *
 	 * @param string
 	 * @param string
-	 * return array
+	 * @return array
 	 */
 	public function getSpecific($contactId, $userEmail = self::DEFAULT_VALUE) {
 		//argument test

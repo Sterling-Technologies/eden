@@ -44,7 +44,7 @@ class Eden_Google_Contacts_Photo extends Eden_Google_Base {
 	 *
 	 * @param string
 	 * @param string
-	 * return array
+	 * @return array
 	 */
 	public function getImage($contactId, $userEmail = self::DAFAULT) {
 		//argument test
@@ -65,7 +65,7 @@ class Eden_Google_Contacts_Photo extends Eden_Google_Base {
 	 *
 	 * @param string
 	 * @param string
-	 * return array
+	 * @return array
 	 */
 	public function delete($contactId, $userEmail = self::DAFAULT) {
 		//argument test

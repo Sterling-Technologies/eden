@@ -121,7 +121,7 @@ class Eden_Google_Contacts_Batch extends Eden_Google_Base {
 	 * Retrieve all group list
 	 *
 	 * @param string
-	 * return array
+	 * @return array
 	 */
 	public function getList($userEmail = self::DEFAULT_VALUE) {
 		//argument 1 must be a string
@@ -140,7 +140,7 @@ class Eden_Google_Contacts_Batch extends Eden_Google_Base {
 	 * @param string
 	 * @param string
 	 * @param string
-	 * return array
+	 * @return array
 	 */
 	public function create($title, $description, $info, $userEmail = self::DEFAULT_VALUE) {
 		//argument test
@@ -169,7 +169,7 @@ class Eden_Google_Contacts_Batch extends Eden_Google_Base {
 	 *
 	 * @param string
 	 * @param string
-	 * return array
+	 * @return array
 	 */
 	public function delete($groupId, $userEmail = self::DEFAULT_VALUE) {
 		//argument test
