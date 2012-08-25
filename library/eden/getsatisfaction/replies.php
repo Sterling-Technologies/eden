@@ -89,7 +89,7 @@ class Eden_Getsatisfaction_Replies extends Eden_Getsatisfaction_Base {
 	 *
 	 * @return array
 	 */
-	public function getResults() {
+	public function getResponse() {
 		return $this->_getResponse($this->_url, $this->_query);
 	}
 	

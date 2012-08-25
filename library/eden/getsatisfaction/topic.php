@@ -205,7 +205,7 @@ class Eden_GetSatisfaction_Topic extends Eden_GetSatisfaction_Base {
 	 *
 	 * @return array
 	 */
-	public function getResults() {
+	public function getResponse() {
 		if(isset($this->_query['status']) && is_array($this->_query['status'])) {
 			$this->_query['status'] = implode(',', $this->_query['status']);
 		}

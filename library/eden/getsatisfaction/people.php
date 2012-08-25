@@ -58,7 +58,7 @@ class Eden_GetSatisfaction_People extends Eden_GetSatisfaction_Base {
 	 *
 	 * @return array
 	 */
-	public function getResults() {
+	public function getResponse() {
 		return $this->_getResponse($this->_url, $this->_query);
 	}
 	
