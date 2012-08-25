@@ -17,6 +17,8 @@
 class Eden_Google_Calendar extends Eden_Google_Base {
 	/* Constants
 	-------------------------------*/
+	const URL_CALENDAR_COLOR = 'https://www.googleapis.com/calendar/v3/colors';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -43,7 +45,6 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 * @return Eden_Google_Calendar_acl
 	 */
 	public function acl() {
-			
 		return Eden_Google_Calendar_Acl::i($this->_token);
 	}
 	
@@ -53,18 +54,17 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 * @return Eden_Google_Calendar_Calendars
 	 */
 	public function calendars() {
-			
 		return Eden_Google_Calendar_Calendars::i($this->_token);
 	}
 	
 	/**
-	 * Returns Google color
+	 * Returns the color definitions for 
+	 * calendars and events. 
 	 *
-	 * @return Eden_Google_Calendar_color
+	 * @return array
 	 */
-	public function color() {
-			
-		return Eden_Google_Calendar_Color::i($this->_token);
+	public function getColors() {
+		return $this->_getResponse(self::URL_CALENDAR_COLOR);
 	}
 	
 	/**
@@ -73,7 +73,6 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 * @return Eden_Google_Calendar_Event
 	 */
 	public function event() {
-			
 		return Eden_Google_Calendar_Event::i($this->_token);
 	}
 	
@@ -83,7 +82,6 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 * @return Eden_Google_Calendar_freebusy
 	 */
 	public function freebusy() {
-			
 		return Eden_Google_Calendar_Freebusy::i($this->_token);
 	}
 	
@@ -93,7 +91,6 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 * @return Eden_Google_Calendar_List
 	 */
 	public function lists() {
-			
 		return Eden_Google_Calendar_List::i($this->_token);
 	}
 	
@@ -103,7 +100,6 @@ class Eden_Google_Calendar extends Eden_Google_Base {
 	 * @return Eden_Google_Calendar_Settings
 	 */
 	public function settings() {
-			
 		return Eden_Google_Calendar_Settings::i($this->_token);
 	}
 	
