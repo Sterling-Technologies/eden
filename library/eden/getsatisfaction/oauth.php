@@ -37,6 +37,16 @@ class Eden_Getsatisfaction_Oauth extends Eden_Class {
 		return self::_getMultiple(__CLASS__);
 	}
 	
+	public function __construct($consumerKey, $consumerSecret) {
+		//argument test
+		Eden_Getsatisfaction_Error::i()
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string');	//Argument 2 must be a string
+			
+		$this->_key 	= $consumerKey;
+		$this->_secret 	= $consumerSecret;
+	}
+	
 	/* Public Methods
 	-------------------------------*/	
 	/**
@@ -46,7 +56,7 @@ class Eden_Getsatisfaction_Oauth extends Eden_Class {
 	 * @param string
 	 * @return string
 	 */
-	public function getAccessToken($token, $secret) {
+	public function getAccess($token, $secret) {
 		//argument test
 		Eden_Getsatisfaction_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
