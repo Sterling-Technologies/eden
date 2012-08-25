@@ -86,56 +86,6 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Specifies a standard roadmap image, as is normally 
-	 * shown on the Google Maps website. If no maptype 
-	 * value is specified, the Static Maps API serves 
-	 * roadmap tiles by default.
-	 *
-	 * @return this
-	 */
-	public function setToRoadMap() {
-		$this->_maptype  = 'roadmap';
-		
-		return $this;
-	}
-	
-	/**
-	 * Specifies a satellite image
-	 *
-	 * @return this
-	 */
-	public function setToSatelliteMap() {
-		$this->_maptype  = 'satellite';
-		
-		return $this;
-	}
-	
-	/**
-	 * Specifies a physical relief map image, 
-	 * showing terrain and vegetation.
-	 *
-	 * @return this
-	 */
-	public function setToTerrainMap() {
-		$this->_maptype  = 'terrain';
-		
-		return $this;
-	}
-	
-	/**
-	 * Specifies a hybrid of the satellite and 
-	 * roadmap image, showing a transparent layer 
-	 * of major streets and place names on the satellite image.
-	 *
-	 * @return this
-	 */
-	public function setToHybridMap() {
-		$this->_maptype  = 'hybrid';
-		
-		return $this;
-	}
-	
-	/**
 	 * Defines the language to use for display of labels on map tiles
 	 *
 	 * @param string
@@ -277,6 +227,56 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 		Eden_Google_Error::i()->argument(1, 'int');	
 		
 		$this->_pitch  = $pitch;
+		
+		return $this;
+	}
+	
+	/**
+	 * Specifies a standard roadmap image, as is normally 
+	 * shown on the Google Maps website. If no maptype 
+	 * value is specified, the Static Maps API serves 
+	 * roadmap tiles by default.
+	 *
+	 * @return this
+	 */
+	public function useRoadMap() {
+		$this->_maptype  = 'roadmap';
+		
+		return $this;
+	}
+	
+	/**
+	 * Specifies a satellite image
+	 *
+	 * @return this
+	 */
+	public function useSatelliteMap() {
+		$this->_maptype  = 'satellite';
+		
+		return $this;
+	}
+	
+	/**
+	 * Specifies a physical relief map image, 
+	 * showing terrain and vegetation.
+	 *
+	 * @return this
+	 */
+	public function useTerrainMap() {
+		$this->_maptype  = 'terrain';
+		
+		return $this;
+	}
+	
+	/**
+	 * Specifies a hybrid of the satellite and 
+	 * roadmap image, showing a transparent layer 
+	 * of major streets and place names on the satellite image.
+	 *
+	 * @return this
+	 */
+	public function useHybridMap() {
+		$this->_maptype  = 'hybrid';
 		
 		return $this;
 	}

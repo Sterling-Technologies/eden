@@ -77,7 +77,7 @@ class Eden_Google_Maps_Elevation extends Eden_Google_Base {
 	 * @param string latitude,longitude pair in string(e.g. "40.714728,-73.998672") 
 	 * @return array
 	 */
-	public function getElevation($location, $sensor = 'false') {
+	public function getResponse($location, $sensor = 'false') {
 		//argument test
 		Eden_Google_Error::i()
 			->argument(1, 'string')		//argument 1 must be a string

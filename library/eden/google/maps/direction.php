@@ -44,40 +44,46 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/	
+	-------------------------------*/
 	/**
-	 * Specifies the mode of transport to use when 
-	 * calculating directions is driving.
+	 * Set Distance to avoid highways
 	 *
 	 * @return this
 	 */
-	public function setModeToDriving() {
-		$this->_mode  = 'driving';
-		
+	public function avoidHighways() {
+		$this->_avoid  = 'highways';
 		return $this;
 	}
 	
 	/**
-	 * Specifies the mode of transport to use when 
-	 * calculating directions is walking.
+	 * Set Distance to avoid tolls
 	 *
 	 * @return this
 	 */
-	public function setModeToWalking() {
-		$this->_mode  = 'walking';
-		
+	public function avoidTolls() {
+		$this->_avoid  = 'tolls';
 		return $this;
 	}
-	
+		
 	/**
 	 * Specifies the mode of transport to use when 
 	 * calculating directions is bicycling.
 	 *
 	 * @return this
 	 */
-	public function setModeToBicycling() {
+	public function bicycling() {
 		$this->_mode  = 'bicycling';
-		
+		return $this;
+	}
+	
+	/**
+	 * Specifies the mode of transport to use when 
+	 * calculating directions is driving.
+	 *
+	 * @return this
+	 */
+	public function driving() {
+		$this->_mode  = 'driving';
 		return $this;
 	}
 	
@@ -88,9 +94,19 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	 *
 	 * @return this
 	 */
-	public function setModeToTransit() {
+	public function transit() {
 		$this->_mode  = 'transit';
-		
+		return $this;
+	}
+	
+	/**
+	 * Specifies the mode of transport to use when 
+	 * calculating directions is walking.
+	 *
+	 * @return this
+	 */
+	public function walking() {
+		$this->_mode  = 'walking';
 		return $this;
 	}
 	
@@ -140,35 +156,12 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	}
 	
 	/**
-	 * Set Distance to avoid tolls
-	 *
-	 * @return this
-	 */
-	public function setAvoidToTolls() {
-		$this->_avoid  = 'tolls';
-		
-		return $this;
-	}
-	
-	/**
-	 * Set Distance to avoid highways
-	 *
-	 * @return this
-	 */
-	public function setAvoidToHighways() {
-		$this->_avoid  = 'highways';
-		
-		return $this;
-	}
-	
-	/**
 	 * Returns distances in miles and feet.
 	 *
 	 * @return this
 	 */
 	public function setUnitToImperial() {
 		$this->_units  = 'imperial';
-		
 		return $this;
 	}
 	
@@ -179,8 +172,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setAlternatives() {
-		$this->_Alternatives  = 'true';
-		
+		$this->_alternatives  = 'true';
 		return $this;
 	}
 	
@@ -194,6 +186,10 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	public function setDepartureTime($departureTime) {
 		//argument 1 must be a string or integer
 		Eden_Google_Error::i()->argument(1, 'string', 'int');
+		
+		if(is_string($departureTime)) {
+			$departureTime = strtotime($departureTime);
+		}
 		
 		$this->_departureTime = $departureTime;
 		
@@ -211,6 +207,10 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 		//argument 1 must be a string or integer
 		Eden_Google_Error::i()->argument(1, 'string', 'int');
 		
+		if(is_string($arrivalTime)) {
+			$arrivalTime = strtotime($arrivalTime);
+		}
+		
 		$this->_arrivalTime = $arrivalTime;
 		
 		return $this;
@@ -224,7 +224,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	 * @param booelean  Indicates whether or not the directions request comes from a device with a location sensor
 	 * @return array
 	 */
-	public function getDirection($origin, $destination, $sensor = 'false') {
+	public function getResponse($origin, $destination, $sensor = 'false') {
 		//argument test
 		Eden_Google_Error::i()
 			->argument(1, 'string', 'int', 'float')		//argument 1 must be a string, integer or float

@@ -40,26 +40,22 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Specifies the mode of transport to use when 
-	 * calculating directions is driving.
+	 * Set Distance to avoid highways
 	 *
 	 * @return this
 	 */
-	public function setModeToDriving() {
-		$this->_mode  = 'driving';
-		
+	public function avoidHighways() {
+		$this->_avoid  = 'highways';
 		return $this;
 	}
 	
 	/**
-	 * Specifies the mode of transport to use when 
-	 * calculating directions is walking.
+	 * Set Distance to avoid tolls
 	 *
 	 * @return this
 	 */
-	public function setModeToWalking() {
-		$this->_mode  = 'walking';
-		
+	public function avoidTolls() {
+		$this->_avoid  = 'tolls';
 		return $this;
 	}
 	
@@ -69,9 +65,30 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 	 *
 	 * @return this
 	 */
-	public function setModeToBicycling() {
+	public function bicycling() {
 		$this->_mode  = 'bicycling';
-		
+		return $this;
+	}
+	
+	/**
+	 * Specifies the mode of transport to use when 
+	 * calculating directions is driving.
+	 *
+	 * @return this
+	 */
+	public function driving() {
+		$this->_mode  = 'driving';
+		return $this;
+	}
+	
+	/**
+	 * Specifies the mode of transport to use when 
+	 * calculating directions is walking.
+	 *
+	 * @return this
+	 */
+	public function walking() {
+		$this->_mode  = 'walking';
 		return $this;
 	}
 	
@@ -86,28 +103,6 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 		Eden_Google_Error::i()->argument(1, 'string', 'int');	
 		
 		$this->_language = $language;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set Distance to avoid tolls
-	 *
-	 * @return this
-	 */
-	public function setAvoidToTolls() {
-		$this->_avoid  = 'tolls';
-		
-		return $this;
-	}
-	
-	/**
-	 * Set Distance to avoid highways
-	 *
-	 * @return this
-	 */
-	public function setAvoidToHighways() {
-		$this->_avoid  = 'highways';
 		
 		return $this;
 	}
@@ -131,7 +126,7 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 	 * @param string
 	 * @return array
 	 */
-	public function getDistance($origin, $destination, $sensor = 'false') {
+	public function getResponse($origin, $destination, $sensor = 'false') {
 		//argument test
 		Eden_Google_Error::i()
 			->argument(1, 'string', 'int', 'float')		//argument 1 must be a string, integer or float

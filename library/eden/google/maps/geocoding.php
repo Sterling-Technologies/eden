@@ -109,7 +109,7 @@ class Eden_Google_Maps_Geocoding extends Eden_Google_Base {
 	 * @param string
 	 * @return array
 	 */
-	public function getGeocode($address, $sensor = 'false') {
+	public function getResponse($address, $sensor = 'false') {
 		//argument test
 		Eden_Google_Error::i()
 			->argument(1, 'string')		//argument 1 must be a string
