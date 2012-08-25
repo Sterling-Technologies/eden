@@ -200,6 +200,19 @@ class Eden_Google extends Eden_Class {
 	}
 	
 	/**
+	 * Returns google shortener methods
+	 *
+	 * @param *string API key
+	 * @return Eden_Google_Plus
+	 */
+	public function shortener($key) {
+		//Argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		
+		return Eden_Google_Shortener::i($key);
+	}
+	
+	/**
 	 * Returns google youtube methods
 	 *
 	 * @param *string 
