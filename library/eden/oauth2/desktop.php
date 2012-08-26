@@ -29,7 +29,7 @@ class Eden_Oauth2_Desktop extends Eden_Oauth2_Abstract {
 	/* Magic
 	-------------------------------*/
 	public static function i() {
-		return self::_getSingleton(__CLASS__);
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	/* Public Methods

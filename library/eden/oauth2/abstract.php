@@ -55,10 +55,6 @@ abstract class Eden_Oauth2_Abstract extends Eden_Class {
 	-------------------------------*/
 	/* Magic
 	-------------------------------*/
-	public static function i() {
-		return self::_getSingleton(__CLASS__);
-	}
-	
 	public function __construct($client, $secret, $redirect, $requestUrl, $accessUrl) {
 		//argument test
 		Eden_Oauth2_Error::i()

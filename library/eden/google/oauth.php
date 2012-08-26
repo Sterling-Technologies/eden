@@ -90,7 +90,7 @@ class Eden_Google_Oauth extends Eden_Oauth2_Client {
 	/* Magic
 	-------------------------------*/
 	public static function i() {
-		return self::_getSingleton(__CLASS__);
+		return self::_getMultiple(__CLASS__);
 	}
 	
 	public function __construct($clientId, $clientSecret, $redirect,  $apiKey = NULL) {
