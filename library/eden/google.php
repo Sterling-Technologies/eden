@@ -12,7 +12,6 @@ require_once dirname(__FILE__).'/google/error.php';
 require_once dirname(__FILE__).'/google/base.php';
 require_once dirname(__FILE__).'/google/calendar/acl.php';
 require_once dirname(__FILE__).'/google/calendar/calendars.php';
-require_once dirname(__FILE__).'/google/calendar/color.php';
 require_once dirname(__FILE__).'/google/calendar/event.php';
 require_once dirname(__FILE__).'/google/calendar/freebusy.php';
 require_once dirname(__FILE__).'/google/calendar/list.php';
@@ -93,19 +92,19 @@ class Eden_Google extends Eden_Class {
 	 *
 	 * @param *string
 	 * @param *string
-	 * @param *string
+	 * @param *url
 	 * @param *string 
 	 * @return Eden_Google_Oauth
 	 */
-	public function auth($clientId, $clientSecret, $apiKey, $redirect) {
+	public function auth($clientId, $clientSecret, $redirect, $apiKey = NULL ) {
 		//argument test
 		Eden_Google_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
-			->argument(3, 'string')				//Argument 3 must be a string
-			->argument(4, 'string');			//Argument 4 must be a string
+			->argument(3, 'url')				//Argument 3 must be a url
+			->argument(4, 'string', 'null');	//Argument 4 must be a string
 		
-		return Eden_Google_Oauth::i($clientId, $clientSecret, $apiKey, $redirect);
+		return Eden_Google_Oauth::i($clientId, $clientSecret, $redirect, $apiKey);
 	}
 	
 	/**
