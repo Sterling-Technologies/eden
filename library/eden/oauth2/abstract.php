@@ -216,7 +216,7 @@ abstract class Eden_Oauth2_Abstract extends Eden_Class {
 		//check if results is in JSON format
 		if($this->isJson($result)) {
 			//if it is in json, lets json decode it
-			$response =  json_decode($result);	
+			$response =  json_decode($result, true);	
 		//else its not in json format
 		} else {
 			//parse it to make it an array
