@@ -80,6 +80,27 @@ class Eden_Google_Oauth extends Eden_Oauth2_Client {
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Returns website login url
+	 *
+	 * @param string|null
+	 * @param string|null
+	 * @return url
+	 */
+	public function getLoginUrl($scope = NULL, $display = NULL) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string', 'array', 'null')	//argument 1 must be a string, array or null
+			->argument(2, 'string', 'array', 'null');	//argument 2 must be a string, array or null
+		
+		//if scope is a key in the scopes array
+		if(is_string($scope) && isset($this->_scopes[$scope])) {
+			$scope = $this->_scopes[$scope];
+		}
+		
+		return parent::getLoginUrl($scope, $display);
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods
