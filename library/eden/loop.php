@@ -65,7 +65,7 @@ class Eden_Loop extends Eden_Class {
 	 * @param callable
 	 * @return this
 	 */
-	public function each($scope, $callback) {
+	public function iterate($scope, $callback) {
 		Eden_Error::i()
 			->argument(1, 'object')
 			->argument(2, 'callable');

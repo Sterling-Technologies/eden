@@ -12,6 +12,7 @@ require_once dirname(__FILE__).'/route.php';
 
 require_once dirname(__FILE__).'/debug.php';
 require_once dirname(__FILE__).'/when.php';
+require_once dirname(__FILE__).'/loop.php';
 
 /**
  * The base class for all classes wishing to integrate with Eden.
@@ -185,9 +186,20 @@ class Eden_Class {
 		}
 		
 		//soft output error
-		Eden_Debug::i()->output(sprintf(Eden_Error::DEBUG_NOT_PROPERTY, $variable, $clas));
+		Eden_Debug::i()->output(sprintf(Eden_Error::DEBUG_NOT_PROPERTY, $variable, $class));
 			
 		return $this;
+	}
+	
+	/** 
+	 * Loops through returned result sets
+	 *
+	 * @param *callable
+	 * @return this
+	 */
+	public function each($callback) {
+		Eden_Error::i()->argument(1, 'callable');
+		return Eden_Loop::i()->iterate($this, $callback);
 	}
 	
 	/**
