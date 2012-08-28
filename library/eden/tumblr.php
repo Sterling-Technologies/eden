@@ -45,7 +45,7 @@ class Eden_Tumblr extends Eden_Class {
 	 */
 	public function auth($key, $secret) {
 		//Argument test
-		Eden_Twitter_Error::i()
+		Eden_Tumblr_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string
 		
