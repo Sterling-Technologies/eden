@@ -7,10 +7,11 @@
  * distributed with this package.
  */
 
-require_once dirname(__FILE__).'/curl.php';
+require_once dirname(__FILE__).'/oauth2.php';
 require_once dirname(__FILE__).'/facebook/error.php';
 require_once dirname(__FILE__).'/facebook/auth.php';
 require_once dirname(__FILE__).'/facebook/graph.php';
+require_once dirname(__FILE__).'/facebook/subscribe.php'; 
 require_once dirname(__FILE__).'/facebook/post.php';
 require_once dirname(__FILE__).'/facebook/event.php';
 require_once dirname(__FILE__).'/facebook/link.php';
@@ -54,14 +55,16 @@ class Eden_Facebook extends Eden_Class {
 	 *
 	 * @param string
 	 * @param string
+	 * @param string
 	 * @return Eden_Facebook_Auth
 	 */
-	public function auth($key, $secret) {
+	public function auth($key, $secret, $redirect) {
 		Eden_Facebook_Error::i()
 			->argument(1, 'string')
-			->argument(2, 'string');
+			->argument(2, 'string')
+			->argument(3, 'string');
 			
-		return Eden_Facebook_Auth::i($key, $secret);
+		return Eden_Facebook_Auth::i($key, $secret, $redirect);
 	}
 	
 	/**
@@ -139,6 +142,16 @@ class Eden_Facebook extends Eden_Class {
 			->getSimpleXmlResponse();
 	}
 	
+	/**
+	 * Returns Facebook subscribe
+	 *
+	 * @param string
+	 * @param string
+	 * @return Eden_Facebook_Post
+	 */
+	public function subscribe($clientId, $secret) {
+		return Eden_Facebook_Subscribe::i($clientId, $secret);
+	}
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods
