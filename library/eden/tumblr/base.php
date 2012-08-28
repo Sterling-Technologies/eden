@@ -17,6 +17,8 @@
 class Eden_Tumblr_Base extends Eden_Oauth_Base {
 	/* Constants
 	-------------------------------*/
+	const API_KEY = 'api_key';
+	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
@@ -44,8 +46,8 @@ class Eden_Tumblr_Base extends Eden_Oauth_Base {
 		$this->_consumerSecret 	= $consumerSecret; 
 		$this->_accessToken 	= $accessToken; 
 		$this->_accessSecret 	= $accessSecret;
+		
 	}
-	
 	/* Public Methods
 	-------------------------------*/
 	/**
@@ -65,35 +67,119 @@ class Eden_Tumblr_Base extends Eden_Oauth_Base {
 	
 	/* Protected Methods
 	-------------------------------*/
+	protected function _accessKey($array) {
+		foreach($array as $key => $val) {
+			if(is_array($val)) {
+				$array[$key] = $this->_accessKey($val);
+			}
+			//if value is null
+			if(is_null($val) || empty($val)) {
+				//remove it to query
+				unset($array[$key]);
+			} else if($val === false) {
+				$array[$key] = 0;
+			} else if($val === true) {			
+				$array[$key] = 1;
+			}
+			
+		}
+		
+		return $array;
+	}
+	
+	protected function _reset() {
+		//foreach this as key => value
+		foreach ($this as $key => $value) {
+			//if the value of key is not array
+			if(!is_array($this->$key)) {
+				//if key name starts at underscore, probably it is protected variable
+				if(preg_match('/^_/', $key)) {
+					//if the protected variable is not equal to token
+					//we dont want to unset the access token
+					if($key != '_token') {
+						//reset all protected variables that currently use
+						$this->$key = NULL;
+					}
+				}
+			} 
+        } 
+		
+		return $this;
+	}
+	
 	protected function _getResponse($url, array $query = array()) {
-		$rest = Eden_Oauth::i()
-			->getConsumer($url, $this->_consumerKey, $this->_consumerSecret)
-			//->setHeaders(self::VERSION_HEADER, self::GDATA_VERSION)
+		//if needed, add developer id to the query
+		if(!is_null($this->_consumerKey)) {
+			$query[self::API_KEY] = $this->_consumerKey;
+		}
+		
+		//prevent sending fields with no value
+		$query = $this->_accessKey($query);
+		//build url query
+		$url = $url.'?'.http_build_query($query);
+		//set curl
+		$curl =  Eden_Curl::i()
+			->setUrl($url)
+			->verifyHost(false)
+			->verifyPeer(false)
+			->setTimeout(60);
+		//get response from curl
+		$response = $curl->getJsonResponse();
+		//get curl infomation
+		$this->_meta['url']			= $url;
+		$this->_meta['query']		= $query;
+		$this->_meta['curl']		= $curl->getMeta();
+		$this->_meta['response']	= $response;
+		
+		//reset variables
+		$this->_reset();
+		
+		return $response;
+	} 
+	
+	protected function _getAuthResponse($url, array $query = array()) {
+		//prevent sending fields with no value
+		$query = $this->_accessKey($query); 
+		//make oauth signature
+		$rest =  Eden_Oauth::i()
+			->consumer($url, $this->_consumerKey, $this->_consumerSecret)
+			->useAuthorization()
 			->setToken($this->_accessToken, $this->_accessSecret)
 			->setSignatureToHmacSha1();
-		
-		$response = $rest->getJsonResponse($query);
+		//get response from curl
+		$response = $rest->getResponse($query);
 			
-		$this->_meta = $rest->getMeta();
+		//get curl infomation
+		$this->_meta['url']			= $url;
+		$this->_meta['query']		= $query;
+		$this->_meta['response']	= $response;
+		
+		//reset variables
+		$this->_reset();
 		
 		return $response;
 	}
 	
-	protected function _post($url, $query = array()) {
+	protected function _post($url, array $query = array()) {
+		//prevent sending fields with no value
+		$query = $this->_accessKey($query);
+		//set headers
 		$headers = array();
 		$headers[] = Eden_Oauth_Consumer::POST_HEADER;
-		
+		//make oauth signature
 		$rest = Eden_Oauth::i()
-			->getConsumer($url, $this->_consumerKey, $this->_consumerSecret)
+			->consumer($url, $this->_consumerKey, $this->_consumerSecret)
+			->setMethodToPost()
 			->setToken($this->_accessToken, $this->_accessSecret)
 			->setSignatureToHmacSha1();
 		
 		//get the authorization parameters as an array
-		$signature 		= $rest->getSignature();
+		$signature 		= $rest->getSignature($query);
 		$authorization 	= $rest->getAuthorization($signature, false);
 		$authorization 	= $this->_buildQuery($authorization);
-		
+		//if query is in array
 		if(is_array($query)) {
+			//build a http query
 			$query 	= $this->_buildQuery($query);
 		}
 		
@@ -121,14 +207,17 @@ class Eden_Tumblr_Base extends Eden_Oauth_Base {
 			->setHeaders($headers);
 		
 		//get the response
-		$response = $curl->getResponse();
+		$response = $curl->getJsonResponse();
 		
 		$this->_meta 					= $curl->getMeta();
 		$this->_meta['url'] 			= $url;
 		$this->_meta['authorization'] 	= $authorization;
 		$this->_meta['headers'] 		= $headers;
 		$this->_meta['query'] 			= $query;
-
+		
+		//reset variables
+		$this->_reset();
+		
 		return $response;
 	}
 	
