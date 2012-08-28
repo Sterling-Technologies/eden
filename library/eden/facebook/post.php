@@ -66,7 +66,9 @@ class Eden_Facebook_Post extends Eden_Class {
 			->setPost(true)										//set post to true
 			->setPostFields(http_build_query($this->_post))		//set post fields
 			->getJsonResponse();								//get the json response
-			
+        	if (array_key_exists('error', $response)) {
+            		throw new Eden_Facebook_Error($response['message']);
+        	}			
 		return $response['id'];									//return the id
 	}
 	
