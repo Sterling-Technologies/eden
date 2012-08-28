@@ -6,6 +6,13 @@
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
+ 
+require_once dirname(__FILE__).'/oauth.php';
+require_once dirname(__FILE__).'/tumblr/error.php';
+require_once dirname(__FILE__).'/tumblr/base.php';
+require_once dirname(__FILE__).'/tumblr/oauth.php';
+require_once dirname(__FILE__).'/tumblr/blog.php';
+require_once dirname(__FILE__).'/tumblr/user.php';
 
 /**
  * Tumblr API factory. This is a factory class with 
@@ -45,7 +52,7 @@ class Eden_Tumblr extends Eden_Class {
 	 */
 	public function auth($key, $secret) {
 		//Argument test
-		Eden_Twitter_Error::i()
+		Eden_Tumblr_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string
 		

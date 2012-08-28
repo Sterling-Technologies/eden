@@ -6,10 +6,11 @@
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
-require_once dirname(__FILE__).'/curl.php';
+require_once dirname(__FILE__).'/oauth2.php';
 require_once dirname(__FILE__).'/template.php';
 require_once dirname(__FILE__).'/google/error.php';
 require_once dirname(__FILE__).'/google/base.php';
+require_once dirname(__FILE__).'/google/oauth.php';
 require_once dirname(__FILE__).'/google/calendar/acl.php';
 require_once dirname(__FILE__).'/google/calendar/calendars.php';
 require_once dirname(__FILE__).'/google/calendar/event.php';
@@ -17,6 +18,7 @@ require_once dirname(__FILE__).'/google/calendar/freebusy.php';
 require_once dirname(__FILE__).'/google/calendar/list.php';
 require_once dirname(__FILE__).'/google/calendar/settings.php';
 require_once dirname(__FILE__).'/google/calendar.php';
+require_once dirname(__FILE__).'/google/checkout/form.php';
 require_once dirname(__FILE__).'/google/drive/changes.php';
 require_once dirname(__FILE__).'/google/drive/children.php';
 require_once dirname(__FILE__).'/google/drive/files.php';
@@ -43,6 +45,7 @@ require_once dirname(__FILE__).'/google/maps/elevation.php';
 require_once dirname(__FILE__).'/google/maps/geocoding.php';
 require_once dirname(__FILE__).'/google/maps/image.php';
 require_once dirname(__FILE__).'/google/maps.php';
+require_once dirname(__FILE__).'/google/shortener.php';
 require_once dirname(__FILE__).'/google/youtube/activity.php';
 require_once dirname(__FILE__).'/google/youtube/channel.php';
 require_once dirname(__FILE__).'/google/youtube/comment.php';

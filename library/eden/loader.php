@@ -41,7 +41,7 @@ class Eden_Loader extends Eden_Class {
 		return self::_getSingleton(__CLASS__);
 	}
 	
-	public function __construct($eden = false) {
+	public function __construct($eden = true) {
 		if($eden) {
 			$this->addRoot(realpath(dirname(__FILE__).'/..'));
 		}

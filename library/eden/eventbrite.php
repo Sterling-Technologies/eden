@@ -7,9 +7,10 @@
  * distributed with this package.
  */
 
-require_once dirname(__FILE__).'/curl.php';
+require_once dirname(__FILE__).'/oauth2.php';
 require_once dirname(__FILE__).'/eventbrite/error.php';
 require_once dirname(__FILE__).'/eventbrite/base.php';
+require_once dirname(__FILE__).'/eventbrite/oauth.php';
 require_once dirname(__FILE__).'/eventbrite/discount.php';
 require_once dirname(__FILE__).'/eventbrite/event.php';
 require_once dirname(__FILE__).'/eventbrite/organizer.php';

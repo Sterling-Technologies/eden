@@ -7,7 +7,7 @@
  * distributed with this package.
  */
  
-require_once dirname(__FILE__).'/class.php';
+require_once dirname(__FILE__).'/type.php';
 
 /**
  * General available methods for common pathing issues 
@@ -34,7 +34,7 @@ class Eden_Path extends Eden_Type_String implements ArrayAccess {
 	public function __construct($path) {
 		//argument 1 must be a string
 		Eden_Path_Error::i()->argument(1, 'string');
-		$this->_data = $this->_format($path);
+		parent::__construct($this->_format($path));
 	}
 	
 	public function __toString() {

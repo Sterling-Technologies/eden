@@ -69,6 +69,30 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 			return $this;
 		}
 		
+		$found = false;
+		
+		//for an array of models the method might exist
+		//we should loop and check for a valid method
+		
+		foreach($this->_list as $i => $row) {
+			//if no method exists
+			if(!method_exists($row, $name)) {
+				continue;
+			}
+			
+			$found = true;
+			
+			//just call the method
+			//let the model worry about the rest
+			$row->callThis($name, $args);
+		}
+		
+		//if found, it means something happened
+		if($found) {
+			//so it was successful
+			return $this;
+		}
+		
 		//nothing more, just see what the parent has to say
 		try {
 			return parent::__call($name, $args);
@@ -120,28 +144,6 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 	}
 	
 	/**
-	 * Adds a row to the collection
-	 *
-	 * @param string
-	 * @param string
-	 * @return this
-	 */
-	public function copy($source, $destination) {
-		//Argument Test
-		Eden_Collection_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string');	//Argument 2 must be a string
-		
-		//for each row	
-		foreach($this->_list as $row) {
-			//let the model handle the copying
-			$row->copy($source, $destination);
-		}
-		
-		return $this;
-	}
-	
-	/**
 	 * returns size using the Countable interface
 	 *
 	 * @return string
@@ -172,6 +174,22 @@ class Eden_Collection extends Eden_Class implements ArrayAccess, Iterator, Seria
 		
 		//reindex the list
 		$this->_list = array_values($this->_list);
+		
+		return $this;
+	}
+	
+	/** 
+	 * Loops through returned result sets
+	 *
+	 * @param *callable
+	 * @return this
+	 */
+	public function each($callback) {
+		Eden_Error::i()->argument(1, 'callable');
+		
+		foreach($this->_list as $key => $value) {
+			call_user_func($callback, $key, $value);
+		}
 		
 		return $this;
 	}

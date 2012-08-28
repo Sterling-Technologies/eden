@@ -34,7 +34,7 @@ class Eden_Foursquare_Oauth extends Eden_Oauth2_Client {
 	
 	public function __construct($clientId, $clientSecret, $redirect) {
 		//argument test
-		Eden_Google_Error::i()
+		Eden_Foursquare_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string');			//Argument 4 must be a string

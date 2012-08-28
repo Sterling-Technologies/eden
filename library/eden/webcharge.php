@@ -7,6 +7,8 @@
  * distributed with this package.
  */
 
+require_once dirname(__FILE__).'/curl.php';
+
 /**
  * Intuit Innovative Gateway Solution WebCharge application
  * model for payment processing.

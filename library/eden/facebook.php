@@ -7,7 +7,7 @@
  * distributed with this package.
  */
 
-require_once dirname(__FILE__).'/curl.php';
+require_once dirname(__FILE__).'/oauth2.php';
 require_once dirname(__FILE__).'/facebook/error.php';
 require_once dirname(__FILE__).'/facebook/auth.php';
 require_once dirname(__FILE__).'/facebook/graph.php';

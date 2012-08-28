@@ -65,7 +65,7 @@ class Eden_Twitter_Oauth extends Eden_Class {
 			->argument(3, 'string');	//Argument 3 must be a string
 		
 		return Eden_Oauth::i()
-			->getConsumer(
+			->consumer(
 				self::ACCESS_URL, 
 				$this->_key, 
 				$this->_secret)
@@ -106,7 +106,7 @@ class Eden_Twitter_Oauth extends Eden_Class {
 	 */
 	public function getRequestToken() {
 		return Eden_Oauth::i()
-			->getConsumer(
+			->consumer(
 				self::REQUEST_URL, 
 				$this->_key, 
 				$this->_secret)

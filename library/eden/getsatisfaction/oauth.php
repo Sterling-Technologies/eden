@@ -63,7 +63,7 @@ class Eden_Getsatisfaction_Oauth extends Eden_Class {
 			->argument(2, 'string');	//Argument 2 must be a string
 			
 		return Eden_Oauth::i()
-			->getConsumer(self::ACCESS_URL, $this->_key, $this->_secret)
+			->consumer(self::ACCESS_URL, $this->_key, $this->_secret)
 			->useAuthorization()
 			->setMethodToPost()
 			->setToken($token, $secret)
@@ -83,7 +83,7 @@ class Eden_Getsatisfaction_Oauth extends Eden_Class {
 		
 		//get the token
 		$token = Eden_Oauth::i()
-			->getConsumer(self::REQUEST_URL, $this->_key, $this->_secret)
+			->consumer(self::REQUEST_URL, $this->_key, $this->_secret)
 			->useAuthorization()
 			->setMethodToPost()
 			->setSignatureToHmacSha1()

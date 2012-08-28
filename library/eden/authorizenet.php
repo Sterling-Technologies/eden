@@ -7,6 +7,15 @@
  * distributed with this package.
  */
 
+require_once dirname(__FILE__).'/curl.php';
+require_once dirname(__FILE__).'/authorizenet/error.php';
+require_once dirname(__FILE__).'/authorizenet/base.php';
+require_once dirname(__FILE__).'/authorizenet/customer.php';
+require_once dirname(__FILE__).'/authorizenet/direct.php';
+require_once dirname(__FILE__).'/authorizenet/payment.php';
+require_once dirname(__FILE__).'/authorizenet/recurring.php';
+require_once dirname(__FILE__).'/authorizenet/server.php';
+
 /**
  * Authorize.net API factory. This is a factory class with 
  * methods that will load up different Authorize.net classes.

@@ -7,6 +7,14 @@
  * distributed with this package.
  */
 
+require_once dirname(__FILE__).'/class.php';
+require_once dirname(__FILE__).'/xend/base.php';
+require_once dirname(__FILE__).'/xend/error.php';
+require_once dirname(__FILE__).'/xend/booking.php';
+require_once dirname(__FILE__).'/xend/rate.php';
+require_once dirname(__FILE__).'/xend/shipment.php';
+require_once dirname(__FILE__).'/xend/tracking.php';
+
 /**
  * Xend API factory. This is a factory class with 
  * methods that will load up different Xend classes.

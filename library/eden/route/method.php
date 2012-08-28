@@ -93,12 +93,8 @@ class Eden_Route_Method extends Eden_Class {
 				->trigger();
 		}
 		
-		if(is_object($class)) {
-			$instance = $class;
-		}
-		
-		//if there is no route or no instance
-		if(!$isClassRoute || !$instance) {
+		//if there is a route or no instance
+		if($isClassRoute || !$instance) {
 			$instance = $classRoute->call($class);
 		}
 		

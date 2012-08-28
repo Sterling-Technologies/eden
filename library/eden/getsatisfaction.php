@@ -7,7 +7,7 @@
  * distributed with this package.
  */
 
-require_once dirname(__FILE__).'/curl.php';
+require_once dirname(__FILE__).'/oauth.php';
 require_once dirname(__FILE__).'/getsatisfaction/error.php';
 require_once dirname(__FILE__).'/getsatisfaction/base.php';
 require_once dirname(__FILE__).'/getsatisfaction/company.php';
@@ -15,6 +15,7 @@ require_once dirname(__FILE__).'/getsatisfaction/detail.php';
 require_once dirname(__FILE__).'/getsatisfaction/oauth.php';
 require_once dirname(__FILE__).'/getsatisfaction/people.php';
 require_once dirname(__FILE__).'/getsatisfaction/product.php';
+require_once dirname(__FILE__).'/getsatisfaction/reply.php';
 require_once dirname(__FILE__).'/getsatisfaction/replies.php';
 require_once dirname(__FILE__).'/getsatisfaction/tag.php';
 require_once dirname(__FILE__).'/getsatisfaction/topic.php';

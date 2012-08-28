@@ -67,88 +67,6 @@ class Eden_Sql_Collection extends Eden_Collection {
 	}
 	
 	/**
-	 * Useful method for formating a time column.
-	 * 
-	 * @param string
-	 * @param string
-	 * @return this
-	 */
-	public function formatTime($column, $format = Eden_Sql_Model::DATETIME) {
-		//for each row
-		foreach($this->_list as $row) {
-			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
-				continue;
-			}
-			
-			//let the row handle this
-			$row->formatTime($column, $format);
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Insert collection to database
-	 *
-	 * @param string
-	 * @param Eden_Sql
-	 * @return this
-	 */
-	public function insert($table = NULL, Eden_Sql_Database $database = NULL) {
-		//for each row
-		foreach($this->_list as $i => $row) {
-			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
-				continue;
-			}
-			
-			$row->insert($table, $database);
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Removes collection from database
-	 *
-	 * @param string
-	 * @param Eden_Sql
-	 * @return this
-	 */
-	public function remove($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
-		//for each row
-		foreach($this->_list as $i => $row) {
-			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
-				continue;
-			}
-			
-			//let the row handle this
-			$row->remove($table, $database, $primary);
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Inserts or updates collection to database
-	 *
-	 * @param string
-	 * @param Eden_Sql
-	 * @return this
-	 */
-	public function save($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
-		//for each row
-		foreach($this->_list as $i => $row) {
-			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
-				continue;
-			}
-			
-			$row->save($table, $database, $primary);
-		}
-		
-		return $this;
-	}
-	
-	/**
 	 * Sets the default database
 	 *
 	 * @param Eden_Sql
@@ -207,26 +125,6 @@ class Eden_Sql_Collection extends Eden_Collection {
 			
 			//let the row handle this
 			$row->setTable($table);
-		}
-		
-		return $this;
-	}
-	
-	/**
-	 * Updates collection to database
-	 *
-	 * @param string
-	 * @param Eden_Sql
-	 * @return this
-	 */
-	public function update($table = NULL, Eden_Sql_Database $database = NULL, $primary = NULL) {
-		//for each row
-		foreach($this->_list as $i => $row) {
-			if(!is_object($row) || !method_exists($row, __FUNCTION__)) {
-				continue;
-			}
-			
-			$row->update($table, $database, $primary);
 		}
 		
 		return $this;

@@ -44,7 +44,7 @@ class Eden_Oauth extends Eden_Class {
 	 * 
 	 * @return Eden_Oauth_Consumer
 	 */
-	public function getConsumer($url, $key, $secret) {
+	public function consumer($url, $key, $secret) {
 		return Eden_Oauth_Consumer::i($url, $key, $secret);
 	}
 	
@@ -74,7 +74,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(7, 'string', 'null')		//Argument 7 must be a string or null
 			->argument(8, 'string', 'null');	//Argument 8 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->setMethodToGet()							//set method to get
 			->setSignatureToHmacSha1()					//set method to HMAC-SHA1
 			->when($realm)								//when there is a realm
@@ -113,7 +113,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(7, 'string', 'null')		//Argument 7 must be a string or null
 			->argument(8, 'string', 'null');	//Argument 8 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->useAuthorization()						//use authorization header
 			->setMethodToGet()							//set method to get
 			->setSignatureToHmacSha1()					//set method to HMAC-SHA1
@@ -146,7 +146,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(3, 'string')				//Argument 3 must be a string
 			->argument(5, 'string', 'null');	//Argument 5 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->useAuthorization()		//use authorization header
 			->setMethodToGet()			//set method to get
 			->setSignatureToHmacSha1()	//set method to HMAC-SHA1
@@ -175,7 +175,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(3, 'string')				//Argument 3 must be a string
 			->argument(5, 'string', 'null');	//Argument 5 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->setMethodToGet()			//set method to get
 			->setSignatureToHmacSha1()	//set method to HMAC-SHA1
 			->when($realm)				//when there is a realm
@@ -210,7 +210,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(7, 'string', 'null')		//Argument 7 must be a string or null
 			->argument(8, 'string', 'null');	//Argument 8 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->setMethodToPost()							//set method to post
 			->setSignatureToHmacSha1()					//set method to HMAC-SHA1
 			->when($realm)								//when there is a realm
@@ -249,7 +249,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(7, 'string', 'null')		//Argument 7 must be a string or null
 			->argument(8, 'string', 'null');	//Argument 8 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->useAuthorization()						//use authorization header
 			->setMethodToPost()							//set method to post
 			->setSignatureToHmacSha1()					//set method to HMAC-SHA1
@@ -282,7 +282,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(3, 'string')				//Argument 3 must be a string
 			->argument(5, 'string', 'null');	//Argument 5 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->useAuthorization()		//use authorization header
 			->setMethodToPost()			//set method to post
 			->setSignatureToHmacSha1()	//set method to HMAC-SHA1
@@ -311,7 +311,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(3, 'string')				//Argument 3 must be a string
 			->argument(5, 'string', 'null');	//Argument 5 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->setMethodToPost()			//set method to post
 			->setSignatureToHmacSha1()	//set method to HMAC-SHA1
 			->when($realm)				//when there is a realm
@@ -346,7 +346,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(7, 'string', 'null')		//Argument 7 must be a string or null
 			->argument(8, 'string', 'null');	//Argument 8 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->setMethodToGet()							//set method to get
 			->setSignatureToPlainText()					//set method to PLAIN TEXT
 			->when($realm)								//when there is a realm
@@ -385,7 +385,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(7, 'string', 'null')		//Argument 7 must be a string or null
 			->argument(8, 'string', 'null');	//Argument 8 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->useAuthorization()						//use authorization header
 			->setMethodToGet()							//set method to get
 			->setSignatureToPlainText()					//set method to PLAIN TEXT
@@ -418,7 +418,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(3, 'string')				//Argument 3 must be a string
 			->argument(5, 'string', 'null');	//Argument 5 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->useAuthorization()		//use authorization header
 			->setMethodToGet()			//set method to get
 			->setSignatureToPlainText()	//set method to PLAIN TEXT
@@ -447,7 +447,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(3, 'string')				//Argument 3 must be a string
 			->argument(5, 'string', 'null');	//Argument 5 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->setMethodToGet()			//set method to get
 			->setSignatureToPlainText()	//set method to PLAIN TEXT
 			->when($realm)				//when there is a realm
@@ -482,7 +482,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(7, 'string', 'null')		//Argument 7 must be a string or null
 			->argument(8, 'string', 'null');	//Argument 8 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->setMethodToPost()							//set method to post
 			->setSignatureToPlainText()					//set method to PLAIN TEXT
 			->when($realm)								//when there is a realm
@@ -521,7 +521,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(7, 'string', 'null')		//Argument 7 must be a string or null
 			->argument(8, 'string', 'null');	//Argument 8 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->useAuthorization()						//use authorization header
 			->setMethodToPost()							//set method to post
 			->setSignatureToPlainText()					//set method to PLAIN TEXT
@@ -554,7 +554,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(3, 'string')				//Argument 3 must be a string
 			->argument(5, 'string', 'null');	//Argument 5 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->useAuthorization()		//use authorization header
 			->setMethodToPost()			//set method to post
 			->setSignatureToPlainText()	//set method to PLAIN TEXT
@@ -583,7 +583,7 @@ class Eden_Oauth extends Eden_Class {
 			->argument(3, 'string')				//Argument 3 must be a string
 			->argument(5, 'string', 'null');	//Argument 5 must be a string or null
 			
-		return $this->getConsumer($url, $key, $secret)
+		return $this->consumer($url, $key, $secret)
 			->setMethodToPost()			//set method to post
 			->setSignatureToPlainText()	//set method to PLAIN TEXT
 			->when($realm)				//when there is a realm
@@ -597,7 +597,7 @@ class Eden_Oauth extends Eden_Class {
 	 * 
 	 * @return Eden_Oauth_Server
 	 */
-	public function getServer() {
+	public function server() {
 		return Eden_Oauth_Server::i();
 	}
 	

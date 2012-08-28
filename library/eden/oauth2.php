@@ -9,7 +9,7 @@
 
 require_once dirname(__FILE__).'/curl.php';
 require_once dirname(__FILE__).'/oauth2/error.php';
-require_once dirname(__FILE__).'/oauth2/base.php';
+require_once dirname(__FILE__).'/oauth2/abstract.php';
 require_once dirname(__FILE__).'/oauth2/client.php';
 require_once dirname(__FILE__).'/oauth2/desktop.php';
 

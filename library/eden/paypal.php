@@ -7,6 +7,18 @@
  * distributed with this package.
  */
 
+require_once dirname(__FILE__).'/curl.php';
+require_once dirname(__FILE__).'/paypal/error.php';
+require_once dirname(__FILE__).'/paypal/base.php';
+require_once dirname(__FILE__).'/paypal/authorization.php';
+require_once dirname(__FILE__).'/paypal/base.php';
+require_once dirname(__FILE__).'/paypal/billing.php';
+require_once dirname(__FILE__).'/paypal/button.php';
+require_once dirname(__FILE__).'/paypal/checkout.php';
+require_once dirname(__FILE__).'/paypal/direct.php';
+require_once dirname(__FILE__).'/paypal/recurring.php';
+require_once dirname(__FILE__).'/paypal/transaction.php';
+
 /**
  * Paypal API factory. This is a factory class with 
  * methods that will load up different Paypal API methods.

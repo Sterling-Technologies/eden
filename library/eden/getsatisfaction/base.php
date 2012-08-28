@@ -67,7 +67,7 @@ class Eden_Getsatisfaction_Base extends Eden_Class {
 	-------------------------------*/
 	protected function _getResponse($url, array $query = array()) {
 		$rest = Eden_Oauth::i()
-			->getConsumer($url, $this->_consumerKey, $this->_consumerSecret)
+			->consumer($url, $this->_consumerKey, $this->_consumerSecret)
 			->setToken($this->_accessToken, $this->_accessSecret)
 			->setSignatureToHmacSha1();
 		
@@ -80,7 +80,7 @@ class Eden_Getsatisfaction_Base extends Eden_Class {
 	
 	protected function _post($url, $query = array(), $jsonEncode = false) {
 		$rest = Eden_Oauth::i()
-			->getConsumer($url, $this->_consumerKey, $this->_consumerSecret)
+			->consumer($url, $this->_consumerKey, $this->_consumerSecret)
 			->setToken($this->_accessToken, $this->_accessSecret)
 			->setMethodToPost()
 			->useAuthorization()

@@ -185,7 +185,23 @@ class Eden_Type_Array extends Eden_Type_Abstract implements ArrayAccess, Iterato
     public function current() {
         return current($this->_data);
     }
-
+	
+	/** 
+	 * Loops through returned result sets
+	 *
+	 * @param *callable
+	 * @return this
+	 */
+	public function each($callback) {
+		Eden_Error::i()->argument(1, 'callable');
+		
+		foreach($this->_data as $key => $value) {
+			call_user_func($callback, $key, $value);
+		}
+		
+		return $this;
+	}
+	
 	/**
 	 * Returns if the data is empty
 	 *

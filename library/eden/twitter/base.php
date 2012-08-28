@@ -41,7 +41,7 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 	-------------------------------*/
 	public function __construct($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
 		//argument test
-		Eden_Tumblr_Error::i()
+		Eden_Twitter_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string')		//Argument 2 must be a string
 			->argument(3, 'string')		//Argument 3 must be a string
@@ -61,7 +61,7 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 	 * @return array
 	 */
 	public function getMeta($key = NULL) {
-		Eden_Tumblr_Error::i()->argument(1, 'string', 'null');
+		Eden_Twitter_Error::i()->argument(1, 'string', 'null');
 		
 		if(isset($this->_meta[$key])) {
 			return $this->_meta[$key];
@@ -96,7 +96,7 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 		$query = $this->_accessKey($query);
 		
 		$rest = Eden_Oauth::i()
-			->getConsumer($url, $this->_consumerKey, $this->_consumerSecret)
+			->consumer($url, $this->_consumerKey, $this->_consumerSecret)
 			->setMethodToPost()
 			->setToken($this->_accessToken, $this->_accessSecret)
 			->setSignatureToHmacSha1();
@@ -113,7 +113,7 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 		$query = $this->_accessKey($query);
 		
 		$rest = Eden_Oauth::i()
-			->getConsumer($url, $this->_consumerKey, $this->_consumerSecret)
+			->consumer($url, $this->_consumerKey, $this->_consumerSecret)
 			->setMethodToPost()
 			->setToken($this->_accessToken, $this->_accessSecret)
 			->setSignatureToHmacSha1();
@@ -164,7 +164,7 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 		return $response;
 	}
 	
-	protected function _upload($url, array $query = array()) { exit;
+	protected function _upload($url, array $query = array()) {
 		//prevent sending fields with no value
 		$query = $this->_accessKey($query);
 		//set url

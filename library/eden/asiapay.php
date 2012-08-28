@@ -6,11 +6,13 @@
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
+
 require_once dirname(__FILE__).'/template.php';
 require_once dirname(__FILE__).'/asiapay/error.php';
 require_once dirname(__FILE__).'/asiapay/base.php';
 require_once dirname(__FILE__).'/asiapay/client.php';
 require_once dirname(__FILE__).'/asiapay/directclient.php';
+
 /**
  * Asiapay API factory. This is a factory class with 
  * methods that will load up different asiapay classes.

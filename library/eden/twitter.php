@@ -7,7 +7,7 @@
  * distributed with this package.
  */
  
-require_once dirname(__FILE__).'/curl.php';
+require_once dirname(__FILE__).'/oauth.php';
 require_once dirname(__FILE__).'/twitter/error.php';
 require_once dirname(__FILE__).'/twitter/base.php';
 require_once dirname(__FILE__).'/twitter/oauth.php';
