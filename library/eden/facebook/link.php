@@ -39,7 +39,7 @@ class Eden_Facebook_Link extends Eden_Class {
 			->argument(2, 'url');	
 		
 		$this->_token 	= $token;
-		$this->_post 	= array('url' => $url);
+		$this->_post 	= array('link' => $url);
 	}
 	
 	/* Public Methods
@@ -67,7 +67,9 @@ class Eden_Facebook_Link extends Eden_Class {
 			->setPost(true)										//set post to true
 			->setPostFields(http_build_query($this->_post))		//set post fields
 			->getJsonResponse();								//get the json response
-			
+        	if (array_key_exists('error', $response)) {
+            		throw Eden_Facebook_Error::i($response['error']['message']);
+        	}			
 		return $response['id'];									//return the id
 	}
 	
