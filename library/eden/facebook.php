@@ -141,6 +141,17 @@ class Eden_Facebook extends Eden_Class {
 			->getSimpleXmlResponse();
 	}
 	
+	/**
+	 * Returns Facebook subscribe
+	 *
+	 * @param string
+	 * @param string
+	 * @return Eden_Facebook_Subscribe
+	 */
+	public function subscribe($clientId, $secret) {
+		return Eden_Facebook_Subscribe::i($clientId, $secret);
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods
