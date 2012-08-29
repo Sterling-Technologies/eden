@@ -38,7 +38,7 @@ class Eden_Facebook_Post extends Eden_Class {
 			->argument(2, 'string');	
 			
 		$this->_token 	= $token;
-		$this->_message = $message;
+		$this->_post['message'] = $message;
 	}
 	
 	/* Public Methods
