@@ -28,14 +28,6 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_entities	= false;
-	protected $_wrap		= NULL;
-	protected $_since		= NULL;
-	protected $_max			= 0;
-	protected $_count		= 0;
-	protected $_page		= 0;
-	protected $_status		= false;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -57,8 +49,7 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');				
 			
-		$url = sprintf(self::URL_SHOW_MESSAGE,$id);
-		return $this->_getResponse($url);
+		return $this->_getResponse(sprintf(self::URL_SHOW_MESSAGE,$id));
 	}
 	
 	/**
@@ -68,33 +59,8 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	 * @return array
 	 */
 	public function getList() {
-		$query = array();
 		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		if($this->_status) {
-			$query['skip_status'] = 1;
-		}
-		
-		if($this->_since) {
-			$query['since_id'] = $this->_since;
-		}
-		
-		if($this->_max) {
-			$query['max_id'] = $this->_max;
-		}
-		
-		if($this->_page) {
-			$query['page'] = $this->_page;
-		}
-		
-		if($this->_count) {
-			$query['count'] = $this->_count;
-		}
-		
-		return $this->_getResponse(self::URL_DIRECT_MESSAGE, $query);
+		return $this->_getResponse(self::URL_DIRECT_MESSAGE, $this->_query);
 	}
 	
 	/**
@@ -104,29 +70,8 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	 * @return array
 	 */
 	public function getSent() {
-		$query = array();
 		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		if($this->_since) {
-			$query['since_id'] = $this->_since;
-		}
-		
-		if($this->_max) {
-			$query['max_id'] = $this->_max;
-		}
-		
-		if($this->_page) {
-			$query['page'] = $this->_page;
-		}
-		
-		if($this->_count) {
-			$query['count'] = $this->_count;
-		}
-		
-		return $this->_getResponse(self::URL_SENT_MESSAGE, $query);
+		return $this->_getResponse(self::URL_SENT_MESSAGE, $this->_query);
 	}
 	
 	/**
@@ -137,7 +82,8 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	 * @return this
 	 */
 	public function includeEntities() {
-		$this->_entities = true;
+		$this->_query['include_entities'] = true;
+		
 		return $this;
 	}
 	 
@@ -153,13 +99,9 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');	
 		
-		$query = array('id'	=> $id);
+		$this->_query['id'] = $id;
 		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		return $this->_post(self::URL_REMOVE_MESSAGE,$query);
+		return $this->_post(self::URL_REMOVE_MESSAGE,$this->_query);
 	}
 	
 	/**
@@ -175,76 +117,80 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 			->argument(1, 'string', 'int') 	//Argument 1 must be a string or int
 			->argument(2, 'string');		//Argument 2 must be a string
 		
-		//poulate fields	
-		$query = array(
-			'text' 			=> $text,
-			'wrap_links'	=> $this->_wrap);
-		
 		//if it is integer
 		if(is_int($id)) {
 			//lets put it in query
-			$query['user_id'] = $id;
+			$this->_query['user_id'] = $id;
 		} else {
 			//lets put it in query
-			$query['screen_name'] = $id;
+			$this->_query['screen_name'] = $id;
 		}
-
-		return $this->_post(self::URL_NEW_MESSAGE, $query);
+		
+		$this->_query['text'] = $text;
+		
+		return $this->_post(self::URL_NEW_MESSAGE, $this->_query);
 	}
 	
 	/**
-	 * Set count
+	 * Specifies the number of direct messages to try and retrieve, up to 
+	 * a maximum of 200. The value of count is best thought of as a limit 
+	 * to the number of Tweets to return because suspended or deleted 
+	 * content is removed after the count has been applied.
 	 *
-	 * @param integer|null
+	 * @param integer
 	 * @return this
 	 */
 	public function setCount($count) {
-		//Argument 1 must be an integer or null
-		Eden_Twitter_Error::i()->argument(1, 'int', 'null');
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['count'] = $count;
 		
-		$this->_count = $count;
 		return $this;
 	}
 	
 	/**
-	 * Set max id
+	 * Returns results with an ID less than (that is, older than) or 
+	 * equal to the specified ID.
 	 *
-	 * @param integer|null
+	 * @param integer
 	 * @return this
 	 */
-	public function setMax($max) {
-		//Argument 1 must be an integer or null
-		Eden_Twitter_Error::i()->argument(1, 'int', 'null');
+	public function setMaxId($maxId) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['max_id'] = $maxId;
 		
-		$this->_max = $max;
 		return $this;
 	}
 	
 	/**
-	 * Set page
+	 * Specifies the page of results to retrieve.
 	 *
-	 * @param integer|null
+	 * @param integer
 	 * @return this
 	 */
 	public function setPage($page) {
-		//Argument 1 must be an integer or null
-		Eden_Twitter_Error::i()->argument(1, 'int', 'null');
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['page'] = $page;
 		
-		$this->_page = $page;
 		return $this;
 	}
 	
 	/**
-	 * Set since id
+	 * Returns results with an ID greater than (that is, more recent than) the specified ID. 
+	 * There are limits to the number of Tweets which can be accessed through the API. If 
+	 * the limit of Tweets has occured since the since_id, the since_id will be forced 
+	 * to the oldest ID available.
 	 *
-	 * @param integer|null
+	 * @param integer
 	 * @return this
 	 */
-	public function setSince($since) {
-		//Argument 1 must be an integer or null
-		Eden_Twitter_Error::i()->argument(1, 'int', 'null');
+	public function setSinceId($sinceId) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['since_id'] = $sinceId;
 		
-		$this->_since = $since;
 		return $this;
 	}
 	
@@ -268,7 +214,8 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	 * @return this
 	 */
 	public function skipStatus() {
-		$this->_status = true;
+		$this->_query['skip_status'] = true;
+		
 		return $this;
 	}
 	

@@ -26,18 +26,6 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	
 	/* Public Properties
 	-------------------------------*/
-	protected $_venueId		= NULL;
-	protected $_status		= NULL;
-	protected $_name		= NULL;
-	protected $_finePrint	= NULL;
-	protected $_count1		= NULL;
-	protected $_count2		= NULL;
-	protected $_count3		= NULL;
-	protected $_offerId		= NULL;
-	protected $_cost		= NULL;
-	protected $_type		= NULL;
-	protected $_text		= NULL;
-	
 	/* Protected Properties
 	-------------------------------*/
 	/* Private Properties
@@ -64,8 +52,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 */
 	public function setVenueId($venueId) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_venueId = $venueId;
+		Eden_Foursquare_Error::i()->argument(1, 'string');
+		$this->_query['venueId'] = $venueId;
 		
 		return $this;
 	}
@@ -89,7 +77,7 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 				->trigger();
 		}
 		
-		$this->_status = $status;
+		$this->_query['status'] = $status;
 		
 		return $this;
 	}
@@ -102,8 +90,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 */
 	public function setName($name) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_name = $name;
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
+		$this->_query['name'] = $name;
 		
 		return $this;
 	}
@@ -116,8 +104,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 */
 	public function setText($text) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_text = $text;
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
+		$this->_query['text'] = $text;
 		
 		return $this;
 	}
@@ -131,8 +119,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 */
 	public function setFinePrint($finePrint) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_finePrint = $finePrint;
+		Eden_Foursquare_Error::i()->argument(1, 'string');		
+		$this->_query['finePrint'] = $finePrint;
 		
 		return $this;
 	}
@@ -145,8 +133,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 */
 	public function count1($count1) {
 		//argument 1 must be a integer
-		Eden_Foursquare_Error::i()->argument(1, 'int');						
-		$this->_count1 = $count1;
+		Eden_Foursquare_Error::i()->argument(1, 'int');	
+		$this->_query['count1'] = $count1;
 		
 		return $this;
 	}
@@ -159,8 +147,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 */
 	public function count2($count2) {
 		//argument 1 must be a integer
-		Eden_Foursquare_Error::i()->argument(1, 'int');						
-		$this->_count2 = $count2;
+		Eden_Foursquare_Error::i()->argument(1, 'int');	
+		$this->_query['count2'] = $count2;
 		
 		return $this;
 	}
@@ -173,8 +161,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 */
 	public function count3($count3) {
 		//argument 1 must be a integer
-		Eden_Foursquare_Error::i()->argument(1, 'int');						
-		$this->_count3 = $count3;
+		Eden_Foursquare_Error::i()->argument(1, 'int');	
+		$this->_query['count3'] = $count3;
 		
 		return $this;
 	}
@@ -188,8 +176,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 */
 	public function setOfferId($offerId) {
 		//argument 1 must be a integer
-		Eden_Foursquare_Error::i()->argument(1, 'int');						
-		$this->_offerId = $offerId;
+		Eden_Foursquare_Error::i()->argument(1, 'int');		
+		$this->_query['offerId'] = $offerId;
 		
 		return $this;
 	}
@@ -203,8 +191,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 */
 	public function setCost($cost) {
 		//argument 1 must be a integer or float
-		Eden_Foursquare_Error::i()->argument(1, 'int', 'float');						
-		$this->_cost = $cost;
+		Eden_Foursquare_Error::i()->argument(1, 'int', 'float');	
+		$this->_query['cost'] = $cost;
 		
 		return $this;
 	}
@@ -216,8 +204,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 * @param string
 	 * @return this
 	 */
-	public function setTypeToMayor() {					
-		$this->_type = 'mayor';
+	public function setTypeToMayor() {	
+		$this->_query['type'] = 'mayor';
 		
 		return $this;
 	}
@@ -229,8 +217,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 * @param string
 	 * @return this
 	 */
-	public function setTypeToFrequency() {					
-		$this->_type = 'frequency';
+	public function setTypeToFrequency() {	
+		$this->_query['type'] = 'frequency';	
 		
 		return $this;
 	}
@@ -242,8 +230,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 * @param string
 	 * @return this
 	 */
-	public function setTypeToCount() {					
-		$this->_type = 'count';
+	public function setTypeToCount() {		
+		$this->_query['type'] = 'count';	
 		
 		return $this;
 	}
@@ -255,8 +243,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 * @param string
 	 * @return this
 	 */
-	public function setTypeToRegular() {					
-		$this->_type = 'regular';
+	public function setTypeToRegular() {
+		$this->_query['type'] = 'regular';	
 		
 		return $this;
 	}
@@ -268,8 +256,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 * @param string
 	 * @return this
 	 */
-	public function setTypeToSwarm() {					
-		$this->_type = 'swarm';
+	public function setTypeToSwarm() {	
+		$this->_query['type'] = 'swarm';		
 		
 		return $this;
 	}
@@ -281,8 +269,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 * @param string
 	 * @return this
 	 */
-	public function setTypeToFriends() {					
-		$this->_type = 'friends';
+	public function setTypeToFriends() {	
+		$this->_query['type'] = 'friends';	
 		
 		return $this;
 	}
@@ -298,8 +286,8 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 * @param string
 	 * @return this
 	 */
-	public function setTypeToFlash() {					
-		$this->_type = 'flash';
+	public function setTypeToFlash() {
+		$this->_query['type'] = 'flash';	
 		
 		return $this;
 	}
@@ -317,19 +305,10 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 		
-		$query = array(
-			'text' 			=> $text,
-			'unlockedText'	=> $unlockedText,
-			'name'			=> $this->_name,		//optional
-			'finePrint'		=> $this->_finePrint,	//optional
-			'count1'		=> $this->_count1,		//optional
-			'count2'		=> $this->_count2,		//optional
-			'count3'		=> $this->_count3,		//optional
-			'type'			=> $this->_type,		//optional
-			'offerId'		=> $this->_offerId,		//optional
-			'cost'			=> $this->_cost);		//optional
+		$this->_query['text']			= $text;
+		$this->_query['unlockedText'] 	= $unlockedText;
 		
-		return $this->_post(self::URL_SPECIAL_ADD, $query);
+		return $this->_post(self::URL_SPECIAL_ADD, $this->_query);
 	}
 	
 	/**
@@ -339,11 +318,7 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 	 */
 	public function getSpecial() {
 		
-		$query = array(
-			'venueId' 	=> $this->_venueId,	//optional
-			'status'	=> $this->_status);		//optional
-		
-		return $this->_getResponse(self::URL_SPECIAL_GET, $query);
+		return $this->_getResponse(self::URL_SPECIAL_GET, $this->_query);
 	}
 	 
 	/**
@@ -359,12 +334,9 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 			->argument(1, 'string', 'int', 'float')		//argument 1 must be a string, integer or float
 			->argument(2, 'string', 'int', 'float');	//argument 2 must be a string, integer or float
 		
-		$query = array(
-			'll' 		=> $longtitude.',',$latitude,
-			'radius'	=> $this->_radius,				//optional
-			'limit'		=> $this->_limit);				//optional
+		$this->_query['ll'] = $longtitude.','.$latitude;
 		
-		return $this->_getResponse(self::URL_SPECIAL_SEARCH, $query);
+		return $this->_getResponse(self::URL_SPECIAL_SEARCH, $this->_query);
 	}
 	
 	/**
@@ -404,13 +376,10 @@ class Eden_Foursquare_Specials extends Eden_Foursquare_Base {
 				->trigger();
 		}
 		
-		//populate fields
-		$query = array(
-			'venueId'	=> $venueId,
-			'problem'	=> $problem,
-			'text'		=> $this->_text);	//optional
+		$this->_query['venueId'] = $venueId;
+		$this->_query['problem'] = $problem;
 		
-		return $this->_post(sprintf(self::URL_SPECIAL_FLAG, $specialId), $query);
+		return $this->_post(sprintf(self::URL_SPECIAL_FLAG, $specialId), $this->_query);
 	}
 	
 	/**

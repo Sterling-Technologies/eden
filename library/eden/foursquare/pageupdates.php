@@ -26,14 +26,6 @@ class Eden_Foursquare_Pageupdates extends Eden_Foursquare_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_pageId			= NULL;
-	protected $_groupId			= NULL;
-	protected $_venueId			= NULL;
-	protected $_shout			= NULL;
-	protected $_campaignId		= NULL;
-	protected $_photoId			= NULL;
-	protected $_broadcast		= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -59,7 +51,7 @@ class Eden_Foursquare_Pageupdates extends Eden_Foursquare_Base {
 	public function setPageId($pageId) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_pageId  = $pageId; 
+		$this->_query['pageId'] = $pageId;
 		
 		return $this;
 	} 
@@ -73,7 +65,7 @@ class Eden_Foursquare_Pageupdates extends Eden_Foursquare_Base {
 	public function setGroupId($groupId) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_groupId  = $groupId; 
+		$this->_query['groupId'] = $groupId;
 		
 		return $this;
 	}
@@ -87,7 +79,7 @@ class Eden_Foursquare_Pageupdates extends Eden_Foursquare_Base {
 	public function setVenueId($venueId) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_venueId  = $venueId; 
+		$this->_query['venueId'] = $venueId;
 		
 		return $this;
 	}
@@ -101,7 +93,7 @@ class Eden_Foursquare_Pageupdates extends Eden_Foursquare_Base {
 	public function setShout($shout) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_shout  = $shout; 
+		$this->_query['shout'] = $shout;
 		
 		return $this;
 	}
@@ -115,7 +107,7 @@ class Eden_Foursquare_Pageupdates extends Eden_Foursquare_Base {
 	public function setCampaignId($campaignId) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_campaignId  = $campaignId; 
+		$this->_query['campaignId'] = $campaignId;
 		
 		return $this;
 	}
@@ -129,7 +121,7 @@ class Eden_Foursquare_Pageupdates extends Eden_Foursquare_Base {
 	public function setPhotoId($photoId) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_photoId  = $photoId; 
+		$this->_query['photoId'] = $photoId;
 		
 		return $this;
 	}
@@ -156,8 +148,8 @@ class Eden_Foursquare_Pageupdates extends Eden_Foursquare_Base {
 				->addVariable($broadcast)
 				->trigger();
 		}
-		
-		$this->_broadcast  = $broadcast; 
+		 
+		$this->_query['broadcast'] = $broadcast;
 		
 		return $this;
 	}
@@ -169,16 +161,7 @@ class Eden_Foursquare_Pageupdates extends Eden_Foursquare_Base {
 	 */
 	public function addPage() {
 		
-		$query = array(
-			'pageId'		=> $this->_pageId,		//optional	
-			'groupId'		=> $this->_groupId,		//optional
-			'venueId'		=> $this->_venueId,		//optional 
-			'shout'			=> $this->_shout,		//optional
-			'campaignId'	=> $this->_campaignId,	//optional
-			'photoId'		=> $this->_photoId,		//optional
-			'broadcast'		=> $this->_broadcast);	//optional
-			
-		return $this->_post(self::URL_PAGEUPDATES_ADD, $query);
+		return $this->_post(self::URL_PAGEUPDATES_ADD, $this->_query);
 	}
 	
 	/**

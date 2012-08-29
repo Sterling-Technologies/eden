@@ -23,26 +23,13 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	const URL_UPDATE_PROFILE		= 'https://api.twitter.com/1/account/update_profile.json';
 	const URL_UPDATE_BACKGROUND		= 'https://api.twitter.com/1/account/update_profile_background_image.json';
 	const URL_UPDATE_PROFILE_COLOR	= 'https://api.twitter.com/1/account/update_profile_colors.json';
+	const URL_ACCOUNT_TOTAL			= 'https://api.twitter.com/1/account/totals.json';
+	const URL_ACCOUNT_SETTING		= 'https://api.twitter.com/1/account/settings.json';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
-	-------------------------------*/
-	protected $_entities	= NULL;
-	protected $_status		= NULL;
-	protected $_use			= NULL;
-	protected $_name		= NULL;
-	protected $_url			= NULL;
-	protected $_location	= NULL;
-	protected $_description	= NULL;
-	protected $_image		= NULL;
-	protected $_tile		= NULL;
-	protected $_background	= NULL;
-	protected $_link		= NULL;
-	protected $_border		= NULL;
-	protected $_fill		= NULL;
-	protected $_text		= NULL;
-	
+	-------------------------------*/	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -53,6 +40,27 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Returns the current count of friends, followers, updates (statuses) 
+	 * and favorites of the authenticating user.
+	 *
+	 * @return array
+	 */
+	public function getAccountAnalytics() {
+		
+		return $this->_getResponse(self::URL_ACCOUNT_TOTAL);
+	}
+	
+	/**
+	 * Returns settings (including current trend, geo and sleep time information)
+	 * for the authenticating user.
+	 *
+	 * @return array
+	 */
+	public function getAccountSettings() {
+		
+		return $this->_getResponse(self::URL_ACCOUNT_SETTING);
+	}
 	
 	/**
 	 * Returns an HTTP 200 OK response code and
@@ -62,12 +70,8 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 * @return array
 	 */
 	public function getCredentials() {
-		//populate fields
-		$query = array(
-			'include_entities'	=> $this->_entities,
-			'skip_status'		=> $this->_status);
-			
-		return $this->_getResponse(self::URL_VERIFY_CREDENTIALS, $query);
+		
+		return $this->_getResponse(self::URL_VERIFY_CREDENTIALS, $this->_query);
 	}
 	
 	/**
@@ -78,7 +82,8 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 *
 	 * @return array
 	 */
-	public function getLimit() {
+	public function checkRateLimits() {
+		
 		return $this->_getResponse(self::URL_LIMIT_STATUS);
 	} 
 	 
@@ -89,6 +94,7 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 * @return string
 	 */
 	public function logOut() {
+		
 		return $this->_post(self::URL_END_SESSION);
 	}
 	/**
@@ -100,8 +106,8 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	public function setBackgroundColor($background) {
 		//Argument 3 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['profile_background_color'] = $backgroud;
 		
-		$this->_background = $background;
 		return $this;
 	}
 	
@@ -114,8 +120,8 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	public function setBorderColor($border) {
 		//Argument 3 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['profile_sidebar_border_color'] = $border;
 		
-		$this->_border = $border;
 		return $this;
 	}
 	
@@ -125,11 +131,11 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 * @param string
 	 * @return this
 	 */
-	public function setDescriptione($description) {
+	public function setDescription($description) {
 		//Argument 1 must be a string or null
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['description'] = $description;
 		
-		$this->_description = $description;
 		return $this;
 	
 	}
@@ -140,7 +146,8 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 * @return this
 	 */
 	public function setEntities() {
-		$this->_entities = true;
+		$this->_query['include_entities'] = true;
+		
 		return $this;
 	}
 	
@@ -153,8 +160,8 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	public function setFillColor($fill) {
 		//Argument 3 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['profile_sidebar_fill_color'] = $fill;
 		
-		$this->_fill = $fill;
 		return $this;
 	}
 	
@@ -167,8 +174,8 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	public function setImage($image) {
 		//Argument 1 must be a string or null
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['image'] = $image;
 		
-		$this->_image = $image;
 		return $this;
 	}
 	
@@ -181,8 +188,8 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	public function setLinkColor($link) {
 		//Argument 3 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['profile_link_color'] = $link;
 		
-		$this->_link = $link;
 		return $this;
 	}
 	
@@ -195,8 +202,8 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	public function setLocation($location) {
 		//Argument 1 must be a string or null
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['location'] = $location;
 		
-		$this->_location = $location;
 		return $this;
 	
 	}
@@ -210,8 +217,8 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	public function setName($name) {
 		//Argument 1 must be a string or null
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['name'] = $name;
 		
-		$this->_name = $name;
 		return $this;
 	
 	}
@@ -222,7 +229,8 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 * @return this
 	 */
 	public function setStatus() {
-		$this->_status = true;
+		$this->_query['skip_status'] = true;
+		
 		return $this;
 	}
 	
@@ -232,11 +240,11 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 * @param string
 	 * @return this
 	 */
-	public function setTextColor($text) {
+	public function setTextColor($textColor) {
 		//Argument 3 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['profile_text_color'] = $textColor;
 		
-		$this->_text = $text;
 		return $this;
 	}
 	
@@ -249,8 +257,8 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	public function setTile($tile) {
 		//Argument 1 must be a string or null
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['tile'] = $tile;
 		
-		$this->_tile = $tile;
 		return $this;
 	}
 	
@@ -263,8 +271,8 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	public function setUrl($url) {
 		//Argument 1 must be a string or null
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['url'] = $url;
 		
-		$this->_url = $url;
 		return $this;
 	
 	}
@@ -275,7 +283,8 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 * @return this
 	 */
 	public function show() {
-		$this->_use = true;
+		$this->_query['use'] = true;
+		
 		return $this;
 	}
 	 
@@ -286,16 +295,9 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 *
 	 * @return array
 	 */
-	public function updateBackground() {
-		//populate fields
-		$query = array(
-			'include_entities'	=> $this->_entities,
-			'skip_status'		=> $this->_status,
-			'use'				=> $this->_use,
-			'image'				=> $this->_image,
-			'tile'				=> $this->_tile);
+	public function updateBackgroundImage() {
 		
-		return $this->_post(self::URL_UPDATE_BACKGROUND, $query);
+		return $this->_post(self::URL_UPDATE_BACKGROUND, $this->_query);
 	}
 	 
 	/**
@@ -306,18 +308,9 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 *
 	 * @return array
 	 */
-	public function updateColor() {
-		//populate fields
-		$query = array(
-			'include_entities'				=> $this->_entities,
-			'skip_status'					=> $this->_status,
-			'profile_background_color'		=> $this->_background,
-			'profile_link_color'			=> $this->_link,
-			'profile_sidebar_border_color'	=> $this->_border,
-			'profile_sidebar_fill_color'	=> $this->_fill,
-			'profile_text_color'			=> $this->_text);
+	public function updateProfileColor() {
 		
-		return $this->_post(self::URL_UPDATE_PROFILE_COLOR, $query);
+		return $this->_post(self::URL_UPDATE_PROFILE_COLOR, $this->_query);
 		
 	}
 	 
@@ -330,16 +323,8 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 * @return array
 	 */
 	public function updateProfile() {
-		//populate fields
-		$query = array(
-			'include_entities'	=> $this->_entities,
-			'skip_status'		=> $this->_status,
-			'name'				=> $this->_name,
-			'url'				=> $this->_url,
-			'location'			=> $this->_location,
-			'description'		=> $this->_description);
 		
-		return $this->_post(self::URL_UPDATE_PROFILE, $query);
+		return $this->_post(self::URL_UPDATE_PROFILE, $this->_query);
 	}
 	 
 	/* Protected Methods

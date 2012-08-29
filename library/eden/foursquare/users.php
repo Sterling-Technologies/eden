@@ -41,25 +41,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
-	-------------------------------*/
-	protected $_sort			= 'popular';
-	protected $_token			= NULL;
-	protected $_phone			= NULL;
-	protected $_email			= NULL;
-	protected $_twitter			= NULL;
-	protected $_twitterSource	= NULL;
-	protected $_fbid			= NULL;
-	protected $_name			= NULL;
-	protected $_limit			= NULL;
-	protected $_offset			= NULL;
-	protected $_afterTimestamp	= NULL;
-	protected $_beforeTimestamp	= NULL;
-	protected $_group			= NULL;
-	protected $_location		= NULL;
-	protected $_catagoryId		= NULL;
-	protected $_userId			= NULL;
-	protected $_photo			= NULL;
-	
+	-------------------------------*/	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -86,7 +68,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	public function setPhone($phone) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_phone = $phone; 
+		$this->_query['phone'] = $phone;
 		
 		return $this;
 	}
@@ -100,7 +82,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	public function setEmail($email) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_email  = $email; 
+		$this->_query['email'] = $email;
 		
 		return $this;
 	}
@@ -114,7 +96,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	public function setTwitter($twitter) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_twitter  = $twitter; 
+		$this->_query['twitter'] = $twitter;
 		
 		return $this;
 	}
@@ -128,7 +110,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	public function setTwitterSource($twitterSource) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_twitterSource  = $twitterSource; 
+		$this->_query['twitterSource'] = $twitterSource;
 		
 		return $this;
 	}
@@ -142,7 +124,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	public function setFacebookId($facebookId) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_facebookId  = $facebookId; 
+		$this->_query['fbid'] = $facebookId;
 		
 		return $this;
 	}
@@ -156,7 +138,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	public function setName($name) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_name  = $name; 
+		$this->_query['name'] = $name;
 		
 		return $this;
 	}
@@ -170,7 +152,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	public function setLimit($limit) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'int');
-		$this->_limit  = $limit; 
+		$this->_query['limit'] = $limit;
 		
 		return $this;
 	}
@@ -182,7 +164,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	 * @return this
 	 */
 	public function setAfterTimeStamp() {
-		$this->_afterTimeStamp = time();
+		$this->_query['afterTimestamp'] = time();
 		
 		return $this;
 	}
@@ -194,7 +176,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	 * @return this
 	 */
 	public function setBeforeTimeStamp() {
-		$this->_beforeTimeStamp = time();
+		$this->_query['beforeTimestamp'] = time();
 		
 		return $this;
 	}
@@ -209,7 +191,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	public function setOffset($offset) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'int');
-		$this->_offset  = $offset; 
+		$this->_query['offset'] = $offset;
 		
 		return $this;
 	}
@@ -223,33 +205,11 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	public function setGroup($group) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_group  = $group; 
+		$this->_query['group'] = $group;
 		
 		return $this;
 	}
-	
-	/**
-	 * Sort results by recent tips
-	 * 
-	 * @return this
-	 */
-	public function sortByRecent() {
-		$this->_sort = 'recent';
-		
-		return $this;
-	}
-	
-	/**
-	 * Sort results by near by tips
-	 * 
-	 * @return this
-	 */
-	public function sortByNearBy() {
-		$this->_sort = 'nearby';
-		
-		return $this;
-	}
-	
+
 	/**
 	 * Set location by setting longtitide 
 	 * and latitude
@@ -264,7 +224,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 			->argument(1, 'int', 'float')	//argument 1 must be an integer or float
 			->argument(2, 'int', 'float');	//argument 2 must be an integer or float
 			
-		$this->_location  = $longtitude.', '.$latitude; 
+		$this->_query['ll'] = $longtitude.', '.$latitude;
 		
 		return $this;
 	}
@@ -306,16 +266,8 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	 * @return array
 	 */
 	public function search() {
-		//populate fields
-		$query = array(
-			'phone'			=> $this->_phone,			//optional
-			'email'			=> $this->_email,			//optional
-			'twitter'		=> $this->_twitter,			//optional
-			'twitterSource'	=> $this->_twitterSource,	//optional
-			'fbid'			=> $this->_fbid,			//optional
-			'name'			=> $this->_name);			//optional
 		
-		return $this->_getResponse(self::URL_USERS_SEARCH, $query);
+		return $this->_getResponse(self::URL_USERS_SEARCH, $this->_query);
 	}
 	
 	/**
@@ -335,14 +287,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	 */
 	public function getCheckins() {
 		
-		//populate fields
-		$query = array(
-			'limit'				=> $this->_limit,				//optional
-			'offset'			=> $this->_offset,				//optional
-			'afterTimestamp'	=> $this->_afterTimestamp,		//optional
-			'beforeTimestamp'	=> $this->_beforeTimestamp);	//optional
-		
-		return $this->_getResponse(self::URL_USERS_CHECKINS, $query);
+		return $this->_getResponse(self::URL_USERS_CHECKINS, $this->_query);
 	}
 	
 	/**
@@ -353,12 +298,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	 */
 	public function getFriends() {
 		
-		//populate fields
-		$query = array(
-			'limit'		=> $this->_limit,		//optional
-			'offset'	=> $this->_offset);		//optional
-		
-		return $this->_getResponse(self::URL_USERS_FRIENDS, $query);
+		return $this->_getResponse(self::URL_USERS_FRIENDS, $this->_query);
 	}
 	
 	/**
@@ -368,12 +308,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	 */
 	public function getUsersList() {
 		
-		//populate fields
-		$query = array(
-			'group'	=> $this->_group,		//optional
-			'll'	=> $this->_location);	//optional
-		
-		return $this->_getResponse(self::URL_USERS_LIST, $query);
+		return $this->_getResponse(self::URL_USERS_LIST, $this->_query);
 	}
 	
 	/**
@@ -392,12 +327,8 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	 * @return array
 	 */
 	public function getPhotos() {
-		//populate fields
-		$query = array(
-			'limit'		=> $this->_limit,	//optional
-			'offset'	=> $this->_offset);	//optional
 		
-		return $this->_getResponse(self::URL_USERS_PHOTOS, $query);
+		return $this->_getResponse(self::URL_USERS_PHOTOS, $this->_query);
 	}
 	
 	/**
@@ -407,13 +338,7 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	 */
 	public function getVenuehistory() {
 
-		//populate fields
-		$query = array(
-			'categoryId'		=> $this->_categoryId,
-			'afterTimestamp'	=> $this->_afterTimestamp,
-			'beforeTimestamp'	=> $this->_beforeTimestamp);
-		
-		return $this->_getResponse(self::URL_USERS_VENUE, $query);
+		return $this->_getResponse(self::URL_USERS_VENUE, $this->_query);
 	}
 	
 	/**
@@ -426,10 +351,9 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array('photo' => $photo);
+		$this->_query['photo'] = $photo;
 		
-		return $this->_post(self::URL_USERS_UPDATE_PHOTO, $query);
+		return $this->_post(self::URL_USERS_UPDATE_PHOTO, $this->_query);
 	
 	}
 	
@@ -444,10 +368,9 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');	
 			
-		//populate fields
-		$query = array('USER_ID' => $userId);
+		$this->_query['USER_ID'] = $userId;
 		
-		return $this->_post(self::URL_USERS_UNFRIEND, $query);
+		return $this->_post(self::URL_USERS_UNFRIEND, $this->_query);
 	
 	}
 	
@@ -465,12 +388,10 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'bool');		//argument 2 must be a boolean
 			
-		//populate fields
-		$query = array(
-			'USER_ID'	=> $this->_userId,
-			'value'		=> $this->_value);
+		$this->_query['USER_ID']	= $userId;
+		$this->_query['value'] 		= $value;
 		
-		return $this->_post(self::URL_USERS_SETPINGS, $query);
+		return $this->_post(self::URL_USERS_SETPINGS, $this->_query);
 	}
 	
 	/**
@@ -483,10 +404,9 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');	
 
-		//populate fields
-		$query = array('USER_ID' => $userId);
+		$this->_query['USER_ID'] = $userId;
 		
-		return $this->_post(self::URL_USERS_SEND_REQUEST, $query);
+		return $this->_post(self::URL_USERS_SEND_REQUEST, $this->_query);
 	
 	}
 	
@@ -499,10 +419,10 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 	public function denyRequest($userId) {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');	
-		//populate fields
-		$query = array('USER_ID' => $userId);
 		
-		return $this->_post(self::URL_USERS_DENY_REQUEST, $query);
+		$this->_query['USER_ID'] = $userId;
+		
+		return $this->_post(self::URL_USERS_DENY_REQUEST, $this->_query);
 	
 	}
 	
@@ -516,10 +436,9 @@ class Eden_Foursquare_Users extends Eden_Foursquare_Base {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');		
 
-		//populate fields
-		$query = array('USER_ID' => $userId);
+		$this->_query['USER_ID'] = $userId;
 		
-		return $this->_post(self::URL_USERS_APPROVE_REQUEST, $query);
+		return $this->_post(self::URL_USERS_APPROVE_REQUEST, $this->_query);
 	
 	}
 	 

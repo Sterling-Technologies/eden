@@ -32,6 +32,7 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 	protected $_authParams 		= NULL;
 	protected $_authHeader 		= NULL;
 	protected $_headers	 		= NULL;
+	protected $_query			= array();
 	
 	/* Private Properties
 	-------------------------------*/
@@ -70,6 +71,19 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 		return $this->_meta;
 	}
 	
+	/**
+	 * Check if the response is json format
+	 *
+	 * @param string
+	 * @return boolean
+	 */
+	public function isJson($string) {
+		//argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		
+ 		json_decode($string);
+ 		return (json_last_error() == JSON_ERROR_NONE);
+	}
 	/* Protected Methods
 	-------------------------------*/
 	protected function _accessKey($array) {
@@ -97,15 +111,26 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 		
 		$rest = Eden_Oauth::i()
 			->consumer($url, $this->_consumerKey, $this->_consumerSecret)
-			->setMethodToPost()
+			->setMethodToGet()
 			->setToken($this->_accessToken, $this->_accessSecret)
 			->setSignatureToHmacSha1();
+		//get response from curl
+		$response = $rest->getResponse($query);
 		
-		$response = $rest->getJsonResponse($query);
-			
+		//reset variables
+		unset($this->_query);
+		
 		$this->_meta = $rest->getMeta();
 		
-		return $response;
+		//check if the response is in json format
+		if($this->isJson($response)) { 
+			//json encode it
+			return json_decode($response, true);
+		//else it is a raw query
+		} else {
+			//return it
+			return $response;
+		}
 	}
 	
 	protected function _post($url, array $query = array()) {
@@ -155,6 +180,9 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 		//get the response
 		$response = $curl->getJsonResponse();
 		
+		//reset variables
+		unset($this->_query);
+		
 		$this->_meta 					= $curl->getMeta();
 		$this->_meta['url'] 			= $url;
 		$this->_meta['authorization'] 	= $authorization;
@@ -188,6 +216,9 @@ class Eden_Twitter_Base extends Eden_Oauth_Base {
 			->setHeaders($headers);
 		//json decode the response	
 		$response = $curl->getJsonResponse();
+		
+		//reset variables
+		unset($this->_query);
 		
 		$this->_meta 					= $curl->getMeta();
 		$this->_meta['url'] 			= $url;

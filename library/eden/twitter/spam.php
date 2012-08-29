@@ -45,23 +45,21 @@ class Eden_Twitter_Spam extends Eden_Twitter_Base {
 		//Argument Test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string', 'null')		//Argument 1 must be a string or null
-			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
-		
-		$query = array();
+			->argument(2, 'string', 'null');	//Argument 2 must be a string or null		
 		
 		//if it is not empty
 		if(!is_null($id)) {
 			//lets put it in query
-			$query['user_id'] = $id;
+			$this->_query['user_id'] = $id;
 		}
 		
 		//if it is not empty
 		if(!is_null($name)) {
 			//lets put it in query
-			$query['screen_name'] = $name;
+			$this->_query['screen_name'] = $name;
 		}
 		
-		return $this->_post(self::URL_REPORT_SPAM, $query);
+		return $this->_post(self::URL_REPORT_SPAM, $this->_query);
 	}
 	
 	/* Protected Methods

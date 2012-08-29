@@ -24,8 +24,6 @@ class Eden_Foursquare_Updates extends Eden_Foursquare_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_limit = NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -56,7 +54,7 @@ class Eden_Foursquare_Updates extends Eden_Foursquare_Base {
 	public function setLimit($limit) {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'int');						
-		$this->_limit = $limit;
+		$this->_query['limit'] = $limit;
 		
 		return $this;
 	}
@@ -68,26 +66,22 @@ class Eden_Foursquare_Updates extends Eden_Foursquare_Base {
 	 */
 	public function getNotification() {
 		
-		$query = array('limit'	=> $this->_limit);	//optional
-		
-		return $this->_getResponse(self::URL_UPDATES_NOTIFICATION, $query);
+		return $this->_getResponse(self::URL_UPDATES_NOTIFICATION, $this->_query);
 	}	 
 	
 	/**
 	 * Mark notification tray notifications as read up, to a certain timestamp.
 	 * 
-	 * @param string|integer The timestamp of the most recent notification that the user viewed.
+	 * @param string|integer|null The timestamp of the most recent notification that the user viewed.
 	 * @return array
 	 */
 	public function markAsRead($highWatermark) {
-		//argument 1 must be a string or integer
-		Eden_Foursquare_Error::i()->argument(1, 'string', 'int');
+		//argument 1 must be a string, integer or null
+		Eden_Foursquare_Error::i()->argument(1, 'string', 'int', 'null');
 		
-		$highWatermark = strtotime($highWatermark);
+		$this->_query['highWatermark'] = strtotime($highWatermark);
 		
-		$query = array('highWatermark'	=> $highWatermark);	//optional
-		
-		return $this->_post(self::URL_UPDATES_MARK_AS_READ, $query);
+		return $this->_post(self::URL_UPDATES_MARK_AS_READ, $this->_query);
 	}
 	
 	/* Protected Methods

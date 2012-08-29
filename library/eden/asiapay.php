@@ -7,7 +7,7 @@
  * distributed with this package.
  */
 
-require_once dirname(__FILE__).'/template.php';
+require_once dirname(__FILE__).'/template.php'; 
 require_once dirname(__FILE__).'/asiapay/error.php';
 require_once dirname(__FILE__).'/asiapay/base.php';
 require_once dirname(__FILE__).'/asiapay/client.php';
@@ -48,14 +48,15 @@ class Eden_Asiapay extends Eden_Class {
 	 * @param *boolean
 	 * @return Eden_Asiapay_Client
 	 */
-	public function clientPost($merchantId, $test = true) {
+	public function clientPost($merchantId, $test = true, $hash = NULL) {
 		
 		//argument test
 		Eden_Asiapay_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'bool');		//Argument 2 must be a boolean
+			->argument(1, 'string')				//Argument 1 must be a string
+			->argument(2, 'bool')				//Argument 2 must be a boolean
+			->argument(3, 'string', 'null');	//Argument 3 must be a string or null
 		
-		return Eden_Asiapay_Client::i($merchantId, $test);
+		return Eden_Asiapay_Client::i($merchantId, $test, $hash);
 	}
 	
 	/**
@@ -65,13 +66,14 @@ class Eden_Asiapay extends Eden_Class {
 	 * @param *boolean
 	 * @return Eden_Asiapay_Directclient
 	 */
-	public function directClient($merchantId, $test = true) {
+	public function directClient($merchantId, $test = true, $hash = NULL) {
 		//argument test
 		Eden_Asiapay_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'bool');		//Argument 2 must be a boolean
+			->argument(2, 'bool')		//Argument 2 must be a boolean
+			->argument(3, 'string', 'null');	//Argument 3 must be a string or null
 		
-		return Eden_Asiapay_Directclient::i($merchantId, $test);
+		return Eden_Asiapay_Directclient::i($merchantId, $test, $hash);
 	}
 	/* Protected Methods
 	-------------------------------*/

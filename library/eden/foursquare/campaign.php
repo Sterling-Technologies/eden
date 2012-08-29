@@ -28,13 +28,6 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_startAt			= NULL;
-	protected $_endAt			= NULL;
-	protected $_campaignId		= NULL;
-	protected $_specialId		= NULL;
-	protected $_groupId			= NULL;
-	protected $_status			= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -63,8 +56,8 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 	 */
 	public function setStartTime($startTime) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_startAt = strtotime($startTime);
+		Eden_Foursquare_Error::i()->argument(1, 'string');
+		$this->_query['startAt'] = strtotime($startTime);
 		
 		return $this;
 	}
@@ -77,8 +70,8 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 	 */
 	public function setEndTime($endTime) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_endAt = strtotime($endTime);
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
+		$this->_query['endAt'] = strtotime($endTime);
 		
 		return $this;
 	}
@@ -91,8 +84,8 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 	 */
 	public function setCampaignId($campaignId) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_campaignId = $campaignId;
+		Eden_Foursquare_Error::i()->argument(1, 'string');		
+		$this->_query['campaignId'] = $campaignId;
 		
 		return $this;
 	}
@@ -105,8 +98,8 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 	 */
 	public function setSpecialId($specialId) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_specialId = $specialId;
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
+		$this->_query['specialId'] = $specialId;
 		
 		return $this;
 	}
@@ -119,8 +112,8 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 	 */
 	public function setGroupId($groupId) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_groupId = $groupId;
+		Eden_Foursquare_Error::i()->argument(1, 'string');		
+		$this->_query['groupId'] = $groupId;
 		
 		return $this;
 	}
@@ -145,7 +138,7 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 				->trigger();
 		}
 		
-		$this->_status = $status;
+		$this->_query['status'] = $status;
 		
 		return $this;
 	}
@@ -166,16 +159,11 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 			->argument(2, 'string', 'null')		//argument 2 must be a string or null
 			->argument(3, 'string', 'null');	//argument 3 must be a string or null
 		
-		//populate fields
-		$query = array(
-			'specialId'		=> $specialId,
-			'groupId'		=> $groupId,
-			'venueId'		=> $venueId,
-			'endAt'			=> $this->_endAt,		//optional
-			'startAt'		=> $this->_startAt,		//optional
-			'campaignId'	=> $this->_campaignId);	//optional
+		$this->_query['specialId'] = $specialId;
+		$this->_query['groupId'] = $groupId;
+		$this->_query['venueId'] = $venueId;
 		
-		return $this->_post(self::URL_CAMPAIGN_ADD, $query);
+		return $this->_post(self::URL_CAMPAIGN_ADD, $this->_query);
 	}
 	
 	/**
@@ -185,13 +173,7 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 	 */
 	public function getList() {
 		
-		//populate fields
-		$query = array(
-			'specialId'		=> $this->_specialId,	//optional
-			'groupId'		=> $this->_groupId,		//optional
-			'status'		=> $this->_status);		//optional
-		
-		return $this->_getResponse(self::URL_CAMPAIGN_GET_LIST, $query);
+		return $this->_getResponse(self::URL_CAMPAIGN_GET_LIST, $this->_query);
 	}
 	
 	/**
@@ -204,12 +186,7 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');	
 		
-		//populate fields
-		$query = array(
-			'endAt'			=> $this->_endAt,		//optional
-			'startAt'		=> $this->_startAt);	//optional
-		
-		return $this->_post(sprintf(self::URL_CAMPAIGN_TIME_SERIES, $campaignId), $query);
+		return $this->_post(sprintf(self::URL_CAMPAIGN_TIME_SERIES, $campaignId), $this->_query);
 	}
 	
 	/**
@@ -248,10 +225,7 @@ class Eden_Foursquare_Campaign extends Eden_Foursquare_Base {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array('startAt' => $this->_startAt); //optional
-		
-		return $this->_post(sprintf(self::URL_CAMPAIGN_START, $campaignId), $query);
+		return $this->_post(sprintf(self::URL_CAMPAIGN_START, $campaignId), $this->_query);
 	}
 	
 	/* Protected Methods

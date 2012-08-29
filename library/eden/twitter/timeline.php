@@ -32,16 +32,6 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_count		= NULL;
-	protected $_since		= NULL;
-	protected $_max			= NULL;
-	protected $_page		= NULL;
-	protected $_trim		= NULL;
-	protected $_entities	= false;
-	protected $_rts			= false;
-	protected $_replies		= false;
-	protected $_detail		= false;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -55,20 +45,22 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	/**
 	 * Set contributors details
 	 *
-	 * @return array
+	 * @return this
 	 */
 	public function addContributorDetail() {
-		$this->_detail = true;
+		$this->_query['contributor_details'] = true;
+		
 		return $this;
 	}
 	
 	/**
 	 * Set exclude replies
 	 *
-	 * @return array
+	 * @return this
 	 */
 	public function excludeReplies() {
-		$this->_replies = true;
+		$this->_query['exclude_replies'] = true;
+		
 		return $this;
 	}
 	
@@ -83,46 +75,20 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 		//Argument 1 must be an integer, string or null
 		Eden_Twitter_Error::i()->argument(1, 'int', 'string', 'null');
 		
-		$query = array();
-		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		if($this->_trim) {
-			$query['trim_user'] = 1;
-		}
-		
-		if($this->_since) {
-			$query['since_id'] = $this->_since;
-		}
-		
-		if($this->_max) {
-			$query['max_id'] = $this->_max;
-		}
-		
-		if($this->_page) {
-			$query['page'] = $this->_page;
-		}
-		
-		if($this->_count) {
-			$query['count'] = $this->_count;
-		}
-		
 		if(!is_null($id)) {
 			//if it is integer
 			if(is_int($id)) {
 				//lets put it in our query
-				$query['user_id'] = $id;
+				$this->_query['user_id'] = $id;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['screen_name'] = $id;
+				$this->_query['screen_name'] = $id;
 			}
-			return $this->_getResponse(self::URL_BY_USER, $query);
+			return $this->_getResponse(self::URL_BY_USER, $this->_query);
 		} 
 		
-		return $this->_getResponse(self::URL_BY_ME, $query);
+		return $this->_getResponse(self::URL_BY_ME, $this->_query);
 	}
 	
 	/**
@@ -138,57 +104,19 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 		//Argument 1 must be an integer, string or null
 		Eden_Twitter_Error::i()->argument(1, 'int', 'string', 'null');
 		
-		$query = array();
-		
 		if(!is_null($id)) {
 			//if it is integer
 			if(is_int($id)) {
 				//lets put it in our query
-				$query['user_id'] = $id;
+				$this->_query['user_id'] = $id;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['screen_name'] = $id;
+				$this->_query['screen_name'] = $id;
 			}
 		} 
 		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		if($this->_rts) {
-			$query['include_rts'] = 1;
-		}
-		
-		if($this->_replies) {
-			$query['exclude_replies'] = 1;
-		}
-		
-		if($this->_trim) {
-			$query['trim_user'] = 1;
-		}
-		
-		if($this->_detail) {
-			$query['contributor_details'] = 1;
-		}
-		
-		if($this->_since) {
-			$query['since_id'] = $this->_since;
-		}
-		
-		if($this->_max) {
-			$query['max_id'] = $this->_max;
-		}
-		
-		if($this->_page) {
-			$query['page'] = $this->_page;
-		}
-		
-		if($this->_count) {
-			$query['count'] = $this->_count;
-		}
-		
-		return $this->_getResponse(self::URL_USER, $query);
+		return $this->_getResponse(self::URL_USER, $this->_query);
 	}
 	 
 	/**
@@ -198,41 +126,8 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 * @return array
 	 */
 	public function getMentions() {
-		$query = array();
 		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		if($this->_rts) {
-			$query['include_rts'] = 1;
-		}
-		
-		if($this->_trim) {
-			$query['trim_user'] = 1;
-		}
-		
-		if($this->_detail) {
-			$query['contributor_details'] = 1;
-		}
-		
-		if($this->_since) {
-			$query['since_id'] = $this->_since;
-		}
-		
-		if($this->_max) {
-			$query['max_id'] = $this->_max;
-		}
-		
-		if($this->_page) {
-			$query['page'] = $this->_page;
-		}
-		
-		if($this->_count) {
-			$query['count'] = $this->_count;
-		}
-		
-		return $this->_getResponse(self::URL_MENTION, $query);
+		return $this->_getResponse(self::URL_MENTION, $this->_query);
 	}
 	
 	/**
@@ -242,33 +137,8 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 * @return array
 	 */
 	public function getRetweeted() {
-		$query = array();
 		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		if($this->_trim) {
-			$query['trim_user'] = 1;
-		}
-		
-		if($this->_since) {
-			$query['since_id'] = $this->_since;
-		}
-		
-		if($this->_max) {
-			$query['max_id'] = $this->_max;
-		}
-		
-		if($this->_page) {
-			$query['page'] = $this->_page;
-		}
-		
-		if($this->_count) {
-			$query['count'] = $this->_count;
-		}
-		
-		return $this->_getResponse(self::URL_OF_ME, $query);
+		return $this->_getResponse(self::URL_OF_ME, $this->_query);
 	}
 	 
 	/**
@@ -278,17 +148,8 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 * @return array
 	 */
 	public function getAllTweets() {
-		$query = array();
 		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		if($this->_trim) {
-			$query['trim_user'] = 1;
-		}
-		
-		return $this->_getResponse(self::URL_PUBLIC, $query);
+		return $this->_getResponse(self::URL_PUBLIC, $this->_query);
 	}
 	
 	/**
@@ -300,45 +161,8 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 * @return array
 	 */
 	public function getTimeline() {
-		$query = array();
 		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		if($this->_rts) {
-			$query['include_rts'] = 1;
-		}
-		
-		if($this->_replies) {
-			$query['exclude_replies'] = 1;
-		}
-		
-		if($this->_trim) {
-			$query['trim_user'] = 1;
-		}
-		
-		if($this->_detail) {
-			$query['contributor_details'] = 1;
-		}
-		
-		if($this->_since) {
-			$query['since_id'] = $this->_since;
-		}
-		
-		if($this->_max) {
-			$query['max_id'] = $this->_max;
-		}
-		
-		if($this->_page) {
-			$query['page'] = $this->_page;
-		}
-		
-		if($this->_count) {
-			$query['count'] = $this->_count;
-		}
-		
-		return $this->_getResponse(self::URL_TIMELINE, $query);
+		return $this->_getResponse(self::URL_TIMELINE, $this->_query);
 	}
 	
 	/**
@@ -352,47 +176,21 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 		//Argument 1 must be an integer, string or null
 		Eden_Twitter_Error::i()->argument(1, 'int', 'string', 'null');
 		
-		$query = array();
-		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		if($this->_trim) {
-			$query['trim_user'] = 1;
-		}
-		
-		if($this->_since) {
-			$query['since_id'] = $this->_since;
-		}
-		
-		if($this->_max) {
-			$query['max_id'] = $this->_max;
-		}
-		
-		if($this->_page) {
-			$query['page'] = $this->_page;
-		}
-		
-		if($this->_count) {
-			$query['count'] = $this->_count;
-		}
-		
 		if(!is_null($id)) {
 			//if it is integer
 			if(is_int($id)) {
 				//lets put it in our query
-				$query['user_id'] = $id;
+				$this->_query['user_id'] = $id;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['screen_name'] = $id;
+				$this->_query['screen_name'] = $id;
 			}
 		
-			return $this->_getResponse(self::URL_TO_USER, $query);
+			return $this->_getResponse(self::URL_TO_USER, $this->_query);
 		} 
 		
-		return $this->_getResponse(self::URL_TO_ME, $query);
+		return $this->_getResponse(self::URL_TO_ME, $this->_query);
 	}
 	
 	/**
@@ -403,7 +201,8 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 * @return this
 	 */
 	public function includeEntities() {
-		$this->_entities = true;
+		$this->_query['include_entities'] = true;
+		
 		return $this;
 	}
 	
@@ -415,7 +214,8 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 * @return this
 	 */
 	public function includeRts() {
-		$this->_rts = true;
+		$this->_query['include_rts'] = true;
+
 		return $this;
 	}
 	
@@ -423,13 +223,13 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 * Set count
 	 *
 	 * @param integer
-	 * @return array
+	 * @return this
 	 */
 	public function setCount($count) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['count'] = $count;
 		
-		$this->_count = $count;
 		return $this;
 	}
 	
@@ -437,13 +237,13 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 * Set max id
 	 *
 	 * @param integer
-	 * @return array
+	 * @return this
 	 */
-	public function setMax($max) {
+	public function setMaxId($maxId) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['max_id'] = $maxId;
 		
-		$this->_max = $max;
 		return $this;
 	}
 	
@@ -451,13 +251,13 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 * Set page
 	 *
 	 * @param integer
-	 * @return array
+	 * @return this
 	 */
 	public function setPage($page) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['page'] = $page;
 		
-		$this->_page = $page;
 		return $this;
 	}
 	
@@ -465,23 +265,24 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 * Set since id
 	 *
 	 * @param integer
-	 * @return array
+	 * @return this
 	 */
-	public function setSince($since) {
+	public function setSinceId($sinceId) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['since_id'] = $sinceId;
 		
-		$this->_since = $since;
 		return $this;
 	}
 	
 	/**
 	 * Set trim user
 	 *
-	 * @return array
+	 * @return this
 	 */
 	public function trimUser() {
-		$this->_trim = true;
+		$this->_query['trim_user'] = true;
+		
 		return $this;
 	}
 	

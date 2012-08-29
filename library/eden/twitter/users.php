@@ -50,56 +50,50 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 * Returns an array of users that
 	 * the specified user can contribute to.
 	 *
+	 * @param string|null Twitter User Id
+	 * @param string|null Twitter Screen Name
 	 * @return array
 	 */
-	public function getContributees() {
-		$query = array();
-		
+	public function getContributees($id = NULL, $name = NULL) {
+		//Argument test
+		Eden_Twitter_Error::i()
+			->argument(1,'string', 'null')		//Argument 1 must be a strng or null
+			->argument(2,'string', 'null');		//Argument 2 must be a strng or null
+
 		if($this->_id) {
-			$query['user_id'] = $this->_id;
+			$this->_query['user_id'] = $id;
 		}
 		
 		if($this->_name) {
-			$query['screen_name'] = $this->_name;
+			$this->_query['screen_name'] = $name;
 		}
-		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		if($this->_status) {
-			$query['skip_status'] = 1;
-		}
-		
-		return $this->_getResponse(self::URL_CONTRIBUTEES, $query);
+				
+		return $this->_getResponse(self::URL_CONTRIBUTEES, $this->_query);
 	}
 	
 	/**
 	 * Returns an array of users that 
 	 * the specified user can contribute to.
 	 *
+	 * @param string|null Twitter User Id
+	 * @param string|null Twitter Screen Name
 	 * @return array
 	 */
-	public function getContributors() {
-		$query = array();
-		
+	public function getContributors($id = NULL, $name = NULL) {
+		//Argument test
+		Eden_Twitter_Error::i()
+			->argument(1,'string', 'null')		//Argument 1 must be a strng or null
+			->argument(2,'string', 'null');		//Argument 2 must be a strng or null
+
 		if($this->_id) {
-			$query['user_id'] = $this->_id;
+			$this->_query['user_id'] = $id;
 		}
 		
 		if($this->_name) {
-			$query['screen_name'] = $this->_name;
+			$this->_query['screen_name'] = $name;
 		}
-		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		if($this->_status) {
-			$query['skip_status'] = 1;
-		}
-		
-		return $this->_getResponse(self::URL_CONTRIBUTORS, $query);
+				
+		return $this->_getResponse(self::URL_CONTRIBUTORS, $this->_query);
 	}
 	 
 	/**
@@ -110,16 +104,20 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 * @return array
 	 */
 	public function getDetail($id) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1,'int');		
-
-		$query = array('user_id' => $id);
+		//Argument 1 must be an integer or string
+		Eden_Twitter_Error::i()->argument(1,'int', 'string');		
 		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
+		//if it is integer
+		if(is_int($id)) {
+			//it is user id
+			$this->_query['user_id'] = $id;
+		//else it is string
+		} else {
+			//it is screen name
+			$this->_query['screen_name'] = $id;
 		}
 		
-		return $this->_getResponse(self::URL_SHOW, $query);
+		return $this->_getResponse(self::URL_SHOW, $this->_query);
 	}
 	 
 	/**
@@ -127,15 +125,16 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 * for the user with the indicated screen_name.
 	 * If no size is provided the normal image is returned.
 	 *
+	 * @param string Twitter Screen Name
 	 * @return array
 	 */
-	public function getProfileImage() {
-		//populate fields
-		$query = array(
-			'screen_name'	=> $this->_name,
-			'size'			=> $this->_size);
+	public function getProfileImage($name) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
 		
-		return $this->_getResponse(self::URL_PROFILE_IMAGE, $query);
+		$this->_query['screen_name'] = $name;
+		
+		return $this->_getResponse(self::URL_PROFILE_IMAGE, $this->_query);
 	}
 	
 	/**
@@ -145,39 +144,35 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 * @return array
 	 */
 	public function lookupFriends() {
-		$query = array();
-		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
 		
 		//if id is integer
-		if(is_int($this->_id)) {
-			$this->_id = explode(',', $this->_id);
+		if(is_int($this->_query['user_id'])) {
+			$id = explode(',', $this->_query['user_id']);
 			//at this point id will be an array
-			$this->_id = array();
+			$id = array();
 			//lets put it in query
-			$query['user_id'] = $this->_id;
+			$this->_query['user_id'] = $id;
 		}
 		
 		//if name is string
-		if(is_string($this->_name)) {
-			$this->_name = explode(',', $this->_name);
+		if(is_string($this->_query['screen_name'])) {
+			$name = explode(',', $this->_query['screen_name']);
 			//at this point id will be an array
-			$this->_name = array();
-			$query['screen_name'] = $this->_name;
+			$name = array();
+			$this->_query['screen_name'] = $name;
 		}
 		
-		return $this->_getResponse(self::URL_LOOK_UP, $query);
+		return $this->_getResponse(self::URL_LOOK_UP, $this->_query);
 	}
 	
 	/**
 	 * Set include entities
 	 *
-	 * @return array
+	 * @return this
 	 */
 	public function includeEntities() {
-		$this->_entities = true;
+		$this->_query['include_entities'] = true;
+		
 		return $this;
 	}
 	
@@ -185,13 +180,13 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 * Set user id
 	 *
 	 * @param integer
-	 * @return array
+	 * @return this
 	 */
 	public function setUserId($id) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['user_id'] = $id;
 		
-		$this->_id = $id;
 		return $this;
 	}
 	
@@ -199,13 +194,13 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 * Set screen name
 	 *
 	 * @param string
-	 * @return array
+	 * @return this
 	 */
 	public function setScreenName($name) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['screen_name'] = $name;
 		
-		$this->_name = $name;
 		return $this;
 	}
 	
@@ -213,13 +208,13 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 * Set page
 	 *
 	 * @param integer
-	 * @return array
+	 * @return this
 	 */
 	public function setPage($page) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['page'] = $page;
 		
-		$this->_page = $page;
 		return $this;
 	}
 	
@@ -227,36 +222,57 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	 * Set per page
 	 *
 	 * @param integer
-	 * @return array
+	 * @return this
 	 */
-	public function setPerpage($perpage) {
+	public function setPerpage($perPage) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['per_page'] = $perPage;
 		
-		$this->_perpage = $perpage;
 		return $this;
 	}
 	
 	/**
-	 * Set size
+	 * Set bigger image 73px by 73px
 	 *
-	 * @param string
-	 * @return array
+	 * @return this
 	 */
-	public function setSize($size) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'string');
+	public function setBiggerImage() {
+		$this->_query['size'] = 'bigger';
 		
-		$this->_size = $size;
+		return $this;
+	}
+	
+	/**
+	 * Set mini image 24px by 24px
+	 *
+	 * @return this
+	 */
+	public function setMiniImage() {
+		$this->_query['size'] = 'mini';
+		
+		return $this;
+	}
+	
+	/**
+	 * This will be the size the image was originally uploaded in
+	 *
+	 * @return this
+	 */
+	public function setOriginalImage() {
+		$this->_query['size'] = 'original';
+		
 		return $this;
 	}
 	
 	/**
 	 * Set skip status
 	 *
-	 * @return array
+	 * @return this
 	 */
 	public function skipStatus() {
+		$this->_query['skip_status'] = true;
+		
 		$this->_status = true;
 		return $this;
 	}
@@ -271,21 +287,9 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 		//Argument 1 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');	
 
-		$query = array('q' => $search);
+		$this->_query['q'] = $search;
 		
-		if($this->_page) {
-			$query['page'] = $this->_page;
-		}
-		
-		if($this->_perpage) {
-			$query['per_page'] = $this->_perpage;
-		}
-		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		return $this->_getResponse(self::URL_SEARCH, $query);
+		return $this->_getResponse(self::URL_SEARCH, $this->_query);
 	}
 	
 	/* Protected Methods

@@ -25,15 +25,6 @@ class Eden_Foursquare_Pages extends Eden_Foursquare_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_twitter		= NULL;
-	protected $_fbId		= NULL;
-	protected $_endAt		= NULL;
-	protected $_fields		= NULL;
-	protected $_location	= NULL;
-	protected $_raduis		= NULL;
-	protected $_offset		= NULL;
-	protected $_limit		= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -59,7 +50,7 @@ class Eden_Foursquare_Pages extends Eden_Foursquare_Base {
 	public function setTwitter($twitter) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_twitter  = $twitter; 
+		$this->_query['twitter'] = $twitter;
 		
 		return $this;
 	}
@@ -73,7 +64,7 @@ class Eden_Foursquare_Pages extends Eden_Foursquare_Base {
 	public function setFacebookId($fbId) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_fbId  = $fbId; 
+		$this->_query['fbid'] = $fbId;
 		
 		return $this;
 	}
@@ -99,7 +90,7 @@ class Eden_Foursquare_Pages extends Eden_Foursquare_Base {
 				->trigger();
 		}
 		
-		$this->_fields  = $fields; 
+		$this->_query['fields'] = $fields;
 		
 		return $this;
 	}
@@ -113,8 +104,8 @@ class Eden_Foursquare_Pages extends Eden_Foursquare_Base {
 	 */
 	public function setEndTime($endTime) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_endAt = strtotime($endTime);
+		Eden_Foursquare_Error::i()->argument(1, 'string');		
+		$this->_query['endAt'] = strtotime($endTime);
 		
 		return $this;
 	}
@@ -133,7 +124,7 @@ class Eden_Foursquare_Pages extends Eden_Foursquare_Base {
 			->argument(1, 'int', 'float')	//argument 1 must be an integer or float
 			->argument(2, 'int', 'float');	//argument 2 must be an integer or float
 			
-		$this->_location  = $longtitude.', '.$latitude; 
+		$this->_query['ll'] = $longtitude.', '.$latitude;
 		
 		return $this;
 	}
@@ -146,8 +137,8 @@ class Eden_Foursquare_Pages extends Eden_Foursquare_Base {
 	 */
 	public function setRadius($radius) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'int');						
-		$this->_radius = $radius;
+		Eden_Foursquare_Error::i()->argument(1, 'int');	
+		$this->_query['radius'] = $radius;
 		
 		return $this;
 	}
@@ -160,8 +151,8 @@ class Eden_Foursquare_Pages extends Eden_Foursquare_Base {
 	 */
 	public function setLimit($limit) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'int');						
-		$this->_limit = $limit;
+		Eden_Foursquare_Error::i()->argument(1, 'int');				
+		$this->_query['limit'] = $limit;
 		
 		return $this;
 	}
@@ -174,8 +165,8 @@ class Eden_Foursquare_Pages extends Eden_Foursquare_Base {
 	 */
 	public function setOffset($offset) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'int');						
-		$this->_offset = $offset;
+		Eden_Foursquare_Error::i()->argument(1, 'int');	
+		$this->_query['offset'] = $offset;
 		
 		return $this;
 	}
@@ -190,12 +181,9 @@ class Eden_Foursquare_Pages extends Eden_Foursquare_Base {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
 		
-		$query = array(
-			'name'		=> $name,
-			'twitter'	=> $this->_twitter,		//optional
-			'fbid'		=> $this->_fbId);		//optionalc
+		$this->_query['name'] = $name;
 		
-		return $this->_getResponse(self::URL_PAGES_SEARCH, $query);
+		return $this->_getResponse(self::URL_PAGES_SEARCH, $this->_query);
 	}
 	
 	/**
@@ -211,12 +199,9 @@ class Eden_Foursquare_Pages extends Eden_Foursquare_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 		
-		$query = array(
-			'startAt'	=> strtotime($startAt),		
-			'endAt'		=> $this->_endAt,		//optional
-			'fields'	=> $this->_fields);		//optional
+		$this->_query['startAt'] = strtotime($startAt);
 		
-		return $this->_getResponse(sprintf(self::URL_PAGES_TIMESERIES, $pageId), $query);
+		return $this->_getResponse(sprintf(self::URL_PAGES_TIMESERIES, $pageId), $this->_query);
 	}
 	
 	/**
@@ -229,15 +214,8 @@ class Eden_Foursquare_Pages extends Eden_Foursquare_Base {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');
 		
-		$query = array(
-			'll'		=> $this->_location,	//optional	
-			'radius'	=> $this->_radius,		//optional
-			'offset'	=> $this->_offset,		//optional 
-			'limit'		=> $this->_limit);		//optional
-		
-		return $this->_getResponse(sprintf(self::URL_PAGES_VENUES, $pageId), $query);
+		return $this->_getResponse(sprintf(self::URL_PAGES_VENUES, $pageId), $this->_query);
 	}
-	
 	
 	/* Protected Methods
 	-------------------------------*/

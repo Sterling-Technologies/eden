@@ -48,44 +48,42 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	 *
 	 * @param int|string user ID or screen name
 	 * @param int|string user ID or screen name
-	 * @return bool	
+	 * @return boolean	
 	 */
 	public function areFriends($userA, $userB) {
 		//Argument Test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string', 'int')	//Argument 1 must be an integer, string
 			->argument(2, 'string', 'int');	//Argument 2 must be an integer, string
-
-		$query = array();
 		
 		//if it is integer
 		if(is_int($userA)) {
 			//lets put it in query
-			$query['user_id_a'] = $userA;
+			$this->_query['user_id_a'] = $userA;
 		//if it is string
 		} else {
 			//lets put it in query
-			$query['screen_name_a'] = $userA;
+			$this->_query['screen_name_a'] = $userA;
 		}
 		
 		//if it is integer
 		if(is_int($userB)) {
 			//lets put it in query
-			$query['user_id_b'] = $userB;
+			$this->_query['user_id_b'] = $userB;
 		//if it is string
 		} else {
 			//lets put it in query
-			$query['screen_name_b'] = $userB;
+			$this->_query['screen_name_b'] = $userB;
 		}
 		
-		return $this->_getResponse(self::URL_FRIENDS_EXIST, $query);
+		return $this->_getResponse(self::URL_FRIENDS_EXIST, $this->_query);
 	}
 	
 	/**
 	 * Allows the authenticating users to follow the 
 	 * user specified in the ID parameter..
 	 * 
-	 * @param string|int or screen name
+	 * @param string|int user id or screen name
 	 * @param bool
 	 * @return array
 	 */
@@ -94,170 +92,88 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 		Eden_Twitter_Error::i()
 			->argument(1, 'string', 'int')	//Argument 1 must be an integer, string
 			->argument(2, 'bool');			//Argument 1 must be a boolean
-
-		$query = array();
 		
 		//if it is integer
 		if(is_int($id)) {
 			//lets put it in our query
-			$query['user_id'] = $id;
+			$this->_query['user_id'] = $id;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['screen_name'] = $id;
+			$this->_query['screen_name'] = $id;
 		}
 		
-		return $this->_post(self::URL_FOLLOW_FRIENDS, $query);
+		return $this->_post(self::URL_FOLLOW_FRIENDS, $this->_query);
 	}
 	
 	/**
 	 * Returns an array of numeric IDs for every 
 	 * user following the specified user. 
 	 *
-	 * @param bool
-	 * @param int|string|null
-	 * @param int|null
+	 * @param string|int
 	 * @return array
 	 */
-	public function getFollowers($stringify = false, $id = NULL, $cursor = NULL) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'bool')					//Argument 1 must be a boolean
-			->argument(2, 'int', 'string', 'null')	//Argument 2 must be an integer, string or null
-			->argument(3, 'int', 'null');			//Argument 3 must be an integer or null
+	public function getFollowers($id) {
+		//Argument 1 must be a string or integer
+		Eden_Twitter_Error::i()->argument(1, 'int', 'string');					
 
-		$query = array();
-		
-		//if it is not empty 
-		if(!is_null($id)) {
-			//if it is integer
-			if(is_int($id)) {
-				//lets put it in query
-				$query['user_id'] = $id;
-			}
-			
-			//if it is string
-			if(is_string($id)) {
-				//lets put it in query
-				$query['string_name'] = $id;
-			}
-		}
-		
-		//if it is not empty 
-		if(!is_null($cursor)) {
+		//if it is integer
+		if(is_int($id)) {
 			//lets put it in query
-			$query['cursor'] = $cursor;
+			$this->_query['user_id'] = $id;
+		//else it is string
+		} else {	
+			//lets put it in query
+			$this->_query['string_name'] = $id;
 		}
 		
-		//if stringify
-		if($stringify) {
-			$query['stringify_ids'] = 1;
-		}
-		
-		return $this->_getResponse(self::URL_FOLLOWERS, $query);
+		return $this->_getResponse(self::URL_FOLLOWERS, $this->_query);
 	}
 	
 	/**
 	 * Returns an array of numeric IDs for
 	 * every user the specified user is following. 
 	 *
-	 * @param bool
-	 * @param int|string|null user ID or screen name
-	 * @param int|null
+	 * @param string|int
 	 * @return array
 	 */
-	public function getFollowing($stringify = false, $id = NULL, $cursor = NULL) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'bool')					//Argument 1 must be an boolean
-			->argument(2, 'int','string', 'null')	//Argument 2 must be an integer, string or null
-			->argument(3, 'int', 'null');			//Argument 3 must be an integer or null
+	public function getFollowing($id) {
+		//Argument 1 must be a string or integer
+		Eden_Twitter_Error::i()->argument(1, 'int', 'string');					
 
-		$query = array();
-		
-		//if stringify
-		if($stringify) {
-			$query['stringify_ids'] = 1;
-		}
-		//if it is not empty 
-		if(!is_null($id)) {
-			//if it is integer
-			if(is_int($id)) {
-				//lets put it in query
-				$query['user_id'] = $id;
-			//if it is string
-			} else {
-				//lets put it in query
-				$query['screen_name'] = $id;
-			} 
-		}
-		//if it is not empty
-		if(!is_null($cursor)) {
+		//if it is integer
+		if(is_int($id)) {
 			//lets put it in query
-			$query['cursor'] = $cursor;
+			$this->_query['user_id'] = $id;
+		//else it is string
+		} else {	
+			//lets put it in query
+			$this->_query['string_name'] = $id;
 		}
 		
-		return $this->_getResponse(self::URL_FRIENDS, $query);
+		return $this->_getResponse(self::URL_FRIENDS, $this->_query);
 	}
 	
 	/**
 	 * Returns an array of numeric IDs for every protected user 
 	 * for whom the authenticating user has a pending follow request.
 	 * 
-	 * @param boolean
-	 * @param integer|null
 	 * @return array
 	 */
-	public function getPendingFollowing($stringify = false, $cursor = NULL) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'boolean')		//Argument 1 must be a boolean
-			->argument(2, 'int', 'null');	//Argument 2 must be an integer or null
-
-		$query = array();
+	public function getPendingFollowing() {
 		
-		//if stringify
-		if($stringify) {
-			$query['stringify_ids'] = 1;
-		}
-		
-		//if it is not empty 
-		if(!is_null($cursor)) {
-			//lets put it in query
-			$query['cursor'] = $cursor;
-		}
-		
-		return $this->_getResponse(self::URL_OUTGOING_FRIENDS, $query);
+		return $this->_getResponse(self::URL_OUTGOING_FRIENDS, $this->_query);
 	}
 	
 	/**
 	 * Returns an array of numeric IDs for every user 
 	 * who has a pending request to follow the authenticating user.
 	 * 
-	 * @param bool
-	 * @param int|null
 	 * @return array
 	 */
-	public function getPendingFollowers($stringify = false, $cursor = NULL) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'boolean')		//Argument 1 must be a boolean
-			->argument(2, 'int', 'null');	//Argument 2 must be an integer or null
-
-		$query = array();
+	public function getPendingFollowers() {
 		
-		//if stringify
-		if($stringify) {
-			$query['stringify_ids'] = 1;
-		}
-		
-		//if it is not empty 
-		if(!is_null($cursor)) {
-			//lets put it in query
-			$query['cursor'] = $cursor;
-		}
-		
-		return $this->_getResponse(self::URL_INCOMING_FRIENDS, $query);
+		return $this->_getResponse(self::URL_INCOMING_FRIENDS, $this->_query);
 	 }
 	
 	/**
@@ -268,35 +184,33 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	 * @param int|string user ID or screen name
 	 * @return array
 	 */
-	public function getRelationship($id, $target = NULL) {
+	public function getRelationship($id, $target) {
 		//Argument Test
 		Eden_Twitter_Error::i()
 			->argument(1, 'string', 'int')	//Argument 1 must be an integer, string
 			->argument(2, 'string', 'int');	//Argument 2 must be an integer, string
-
-		$query = array();
 		
 		//if it is integer
 		if(is_int($id)) {
 			//lets put it in query
-			$query['source_id'] = $id;
+			$this->_query['source_id'] = $id;
 		//if it is string
 		} else {
 			//lets put it in query
-			$query['source_screen_name'] = $id;
+			$this->_query['source_screen_name'] = $id;
 		}
 		
 		//if it is integer
 		if(is_int($target)) {
 			//lets put it in query
-			$query['target_id'] = $target;
+			$this->_query['target_id'] = $target;
 		//if it is string
 		} else {
 			//lets put it in query
-			$query['target_screen_name'] = $target;
+			$this->_query['target_screen_name'] = $target;
 		}
 		
-		return $this->_getResponse(self::URL_SHOW_FRIENDS, $query);
+		return $this->_getResponse(self::URL_SHOW_FRIENDS, $this->_query);
 	}
 	
 	/**
@@ -310,11 +224,9 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 		//Argument 1 must be an integer, string or null
 		Eden_Twitter_Error::i() ->argument(1, 'int', 'string', 'array', 'null');	
 		
-		$query = array();
-		
 		//if it is empty 
 		if(is_null($id)) {
-			return $this->_getResponse(self::URL_LOOKUP_FRIENDS, $query);
+			return $this->_getResponse(self::URL_LOOKUP_FRIENDS, $this->_query);
 		}
 		
 		//if it's not an array
@@ -326,14 +238,14 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 		//if id is integer
 		if(is_int($id[0])) {
 			//lets put it in query
-			$query['user_id'] = implode(',',$id);
+			$this->_query['user_id'] = implode(',',$id);
 		//if it is streing
 		} else {
 			//lets put it in query
-			$query['screen_name'] = implode(',',$id);
+			$this->_query['screen_name'] = implode(',',$id);
 		}
 		
-		return $this->_getResponse(self::URL_LOOKUP_FRIENDS, $query);
+		return $this->_getResponse(self::URL_LOOKUP_FRIENDS, $this->_query);
 	}
 	
 	/**
@@ -348,14 +260,12 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 		//Argument 1 must be an boolean
 		Eden_Twitter_Error::i()->argument(1, 'bool');						
 		
-		$query = array();
-		
 		if($stringify) {
 			//lets put it in query
-			$query['stringify_ids'] =  1;
+			$this->_query['stringify_ids'] =  1;
 		}
 		
-		return $this->_getResponse(self::URL_NO_RETWEETS_IDS, $query);
+		return $this->_getResponse(self::URL_NO_RETWEETS_IDS, $this->_query);
 	}
 	 
 	/**
@@ -371,24 +281,22 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 		Eden_Twitter_Error::i()
 			->argument(1, 'string', 'int')	//Argument 1 must be a string or int
 			->argument(2, 'boolean');		//Argument 2 must be an boolean
-			
-		$query = array();
 		
 		//if it is integer
 		if(is_int($id)) {
 			//lets put it in query
-			$query['user_id'] = $id;
+			$this->_query['user_id'] = $id;
 		} else {
 			//lets put it in query
-			$query['string_name'] = $id;
+			$this->_query['string_name'] = $id;
 		}
 		
 		//if entities
 		if($entities) {
-			$query['include_entities'] = $entities;
+			$this->_query['include_entities'] = $entities;
 		}
 		
-		return $this->_post(self::URL_UNFOLLOW_FRIENDS, $query);
+		return $this->_post(self::URL_UNFOLLOW_FRIENDS, $this->_query);
 	}
 	 
 	/**
@@ -406,30 +314,28 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 			->argument(1, 'string', 'int')	//Argument 1 must be a string or int
 			->argument(2, 'bool')			//Argument 2 must be a boolean
 			->argument(3, 'bool');			//Argument 3 must be a boolean
-
-		$query = array();
 		
 		//if id is string
 		if(is_string($id)) {
 			//lets put it in query
-			$query['screen_name'] = $id;
+			$this->_query['screen_name'] = $id;
 		//else it is integer
 		} else {
 			//lets put it in query
-			$query['user_id'] = $id;
+			$this->_query['user_id'] = $id;
 		}
 
 		if($device) {
 			//lets put it in query
-			$query['device'] = 1;
+			$this->_query['device'] = 1;
 		}
 		
 		if($retweets) {
 			//lets put it in query
-			$query['retweets'] = 1;
+			$this->_query['retweets'] = 1;
 		}
 		
-		return $this->_post(self::URL_UPDATE, $query);
+		return $this->_post(self::URL_UPDATE, $this->_query);
 	}
 	
 	/* Protected Methods

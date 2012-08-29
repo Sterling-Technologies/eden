@@ -49,15 +49,15 @@ class Eden_Twitter_Suggestions extends Eden_Twitter_Base {
 			->argument(1, 'string')				//Argument 1 must be a string 
 			->argument(2, 'string', 'null');	//Argument 2 must be a string or null 
 
-		$query = array('slug' => $slug);
+		$this->_query['slug'] = $slug;
 		
 		//if it is not empty
 		if(!is_null($lang)) {
 			//lets put it in our query	
-			$query['lang'] = $lang;
+			$this->_query['lang'] = $lang;
 		}
 		
-		return $this->_getResponse(self::URL_GET_CATEGORY, $query);
+		return $this->_getResponse(self::URL_GET_CATEGORY, $this->_query);
 	}
 	
 	/**
@@ -72,9 +72,9 @@ class Eden_Twitter_Suggestions extends Eden_Twitter_Base {
 		//Argument 1 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');			
 
-		$query = array('slug' => $slug);
+		$this->_query['slug'] = $slug;
 	
-		return $this->_getResponse(self::URL_GET_RECENT_STATUS, $query);
+		return $this->_getResponse(self::URL_GET_RECENT_STATUS, $this->_query);
 	}
 	
 	/**
@@ -90,10 +90,10 @@ class Eden_Twitter_Suggestions extends Eden_Twitter_Base {
 		//if it is not empty
 		if(!is_null($lang)) {
 			//lets put it in our query	
-			$query = array('lang' => $lang);
+			$this->_query['lang'] = $lang;
 		}
 
-		return $this->_getResponse(self::URL_SUGGESTION, $query);
+		return $this->_getResponse(self::URL_SUGGESTION, $this->_query);
 	}
 	 
 	/* Protected Methods

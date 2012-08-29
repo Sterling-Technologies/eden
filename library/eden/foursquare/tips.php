@@ -29,14 +29,6 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_broadcast 	= NULL;
-	protected $_url		 	= NULL;
-	protected $_location 	= NULL;
-	protected $_limit 		= NULL;
-	protected $_filter 		= NULL;
-	protected $_query 		= NULL;
-	protected $_group 		= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -61,8 +53,8 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 	 */
 	public function setUrl($url) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_url = $url;
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
+		$this->_query['url'] = $url;
 		
 		return $this;
 	}
@@ -81,7 +73,7 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 			->argument(1, 'int', 'float')	//argument 1 must be an integer or float
 			->argument(2, 'int', 'float');	//argument 2 must be an integer or float
 			
-		$this->_location  = $longtitude.', '.$latitude; 
+		$this->_query['ll'] =$longtitude.', '.$latitude; 
 		
 		return $this;
 	}
@@ -94,8 +86,8 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 	 */
 	public function setLimit($limit) {
 		//argument 1 must be a integer
-		Eden_Foursquare_Error::i()->argument(1, 'int');						
-		$this->_limit = $limit;
+		Eden_Foursquare_Error::i()->argument(1, 'int');			
+		$this->_query['limit'] = $limit;
 		
 		return $this;
 	}
@@ -108,8 +100,8 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 	 */
 	public function setFilter($filter) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_filter = $filter;
+		Eden_Foursquare_Error::i()->argument(1, 'string');		
+		$this->_query['filter'] = $filter;
 		
 		return $this;
 	}
@@ -123,8 +115,8 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 	 */
 	public function setQuery($query) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_query = $query;
+		Eden_Foursquare_Error::i()->argument(1, 'string');		
+		$this->_query['query'] = $query;
 		
 		return $this;
 	}
@@ -150,7 +142,7 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 				->trigger();
 		}
 		
-		$this->_broadcast = $broadcast;
+		$this->_query['broadcast'] = $broadcast;
 		
 		return $this;
 	}
@@ -175,7 +167,7 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 				->trigger();
 		}
 		
-		$this->_group = $group;
+		$this->_query['group'] = $group;
 		
 		return $this;
 	}
@@ -193,13 +185,10 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 		
-		$query = array(
-			'venueId'	=> $venueId,
-			'text'		=> $text,	
-			'broadcast'	=> $this->_broadcast,		//optional
-			'url'		=> $this->_eventId);		//optional
+		$this->_query['text'] 		= $text;
+		$this->_query['venueId']	= $venueId;
 		
-		return $this->_post(self::URL_TIPS_ADD, $query);
+		return $this->_post(self::URL_TIPS_ADD, $this->_query);
 	}	
 	
 	/**
@@ -211,18 +200,10 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 	public function search($near) {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');
+				
+		$this->_query['near'] = $near;
 		
-		//populate fields
-		$query = array(
-			'near'		=> $near,
-			'll'		=> $this->_location,	//optional
-			'limit'		=> $this->_limit,		//optional
-			'offset'	=> $this->_offset,		//optional
-			'filter'	=> $this->_filters,		//optional
-			'query'		=> $this->_query);		//optional
-			
-		
-		return $this->_post(self::URL_TIPS_SEARCH, $query);
+		return $this->_post(self::URL_TIPS_SEARCH, $this->_query);
 	}
 	
 	/**
@@ -235,12 +216,7 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(
-			'limit'		=> $this->_limit,		//optional
-			'offset'	=> $this->_offset);		//optional
-			
-		return $this->_post(sprintf(self::URL_TIPS_GET, $tipId), $query);
+		return $this->_post(sprintf(self::URL_TIPS_GET, $tipId), $this->_query);
 	}
 	
 	/**
@@ -253,10 +229,9 @@ class Eden_Foursquare_Tips extends Eden_Foursquare_Base {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array('group' => $this->_group);
-			
-		return $this->_post(sprintf(self::URL_TIPS_LIST, $tipId), $query);
+		$this->_query['_group'] = $_group;
+		
+		return $this->_post(sprintf(self::URL_TIPS_LIST, $tipId), $this->_query);
 	}
 	
 	/**

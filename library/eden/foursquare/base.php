@@ -32,6 +32,7 @@ class Eden_Foursquare_Base extends Eden_Class {
 	protected $_token		= NULL;
 	protected $_maxResult	= NULL;
 	protected $_headers		= array(self::FORM_HEADER, self::CONTENT_TYPE);
+	protected $_query		= array();
 	
 	/* Private Properties
 	-------------------------------*/
@@ -116,8 +117,8 @@ class Eden_Foursquare_Base extends Eden_Class {
 		//build url query
 		$url .= '?'.http_build_query($query);
 		//reset variables
-		$this->_reset();
-		
+		unset($this->_query);
+	
 		//set curl
 		return $this->Eden_Curl()
 			->setUrl($url)
@@ -137,7 +138,7 @@ class Eden_Foursquare_Base extends Eden_Class {
 		//build a to string query
 		$query = http_build_query($query);
 		//reset variables
-		$this->_reset();
+		unset($this->_query);
 
 		//set curl
 		$curl = Eden_Curl::i()

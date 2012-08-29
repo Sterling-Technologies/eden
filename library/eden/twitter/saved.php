@@ -43,14 +43,13 @@ class Eden_Twitter_Saved extends Eden_Twitter_Base {
 	 * @param string
 	 * @return array
 	 */
-	public function createSearch($input) {
+	public function createSearch($query) {
 		//Argument 1 must be a integer
 		Eden_Twitter_Error::i()->argument(1, 'string');	
 		
-		$query  = array('query' => $input);
+		$this->_query['query'] = $query;
 		
-		$url = sprintf(self::URL_CREATE_SEARCH, $input);
-		return $this->_post($url,$query);
+		return $this->_post(self::URL_CREATE_SEARCH, $this->_query);
 	}
 	
 	/**
@@ -65,9 +64,7 @@ class Eden_Twitter_Saved extends Eden_Twitter_Base {
 		//Argument 1 must be a integer
 		Eden_Twitter_Error::i()->argument(1, 'int');	
 		
-		$query  = array('id' => $id);
-		
-		return $this->_getResponse(self::URL_GET_DETAIL, $query);
+		return $this->_getResponse(sprintf(self::URL_GET_DETAIL, $id));
 	}
 	
 	/**
@@ -77,6 +74,7 @@ class Eden_Twitter_Saved extends Eden_Twitter_Base {
 	 * @return array
 	 */
 	public function getSavedSearches() {
+		
 		return $this->_getResponse(self::URL_SAVED_SEARCHES);
 	}
 	
@@ -92,10 +90,7 @@ class Eden_Twitter_Saved extends Eden_Twitter_Base {
 		//Argument 1 must be a integer
 		Eden_Twitter_Error::i()->argument(1, 'int');	
 		
-		$query  = array('id' => $id);
-		
-		$url = sprintf(self::URL_REMOVE, $id);
-		return $this->_post($url,$query);
+		return $this->_post(sprintf(self::URL_REMOVE, $id));
 	}
 	
 	/* Protected Methods

@@ -46,19 +46,17 @@ class Eden_Twitter_Notification extends Eden_Twitter_Base {
 		//Argument 1 must be a string or integer
 		Eden_Twitter_Error::i()->argument(1, 'string', 'int');	
 		
-		$query  = array();
-		
 		//if it is integer
 		if(is_int($id)) {
 			//lets put it in our query
-			$query['user_id'] = $id;
+			$this->_query['user_id'] = $id;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['screen_name'] = $id;
+			$this->_query['screen_name'] = $id;
 		}
 		
-		return $this->_post(self::URL_FOLLOW, $query);
+		return $this->_post(self::URL_FOLLOW, $this->_query);
 	}
 	
 	/**
@@ -73,19 +71,17 @@ class Eden_Twitter_Notification extends Eden_Twitter_Base {
 		//Argument 1 must be a string or integer
 		Eden_Twitter_Error::i()->argument(1, 'string', 'int');	
 		
-		$query  = array();
-		
 		//if it is integer
 		if(is_int($id)) {
 			//lets put it in our query
-			$query['user_id'] = $id;
+			$this->_query['user_id'] = $id;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['screen_name'] = $id;
+			$this->_query['screen_name'] = $id;
 		}
 		
-		return $this->_post(self::URL_LEAVE, $query);
+		return $this->_post(self::URL_LEAVE, $this->_query);
 	}
 	
 	/* Protected Methods

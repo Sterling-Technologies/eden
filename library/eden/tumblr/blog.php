@@ -36,20 +36,6 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	-------------------------------*/
 	protected $_size			= 64;
 	protected $_postType		= 'text';
-	protected $_limit			= NULL;
-	protected $_offset			= NULL;
-	protected $_postId			= NULL;
-	protected $_tag				= NULL;
-	protected $_reblogInfo		= NULL;
-	protected $_notesInfo		= NULL;
-	protected $_state			= NULL;
-	protected $_format			= NULL;
-	protected $_slug			= NULL;
-	protected $_caption			= NULL;
-	protected $_link			= NULL;
-	protected $_source			= NULL;
-	protected $_data			= NULL;
-	protected $_description		= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -88,7 +74,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	public function setLimit($limit) {
 		//Argument 1 must be a integer
 		Eden_Tumblr_Error::i()->argument(1, 'int');
-		$this->_limit = $limit;
+		$this->_query['limit'] = $limit;
 		
 		return $this;
 		
@@ -103,7 +89,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	public function setOffset($offset) {
 		//Argument 1 must be a integer
 		Eden_Tumblr_Error::i()->argument(1, 'int');
-		$this->_offset = $offset;
+		$this->_query['offset'] = $offset;
 		
 		return $this;
 		
@@ -119,7 +105,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	public function setPostId($postId) {
 		//Argument 1 must be a integer
 		Eden_Tumblr_Error::i()->argument(1, 'int');
-		$this->_postId = $postId;
+		$this->_query['id'] = $postId;
 		
 		return $this;
 		
@@ -150,7 +136,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	public function setTag($tag) {
 		//Argument 1 must be a string
 		Eden_Tumblr_Error::i()->argument(1, 'string');
-		$this->_tag = $tag;
+		$this->_query['tag'] = $tag;
 		
 		return $this;
 		
@@ -166,7 +152,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	public function setState($state) {
 		//Argument 1 must be a string
 		Eden_Tumblr_Error::i()->argument(1, 'string');
-		$this->_state = $state;
+		$this->_query['state'] = $tag;
 		
 		return $this;
 		
@@ -182,7 +168,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	public function setFormat($format) {
 		//Argument 1 must be a string
 		Eden_Tumblr_Error::i()->argument(1, 'string');
-		$this->_format = $format;
+		$this->_query['format'] = $format;
 		
 		return $this;
 		
@@ -197,7 +183,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	public function setSlug($slug) {
 		//Argument 1 must be a string
 		Eden_Tumblr_Error::i()->argument(1, 'string');
-		$this->_slug = $slug;
+		$this->_query['slug'] = $slug;
 		
 		return $this;
 		
@@ -212,7 +198,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	public function setCaption($caption) {
 		//Argument 1 must be a string
 		Eden_Tumblr_Error::i()->argument(1, 'string');
-		$this->_caption = $caption;
+		$this->_query['caption'] = $caption;
 		
 		return $this;
 		
@@ -227,7 +213,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	public function setLink($link) {
 		//Argument 1 must be a url
 		Eden_Tumblr_Error::i()->argument(1, 'url');
-		$this->_link = $link;
+		$this->_query['link'] = $link;
 		
 		return $this;
 		
@@ -242,7 +228,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	public function setDescription($description) {
 		//Argument 1 must be a string
 		Eden_Tumblr_Error::i()->argument(1, 'string');
-		$this->_description = $description;
+		$this->_query['description'] = $description;
 		
 		return $this;
 		
@@ -284,12 +270,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 		//Argument 1 must be a string
 		Eden_Tumblr_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(
-			'limit'		=> $this->_limit,	//optional
-			'offset'	=> $this->_offset);	//optional
-		
-		return $this->_getAuthResponse(sprintf(self::URL_BLOG_GET_FOLLOWER, $baseHostName));
+		return $this->_getAuthResponse(sprintf(self::URL_BLOG_GET_FOLLOWER, $baseHostName), $this->_query);
 	}
 	
 	/**
@@ -302,16 +283,7 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 		//Argument 1 must be a string
 		Eden_Tumblr_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(
-			'id'			=> $this->_postId,		//optional
-			'tag'			=> $this->_tag,			//optional
-			'limit'			=> $this->_limit,		//optional
-			'offset'		=> $this->_offset,		//optional
-			'reblog_info'	=> $this->_reblogInfo,	//optional
-			'notes_info'	=> $this->_notesInfo);	//optional
-		
-		return $this->_getResponse(sprintf(self::URL_BLOG_GET_POST, $baseHostName, $this->_postType), $query);
+		return $this->_getResponse(sprintf(self::URL_BLOG_GET_POST, $baseHostName, $this->_postType), $this->_query);
 	}
 	
 	/**
@@ -361,23 +333,18 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 	 * @param string|null Title of the post, HTML entities must be escaped
 	 * @return this
 	 */
-	public function postText($baseHostName, $body, $title = NULL) {
+	public function postText($baseHostName, $body, $title = NULL) { 
 		//Argument test
 		Eden_Tumblr_Error::i()
 			->argument(1, 'string')				//Argument 1 must be a string
 			->argument(2, 'string')				//Argument 2 must be a string
 			->argument(3, 'string', 'null');	//Argument 3 must be a string or null
 		
-		$query = array(
-			'type'		=> 'text',
-			'body'		=> $body,
-			'title'		=> $title,			//optional	
-			'state'		=> $this->_state,	//optional
-			'tags'		=> $this->_tag,		//optional
-			'format'	=> $this->_format,	//optional
-			'slug'		=> $this->_slug);	//optional
+		$this->_query['type'] 	= 'text';
+		$this->_query['body'] 	= $body;
+		$this->_query['title']	= $title;
 		
-		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName),$query);
+		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName), $this->_query);
 	}
 	
 	/**
@@ -396,18 +363,11 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 			->argument(2, 'string', 'null')		//Argument 2 must be a string or null
 			->argument(3, 'string', 'null');	//Argument 3 must be a string or null
 		
-		$query = array(
-			'type'		=> 'photo',	
-			'source'	=> $source,
-			'data'		=> $data,
-			'caption'	=> $this->_caption,	//optional
-			'link'		=> $this->_link,	//optional
-			'state'		=> $this->_state,	//optional
-			'tags'		=> $this->_tag,		//optional
-			'format'	=> $this->_format,	//optional
-			'slug'		=> $this->_slug);	//optional
+		$this->_query['type'] 	= 'photo';
+		$this->_query['data'] 	= $data;
+		$this->_query['source'] = $source;
 		
-		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName),$query);
+		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName), $this->_query);
 	}
 	
 	/**
@@ -425,16 +385,11 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 			->argument(2, 'string')				//Argument 2 must be a string 
 			->argument(3, 'string', 'null');	//Argument 3 must be a string or null
 		
-		$query = array(
-			'type'		=> 'quote',	
-			'source'	=> $source,
-			'quote'		=> $quote,
-			'state'		=> $this->_state,	//optional
-			'tags'		=> $this->_tag,		//optional
-			'format'	=> $this->_format,	//optional
-			'slug'		=> $this->_slug);	//optional
+		$this->_query['type'] 	= 'quote';
+		$this->_query['quote'] 	= $quote;
+		$this->_query['source'] = $source;
 		
-		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName),$query);
+		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName), $this->_query);
 	}
 	
 	/**
@@ -450,17 +405,10 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string 
 		
-		$query = array(
-			'type'			=> 'link',	
-			'url'			=> $url,
-			'title'			=> $this->_title,		//optional
-			'description'	=> $this->_description,	//optional
-			'state'			=> $this->_state,		//optional
-			'tags'			=> $this->_tag,			//optional
-			'format'		=> $this->_format,		//optional
-			'slug'			=> $this->_slug);		//optional
+		$this->_query['type'] 	= 'link';
+		$this->_query['url'] 	= $url;
 		
-		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName),$query);
+		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName), $this->_query);
 	}
 	
 	/**
@@ -476,15 +424,10 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string 
 		
-		$query = array(
-			'type'			=> 'chat',	
-			'conversation'	=> $conversation,
-			'state'			=> $this->_state,		//optional
-			'tags'			=> $this->_tag,			//optional
-			'format'		=> $this->_format,		//optional
-			'slug'			=> $this->_slug);		//optional
+		$this->_query['type'] 			= 'chat';
+		$this->_query['conversation'] 	= $conversation;
 		
-		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName),$query);
+		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName), $this->_query);
 	}
 	
 	/**
@@ -503,17 +446,11 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 			->argument(2, 'string', 'null')		//Argument 2 must be a string or null
 			->argument(3, 'string', 'null');	//Argument 3 must be a string or null 
 		
-		$query = array(
-			'type'			=> 'audio',	
-			'external_url'	=> $externalUrl,
-			'data'			=> $data,
-			'caption'		=> $this->_caption,
-			'state'			=> $this->_state,		//optional
-			'tags'			=> $this->_tag,			//optional
-			'format'		=> $this->_format,		//optional
-			'slug'			=> $this->_slug);		//optional
+		$this->_query['type'] 			= 'audio';
+		$this->_query['data'] 			= $data;
+		$this->_query['externalUrl'] 	= $externalUrl;
 		
-		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName),$query);
+		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName), $this->_query);
 	}
 	
 	/**
@@ -532,17 +469,11 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 			->argument(2, 'string', 'null')		//Argument 2 must be a string or null
 			->argument(3, 'string', 'null');	//Argument 3 must be a string or null 
 		
-		$query = array(
-			'type'			=> 'video',	
-			'embed'			=> $embed,
-			'data'			=> $data,
-			'caption'		=> $this->_caption,
-			'state'			=> $this->_state,		//optional
-			'tags'			=> $this->_tag,			//optional
-			'format'		=> $this->_format,		//optional
-			'slug'			=> $this->_slug);		//optional
+		$this->_query['type'] 	= 'video';
+		$this->_query['embed'] 	= $embed;
+		$this->_query['data'] 	= $data;
 		
-		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName),$query);
+		return $this->_post(sprintf(self::URL_BLOG_CREATE_POST, $baseHostName), $this->_query);
 	}
 	
 	/**
@@ -562,12 +493,11 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 			->argument(3, 'string')				//Argument 3 must be a string 
 			->argument(4, 'string', 'null');	//Argument 4 must be a string or null 
 		
-		$query = array(
-			'id' 			=> $postId,
-			'reblog_key'	=> $reblogKey,
-			'comment'		=> $comment);
-			
-		return $this->_post(sprintf(self::URL_BLOG_REBLOG_POST, $baseHostName),$query);
+		$this->_query['id'] 		= $postId;	
+		$this->_query['comment'] 	= $comment;
+		$this->_query['reblog_key'] = $reblogKey;	
+		
+		return $this->_post(sprintf(self::URL_BLOG_REBLOG_POST, $baseHostName), $this->_query);
 	}
 	
 	/**
@@ -583,10 +513,9 @@ class Eden_Tumblr_Blog extends Eden_Tumblr_Base {
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string
 		
-		//populate fields
-		$query = array('id'	=> $postId);
+		$this->_query['id'] = $postId;
 		
-		return $this->_post(sprintf(self::URL_BLOG_DELETE_POST, $baseHostName), $query);
+		return $this->_post(sprintf(self::URL_BLOG_DELETE_POST, $baseHostName), $this->_query);
 	}
 	/* Protected Methods
 	-------------------------------*/

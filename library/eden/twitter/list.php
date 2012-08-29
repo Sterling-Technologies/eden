@@ -41,16 +41,6 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/	
-	protected $_since		= NULL;
-	protected $_max			= 0;
-	protected $_perpage		= 0;
-	protected $_cursor		= -1;
-	protected $_entities	= false;
-	protected $_rts			= false;
-	protected $_filter		= false;
-	protected $_status		= false;
-	protected $_count		= 0;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -77,41 +67,39 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 			->argument(2, 'int', 'string')				//Argument 2 must be an integer or string
 			->argument(3, 'int', 'string', 'null');		//Argument 3 must be an integer, null or string
 		
-		$query = array();
-		
 		//if it is integer
 		if(is_int($listId)) {
 			//lets put it in our query
-			$query['list_id'] = $listId;
+			$this->_query['list_id'] = $listId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['slug'] = $listId;
+			$this->_query['slug'] = $listId;
 		}
 		
 		if(!is_null($ownerId)) {
 			//if it is integer
 			if(is_int($ownerId)) {
 				//lets put it in our query
-				$query['owner_id'] = $ownerId;
+				$this->_query['owner_id'] = $ownerId;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['owner_screen_name'] = $ownerId;
+				$this->_query['owner_screen_name'] = $ownerId;
 			}
 		}
 		
 		//if it is integer
-		if(is_int($user_id)) {
+		if(is_int($userId)) {
 			//lets put it in our query
-			$query['user_id'] = $user_id;
+			$this->_query['user_id'] = $userId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['screen_name'] = $user_id;
+			$this->_query['screen_name'] = $userId;
 		}
 		
-		return $this->_post(self::URL_CREATE_MEMBER, $query);
+		return $this->_post(self::URL_CREATE_MEMBER, $this->_query);
 	}
 	
 	/**
@@ -129,67 +117,53 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 			->argument(2, 'array')						//Argument 2 must be an array
 			->argument(3, 'int', 'string');				//Argument 3 must be an integer or string
 		
-		$query = array();
-		
 		//if it is integer
 		if(is_int($listId)) {
 			//lets put it in our query
-			$query['list_id'] = $listId;
+			$this->_query['list_id'] = $listId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['slug'] = $listId;
+			$this->_query['slug'] = $listId;
 		}
 		
 		//if it is integer
 		if(is_int($ownerId)) {
 			//lets put it in our query
-			$query['owner_id'] = $ownerId;
+			$this->_query['owner_id'] = $ownerId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['owner_screen_name'] = $ownerId;
+			$this->_query['owner_screen_name'] = $ownerId;
 		}
 		
 		//if id is integer
 		if(is_int($userIds[0])) {
 			//lets put it in query
-			$query['user_id'] = implode(',',$userIds);
+			$this->_query['user_id'] = implode(',',$userIds);
 		//if it is streing
 		} else {
 			//lets put it in query
-			$query['screen_name'] = implode(',',$userIds);
+			$this->_query['screen_name'] = implode(',',$userIds);
 		}
 		
-		return $this->_post(self::URL_CREATE_ALL, $query);
+		return $this->_post(self::URL_CREATE_ALL, $this->_query);
 	}
 	
 	/**
 	 * Creates a new list for the authenticated user.
 	 * Note that you can't create more than 20 lists per account.
 	 *
-	 * @param string 
-	 * @param string|null
-	 * @param bool
+	 * @param string The name for the list.
 	 * @return array
 	 */
-	public function createList($name, $description = NULL, $public = true) {
-		Eden_Twitter_Error::i()
-			->argument(1, 'string')
-			->argument(2, 'string', 'null')
-			->argument(3, 'bool');			
+	public function createList($name) {
+		//argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');			
 			
-		$query = array('name' => $name);
+		$this->_query['name'] = $name;
 		
-		if($description) {
-			$query['description'] = $description;
-		}
-		
-		if(!$public) {
-			$query['mode'] = 'private';
-		}
-		
-		return $this->_post(self::URL_CREATE_USER, $query);
+		return $this->_post(self::URL_CREATE_USER, $this->_query);
 	}
 	
 	/**
@@ -205,59 +179,55 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 		Eden_Twitter_Error::i()
 			->argument(1, 'int', 'string')				//Argument 1 must be an integer or string
 			->argument(2, 'int', 'string', 'null');		//Argument 2 must be an integer, null or string
-		
-		$query = array();
-		
+	
 		//if it is integer
 		if(is_int($listId)) {
 			//lets put it in our query
-			$query['list_id'] = $listId;
+			$this->_query['list_id'] = $listId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['slug'] = $listId;
+			$this->_query['slug'] = $listId;
 		}
 		
 		if(!is_null($ownerId)) {
 			//if it is integer
 			if(is_int($ownerId)) {
 				//lets put it in our query
-				$query['owner_id'] = $ownerId;
+				$this->_query['owner_id'] = $ownerId;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['owner_screen_name'] = $ownerId;
+				$this->_query['owner_screen_name'] = $ownerId;
 			}
-		}	
+		}		
 		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		if($this->_status) {
-			$query['skip_status'] = 1;
-		}
-		
-		if($this->_cursor != -1) {
-			$query['cursor'] = $this->_cursor;
-		}	
-		
-		return $this->_getResponse(self::URL_GET_DETAIL, $query);
+		return $this->_getResponse(self::URL_GET_DETAIL, $this->_query);
 	}
 	
 	/**
 	 * Returns all lists the authenticating or specified user 
 	 * subscribes to, including their own.
 	 *
+	 * @param string|null The user is specified using the user_id or screen_name parameters. 
+	 * If no user is given, the authenticating user is used.
 	 * @return array
 	 */
-	public function getAllLists() {
-		//populate fields
-		$query = array(
-			'user_id'		=> $this->_id,
-			'screen_name'	=> $this->_name);
-			
-		return $this->_getResponse(self::URL_ALL_LIST, $query);
+	public function getAllLists($id = NULL) {
+		//Argument 2 must be an integer, null or string
+		Eden_Twitter_Error::i()->argument(2, 'int', 'string', 'null');		
+		
+		//if it is integer
+		if(is_int($id)) {
+			//lets put it in our query
+			$this->_query['user_id'] = $id;
+		//else it is string
+		} else {
+			//lets put it in our query
+			$this->_query['screen_name'] = $id;
+		}
+		
+		return $this->_getResponse(self::URL_ALL_LIST, $this->_query);
 	} 
 	
 	/**
@@ -277,15 +247,10 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 			->argument(2, 'string');	//Argument 2 must be a string
 			
 		//populate fields	
-		$query = array(
-			'user_id'		=> $id, 
-			'screen_name'	=> $name);
+		$this->_query['user_id'] 		= $id; 
+		$this->_query['screen_name']	= $name;
 		
-		if($this->_cursor != -1) {
-			$query['cursor'] = $this->_cursor;
-		}
-		
-		return $this->_getResponse(self::URL_GET_LISTS, $query);
+		return $this->_getResponse(self::URL_GET_LISTS, $this->_query);
 	}
 	
 	/**
@@ -301,31 +266,29 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 			->argument(1, 'int', 'string')				//Argument 1 must be an integer or string
 			->argument(2, 'int', 'string', 'null');		//Argument 2 must be an integer, null or string
 		
-		$query = array();
-		
 		//if it is integer
 		if(is_int($listId)) {
 			//lets put it in our query
-			$query['list_id'] = $listId;
+			$this->_query['list_id'] = $listId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['slug'] = $listId;
+			$this->_query['slug'] = $listId;
 		}
 		
 		if(!is_null($ownerId)) {
 			//if it is integer
 			if(is_int($ownerId)) {
 				//lets put it in our query
-				$query['owner_id'] = $ownerId;
+				$this->_query['owner_id'] = $ownerId;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['owner_screen_name'] = $ownerId;
+				$this->_query['owner_screen_name'] = $ownerId;
 			}
 		}
 		
-		return $this->_getResponse(self::URL_SHOW, $query);
+		return $this->_getResponse(self::URL_SHOW, $this->_query);
 	}
 	
 	/**
@@ -341,29 +304,19 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 		//Argument 1 must be an integer, null or string
 		Eden_Twitter_Error::i()->argument(1, 'int', 'string', 'null');
 		
-		$query = array();
-		
 		if(!is_null($id)) {
 			//if it is integer
 			if(is_int($id)) {
 				//lets put it in our query
-				$query['user_id'] = $id;
+				$this->_query['user_id'] = $id;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['screen_name'] = $id;
+				$this->_query['screen_name'] = $id;
 			}
 		}
 		
-		if($this->_cursor != -1) {
-			$query['cursor'] = $this->_cursor;
-		}
-		
-		if($this->_filter) {
-			$query['filter_to_owned_lists'] = 1;
-		}
-		
-		return $this->_getResponse(self::URL_MEMBERSHIP, $query);
+		return $this->_getResponse(self::URL_MEMBERSHIP, $this->_query);
 	}
 	 
 	/**
@@ -379,51 +332,29 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 			->argument(1, 'int', 'string')				//Argument 1 must be an integer or string
 			->argument(2, 'int', 'string', 'null');		//Argument 2 must be an integer, null or string
 		
-		$query = array();
-		
 		//if it is integer
 		if(is_int($listId)) {
 			//lets put it in our query
-			$query['list_id'] = $listId;
+			$this->_query['list_id'] = $listId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['slug'] = $listId;
+			$this->_query['slug'] = $listId;
 		}
 		
 		if(!is_null($ownerId)) {
 			//if it is integer
 			if(is_int($ownerId)) {
 				//lets put it in our query
-				$query['owner_id'] = $ownerId;
+				$this->_query['owner_id'] = $ownerId;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['owner_screen_name'] = $ownerId;
+				$this->_query['owner_screen_name'] = $ownerId;
 			}
 		}	
 		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		if($this->_rts) {
-			$query['include_rts'] = 1;
-		}
-		
-		if($this->_since) {
-			$query['since_id'] = $this->_since;
-		}
-		
-		if($this->_max) {
-			$query['max_id'] = $this->_max;
-		}
-		
-		if($this->_perpage) {
-			$query['per_page'] = $this->_perpage;
-		}
-		
-		return $this->_getResponse(self::URL_GET_STATUS, $query);
+		return $this->_getResponse(self::URL_GET_STATUS, $this->_query);
 	}
 	 
 	/**
@@ -440,43 +371,29 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 			->argument(1, 'int', 'string')				//Argument 1 must be an integer or string
 			->argument(2, 'int', 'string', 'null');		//Argument 2 must be an integer, null or string
 		
-		$query = array();
-		
 		//if it is integer
 		if(is_int($listId)) {
 			//lets put it in our query
-			$query['list_id'] = $listId;
+			$this->_query['list_id'] = $listId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['slug'] = $listId;
+			$this->_query['slug'] = $listId;
 		}
 		
 		if(!is_null($ownerId)) {
 			//if it is integer
 			if(is_int($ownerId)) {
 				//lets put it in our query
-				$query['owner_id'] = $ownerId;
+				$this->_query['owner_id'] = $ownerId;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['owner_screen_name'] = $ownerId;
+				$this->_query['owner_screen_name'] = $ownerId;
 			}
 		}	
 		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		if($this->_status) {
-			$query['skip_status'] = 1;
-		}
-		
-		if($this->_cursor != -1) {
-			$query['cursor'] = $this->_cursor;
-		}
-		
-		return $this->_getResponse(self::URL_SUBSCRIBER,$query);
+		return $this->_getResponse(self::URL_SUBSCRIBER, $this->_query);
 	}
 	
 	/**
@@ -490,27 +407,17 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 		//Argument 1 must be an integer or string
 		Eden_Twitter_Error::i()->argument(1, 'int', 'string');	
 		
-		$query = array();
-		
 		//if it is integer
 		if(is_int($id)) {
 			//lets put it in our query
-			$query['user_id'] = $id;
+			$this->_query['user_id'] = $id;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['screen_name'] = $id;
+			$this->_query['screen_name'] = $id;
 		}
 		
-		if($this->_cursor != -1) {
-			$query['cursor'] = $this->_cursor;
-		}
-		
-		if($this->_count) {
-			$query['count'] = $this->_count;
-		}
-		
-		return $this->_getResponse(self::URL_GET_SUBSCRITION, $query);
+		return $this->_getResponse(self::URL_GET_SUBSCRITION, $this->_query);
 	}
 	
 	/**
@@ -520,7 +427,7 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 	 * @return this
 	 */
 	public function filterToOwn() {
-		$this->_filter = true;
+		$this->_query['filter_to_owned_lists'] = true;
 		return $this;
 	}
 	
@@ -532,7 +439,7 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 	 * @return this
 	 */
 	public function includeEntities() {
-		$this->_entities = true;
+		$this->_query['include_entities'] = true;
 		return $this;
 	}
 	
@@ -544,7 +451,7 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 	 * @return this
 	 */
 	public function includeRts() {
-		$this->_rts = true;
+		$this->_query['include_rts'] = true;
 		return $this;
 	}
 	
@@ -562,49 +469,40 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 			->argument(2, 'int', 'string')				//Argument 2 must be an integer or string
 			->argument(3, 'int', 'string', 'null');		//Argument 3 must be an integer, null or string
 		
-		$query = array();
-		
 		//if it is integer
 		if(is_int($listId)) {
 			//lets put it in our query
-			$query['list_id'] = $listId;
+			$this->_query['list_id'] = $listId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['slug'] = $listId;
+			$this->_query['slug'] = $listId;
 		}
 		
 		if(!is_null($ownerId)) {
 			//if it is integer
 			if(is_int($ownerId)) {
 				//lets put it in our query
-				$query['owner_id'] = $ownerId;
+				$this->_query['owner_id'] = $ownerId;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['owner_screen_name'] = $ownerId;
+				$this->_query['owner_screen_name'] = $ownerId;
 			}
 		}
 		
 		//if it is integer
 		if(is_int($user_id)) {
 			//lets put it in our query
-			$query['user_id'] = $user_id;
+			$this->_query['user_id'] = $user_id;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['screen_name'] = $user_id;
+			$this->_query['screen_name'] = $user_id;
 		}		
 		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
 		
-		if($this->_status) {
-			$query['skip_status'] = 1;
-		}
-		
-		return $this->_getResponse(self::URL_GET_MEMBER, $query);
+		return $this->_getResponse(self::URL_GET_MEMBER, $this->_query);
 	}
 	
 	/**
@@ -622,27 +520,25 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 			->argument(2, 'int', 'string')				//Argument 2 must be an integer or string
 			->argument(3, 'int', 'string', 'null');		//Argument 3 must be an integer, null or string
 		
-		$query = array();
-		
 		//if it is integer
 		if(is_int($listId)) {
 			//lets put it in our query
-			$query['list_id'] = $listId;
+			$this->_query['list_id'] = $listId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['slug'] = $listId;
+			$this->_query['slug'] = $listId;
 		}
 		
 		if(!is_null($ownerId)) {
 			//if it is integer
 			if(is_int($ownerId)) {
 				//lets put it in our query
-				$query['owner_id'] = $ownerId;
+				$this->_query['owner_id'] = $ownerId;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['owner_screen_name'] = $ownerId;
+				$this->_query['owner_screen_name'] = $ownerId;
 			}
 		}
 		
@@ -653,18 +549,10 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['screen_name'] = $user_id;
+			$this->_query['screen_name'] = $user_id;
 		}		
 		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		if($this->_status) {
-			$query['skip_status'] = 1;
-		}
-		
-		return $this->_getResponse(self::URL_SHOW_SUBSCRIBER, $query);
+		return $this->_getResponse(self::URL_SHOW_SUBSCRIBER, $this->_query);
 	}
 	
 	/**
@@ -680,31 +568,29 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 			->argument(1, 'int', 'string')				//Argument 1 must be an integer or string
 			->argument(2, 'int', 'string', 'null');		//Argument 2 must be an integer, null or string
 		
-		$query = array();
-		
 		//if it is integer
 		if(is_int($listId)) {
 			//lets put it in our query
-			$query['list_id'] = $listId;
+			$qthis->_uery['list_id'] = $listId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['slug'] = $listId;
+			$this->_query['slug'] = $listId;
 		}
 		
 		if(!is_null($ownerId)) {
 			//if it is integer
 			if(is_int($ownerId)) {
 				//lets put it in our query
-				$query['owner_id'] = $ownerId;
+				$this->_query['owner_id'] = $ownerId;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['owner_screen_name'] = $ownerId;
+				$this->_query['owner_screen_name'] = $ownerId;
 			}
 		}	
 			
-		return $this->_post(self::URL_REMOVE,$query);
+		return $this->_post(self::URL_REMOVE, $this->_query);
 	}
 	
 	/**
@@ -723,41 +609,39 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 			->argument(2, 'int', 'string')				//Argument 2 must be an integer or string
 			->argument(3, 'int', 'string', 'null');		//Argument 3 must be an integer, null or string
 		
-		$query = array();
-		
 		//if it is integer
 		if(is_int($listId)) {
 			//lets put it in our query
-			$query['list_id'] = $listId;
+			$this->_query['list_id'] = $listId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['slug'] = $listId;
+			$this->_query['slug'] = $listId;
 		}
 		
 		if(!is_null($ownerId)) {
 			//if it is integer
 			if(is_int($ownerId)) {
 				//lets put it in our query
-				$query['owner_id'] = $ownerId;
+				$this->_query['owner_id'] = $ownerId;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['owner_screen_name'] = $ownerId;
+				$this->_query['owner_screen_name'] = $ownerId;
 			}
 		}
 		
 		//if it is integer
 		if(is_int($user_id)) {
 			//lets put it in our query
-			$query['user_id'] = $ownerId;
+			$this->_query['user_id'] = $ownerId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['screen_name'] = $ownerId;
+			$this->_query['screen_name'] = $ownerId;
 		}
 		
-		return $this->_post(self::URL_REMOVE_MEMBER, $query);
+		return $this->_post(self::URL_REMOVE_MEMBER, $this->_query);
 	}
 	
 	/**
@@ -769,8 +653,8 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 	public function setCount($count) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['count'] = $count;
 		
-		$this->_count = $count;
 		return $this;
 	}
 	
@@ -785,8 +669,8 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 	public function setCursor($cursor) {
 		//Argument 1 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['cursor'] = $cursor;
 		
-		$this->_cursor = $cursor;
 		return $this;
 	}
 	
@@ -799,8 +683,8 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 	public function setMax($max) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['max_id'] = $max;
 		
-		$this->_max = $max;
 		return $this;
 	}
 	
@@ -810,11 +694,11 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 	 * @param integer
 	 * @return this
 	 */
-	public function setPage($perpage) {
+	public function setPage($perPage) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['per_page'] = $perPage;
 		
-		$this->_perpage = $perpage;
 		return $this;
 	}
 	
@@ -822,23 +706,48 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 	 * Set since id
 	 *
 	 * @param integer the tweet ID
-	 * @return array
+	 * @return this
 	 */
-	public function setSince($since) {
+	public function setSinceId($sinceId) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['since_id'] = $sinceId;
 		
-		$this->_since = $since;
 		return $this;
 	}
 	
+	/**
+	 * The description to give the list.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setDescription($description) {
+		//Argument 1 must be an string
+		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['description'] = $description;
+		
+		return $this;
+	}
+	
+	/**
+	 * Whether your list is public or private. Values can be public 
+	 * or private. If no mode is specified the list will be public.
+	 *
+	 * @return this
+	 */
+	public function setModeToPrivate() {
+		$this->_query['mode'] = 'private';
+		
+		return $this;
+	}
 	/**
 	 * Statuses will not be included in the returned user objects.
 	 *
 	 * @return this
 	 */
 	public function skipStatus() {
-		$this->_status = true;
+		$this->_query['skip_status'] = true;
 		return $this;
 	}
 	
@@ -855,31 +764,29 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 			->argument(1, 'int', 'string')				//Argument 1 must be an integer or string
 			->argument(2, 'int', 'string', 'null');		//Argument 2 must be an integer, null or string			
 		
-		$query = array();
-		
 		//if it is integer
 		if(is_int($listId)) {
 			//lets put it in our query
-			$query['list_id'] = $listId;
+			$this->_query['list_id'] = $listId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['slug'] = $listId;
+			$this->_query['slug'] = $listId;
 		}
 		
 		if(!is_null($ownerId)) {
 			//if it is integer
 			if(is_int($ownerId)) {
 				//lets put it in our query
-				$query['owner_id'] = $ownerId;
+				$this->_query['owner_id'] = $ownerId;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['owner_screen_name'] = $ownerId;
+				$this->_query['owner_screen_name'] = $ownerId;
 			}
 		}
 		
-		return $this->_post(self::URL_CREATE_SUBCRIBER, $query);
+		return $this->_post(self::URL_CREATE_SUBCRIBER, $this->_query);
 	}
 	
 	/**
@@ -895,31 +802,29 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 			->argument(1, 'int', 'string')				//Argument 1 must be an integer or string
 			->argument(2, 'int', 'string', 'null');		//Argument 2 must be an integer, null or string
 		
-		$query = array();
-		
 		//if it is integer
 		if(is_int($listId)) {
 			//lets put it in our query
-			$query['list_id'] = $listId;
+			$this->_query['list_id'] = $listId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['slug'] = $listId;
+			$this->_query['slug'] = $listId;
 		}
 		
 		if(!is_null($ownerId)) {
 			//if it is integer
 			if(is_int($ownerId)) {
 				//lets put it in our query
-				$query['owner_id'] = $ownerId;
+				$this->_query['owner_id'] = $ownerId;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['owner_screen_name'] = $ownerId;
+				$this->_query['owner_screen_name'] = $ownerId;
 			}
 		}
 		
-		return $this->_post(self::URL_REMOVE_SUBCRIBER, $query);
+		return $this->_post(self::URL_REMOVE_SUBCRIBER, $this->_query);
 	}
 	
 	/**
@@ -935,42 +840,38 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 	 */
 	public function update($listId, $name, $description, $ownerId = NULL, $public = true) {
 		Eden_Twitter_Error::i()
-		->argument(1, 'int', 'string')			//Argument 1 must be an integer or string
-		->argument(2, 'string')					//Argument 2 must be an string
-		->argument(3, 'string')					//Argument 3 must be an string
-		->argument(4, 'int', 'string', 'null')	//Argument 4 must be an integer, string or null			
-		->argument(5, 'bool');					//Argument 3 must be an boolean
-		$query = array(
-			'name'				=> $name,
-			'description'		=> $description);
+			->argument(1, 'int', 'string')			//Argument 1 must be an integer or string
+			->argument(2, 'string')					//Argument 2 must be an string
+			->argument(3, 'string')					//Argument 3 must be an string
+			->argument(4, 'int', 'string', 'null')	//Argument 4 must be an integer, string or null			
+			->argument(5, 'bool');					//Argument 3 must be an boolean
+		
+		$this->_query['name']			= $name;
+		$this->_query['description']	= $description;
 		
 		//if it is integer
 		if(is_int($listId)) {
 			//lets put it in our query
-			$query['list_id'] = $listId;
+			$this->_query['list_id'] = $listId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$query['slug'] = $listId;
+			$this->_query['slug'] = $listId;
 		}
 		
 		if(!is_null($ownerId)) {
 			//if it is integer
 			if(is_int($ownerId)) {
 				//lets put it in our query
-				$query['owner_id'] = $ownerId;
+				$this->_query['owner_id'] = $ownerId;
 			//else it is string
 			} else {
 				//lets put it in our query
-				$query['owner_screen_name'] = $ownerId;
+				$this->_query['owner_screen_name'] = $ownerId;
 			}
 		}
 		
-		if(!$public) {
-			$query['mode'] = 'private';
-		}
-		
-		return $this->_post(self::URL_UPDATE, $query);
+		return $this->_post(self::URL_UPDATE, $this->_query);
 	}
 	
 	/* Protected Methods

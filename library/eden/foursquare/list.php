@@ -35,21 +35,6 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_description		= NULL;
-	protected $_collaborative	= NULL;
-	protected $_photoId			= NULL;
-	protected $_venueId			= NULL;
-	protected $_text			= NULL;
-	protected $_url				= NULL;
-	protected $_tipId			= NULL;
-	protected $_listId			= NULL;
-	protected $_itemId			= NULL;
-	protected $_beforeId		= NULL;
-	protected $_afterId			= NULL;
-	protected $_broadcast		= NULL;
-	protected $_message			= NULL;
-	protected $_name			= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -86,8 +71,7 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 				->addVariable($broadcast)
 				->trigger();
 		}
-		
-		$this->_broadcast = $broadcast;
+		$this->_query['broadcast'] = $broadcast;
 		
 		return $this;
 	}
@@ -100,8 +84,8 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 */
 	public function setMessage($message) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_message = $message;
+		Eden_Foursquare_Error::i()->argument(1, 'string');			
+		$this->_query['message'] = $message;
 		
 		return $this;
 	}
@@ -114,8 +98,8 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 */
 	public function setUrl($url) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_url = $url;
+		Eden_Foursquare_Error::i()->argument(1, 'string');		
+		$this->_query['url'] = $url;
 		
 		return $this;
 	}
@@ -128,8 +112,8 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 */
 	public function setBeforeId($beforeId) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_beforeId = $beforeId;
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
+		$this->_query['beforeId'] = $beforeId;
 		
 		return $this;
 	}
@@ -142,8 +126,8 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 */
 	public function setAfterId($afterId) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_afterId = $afterId;
+		Eden_Foursquare_Error::i()->argument(1, 'string');		
+		$this->_query['afterId'] = $afterId;
 		
 		return $this;
 	}
@@ -158,8 +142,8 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 */
 	public function setText($text) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_text = $text;
+		Eden_Foursquare_Error::i()->argument(1, 'string');		
+		$this->_query['text'] = $text;
 		
 		return $this;
 	}
@@ -172,8 +156,8 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 */
 	public function setItemId($itemId) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_itemId = $itemId;
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
+		$this->_query['itemId'] = $itemId;
 		
 		return $this;
 	}
@@ -187,8 +171,8 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 */
 	public function setListId($listId) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_listId = $listId;
+		Eden_Foursquare_Error::i()->argument(1, 'string');		
+		$this->_query['listId'] = $listId;
 		
 		return $this;
 	}
@@ -201,8 +185,8 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 */
 	public function setTipId($tipId) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_tipId = $tipId;
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
+		$this->_query['tipId'] = $tipId;
 		
 		return $this;
 	}
@@ -215,8 +199,8 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 */
 	public function setVenueId($venueId) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_venueId = $venueId;
+		Eden_Foursquare_Error::i()->argument(1, 'string');		
+		$this->_query['venueId'] = $venueId;
 		
 		return $this;
 	}
@@ -229,8 +213,8 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 */
 	public function setDescription($description) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_description = $description;
+		Eden_Foursquare_Error::i()->argument(1, 'string');		
+		$this->_query['description'] = $description;
 		
 		return $this;
 	}
@@ -243,8 +227,8 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 */
 	public function setListName($name) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_name = $name;
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
+		$this->_query['name'] = $name;
 		
 		return $this;
 	}
@@ -256,7 +240,7 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 * @return this
 	 */
 	public function setCollaborative() {
-		$this->_collaborative = true;
+		$this->_query['collaborative'] = true;
 		
 		return $this;
 	}
@@ -269,8 +253,8 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 	 */
 	public function setPhotoId($photoId) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_photoId = $photoId;
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
+		$this->_query['photoId'] = $photoId;
 		
 		return $this;
 	}
@@ -285,13 +269,9 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
 		
-		$query = array(
-			'name'			=> $name,
-			'description'	=> $this->_description,		//optional
-			'collaborative'	=> $this->_collaborative,	//optional
-			'photoId'		=> $this->_photoId);		//optional
+		$this->_query['name'] = $name;
 		
-		return $this->_post(self::URL_LIST_ADD, $query);
+		return $this->_post(self::URL_LIST_ADD, $this->_query);
 	}	
 	
 	/**
@@ -318,10 +298,9 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array('itemId' => $itemId);
+		$this->_query['itemId'] = $itemId;
 		
-		return $this->_getResponse(sprintf(self::URL_LIST_SUGGEST_PHOTO, $listId), $query);
+		return $this->_getResponse(sprintf(self::URL_LIST_SUGGEST_PHOTO, $listId), $this->_query);
 	}
 	
 	/**
@@ -335,10 +314,9 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array('itemId' => $itemId);
+		$this->_query['itemId'] = $itemId;
 		
-		return $this->_getResponse(sprintf(self::URL_LIST_SUGGEST_TIPS, $listId), $query);
+		return $this->_getResponse(sprintf(self::URL_LIST_SUGGEST_TIPS, $listId), $this->_query);
 	}
 	
 	/**
@@ -365,16 +343,7 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(
-			'venueId'	=> $this->_venueId,		//optional
-			'text'		=> $this->_text,		//optional
-			'url'		=> $this->_url,			//optional
-			'tipId'		=> $this->_tipId,		//optional
-			'listId'	=> $this->_listId,		//optional
-			'itemId'	=> $this->_itemId);		//optional
-		
-		return $this->_post(sprintf(self::URL_LIST_ADD_ITEM, $listId), $query);
+		return $this->_post(sprintf(self::URL_LIST_ADD_ITEM, $listId), $this->_query);
 	}
 	
 	/**
@@ -390,15 +359,9 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 		
-		//populate fields
-		$query = array(
-			'itemId'	=> $itemId,		
-			'text'		=> $this->_text,		//optional
-			'url'		=> $this->_url,			//optional
-			'tipId'		=> $this->_tipId,		//optional
-			'photoId'	=> $this->_photoId);	//optional
+		$this->_query['itemId'] = $itemId;
 		
-		return $this->_post(sprintf(self::URL_LIST_UPDATE_ITEM, $listId), $query);
+		return $this->_post(sprintf(self::URL_LIST_UPDATE_ITEM, $listId), $this->_query);
 	}
 	
 	/**
@@ -415,10 +378,9 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 		
-		//populate fields
-		$query = array('itemId'	=> $itemId);		
+		$this->_query['itemId'] = $itemId;
 		
-		return $this->_post(sprintf(self::URL_LIST_DELETE_ITEM, $listId), $query);
+		return $this->_post(sprintf(self::URL_LIST_DELETE_ITEM, $listId), $this->_query);
 	}
 	
 	/**
@@ -434,13 +396,9 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 		
-		//populate fields
-		$query = array(
-			'itemId'	=> $itemId,
-			'beforeId'	=> $this->_beforeId,
-			'afterId'	=> $this->_afterId);		
+		$this->_query['itemId'] = $itemId;
 		
-		return $this->_post(sprintf(self::URL_LIST_MOVE_ITEM, $listId), $query);
+		return $this->_post(sprintf(self::URL_LIST_MOVE_ITEM, $listId), $this->_query);
 	}
 	
 	/**
@@ -479,13 +437,9 @@ class Eden_Foursquare_List extends Eden_Foursquare_Base {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(
-			'itemId'	=> $itemId,
-			'broadcast'	=> $this->_broadcast,	//optional
-			'message'	=> $this->_message);	//optional
+		$this->_query['itemId'] = $itemId;
 		
-		return $this->_post(sprintf(self::URL_LIST_SHARE, $listId), $query);
+		return $this->_post(sprintf(self::URL_LIST_SHARE, $listId), $this->_query);
 	}
 	
 	/* Protected Methods

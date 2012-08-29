@@ -75,11 +75,10 @@ class Eden_Foursquare_Settings extends Eden_Foursquare_Base {
 				->trigger();
 		}
 		
-		$query = array(
-				'SETTING_ID'	=> $settingId,
-				'value' 		=> $value);
+		$this->_query['value'] 		= $value;
+		$this->_query['SETTING_ID'] = $settingId;
 		
-		return $this->_post(sprintf(self::URL_SETTINGS_CHANGE, $settingId), $query);
+		return $this->_post(sprintf(self::URL_SETTINGS_CHANGE, $settingId), $this->_query);
 	}
 	 
 	/* Protected Methods

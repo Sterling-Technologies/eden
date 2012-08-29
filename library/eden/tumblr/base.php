@@ -27,6 +27,7 @@ class Eden_Tumblr_Base extends Eden_Oauth_Base {
 	protected $_consumerSecret 	= NULL;
 	protected $_accessToken		= NULL;
 	protected $_accessSecret	= NULL;
+	protected $_query			= array();
 	
 	/* Private Properties
 	-------------------------------*/
@@ -132,7 +133,7 @@ class Eden_Tumblr_Base extends Eden_Oauth_Base {
 		$this->_meta['response']	= $response;
 		
 		//reset variables
-		$this->_reset();
+		unset($this->_query);
 		
 		return $response;
 	} 
@@ -147,7 +148,7 @@ class Eden_Tumblr_Base extends Eden_Oauth_Base {
 			->setToken($this->_accessToken, $this->_accessSecret)
 			->setSignatureToHmacSha1();
 		//get response from curl
-		$response = $rest->getResponse($query);
+		$response = $rest->getJsonResponse($query);
 			
 		//get curl infomation
 		$this->_meta['url']			= $url;
@@ -155,7 +156,7 @@ class Eden_Tumblr_Base extends Eden_Oauth_Base {
 		$this->_meta['response']	= $response;
 		
 		//reset variables
-		$this->_reset();
+		unset($this->_query);
 		
 		return $response;
 	}
@@ -208,7 +209,7 @@ class Eden_Tumblr_Base extends Eden_Oauth_Base {
 		
 		//get the response
 		$response = $curl->getJsonResponse();
-		
+	
 		$this->_meta 					= $curl->getMeta();
 		$this->_meta['url'] 			= $url;
 		$this->_meta['authorization'] 	= $authorization;
@@ -216,7 +217,7 @@ class Eden_Tumblr_Base extends Eden_Oauth_Base {
 		$this->_meta['query'] 			= $query;
 		
 		//reset variables
-		$this->_reset();
+		unset($this->_query);
 		
 		return $response;
 	}

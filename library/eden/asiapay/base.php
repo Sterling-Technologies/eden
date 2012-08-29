@@ -37,27 +37,7 @@ class Eden_Asiapay_Base extends Eden_Class {
 	/* Public Methods
 	-------------------------------*/
 	/* Protected Methods
-	-------------------------------*/
-	protected function _reset() {
-		//foreach this as key => value
-		foreach ($this as $key => $value) {
-			//if the value of key is not array
-			if(!is_array($this->$key)) {
-				//if key name starts at underscore, probably it is protected variable
-				if(preg_match('/^_/', $key)) {
-					//if the protected variable is not equal to token
-					//we dont want to unset the access token
-					if($key != '_token') {
-						//reset all protected variables that currently use
-						$this->$key = NULL;
-					}
-				}
-			} 
-        } 
-		
-		return $this;
-	}
-	
+	-------------------------------*/	
 	protected function _removeNull($array) {
 		foreach($array as $key => $val) {
 			if(is_array($val)) {
@@ -73,7 +53,7 @@ class Eden_Asiapay_Base extends Eden_Class {
 		return $array;
 	}
 	
-	protected function _generateHash($amount, $orderRef) {
+	protected function _generateHash($amount, $orderRef) { 
 		//merge parameters to generate hash
 		$hash = $this->_merchantId . '|' . 
 			$orderRef. '|' . 

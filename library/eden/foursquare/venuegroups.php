@@ -31,16 +31,6 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_venueId 			= NULL;
-	protected $_city				= NULL;
-	protected $_state				= NULL;
-	protected $_zip					= NULL;
-	protected $_phone				= NULL;
-	protected $_twitter				= NULL;
-	protected $_description			= NULL;
-	protected $_url					= NULL;
-	protected $_categoryId			= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -65,8 +55,8 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 	 */
 	public function setVenueId($venueId) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_venueId = $venueId;
+		Eden_Foursquare_Error::i()->argument(1, 'string');		
+		$this->_query['venueId'] = $venueId;
 		
 		return $this;
 	}
@@ -79,8 +69,8 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 	 */
 	public function setVenueName($venueName) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_name = $venueName;
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
+		$this->_query['name'] = $venueName;
 		
 		return $this;
 	}
@@ -94,7 +84,7 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 	public function setTwitter($twitter) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_twitter  = $twitter; 
+		$this->_query['twitter'] = $twitter;
 		
 		return $this;
 	}
@@ -107,8 +97,8 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 	 */
 	public function setCity($city) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_city = $city;
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
+		$this->_query['city'] = $city;
 		
 		return $this;
 	}
@@ -122,7 +112,7 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 	public function setState($state) {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_state = $state;
+		$this->_query['state'] = $state;
 		
 		return $this;
 	}
@@ -136,7 +126,7 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 	public function setZip($zip) {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_zip = $zip;
+		$this->_query['zip'] = $zip;
 		
 		return $this;
 	}
@@ -150,7 +140,7 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 	public function setPhone($phone) {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_phone = $phone;
+		$this->_query['phone'] = $phone;
 		
 		return $this;
 	}
@@ -163,8 +153,8 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 	 */
 	public function setDescription($description) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_description = $description;
+		Eden_Foursquare_Error::i()->argument(1, 'string');		
+		$this->_query['description'] = $description;
 		
 		return $this;
 	}
@@ -177,8 +167,8 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 	 */
 	public function setUrl($url) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_url = $url;
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
+		$this->_query['url'] = $url;
 		
 		return $this;
 	}
@@ -192,7 +182,7 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 	public function setCategoryId($categoryId) {
 		//argument test
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_categoryId  = $categoryId; 
+		$this->_query['categoryId'] = $categoryId;
 		
 		return $this;
 	}
@@ -206,7 +196,7 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 	public function setEndTime($endTime) {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		$this->_endTime = strtotime($endTime);
+		$this->_query['endAt'] = strtotime($endTime);
 		
 		return $this;
 	}
@@ -231,7 +221,7 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 				->trigger();
 		}
 		
-		$this->_fields = $fields;
+		$this->_query['fields'] = $fields;
 		
 		return $this;
 	}
@@ -246,12 +236,9 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(
-			'name'		=> $name,
-			'venueId'	=>  $this->_venueId);	//optional		
+		$this->_query['name'] = $name;
 		
-		return $this->_post(self::URL_VENUE_GROUPS_ADD, $query);
+		return $this->_post(self::URL_VENUE_GROUPS_ADD, $this->_query);
 	}
 	
 	/**
@@ -264,7 +251,7 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');
 			
-		return $this->_post(sprintf(self::URL_VENUE_GROUPS_DELETE, $groupId), $query);
+		return $this->_post(sprintf(self::URL_VENUE_GROUPS_DELETE, $groupId));
 	}
 	
 	/**
@@ -289,17 +276,10 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 		Eden_Foursquare_Error::i()
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
-			
-		$startTime = strtotime($startTime);
 		
-		//populate fields
-		$query = array(
-			'startAt' 	=> $startTime,
-			'GROUP_ID'	=> $groupId,
-			'endAt'		=> $this->_endTime,		//optional
-			'fields'	=> $this->_fields);		//optional
-			
-		return $this->_getResponse(sprintf(self::URL_VENUE_GROUPS_TIMESERIES, $groupId), $query);
+		$this->_query['startAt'] = strtotime($startTime);
+		
+		return $this->_getResponse(sprintf(self::URL_VENUE_GROUPS_TIMESERIES, $groupId), $this->_query);
 	}
 	
 	/**
@@ -315,12 +295,9 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 			
-		//populate fields
-		$query = array(
-			'GROUP_ID' 	=> $groupId,
-			'venueId'	=> $venueId);		
-			
-		return $this->_post(sprintf(self::URL_VENUE_GROUPS_ADDVENUE, $groupId), $query);
+		$this->_query['venueId'] = $venueId;
+		
+		return $this->_post(sprintf(self::URL_VENUE_GROUPS_ADDVENUE, $groupId), $this->_query);
 	}
 	
 	/**
@@ -345,21 +322,8 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 	public function editVenue($venueGroupId) {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');
-		
-		//populate fields
-		$query = array(
-			'VENUEGROUP_ID'	=> $venueGroupId,				
-			'name'			=> $this->_name,			//optional	
-			'city'			=> $this->_city,			//optional	
-			'state'			=> $this->_state,			//optional	
-			'zip'			=> $this->_zip,				//optional	
-			'phone'			=> $this->_phone,			//optional		
-			'categoryId'	=> $this->_categoryId,		//optional	
-			'twitter'		=> $this->_twitter,			//optional	
-			'description'	=> $this->_description,		//optional	
-			'url'			=> $this->_url);			//optional	
 			
-		return $this->_post(sprintf(self::URL_VENUE_GROUPS_EDIT_VENUE, $venueGroupId), $query);
+		return $this->_post(sprintf(self::URL_VENUE_GROUPS_EDIT_VENUE, $venueGroupId), $this->_query);
 	}
 	
 	/**
@@ -374,9 +338,9 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 			
-			$query = array('venueId' => $venueId);
-			
-		return $this->_post(sprintf(self::URL_VENUE_GROUPS_REMOVE, $groupId), $query);
+		$this->_query['venueId'] = $venueId;
+		
+		return $this->_post(sprintf(self::URL_VENUE_GROUPS_REMOVE, $groupId), $this->_query);
 	}
 	
 	/**
@@ -394,11 +358,10 @@ class Eden_Foursquare_Venuegroups extends Eden_Foursquare_Base {
 			->argument(2, 'string')		//argument 2 must be a string
 			->argument(3, 'string');	//argument 3 must be a string 
 			
-			$query = array(
-				'venueId' 	=> $venueId,
-				'name'		=> $name);
-			
-		return $this->_post(sprintf(self::URL_VENUE_GROUPS_UPDATE, $groupId), $query);
+		$this->_query['venueId']	= $venueId;
+		$this->_query['name'] 		= $name;
+		
+		return $this->_post(sprintf(self::URL_VENUE_GROUPS_UPDATE, $groupId), $this->_query);
 	}
 	
 	/* Protected Methods

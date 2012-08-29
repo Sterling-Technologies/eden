@@ -22,21 +22,7 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
-	-------------------------------*/
-	protected static $_validResult = array('mixed', 'recent', 'popular');
-	
-	protected $_callback	= NULL;
-	protected $_geocode		= NULL;
-	protected $_lang		= NULL;
-	protected $_locale		= NULL;
-	protected $_page		= NULL;
-	protected $_result		= NULL;
-	protected $_rpp			= 25;
-	protected $_until		= NULL;
-	protected $_since		= 0;		
-	protected $_show		= 0;
-	protected $_entities	= false;
-	
+	-------------------------------*/	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -57,53 +43,9 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 		//Argument 1 must be a string or integer
 		Eden_Twitter_Error::i()->argument(1, 'string', 'integer');
 		
-		$query = array('q' => $search);
+		$this->_query['q'] = $search;
 		
-		if($this->_callback) {
-			$query['callback'] = $this->_callback;
-		}
-		
-		if($this->_geocode) {
-			$query['geocode'] = $this->_geocode;
-		}
-		
-		if($this->_lang) {
-			$query['lang'] = $this->_lang;
-		}
-		
-		if($this->_locale) {
-			$query['locale'] = $this->_locale;
-		}
-		
-		if($this->_page) {
-			$query['page'] = $this->_page;
-		}
-		
-		if($this->_result) {
-			$query['result_type'] = $this->_result;
-		}
-		
-		if($this->_rpp) {
-			$query['rpp'] = $this->_rpp;
-		}
-		
-		if($this->_show) {
-			$query['show_user'] = $this->_show;
-		}
-		
-		if($this->_until) {
-			$query['until'] = $this->_until;
-		}
-		
-		if($this->_since) {
-			$query['since_id'] = $this->_since;
-		}
-		
-		if($this->_entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		return $this->_getResponse(self::URL_SEARCH, $query);
+		return $this->_getResponse(self::URL_SEARCH, $this->_query);
 	}
 	
 	/**
@@ -115,8 +57,8 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	public function setCallback($callback) {
 		//Argument 1 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['callback'] = $callback;
 		
-		$this->_callback = $callback;
 		return $this;
 	}
 	
@@ -126,7 +68,8 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	 * @return this
 	 */
 	public function includeEntities() {
-		$this->_entities = true;
+		$this->_query['include_entities'] = true;
+		
 		return $this;
 	}
 	
@@ -139,27 +82,29 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	public function setGeocode($geocode) {
 		//Argument 1 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['geocode'] = $geocode;
 		
-		$this->_geocode = $geocode;
 		return $this;
 	}
 	
 	/**
-	 * Set lang
+	 * Restricts tweets to the given language, given by an ISO 639-1 code.
 	 *
 	 * @param string
 	 * @return this
 	 */
-	public function setLang($lang) {
+	public function setLanguage($language) {
 		//Argument 1 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['lang'] = $language;
 		
-		$this->_lang = $lang;
 		return $this;
 	}
 	
 	/**
-	 * Set locale
+	 * Specify the language of the query you are sending (only ja is currently effective). 
+	 * This is intended for language-specific clients and the default should work in the
+	 * majority of cases.
 	 *
 	 * @param string
 	 * @return this
@@ -167,13 +112,13 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	public function setLocale($locale) {
 		//Argument 1 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');
+		$this->_query['locale'] = $locale;
 		
-		$this->_locale = $locale;
 		return $this;
 	}
 	
 	/**
-	 * Set page
+	 * The page number (starting at 1) to return, up to a max of roughly 1500 results 
 	 *
 	 * @param integer
 	 * @return this
@@ -181,8 +126,8 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	public function setPage($page) {
 		//Argument 1 must be an integer
 		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['page'] = $page;
 		
-		$this->_page = $page;
 		return $this;
 	}
 	
@@ -192,7 +137,8 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	 * @return this
 	 */
 	public function setMixedResultType() {
-		$this->_result = 'mixed';
+		$this->_query['result_type'] = 'mixed';
+		
 		return $this;
 	}
 	
@@ -202,7 +148,8 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	 * @return this
 	 */
 	public function setRecentResultType() {
-		$this->_result = 'recent';
+		$this->_query['result_type'] = 'recent';
+		
 		return $this;
 	}
 	
@@ -212,25 +159,29 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	 * @return this
 	 */
 	public function setPopularResultType() {
-		$this->_result = 'popular';
+		$this->_query['result_type'] = 'popular';
+		
 		return $this;
 	}
 	
 	/**
-	 * Set rpp
+	 * The number of tweets to return per page, up to a max of 100.
 	 *
-	 * @param int The number of tweets to return per page, up to a max of 100
+	 * @param int 
 	 * @return this
 	 */
 	public function setRpp($rpp) {
 		//Argument 1 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string');
 		
-		if($this->_rpp > 100) {
-			$this->_rpp = 100;
+		//if it is greater than 100
+		if($rpp > 100) {
+			//set it to 100
+			$rpp = 100;
 		}
 		
-		$this->_rpp = $rpp;
+		$this->_query['rpp'] = $rpp;
+		
 		return $this;
 	}
 	
@@ -240,11 +191,11 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	 * @param int
 	 * @return this
 	 */
-	public function setSince($since) {
+	public function setSinceId($sinceId) {
 		//Argument 1 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['since_id'] = $sinceId;
 		
-		$this->_since = $since;
 		return $this;
 	}
 	
@@ -254,12 +205,13 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	 * @return this
 	 */
 	public function showUser() {
-		$this->_show = true;
+		$this->_query['show_user'] = true;
+		
 		return $this;
 	}
 	
 	/**
-	 * Set until
+	 * Returns tweets generated before the given date.
 	 *
 	 * @param string|int unix time for date format
 	 * @return this
@@ -268,12 +220,16 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 		//Argument 1 must be a string
 		Eden_Twitter_Error::i()->argument(1, 'string', 'int');
 		
+		//if it is a string
 		if(is_string($until)) {
+			//make it a integer date
 			$until = strtotime($until);
 		}
 		
+		//format date
 		$until = date('Y-m-d', $until);
-		$this->_until = $until;
+		$this->_query['until'] = $until;
+		
 		return $this;
 	}
 	 

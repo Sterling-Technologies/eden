@@ -40,70 +40,24 @@ class Eden_Twitter_Favorites extends Eden_Twitter_Base {
 	 * the authenticating user.
 	 *
 	 * @param int the tweet ID
-	 * @param bool
 	 * @return array
 	 */
-	public function add($id, $entities = false) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int')	//Argument 1 must be an integer
-			->argument(2, 'bool');	//Argument 2 must be a boolean
+	public function addFavorites($id) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');	
 
-		$query = array('id' => $id);
-		
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		$url = sprintf(self::URL_FAVORITE_STATUS, $id);
-		return $this->_post($url, $query);
+		return $this->_post(sprintf(self::URL_FAVORITE_STATUS, $id), $this->_query);
 	}
 	
 	/**
 	 * Returns the 20 most recent favorite statuses for the authenticating 
 	 * user or user specified by the ID parameter in the requested format.
 	 *
-	 * @param bool
-	 * @param string|int|null
-	 * @param int|null
-	 * @param int|null
 	 * @return array
 	 */
-	public function getList($entities = false, $id = NULL, $since = NULL, $page = NULL) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'bool')					//Argument 1 must be a boolean
-			->argument(2, 'int', 'string', 'null')	//Argument 2 must be a string, integer or null
-			->argument(3, 'int', 'null')			//Argument 3 must be an integer or null
-			->argument(4, 'int', 'null');			//Argument 4 must be an integer or null
-			
-		$query = array();
+	public function getList() {
 		
-		//if entities
-		if($entities) {
-			$query['include_entities'] = 1;
-		}
-		
-		//if it is not empty
-		if(!is_null($id)) {
-			//lets put it in our query	
-			$query['id'] = $id;
-		}
-		
-		//if it is not empty
-		if(!is_null($since)) {
-			//lets put it in our query	
-			$query['since_id'] = $since;
-		}
-		
-		//if it is not empty
-		if(!is_null($page)) {
-			//lets put it in our query	
-			$query['page'] = $page;
-		}
-		
-		return $this->_getResponse(self::URL_GET_FAVORITES, $query);
+		return $this->_getResponse(self::URL_GET_FAVORITES, $this->_query);
 	 }
 	 
 	/**
@@ -117,10 +71,104 @@ class Eden_Twitter_Favorites extends Eden_Twitter_Base {
 		//Argument 1 must be na integer
 		Eden_Twitter_Error::i()->argument(1, 'int');						
 
-		$query = array('id' => $id);
+		return $this->_post(sprintf(self::URL_UNFAVORITE_STATUS, $id));
+	}
+	
+	/**
+	 * The ID of the user for whom to return results for. Either an 
+	 * id or screen_name is required for this method. 
+	 *
+	 * @param int|string
+	 * @return this
+	 */
+	public function setUserId($id) {
+		//Argument 1 must be na integer
+		Eden_Twitter_Error::i()->argument(1, 'int', 'string');
 		
-		$url = sprintf(self::URL_UNFAVORITE_STATUS, $id);
-		return $this->_post($url, $query);
+		//if id is integer
+		if(is_int($id)) {
+			$this->_query['user_id'] = $id;
+		} else {
+			$this->_query['screen_name'] = $id;
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Specifies the number of records to retrieve. Must be less than
+	 * or equal to 200. Defaults to 20.
+	 *
+	 * @param int|string
+	 * @return this
+	 */
+	public function setCount($count) {
+		//Argument 1 must be na integer
+		Eden_Twitter_Error::i()->argument(1, 'int', 'string');
+		$this->_query['count'] = $count;
+		
+		return $this;
+	}
+	
+	/**
+	 * Returns results with an ID greater than (that is, more recent than) the specified ID. 
+	 * There are limits to the number of Tweets which can be accessed through the API. If 
+	 * the limit of Tweets has occured since the since_id, the since_id will be forced 
+	 * to the oldest ID available.
+	 *
+	 * @param integer
+	 * @return this
+	 */
+	public function setSinceId($sinceId) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['since_id'] = $sinceId;
+		
+		return $this;
+	}
+	
+	/**
+	 * Returns results with an ID less than (that is, older than) or 
+	 * equal to the specified ID.
+	 *
+	 * @param integer
+	 * @return this
+	 */
+	public function setMaxId($maxId) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['max_id'] = $maxId;
+		
+		return $this;
+	}
+	
+	/**
+	 * Specifies the page of results to retrieve.
+	 *
+	 * @param integer
+	 * @return this
+	 */
+	public function setPage($page) {
+		//Argument 1 must be an integer 
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['page'] = $page;
+		
+		return $this;
+	}
+	
+	/**
+	 * When set to either true, t or 1, each tweet will include a node called "entities,". 
+	 * This node offers a variety of metadata about the tweet in a discreet structure, 
+	 * including: user_mentions, urls, and hashtags. While entities are opt-in on 
+	 * timelines at present, they will be made a default component of output in the 
+	 * future. See Tweet Entities for more detail on entities.
+	 *
+	 * @return this
+	 */
+	public function includeEntities() {
+		$this->_query['include_entities'] = true;
+		
+		return $this;
 	}
 	
 	/* Protected Methods

@@ -28,13 +28,6 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_eventId 			= NULL;
-	protected $_location 			= NULL;
-	protected $_limit 				= NULL;
-	protected $_contentId			= NULL;
-	protected $_url					= NULL;
-	protected $_shout				= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -59,8 +52,8 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	 */
 	public function setEventId($eventId) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_eventId = $eventId;
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
+		$this->_query['eventId'] = $eventId;
 		
 		return $this;
 	}
@@ -74,8 +67,7 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	public function setShout($shout) {
 		//argument 1 must be a string
 		Eden_Foursquare_Error::i()->argument(1, 'string');	
-			
-		$this->_shout  = $shout; 
+		$this->_query['shout'] = $shout;
 		
 		return $this;
 	}
@@ -88,8 +80,8 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	 */
 	public function setLimit($limit) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'int');						
-		$this->_limit = $limit;
+		Eden_Foursquare_Error::i()->argument(1, 'int');		
+		$this->_query['limit'] = $limit;
 		
 		return $this;
 	}
@@ -102,8 +94,8 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	 */
 	public function setUrl($url) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_url = $url;
+		Eden_Foursquare_Error::i()->argument(1, 'string');		
+		$this->_query['url'] = $url;
 		
 		return $this;
 	}
@@ -116,8 +108,8 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	 */
 	public function setContentId($contentId) {
 		//argument 1 must be a string
-		Eden_Foursquare_Error::i()->argument(1, 'string');						
-		$this->_contentId = $contentId;
+		Eden_Foursquare_Error::i()->argument(1, 'string');	
+		$this->_query['contentId'] = $contentId;
 		
 		return $this;
 	}
@@ -144,13 +136,10 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 				->trigger();
 		}
 		
-		$query = array(
-			'venueId'	=> $venueId,
-			'broadcast'	=> $broadcast,
-			'eventId'	=> $this->_eventId,	//optional
-			'shout'		=> $this->_shout);	//optional
+		$this->_query['venueId'] = $venueId;
+		$this->_query['broadcast'] = $broadcast;
 		
-		return $this->_post(self::URL_CHECKINS_CREATE, $query);
+		return $this->_post(self::URL_CHECKINS_CREATE, $this->_query);
 	}
 	
 	/**
@@ -160,11 +149,7 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 	 */
 	public function getRecentCheckins() {
 		
-		$query = array(
-			'll'	=> $this->_location,	//optional
-			'limit'	=> $this->_limit);		//optional
-		
-		return $this->_getResponse(self::URL_CHECKINS_CHECKINS, $query);
+		return $this->_getResponse(self::URL_CHECKINS_CHECKINS, $this->_query);
 	}
 	
 	/**
@@ -179,11 +164,10 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 		Eden_Foursquare_Error::i()
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
+			
+		$this->_query['text'] = $text;
 		
-		//populate fiels
-		$query = array('text' => $text);	
-		
-		return $this->_post(sprintf(self::URL_CHECKINS_ADD_COMMENT, $checkinId), $query);
+		return $this->_post(sprintf(self::URL_CHECKINS_ADD_COMMENT, $checkinId), $this->_query);
 	}
 	
 	/**
@@ -200,13 +184,9 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 		
-		//populate fiels
-		$query = array(
-			'text' 		=> $text,
-			'url'		=> $this->_url,			//optional
-			'contentId'	=> $this->_contentId);	//optional
+		$this->_query['text'] = $text;
 		
-		return $this->_post(sprintf(self::URL_CHECKINS_ADD_POST, $checkinId), $query);
+		return $this->_post(sprintf(self::URL_CHECKINS_ADD_POST, $checkinId), $this->_query);
 	}
 	
 	/**
@@ -222,10 +202,9 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 		
-		//populate fiels
-		$query = array('commentId'  => $commentId);	
+		$this->_query['commentId'] = $commentId;
 		
-		return $this->_post(sprintf(self::URL_CHECKINS_DELETE_COMMENT, $checkinId), $query);
+		return $this->_post(sprintf(self::URL_CHECKINS_DELETE_COMMENT, $checkinId), $this->_query);
 	}
 	
 	/**
@@ -241,13 +220,9 @@ class Eden_Foursquare_Checkins extends Eden_Foursquare_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 		
-		//populate fiels
-		$query = array(
-			'text' 		=> $text,
-			'url'		=> $this->_url,			//optional
-			'contentId'	=> $this->_contentId);	//optional
+		$this->_query['text'] = $text;
 		
-		return $this->_post(sprintf(self::URL_CHECKINS_REPLY, $checkinId), $query);
+		return $this->_post(sprintf(self::URL_CHECKINS_REPLY, $checkinId), $this->_query);
 	}
 	
 	/* Protected Methods

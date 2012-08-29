@@ -22,11 +22,6 @@ class Eden_Asiapay_Directclient extends Eden_Asiapay_Base {
 	/* Protected Properties
 	-------------------------------*/
 	protected $_secureHashSecret	= NULL;
-	protected $_mpsMode				= NULL;
-	protected $_remark				= NULL;
-	protected $_redirect			= NULL;
-	protected $_print				= NULL;
-	protected $_failRetry			= NULL;
 	protected $_currencyCode		= '608';
 	protected $_payType				= 'N';
 	protected $_language			= 'E';
@@ -40,36 +35,21 @@ class Eden_Asiapay_Directclient extends Eden_Asiapay_Base {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	public function __construct($merchantId, $test = true) {
+	public function __construct($merchantId, $test = true, $secureHash = NULL) {
 		//argument test
 		Eden_Asiapay_Error::i()
-			->argument(1, 'string')		//argument 1 must be a string
-			->argument(2, 'bool');		//argument 2 must be a boolean
+			->argument(1, 'string')				//argument 1 must be a string
+			->argument(2, 'bool')				//argument 2 must be a boolean
+			->argument(3, 'string', 'null');	//argument 3 must be a string or null
 		
-		$this->_merchantId 	= $merchantId;
-		$this->_test 		= $test;
+		$this->_merchantId 			= $merchantId;
+		$this->_test 				= $test;
+		$this->_secureHashSecret	= $secureHash;
+
 	}
 	
 	/* Public Methods
 	-------------------------------*/
-	/**
-	 * Set secure hash. You may retrieve the Secure Hash Secret of 
-	 * the merchant account by accessing to the Merchant Administration Interface, 
-	 * “Profile”  “Payment Information”. The Secure Hash Secret must be kept
-	 * safely for the function to be effective. The Secure Hash Secret will 
-	 * be changed every 2 years to enhance the level of security.
-	 * 
-	 * @param string 
-	 * @return this
-	 */
-	public function setHash($hash) {
-		//argument 1 must be a string
-		Eden_Asiapay_Error::i()->argument(1, 'string');						
-		$this->_secureHashSecret = $hash;
-		
-		return $this;
-	}
-	
 	/**
 	 * Set Multi-Currency Processing Service (MPS) Mode
 	 * For merchant who applied MPS function
@@ -84,8 +64,8 @@ class Eden_Asiapay_Directclient extends Eden_Asiapay_Base {
 	 */
 	public function setMpsmode($mpsMode) {
 		//argument 1 must be a string
-		Eden_Asiapay_Error::i()->argument(1, 'string');						
-		$this->_mpsMode = $mpsMode;
+		Eden_Asiapay_Error::i()->argument(1, 'string');	
+		$this->_query['mpsMode'] = $mpsMode;
 		
 		return $this;
 	}
@@ -99,8 +79,8 @@ class Eden_Asiapay_Directclient extends Eden_Asiapay_Base {
 	 */
 	public function setRemark($remark) {
 		//argument 1 must be a string
-		Eden_Asiapay_Error::i()->argument(1, 'string');						
-		$this->_remark = $remark;
+		Eden_Asiapay_Error::i()->argument(1, 'string');		
+		$this->_query['remark'] = $remark;
 		
 		return $this;
 	}
@@ -114,8 +94,8 @@ class Eden_Asiapay_Directclient extends Eden_Asiapay_Base {
 	 */
 	public function setRedirect($redirect) {
 		//argument 1 must be a string or integer
-		Eden_Asiapay_Error::i()->argument(1, 'int', 'string');						
-		$this->_remark = $redirect;
+		Eden_Asiapay_Error::i()->argument(1, 'int', 'string');		
+		$this->_query['redirect'] = $redirect;
 		
 		return $this;
 	}
@@ -125,8 +105,8 @@ class Eden_Asiapay_Directclient extends Eden_Asiapay_Base {
 	 * 
 	 * @return this
 	 */
-	public function disablePrint() {					
-		$this->_print = 'no';
+	public function disablePrint() {			
+		$this->_query['print'] = 'no';
 		
 		return $this;
 	}
@@ -136,8 +116,8 @@ class Eden_Asiapay_Directclient extends Eden_Asiapay_Base {
 	 * 
 	 * @return this
 	 */
-	public function disableFailRetry() {					
-		$this->_failRetry = 'no';
+	public function disableFailRetry() {	
+		$this->_query['failRetry'] = 'no';
 		
 		return $this;
 	}
@@ -232,31 +212,24 @@ class Eden_Asiapay_Directclient extends Eden_Asiapay_Base {
 		//creata a random order reference number 
 		$orderRef = rand(10000, 99999);
 		
-		//populate fields
-		$query = array(
-			'amount'		=> $amount,
-			'successUrl'	=> $successUrl,
-			'failUrl'		=> $failUrl,
-			'cancelUrl'		=> $cancelUrl,
-			'cardNo'		=> $cardNumber,
-			'securityCode'	=> $securityCode,
-			'cardHolder'	=> $cardHolder,
-			'epMonth'		=> $month,
-			'epYear'		=> $year,
-			'orderRef'		=> $orderRef,
-			'merchantId'	=> $this->_merchantId,
-			'currCode'		=> $this->_currencyCode,	//if not specify, default is '608' - PH
-			'payType'		=> $this->_payType,			//if not specify, default is 'N' - Normal Payment (Sales)
-			'lang'			=> $this->_language,		//if not specify, default is 'E' - English
-			'pMethod'		=> $this->_payMethod,		//if not specify, default is 'VISA'
-			'mpsMode'		=> $this->_mpsMode,			//optional
-			'remark'		=> $this->_remark,			//optional
-			'redirect'		=> $this->_redirect,		//optional
-			'print'			=> $this->_print,			//optional
-			'failRetry'		=> $this->_failRetry);		//optional
-		
+		$this->_query['amount']			= $amount;
+		$this->_query['successUrl']		= $successUrl;
+		$this->_query['failUrl']		= $failUrl;
+		$this->_query['cancelUrl']		= $cancelUrl;
+		$this->_query['cardNo']			= $cardNumber;
+		$this->_query['securityCode']	= $securityCode;
+		$this->_query['cardHolder']		= $cardHolder;
+		$this->_query['epMonth']		= $month;
+		$this->_query['epYear']			= $year;
+		$this->_query['orderRef']		= $orderRef;
+		$this->_query['merchantId']		= $this->_merchantId;
+		$this->_query['currCode']		= $this->_currencyCode;	//if not specify, default is '608' - PH
+		$this->_query['payType']		= $this->_payType;		//if not specify, default is 'N' - Normal Payment (Sales)
+		$this->_query['lang']			= $this->_language;		//if not specify, default is 'E' - English
+		$this->_query['pMethod']		= $this->_payMethod;	//if not specify, default is 'VISA'
+			
 		//prevent sending fields with no value
-		$query = $this->_removeNull($query);
+		$this->_query = $this->_removeNull($this->_query);
 		
 		//if test is true
 		if($this->_test) {
@@ -269,17 +242,17 @@ class Eden_Asiapay_Directclient extends Eden_Asiapay_Base {
 			//make a secure hash to prevent hacking
 			$hash = $this->_generateHash($amount, $orderRef);
 			//use secure hash when using live transaction
-			$query['secureHash'] = $hash;
+			$this->_query['secureHash'] = $hash;
 		}
 		
 		//make a form template
 		$parameters = Eden_Template::i()
-			->set('query', $query)
+			->set('query', $this->_query)
 			->set('url', $url)
 			->parsePHP(dirname(__FILE__).'/template/asiapay.php');
 		
 		//reset variables
-		$this->_reset();
+		unset($this->_query);
 		
 		return $parameters;
 	}
