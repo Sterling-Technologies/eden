@@ -22,11 +22,7 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	/* Public Properties 
 	-------------------------------*/
 	/* Protected Properties
-	-------------------------------*/
-	protected $_startIndex	= NULL;
-	protected $_maxResults	= NULL;
-	protected $_orderBy		= NULL;
-	
+	-------------------------------*/	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -52,7 +48,7 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	public function setStart($start) {
 		//argument 1 must be a integer
 		Eden_Google_Error::i()->argument(1, 'integer');
-		$this->_startIndex = $start;
+		$this->_query[self::START_INDEX] = $start;
 		
 		return $this;
 	}
@@ -66,7 +62,7 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	public function setRange($range) {
 		//argument 1 must be a integer
 		Eden_Google_Error::i()->argument(1, 'integer');
-		$this->_maxResults = $range;
+		$this->_query[self::MAX_RESULTS] = $range;
 		
 		return $this;
 	}
@@ -77,7 +73,7 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function orderByRelevance() {
-		$this->_orderBy = 'relevance';
+		$this->_query[self::ORDER_BY] = 'relevance';
 		
 		return $this;
 	}
@@ -88,7 +84,7 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function orderByPublished() {
-		$this->_orderBy = 'published';
+		$this->_query[self::ORDER_BY] = 'published';
 		
 		return $this;
 	}
@@ -99,7 +95,7 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function orderByViewCount() {
-		$this->_orderBy = 'viewCount';
+		$this->_query[self::ORDER_BY] = 'viewCount';
 		
 		return $this;
 	}
@@ -110,7 +106,7 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function orderByRating() {
-		$this->_orderBy = 'rating';
+		$this->_query[self::ORDER_BY] = 'rating';
 		
 		return $this;
 	}
@@ -125,15 +121,10 @@ class Eden_Google_Youtube_Search extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate parameters
-		$query = array(
-			self::QUERY			=> $queryString,
-			self::VERSION		=> self::VERSION_TWO,	
-			self::START_INDEX	=> $this->_startIndex,	//optional
-			self::MAX_RESULTS	=> $this->_maxResults,	//optional
-			self::ORDER_BY		=> $this->_orderBy);	//optional
+		$this->_query[self::QUERY]		= $queryString;
+		$this->_query[self::VERSION]	= self::VERSION_TWO;
 		
-		return $this->_getResponse(self::URL_YOUTUBE_SEARCH, $query);
+		return $this->_getResponse(self::URL_YOUTUBE_SEARCH, $this->_queryquery);
 	}
 	
 	/* Protected Methods

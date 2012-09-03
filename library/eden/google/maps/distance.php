@@ -23,12 +23,6 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_apiKey			= NULL;
-	protected $_mode			= NULL;
-	protected $_language 		= NULL;
-	protected $_avoid 			= NULL;
-	protected $_units 			= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -45,7 +39,7 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function avoidHighways() {
-		$this->_avoid  = 'highways';
+		$this->_query['avoid'] = 'highways';
 		return $this;
 	}
 	
@@ -55,7 +49,7 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function avoidTolls() {
-		$this->_avoid  = 'tolls';
+		$this->_query['avoid']  = 'tolls';
 		return $this;
 	}
 	
@@ -66,7 +60,7 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function bicycling() {
-		$this->_mode  = 'bicycling';
+		$this->_query['mode']  = 'bicycling';
 		return $this;
 	}
 	
@@ -77,7 +71,7 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function driving() {
-		$this->_mode  = 'driving';
+		$this->_query['mode']  = 'driving';
 		return $this;
 	}
 	
@@ -88,7 +82,7 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function walking() {
-		$this->_mode  = 'walking';
+		$this->_query['mode']  = 'walking';
 		return $this;
 	}
 	
@@ -101,8 +95,7 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 	public function setLanguage($language) {
 		//argument 1 must be a string or integer	
 		Eden_Google_Error::i()->argument(1, 'string', 'int');	
-		
-		$this->_language = $language;
+		$this->_query['language'] = $language;
 		
 		return $this;
 	}
@@ -113,7 +106,7 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setUnitToImperial() {
-		$this->_units  = 'imperial';
+		$this->_query['units']  = 'imperial';
 		
 		return $this;
 	}
@@ -133,17 +126,11 @@ class Eden_Google_Maps_Distance extends Eden_Google_Base {
 			->argument(2, 'string', 'int', 'float')		//argument 2 must be a string, integer or float
 			->argument(3, 'string');					//argument 3 must be a string	
 			
-		//populate paramenter
-		$query = array(
-			'origins'		=> $origin,			
-			'sensor'		=> $sensor,			
-			'destinations'	=> $destination,	
-			'language'		=> $this->_language,	//optional
-			'avoid'			=> $this->_avoid,		//optional
-			'mode'			=> $this->_mode,		//optional
-			'units'			=> $this->_units);		//optional
+		$this->_query['origin'] 		= $origin;
+		$this->_query['sensor'] 		= $sensor;
+		$this->_query['destinations']	= $destination;
 		
-		return $this->_getResponse(self::URL_MAP_DISTANCE, $query);
+		return $this->_getResponse(self::URL_MAP_DISTANCE, $this->_query);
 	}
 	/* Protected Methods
 	-------------------------------*/

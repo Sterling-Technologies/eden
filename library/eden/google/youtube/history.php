@@ -51,12 +51,11 @@ class Eden_Google_Youtube_History extends Eden_Google_Base {
 	 * @return array
 	 */
 	public function getList() {
-		//populate fields
-		$query = array(
-			self::VERSION	=> self::VERSION_TWO,
-			self::RESPONSE	=> self::JSON_FORMAT);
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_HISTORY), $query);
+		$this->_query[self::VERSION]	= self::VERSION_TWO;
+		$this->_query[self::RESPONSE]	= self::JSON_FORMAT;
+		
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_HISTORY), $this->_query);
 	}
 	
 	/**

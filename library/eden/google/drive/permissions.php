@@ -24,13 +24,6 @@ class Eden_Google_Drive_Permissions extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_withLink		= false;
-	protected $_id				= NULL;
-	protected $_name			= NULL;
-	protected $_role			= NULL;
-	protected $_type			= NULL;
-	protected $_value			= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -127,15 +120,11 @@ class Eden_Google_Drive_Permissions extends Eden_Google_Base {
 				->trigger();
 		}
 		
-		//populate fields
-		$query = array(
-			self::VALUE			=> $value,
-			self::ROLE			=> $role,		
-			self::TYPE			=> $type,	
-			self::NAME			=> $this->_name,		//optional
-			self::WITH_LINK		=> $this->_withLink);	//optional	
+		$this->_query[self::VALUE]	= $value;
+		$this->_query[self::ROLE]	= $role;
+		$this->_query[self::TYPE]	= $type;
 		
-		return $this->_post(sprintf(self::URL_PERMISSIONS_LIST, $fileId), $query);
+		return $this->_post(sprintf(self::URL_PERMISSIONS_LIST, $fileId), $this->_query);
 	}
 	
 	/**
@@ -151,29 +140,7 @@ class Eden_Google_Drive_Permissions extends Eden_Google_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 			
-		//populate fields
-		$query = array(
-			self::NAME			=> $this->_name,		//optional
-			self::ROLE			=> $this->_role,		//optional
-			self::TYPE			=> $this->_type,		//optional
-			self::WITH_LINK		=> $this->_withLink,	//optional
-			self::VALUE			=> $this->_value);		//optional		
-		
-		return $this->_patch(sprintf(self::URL_PERMISSIONS_GET, $fileId, $permissionId), $query);
-	}
-	
-	/**
-	 * The ID of the child.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setId($id) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_id = $id;
-		
-		return $this;
+		return $this->_patch(sprintf(self::URL_PERMISSIONS_GET, $fileId, $permissionId), $this->_query);
 	}
 	
 	/**
@@ -185,7 +152,7 @@ class Eden_Google_Drive_Permissions extends Eden_Google_Base {
 	public function setName($name) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_name = $name;
+		$this->_query[self::NAME] = $name;
 		
 		return $this;
 	}
@@ -203,7 +170,7 @@ class Eden_Google_Drive_Permissions extends Eden_Google_Base {
 	public function setRole($role) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_role = $role;
+		$this->_query[self::ROLE] = $role;
 		
 		return $this;
 	}
@@ -221,7 +188,7 @@ class Eden_Google_Drive_Permissions extends Eden_Google_Base {
 	public function setType($type) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_type = $type;
+		$this->_query[self::TYPE] = $type;
 		
 		return $this;
 	}
@@ -236,7 +203,7 @@ class Eden_Google_Drive_Permissions extends Eden_Google_Base {
 	public function setValue($value) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_value = $value;
+		$this->_query[self::VALUE] = $value;
 		
 		return $this;
 	}
@@ -247,7 +214,7 @@ class Eden_Google_Drive_Permissions extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setWithLink() {
-		$this->_withLink = true;
+		$this->_query[self::WITH_LINK] = true;
 		
 		return $this;
 	}
@@ -265,15 +232,7 @@ class Eden_Google_Drive_Permissions extends Eden_Google_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 			
-		//populate fields
-		$query = array(
-			self::NAME			=> $this->_name,		//optional
-			self::ROLE			=> $this->_role,		//optional
-			self::TYPE			=> $this->_type,		//optional
-			self::WITH_LINK		=> $this->_withLink,	//optional
-			self::VALUE			=> $this->_value);		//optional		
-		
-		return $this->_put(sprintf(self::URL_PERMISSIONS_GET, $fileId, $permissionId), $query);
+		return $this->_put(sprintf(self::URL_PERMISSIONS_GET, $fileId, $permissionId), $this->_query);
 	}
 	
 	/* Protected Methods

@@ -25,14 +25,6 @@ class Eden_Google_Calendar_Calendars extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_timeZone			= NULL;
-	protected $_etag				= NULL;
-	protected $_id					= NULL;
-	protected $_kind				= NULL;
-	protected $_location			= NULL;
-	protected $_summary				= NULL;
-	protected $_description			= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -74,17 +66,9 @@ class Eden_Google_Calendar_Calendars extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(
-			self::SUMMARY		=> $summary,
-			self::ETAG			=> $this->_etag,		//optional
-			self::ID			=> $this->_id,			//optional
-			self::KIND			=> $this->_kind,		//optional
-			self::DESCRIPTION	=> $this->_description,	//optional
-			self::LOCATION		=> $this->_location,	//optional
-			self::TIMEZONE		=> $this->_timeZone);	//optional
+		$this->_query[self::SUMMARY] = $summary;
 		
-		return $this->_post(self::URL_CALENDAR_CREATE, $query);
+		return $this->_post(self::URL_CALENDAR_CREATE, $this->_query);
 	}
 	
 	/**
@@ -124,14 +108,7 @@ class Eden_Google_Calendar_Calendars extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(
-			self::ETAG		=> $this->_etag,		//optional
-			self::ID		=> $this->_id,			//optional
-			self::KIND		=> $this->_kind,		//optional
-			self::SUMARRY	=> $this->_summary);	//optional
-		
-		return $this->_patch(sprintf(self::URL_CALENDAR_GET, $calendarId), $query);
+		return $this->_patch(sprintf(self::URL_CALENDAR_GET, $calendarId), $this->_query);
 	}
 
 	/**
@@ -143,7 +120,7 @@ class Eden_Google_Calendar_Calendars extends Eden_Google_Base {
 	public function setDescription($description) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_description = $description;
+		$this->_query[self::DESCRIPTION] = $description;
 		
 		return $this;
 	}
@@ -157,7 +134,7 @@ class Eden_Google_Calendar_Calendars extends Eden_Google_Base {
 	public function setEtag($etag) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_etag = $etag;
+		$this->_query[self::ETAG] = $etag;
 		
 		return $this;
 	}
@@ -171,7 +148,7 @@ class Eden_Google_Calendar_Calendars extends Eden_Google_Base {
 	public function setId($id) {
 		//argument 1 must be a string or integer
 		Eden_Google_Error::i()->argument(1, 'string', 'int');
-		$this->_id = $id;
+		$this->_query[self::ID] = $id;
 		
 		return $this;
 	}
@@ -185,7 +162,7 @@ class Eden_Google_Calendar_Calendars extends Eden_Google_Base {
 	public function setKind($kind) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_kind = $kind;
+		$this->_query[self::KIND] = $kind;
 		
 		return $this;
 	}
@@ -200,7 +177,7 @@ class Eden_Google_Calendar_Calendars extends Eden_Google_Base {
 	public function setLocation($location) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_location = $location;
+		$this->_query[self::LOCATION] = $location;
 		
 		return $this;
 	}
@@ -214,7 +191,7 @@ class Eden_Google_Calendar_Calendars extends Eden_Google_Base {
 	public function setSummary($summary) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_summary = $summary;
+		$this->_query[self::SUMMARY] = $summary;
 		
 		return $this;
 	}
@@ -228,7 +205,7 @@ class Eden_Google_Calendar_Calendars extends Eden_Google_Base {
 	public function setTimeZone($timeZone) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_timeZone = $timeZone;
+		$this->_query[self::TIMEZONE] = $timeZone;
 		
 		return $this;
 	}
@@ -243,14 +220,7 @@ class Eden_Google_Calendar_Calendars extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(
-			self::ETAG		=> $this->_etag,		//optional
-			self::ID		=> $this->_id,			//optional
-			self::KIND		=> $this->_kind,		//optional
-			self::SUMARRY	=> $this->_summary);	//optional
-		
-		return $this->_put(sprintf(self::URL_CALENDAR_GET, $calendarId), $query);
+		return $this->_put(sprintf(self::URL_CALENDAR_GET, $calendarId), $this->_query);
 	}
 	
 	/* Protected Methods

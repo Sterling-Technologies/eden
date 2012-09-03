@@ -24,20 +24,6 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_apiKey		= NULL;
-	protected $_scale		= NULL;
-	protected $_format		= NULL;
-	protected $_maptype		= NULL;
-	protected $_language	= NULL;
-	protected $_region		= NULL;
-	protected $_markers		= NULL;
-	protected $_path		= NULL;
-	protected $_visible		= NULL;
-	protected $_style		= NULL;
-	protected $_heading		= NULL;
-	protected $_fov			= NULL;
-	protected $_pitch		= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -64,7 +50,7 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 		//argument 1 must be a integer 	
 		Eden_Google_Error::i()->argument(1, 'int');	
 		
-		$this->_scale = $scale;
+		$this->_query['scale'] = $scale;
 		
 		return $this;
 	}
@@ -80,7 +66,7 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 		//argument 1 must be a string 	
 		Eden_Google_Error::i()->argument(1, 'string');	
 		
-		$this->_format = $format;
+		$this->_query['format'] = $format;
 		
 		return $this;
 	}
@@ -95,7 +81,7 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 		//argument 1 must be a string 	
 		Eden_Google_Error::i()->argument(1, 'string');	
 		
-		$this->_language = $language;
+		$this->_query['language'] = $language;
 		
 		return $this;
 	}
@@ -111,7 +97,7 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 		//argument 1 must be a string 	
 		Eden_Google_Error::i()->argument(1, 'string');	
 		
-		$this->_region = $region;
+		$this->_query['region'] = $region;
 		
 		return $this;
 	}
@@ -127,7 +113,7 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 		//argument 1 must be a string 	
 		Eden_Google_Error::i()->argument(1, 'string');	
 		
-		$this->_markers = $markers;
+		$this->_query['markers'] = $markers;
 		
 		return $this;
 	}
@@ -143,7 +129,7 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 		//argument 1 must be a string 	
 		Eden_Google_Error::i()->argument(1, 'string');	
 		
-		$this->_path  = $path;
+		$this->_query['path']  = $path;
 		
 		return $this;
 	}
@@ -160,7 +146,7 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 		//argument 1 must be a string 	
 		Eden_Google_Error::i()->argument(1, 'string');	
 		
-		$this->_visible  = $visible;
+		$this->_query['visible']  = $visible;
 		
 		return $this;
 	}
@@ -176,7 +162,7 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 		//argument 1 must be a string 	
 		Eden_Google_Error::i()->argument(1, 'string');	
 		
-		$this->_style  = $style;
+		$this->_query['style']  = $style;
 		
 		return $this;
 	}
@@ -193,7 +179,7 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 		//argument 1 must be a integer	
 		Eden_Google_Error::i()->argument(1, 'int');	
 		
-		$this->_heading  = $heading;
+		$this->_query['heading']  = $heading;
 		
 		return $this;
 	}
@@ -210,7 +196,7 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 		//argument 1 must be a integer	
 		Eden_Google_Error::i()->argument(1, 'int');	
 		
-		$this->_fov  = $fov;
+		$this->_query['fov']  = $fov;
 		
 		return $this;
 	}
@@ -226,7 +212,7 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 		//argument 1 must be a integer	
 		Eden_Google_Error::i()->argument(1, 'int');	
 		
-		$this->_pitch  = $pitch;
+		$this->_query['pitch']  = $pitch;
 		
 		return $this;
 	}
@@ -240,7 +226,7 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function useRoadMap() {
-		$this->_maptype  = 'roadmap';
+		$this->_query['maptype']  = 'roadmap';
 		
 		return $this;
 	}
@@ -251,7 +237,7 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function useSatelliteMap() {
-		$this->_maptype  = 'satellite';
+		$this->_query['maptype']  = 'satellite';
 		
 		return $this;
 	}
@@ -263,7 +249,7 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function useTerrainMap() {
-		$this->_maptype  = 'terrain';
+		$this->_query['maptype']  = 'terrain';
 		
 		return $this;
 	}
@@ -276,7 +262,7 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function useHybridMap() {
-		$this->_maptype  = 'hybrid';
+		$this->_query['maptype']  = 'hybrid';
 		
 		return $this;
 	}
@@ -298,23 +284,12 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 			->argument(3, 'string')		//argument 3 must be a string
 			->argument(4, 'string');	//argument 4 must be a string	
 			
-		//populate fields
-		$query = array(
-			'center'	=> $center,	
-			'zoom'		=> $zoom,
-			'size'		=> $size,
-			'sensor' 	=> $sensor,		
-			'scale'		=> $this->_scale,		//optional
-			'format'	=> $this->_format,		//optional
-			'maptype'	=> $this->_maptype,		//optional
-			'language'	=> $this->_language,	//optional
-			'region'	=> $this->_region,		//optional
-			'markers'	=> $this->_markers,		//optional
-			'path'		=> $this->_path,		//optional
-			'visible'	=> $this->_visible,		//optional
-			'style'		=> $this->_style);		//optional
-	
-		return $this->_getResponse(self::URL_MAP_IMAGE_STATIC, $query);
+		$this->_query['center']	= $center;
+		$this->_query['zoom']	= $zoom;
+		$this->_query['size']	= $size;
+		$this->_query['sensor'] = $sensor;		
+		
+		return $this->_getResponse(self::URL_MAP_IMAGE_STATIC, $this->_query);
 	}
 	
 	/**
@@ -332,17 +307,13 @@ class Eden_Google_Maps_Image extends Eden_Google_Base {
 			->argument(2, 'string')		//argument 2 must be a string
 			->argument(3, 'string');	//argument 3 must be a string
 			
-		//populate paramenter
-		$query = array(
-			'size'		=> $size,		
-			'location'	=> $location,	
-			'sensor'	=> $sensor,		
-			'heading'	=> $this->_heading,	//optional
-			'fov'		=> $this->_fov,		//optional
-			'pitch'		=> $this->_pitch);	//optional
-	
-		return $this->_getResponse(self::URL_MAP_IMAGE_STREET, $query);
+		$this->_query['size']		= $size;		
+		$this->_query['location']	= $location;	
+		$this->_query['sensor']		= $sensor;		
+		
+		return $this->_getResponse(self::URL_MAP_IMAGE_STREET, $this->_query);
 	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods

@@ -156,9 +156,10 @@ class Eden_Google_Youtube_Video extends Eden_Google_Base {
 	 * @return array
 	 */
 	public function getFavorites() {
-		//populate parameters
-		$query = array(self::VERSION => self::VERSION_TWO);
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_FAVORITES, $this->_feeds), $query);
+		
+		$this->_query[self::VERSION] = self::VERSION_TWO;
+		
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_FAVORITES, $this->_feeds), $this->_query);
 	}
 	
 	/**
@@ -180,12 +181,10 @@ class Eden_Google_Youtube_Video extends Eden_Google_Base {
 		//argument test
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate parameters
-		$query = array(
-			self::CATEGORY	=> $category,
-			self::VERSION 	=> self::VERSION_TWO);
+		$this->_query[self::CATEGORY]	= $category;
+		$this->_query[self::VERSION]	= self::VERSION_TWO;
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_CATEGORY, $this->_feeds), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_CATEGORY, $this->_feeds), $this->_query);
 	}
 	
 	/**

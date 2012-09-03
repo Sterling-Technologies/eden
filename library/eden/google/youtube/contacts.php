@@ -54,10 +54,9 @@ class Eden_Google_Youtube_Contacts extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query  = array(self::RESPONSE => self::JSON_FORMAT);
+		$this->_query[self::RESPONSE] = self::JSON_FORMAT;
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_CONTACTS, $userId), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_CONTACTS, $userId), $this->_query);
 	}
 	
 	/**
@@ -72,10 +71,10 @@ class Eden_Google_Youtube_Contacts extends Eden_Google_Base {
 		Eden_Google_Error::i()
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
-		//populate fields
-		$query  = array(self::RESPONSE => self::JSON_FORMAT);
+			
+		$this->_query[self::RESPONSE] = self::JSON_FORMAT;
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_CONTACTS_GET, $userId, $userName), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_CONTACTS_GET, $userId, $userName), $this->_query);
 	}
 	
 	/**

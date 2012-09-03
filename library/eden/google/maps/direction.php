@@ -23,18 +23,6 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_apiKey			= NULL;
-	protected $_samples			= NULL;
-	protected $_mode			= NULL;
-	protected $_language 		= NULL;
-	protected $_avoid 			= NULL;
-	protected $_units 			= NULL;
-	protected $_waypoints 		= NULL;
-	protected $_alternatives	= NULL;
-	protected $_departureTime	= NULL;
-	protected $_arrivalTime		= NULL;
-	protected $_region			= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -51,7 +39,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function avoidHighways() {
-		$this->_avoid  = 'highways';
+		$this->_query['avoid']  = 'highways';
 		return $this;
 	}
 	
@@ -61,7 +49,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function avoidTolls() {
-		$this->_avoid  = 'tolls';
+		$this->_query['avoid']  = 'tolls';
 		return $this;
 	}
 		
@@ -72,7 +60,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function bicycling() {
-		$this->_mode  = 'bicycling';
+		$this->_query['mode']  = 'bicycling';
 		return $this;
 	}
 	
@@ -83,7 +71,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function driving() {
-		$this->_mode  = 'driving';
+		$this->_query['mode']  = 'driving';
 		return $this;
 	}
 	
@@ -95,7 +83,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function transit() {
-		$this->_mode  = 'transit';
+		$this->_query['mode']  = 'transit';
 		return $this;
 	}
 	
@@ -106,7 +94,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function walking() {
-		$this->_mode  = 'walking';
+		$this->_query['mode']  = 'walking';
 		return $this;
 	}
 	
@@ -120,7 +108,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 		//argument 1 must be a string or integer	
 		Eden_Google_Error::i()->argument(1, 'string', 'int');	
 		
-		$this->_language = $language;
+		$this->_query['language'] = $language;
 		
 		return $this;
 	}
@@ -135,7 +123,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 		//argument 1 must be a string or integer	
 		Eden_Google_Error::i()->argument(1, 'string', 'int');	
 		
-		$this->_waypoint = $waypoint;
+		$this->_query['waypoint'] = $waypoint;
 		
 		return $this;
 	}
@@ -149,8 +137,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	public function setRegion($region) {
 		//argument 1 must be a string or integer	
 		Eden_Google_Error::i()->argument(1, 'string', 'int');	
-		
-		$this->_region = $region;
+		$this->_query['region'] = $region;
 		
 		return $this;
 	}
@@ -161,7 +148,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setUnitToImperial() {
-		$this->_units  = 'imperial';
+		$this->_query['units']  = 'imperial';
 		return $this;
 	}
 	
@@ -172,7 +159,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setAlternatives() {
-		$this->_alternatives  = 'true';
+		$this->_query['alternatives'] = 'true';
 		return $this;
 	}
 	
@@ -191,7 +178,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 			$departureTime = strtotime($departureTime);
 		}
 		
-		$this->_departureTime = $departureTime;
+		$this->_query['departureTime'] = $departureTime;
 		
 		return $this;
 	}
@@ -211,7 +198,7 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 			$arrivalTime = strtotime($arrivalTime);
 		}
 		
-		$this->_arrivalTime = $arrivalTime;
+		$this->_query['arrivalTime'] = $arrivalTime;
 		
 		return $this;
 	}
@@ -224,28 +211,18 @@ class Eden_Google_Maps_Direction extends Eden_Google_Base {
 	 * @param booelean  Indicates whether or not the directions request comes from a device with a location sensor
 	 * @return array
 	 */
-	public function getResponse($origin, $destination, $sensor = 'false') {
+	public function getDirection($origin, $destination, $sensor = 'false') {
 		//argument test
 		Eden_Google_Error::i()
 			->argument(1, 'string', 'int', 'float')		//argument 1 must be a string, integer or float
 			->argument(2, 'string', 'int', 'float')		//argument 2 must be a string, integer or float
 			->argument(3, 'string');					//argument 3 must be a string	
-			
-		//populate paramenter
-		$query = array(
-			'origin'		=> $origin,			
-			'sensor'		=> $sensor,	
-			'destination'	=> $destination,	
-			'alternatives'	=> $this->_alternatives,	//optional
-			'region'		=> $this->_region,			//optional
-			'departureTime'	=> $this->_departureTime,	//optional
-			'arrivalTime'	=> $this->_arrivalTime,		//optional
-			'language'		=> $this->_language,		//optional
-			'avoid'			=> $this->_avoid,			//optional
-			'units'			=> $this->_units);			//optional
 		
-
-		return $this->_getResponse(self::URL_MAP_DIRECTION, $query);
+		$this->_query['origin'] 		= $origin;
+		$this->_query['sensor'] 		= $sensor;
+		$this->_query['destination']	= $destination;
+		
+		return $this->_getResponse(self::URL_MAP_DIRECTION, $this->_query);
 	}
 	/* Protected Methods
 	-------------------------------*/

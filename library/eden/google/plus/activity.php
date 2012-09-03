@@ -54,7 +54,7 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	public function setPageToken($pageToken) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_pageToken = $pageToken;
+		$this->_query[self::PAGE_TOKEN] = $pageToken;
 		
 		return $this;
 	}
@@ -69,7 +69,7 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	public function setMaxResults($maxResults) {
 		//argument 1 must be a integer
 		Eden_Google_Error::i()->argument(1, 'int');
-		$this->_maxResults = $maxResults;
+		$this->_query[self::MAX_RESULTS] = $maxResults;
 		
 		return $this;
 	}
@@ -80,7 +80,7 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function orderByBest() {
-		$this->_orderBy = 'best';
+		$this->_query[self::ORDER] = 'best';
 		
 		return $this;
 	}
@@ -91,7 +91,7 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function orderByRecent() {
-		$this->_orderBy = 'recent';
+		$this->_query[self::ORDER] = 'recent';
 		
 		return $this;
 	}
@@ -106,12 +106,7 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(	
-			self::MAX_RESULTS	=> $this->_maxResults,	//optional
-			SELF::PAGE_TOKEN	=> $this->_pageToken);	//optional
-		
-		return $this->_getResponse(sprintf(self::URL_ACTIVITY_LIST, $userId, self::PUBLIC_DATA), $query);
+		return $this->_getResponse(sprintf(self::URL_ACTIVITY_LIST, $userId, self::PUBLIC_DATA), $this->_query);
 	 }
 	
 	/**
@@ -137,14 +132,9 @@ class Eden_Google_Plus_Activity extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string', 'int');
 		
-		//populate fields
-		$query = array(
-			self::QUERY_STRING	=> $queryString,
-			self::PAGE_TOKEN	=> $this->_pageToken,	//optional
-			self::MAX_RESULTS	=> $this->_maxResults,	//optional
-			self::ORDER			=> $this->_orderBy);	//optional
+		$this->_query[self::QUERY_STRING] = $queryString;
 		
-		return $this->_getResponse(self::URL_ACTIVITY_SEARCH, $query);
+		return $this->_getResponse(self::URL_ACTIVITY_SEARCH, $this->_query);
 	}
 	
 	/* Protected Methods

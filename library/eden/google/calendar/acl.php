@@ -24,12 +24,6 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_role	= NULL;
-	protected $_type	= NULL; 
-	protected $_etag	= NULL;
-	protected $_id		= NULL;
-	protected $_kind	= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -61,15 +55,10 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 			->argument(2, 'string')		//argument 2 must be a string
 			->argument(3, 'string');	//argument 3 must be a string
 		
-		//populate fields
-		$query = array(
-			self::ROLE	=> $role,
-			self::ETAG	=> $this->_etag,	//optional
-			self::ID	=> $this->_id,		//optional
-			self::KIND	=> $this->_kind,	//optional
-			self::SCOPE	=> array(self::TYPE => $type));
+		$this->_query[self::ROLE]	= $role;
+		$this->_query[self::SCOPE]	= array(self::TYPE => $type);
 		
-		return $this->_post(sprintf(self::URL_CALENDAR_ACL_GET, $calendarId), $query);
+		return $this->_post(sprintf(self::URL_CALENDAR_ACL_GET, $calendarId), $this->_query);
 	}
 	
 	/**
@@ -127,7 +116,7 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	public function setEtag($etag) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_etag = $etag;
+		$this->_query[self::ETAG] = $etag;
 		
 		return $this;
 	}
@@ -141,7 +130,7 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	public function setId($id) {
 		//argument 1 must be a string or integer
 		Eden_Google_Error::i()->argument(1, 'string', 'int');
-		$this->_id = $id;
+		$this->_query[self::ID] = $id;
 		
 		return $this;
 	}
@@ -155,7 +144,7 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	public function setKind($kind) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_kind = $kind;
+		$this->_query[self::KIND] = $kind;
 		
 		return $this;
 	}
@@ -166,7 +155,7 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setRoleToFreeBusyReader() {
-		$this->_role = 'freeBusyReader';
+		$this->_query[self::ROLE] = 'freeBusyReader';
 		
 		return $this;
 	}
@@ -177,7 +166,7 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setRoleToNone() {
-		$this->_role = 'none';
+		$this->_query[self::ROLE] = 'none';
 		
 		return $this;
 	}
@@ -191,7 +180,7 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setRoleToReader() {
-		$this->_role = 'reader';
+		$this->_query[self::ROLE] = 'reader';
 		
 		return $this;
 	}
@@ -205,7 +194,7 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setRoleToWriter() {
-		$this->_role = 'writer';
+		$this->_query[self::ROLE] = 'writer';
 		
 		return $this;
 	}
@@ -219,21 +208,7 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setRoleToOwner() {
-		$this->_role = 'owner';
-		
-		return $this;
-	}
-	
-	/**
-	 * Set rule id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setRuleId($ruleId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_ruleId= $ruleId;
+		$this->_query[self::ROLE] = 'owner';
 		
 		return $this;
 	}
@@ -250,7 +225,7 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 	public function setType($type) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_type = $type;
+		$this->_query[self::TYPE] = $type;
 		
 		return $this;
 	}
@@ -268,15 +243,7 @@ class Eden_Google_Calendar_Acl extends Eden_Google_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 1 must be a string
 			
-		//populate fields
-		$query = array(
-			self::ETAG	=> $this->_etag,
-			self::ID	=> $this->_id,
-			self::KIND	=> $this->_kind,
-			self::ROLE	=> $this->_role,
-			self::SCOPE	=> $scope = array(self::TYPE => $this->_type));
-		
-		return $this->_put(sprintf(self::URL_CALENDAR_ACL_SPECIFIC, $calendarId, $ruleId), $query);
+		return $this->_put(sprintf(self::URL_CALENDAR_ACL_SPECIFIC, $calendarId, $ruleId), $this->_query);
 	}
 	
 	/* Protected Methods

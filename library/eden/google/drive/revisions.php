@@ -24,11 +24,6 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_pinned					= false;
-	protected $_publishAuto				= false;
-	protected $_publishedOutsideDomain	= false;
-	protected $_published				= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -103,15 +98,7 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 			
-		//populate fields
-		$query = array(
-			self::PINNED			=> $this->_pinned,					//optional
-			self::PUBLISHED			=> $this->_published,				//optional
-			self::PUBLISHED_LINK	=> $this->_publishedLink,			//optional
-			self::PUBLISHED_AUTO	=> $this->_publishAuto,				//optional
-			self::OUTSIDE_DOMAIN	=> $this->_publishedOutsideDomain);	//optional
-		
-		return $this->_patch(sprintf(self::URL_PERMISSIONS_GET, $fileId, $revisionId), $query);
+		return $this->_patch(sprintf(self::URL_PERMISSIONS_GET, $fileId, $revisionId), $this->_query);
 	}
 	
 	/**
@@ -121,7 +108,7 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setPinned() {
-		$this->_pinned = true;
+		$this->_query[self::PINNED] = true;
 		
 		return $this;
 	}
@@ -132,7 +119,7 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setPublishAuto() {
-		$this->_publishAuto = true;
+		$this->_query[self::PUBLICHED_AUTO] = true;
 		
 		return $this;
 	}	
@@ -143,7 +130,7 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setPublished() {
-		$this->_published = true;
+		$this->_query[self::PUBLISHED] = true;
 		
 		return $this;
 	}
@@ -157,7 +144,7 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 	public function setPublishedLink($publishedLink) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_publishedLink = $publishedLink;
+		$this->_query[self::PUBLISHED_LINK] = $publishedLink;
 		
 		return $this;
 	}
@@ -168,7 +155,7 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setPublishedOutsideDomain() {
-		$this->_publishedOutsideDomain = true;
+		$this->_query[self::OUTSIDE_DOMAIN] = true;
 		
 		return $this;
 	}
@@ -186,15 +173,7 @@ class Eden_Google_Drive_Revisions extends Eden_Google_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 			
-		//populate fields
-		$query = array(
-			self::PINNED			=> $this->_pinned,					//optional
-			self::PUBLISHED			=> $this->_published,				//optional
-			self::PUBLISHED_LINK	=> $this->_publishedLink,			//optional
-			self::PUBLISHED_AUTO	=> $this->_publishAuto,				//optional
-			self::OUTSIDE_DOMAIN	=> $this->_publishedOutsideDomain);	//optional
-		
-		return $this->_put(sprintf(self::URL_PERMISSIONS_GET, $fileId, $revisionId), $query);
+		return $this->_put(sprintf(self::URL_PERMISSIONS_GET, $fileId, $revisionId), $this->_query);
 	}
 	
 	/* Protected Methods

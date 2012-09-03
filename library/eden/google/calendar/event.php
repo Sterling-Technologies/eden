@@ -28,19 +28,6 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/ 
-	protected $_location	= NULL;
-	protected $_description	= NULL;
-	protected $_colorId		= NULL;
-	protected $_creator		= NULL;
-	protected $_kind		= NULL;
-	protected $_organizer	= NULL;
-	protected $_reminders	= NULL;
-	protected $_status		= NULL;
-	
-	protected $_start 		= array();
-	protected $_end 		= array();
-	protected $_attendees 	= array();
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -57,7 +44,6 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	
 	/* Public Methods
 	-------------------------------*/	
-	
 	/**
 	 * sets the attendees for event
 	 *
@@ -73,7 +59,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 		}
 		
 		foreach($attendee as $user) {
-			$this->_attendees[] = array('email' => $user);
+			$this->_query[self::ATTENDESS][] = array('email' => $user);
 		}
 		
 		return $this;
@@ -92,15 +78,9 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 			
-		//populate fields
-		$query = array(
-			self::SUMMARY	=> $summary,
-			self::LOCATION	=> $this->_location,	//optional
-			self::START		=> $this->_start,		//optional
-			self::END		=> $this->_end,			//optional
-			self::ATTENDEES	=> $this->_attendees);	//optional
+		$this->_query[self::SUMMARY] = $summary;
 		
-		return $this->_post(sprintf(self::URL_CALENDAR_EVENT, $calendarId), $query);
+		return $this->_post(sprintf(self::URL_CALENDAR_EVENT, $calendarId), $this->_query);
 	}
 	
 	/**
@@ -116,7 +96,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 		
-		return $this->_delete(sprintf(self::URL_CALENDAR, $calendarId, $eventId), $url);
+		return $this->_delete(sprintf(self::URL_CALENDAR, $calendarId, $eventId));
 	}
 	
 	/**
@@ -192,13 +172,11 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 		$end['dateTime']	= date('c', $end);
 		$start['dateTime']	= date('c', $start);
 		
-		//populate fields
-		$query = array(
-			self::START	=> $start,
-			self::END	=> $end,
-			self::UID	=> $importId);
+		$this->_query[self::START]	= $start['dateTime'] = date('c', $start);
+		$this->_query[self::END] 	= $end['dateTime'] = date('c', $end);
+		$this->_query[self::UID] 	= $importId;
 		
-		return $this->_post(sprintf(self::URL_CALENDAR_IMPORT, $calendarId), $query);
+		return $this->_post(sprintf(self::URL_CALENDAR_IMPORT, $calendarId), $this->_query);
 	}	
 	
 	/**
@@ -216,10 +194,9 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 			->argument(2, 'string')		//argument 2 must be a string
 			->argument(3, 'string');	//argument 3 must be a string
 			
-		//populate fields
-		$query = array(self::DESTINATION => $destination);
+		$this->_query[self::DESTINATION] = $description;
 		
-		return $this->_customPost(sprintf(self::URL_CALENDAR_MOVE, $calendarId, $eventId), $query);
+		return $this->_customPost(sprintf(self::URL_CALENDAR_MOVE, $calendarId, $eventId), $this->_query);
 	}
 	
 	/**
@@ -236,20 +213,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 			
-		//populate fields
-		$query = array(
-			self::END			=> $this->_end,			//optional
-			self::START			=> $this->_start,		//optional
-			self::DESCRIPTION	=> $this->_description,	//optional
-			self::COLOR_ID		=> $this->_colorId,		//optional
-			self::CREATOR		=> $this->_creator,		//optional
-			self::KIND			=> $this->_kind,		//optional
-			self::LOCATION		=> $this->_location,	//optional
-			self::ORGANIZER		=> $this->_organizer,	//optional
-			self::REMINDERS		=> $this->_reminders,	//optional
-			self::STATUS		=> $this->_status);		//optional
-		
-		return $this->_patch(sprintf(self::URL_CALENDAR, $calendarId, $eventId), $query);
+		return $this->_patch(sprintf(self::URL_CALENDAR, $calendarId, $eventId), $this->_query);
 	}
 	
 	/**
@@ -265,10 +229,9 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 		
-		//populate fields
-		$query = array(self::TEXT => $text);
+		$this->_query[self::TEXT] = $text;
 		
-		return $this->_customPost(sprintf(self::URL_QUICK_CREATE_EVENT, $calendarId), $query);
+		return $this->_customPost(sprintf(self::URL_QUICK_CREATE_EVENT, $calendarId), $this->_query);
 	}
 	
 	/**
@@ -280,7 +243,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	public function setColorId($colorId) {
 		//argument 1 must be a integer
 		Eden_Google_Error::i()->argument(1, 'int');
-		$this->_colorId = $colorId;
+		$this->_query[self::COLOR_ID] = $colorId;
 		
 		return $this;
 	}
@@ -294,7 +257,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	public function setCreator($creator) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_creator = $creator;
+		$this->_query[self::CREATOR] = $creator;
 		
 		return $this;
 	}
@@ -308,7 +271,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	public function setDescription($description) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_description = $description;
+		$this->_query[self::DESCRIPTION] = $description;
 		
 		return $this;
 	}
@@ -327,7 +290,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 			$end = strtotime($end);
 		}
 		
-		$this->_end['dateTime'] = date('c', $end);
+		$this->_query[self::END]['dateTime'] = date('c', $end);
 		
 		return $this;
 	}
@@ -341,7 +304,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	public function setKind($kind) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_kind = $kind;
+		$this->_query[self::KIND] = $kind;
 		
 		return $this;
 	}
@@ -355,7 +318,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	public function setLocation($location) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_location = $location;
+		$this->_query[self::LOCATION] = $location;
 		
 		return $this;
 	}
@@ -369,7 +332,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	public function setOrganizer($organizer) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_organizer = $organizer;
+		$this->_query[self::ORGANIZER] = $organizer;
 		
 		return $this;
 	}
@@ -383,7 +346,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	public function setReminders($reminders) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_reminders = $reminders;
+		$this->_query[self::REMINDERS] = $reminders;
 		
 		return $this;
 	}
@@ -401,7 +364,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 			$start = strtotime($start);
 		}
 		
-		$this->_start['dateTime'] = date('c', $start);
+		$this->_query[self::START]['dateTime'] = date('c', $start);
 		
 		return $this;
 	}
@@ -415,7 +378,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 	public function setStatus($status) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_status = $status;
+		$this->_query[self::STATUS] = $status;
 		
 		return $this;
 	}
@@ -433,20 +396,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 		
-		//populate fields
-		$query = array(
-			self::END			=> $this->_end,			//optional
-			self::START			=> $this->_start,		//optional
-			self::DESCRIPTION	=> $this->_description,	//optional
-			self::COLOR_ID		=> $this->_colorId,		//optional
-			self::CREATOR		=> $this->_creator,		//optional
-			self::KIND			=> $this->_kind,		//optional
-			self::LOCATION		=> $this->_location,	//optional
-			self::ORGANIZER		=> $this->_organizer,	//optional
-			self::REMINDERS		=> $this->_reminders,	//optional
-			self::STATUS		=> $this->_status);		//optional
-		
-		return $this->_put(sprintf(self::URL_CALENDAR, $calendarId, $eventId), $query);
+		return $this->_put(sprintf(self::URL_CALENDAR, $calendarId, $eventId), $this->_query);
 	}
 	
 	/* Protected Methods

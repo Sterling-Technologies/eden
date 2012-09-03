@@ -23,10 +23,6 @@ class Eden_Google_Maps_Elevation extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_apiKey		= NULL;
-	protected $_path		= NULL;
-	protected $_samples		= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -50,7 +46,7 @@ class Eden_Google_Maps_Elevation extends Eden_Google_Base {
 			->argument(1, 'string', 'int', 'float')		//argument 1 must be a string, integer or float
 			->argument(2, 'string', 'int', 'float');	//argument 2 must be a string, integer or float
 		
-		$this->_path = $latitude.', '.$longtitude;
+		$this->_query['path'] = $latitude.', '.$longtitude;
 		
 		return $this;
 	}
@@ -66,7 +62,7 @@ class Eden_Google_Maps_Elevation extends Eden_Google_Base {
 		//argument 1 must be a string or integer	
 		Eden_Google_Error::i()->argument(1, 'string', 'int');	
 		
-		$this->_samples = $samples;
+		$this->_query['samples'] = $samples;
 		
 		return $this;
 	}
@@ -83,14 +79,10 @@ class Eden_Google_Maps_Elevation extends Eden_Google_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string	
 		
-		//populate paramenter
-		$query = array(
-			'locations'	=> $ocation,	
-			'sensor'	=> $sensor,		
-			'path'		=> $this->_path,		//optional
-			'samples'	=> $this->_samples);	//optional
+		$this->_query['locations']	= $location;	
+		$this->_query['sensor']		= $sensor;
 		
-		return $this->_getResponse(self::URL_MAP_ELEVATION, $query);
+		return $this->_getResponse(self::URL_MAP_ELEVATION, $this->_query);
 	}
 	/* Protected Methods
 	-------------------------------*/

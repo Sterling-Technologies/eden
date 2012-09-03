@@ -55,10 +55,9 @@ class Eden_Google_Youtube_Profile extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query  = array(self::RESPONSE => self::JSON_FORMAT);
+		$this->_query[self::RESPONSE] = self::JSON_FORMAT;
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_PROFILE, $userId), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_PROFILE, $userId), $this->_query);
 	}
 	
 	/**
@@ -71,10 +70,9 @@ class Eden_Google_Youtube_Profile extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query  = array(self::RESPONSE => self::JSON_FORMAT);
+		$this->_query[self::RESPONSE] = self::JSON_FORMAT;
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_UPLOADS, $userId), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_UPLOADS, $userId), $this->_query);
 	}
 	
 	/**
@@ -90,10 +88,9 @@ class Eden_Google_Youtube_Profile extends Eden_Google_Base {
 			->argument(1, 'string')		//argument 1 must be a string
 			->argument(2, 'string');	//argument 2 must be a string
 			
-		//populate fields
-		$query  = array(self::RESPONSE => self::JSON_FORMAT);
+		$this->_query[self::RESPONSE] = self::JSON_FORMAT;
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_GET, $userId, $videoId), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_GET, $userId, $videoId), $this->_query);
 	}
 	
 	/**

@@ -25,9 +25,6 @@ class Eden_Google_Plus_People extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/ 
-	protected $_maxResults	= NULL;
-	protected $_pageToken	= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -55,7 +52,7 @@ class Eden_Google_Plus_People extends Eden_Google_Base {
 	public function setPageToken($pageToken) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_pageToken = $pageToken;
+		$this->_query[self::PAGE_TOKEN] = $pageToken;
 		
 		return $this;
 	}
@@ -70,7 +67,7 @@ class Eden_Google_Plus_People extends Eden_Google_Base {
 	public function setMaxResults($maxResults) {
 		//argument 1 must be a integer
 		Eden_Google_Error::i()->argument(1, 'int');
-		$this->_maxResults = $maxResults;
+		$this->_query[self::MAX_RESULTS] = $maxResults;
 		
 		return $this;
 	}
@@ -98,13 +95,9 @@ class Eden_Google_Plus_People extends Eden_Google_Base {
 		//argument 1 must be a string or integer
 		Eden_Google_Error::i()->argument(1, 'string', 'int');
 		
-		//populate fields
-		$query = array(
-			self::QUERY_STRING	=> $queryString,
-			self::PAGE_TOKEN	=> $this->_pageToken,		//optional
-			self::MAX_RESULTS	=> $this->_maxResults);		//optional
+		$this->_query[self::QUERY_STRING] = $queryString;
 		
-		return $this->_getResponse(self::URL_PEOPLE_SEARCH, $query);
+		return $this->_getResponse(self::URL_PEOPLE_SEARCH, $this->_query);
 	}
 	
 	/**
@@ -130,14 +123,10 @@ class Eden_Google_Plus_People extends Eden_Google_Base {
 				->trigger();
 		}
 		
-		//populate fields
-		$query = array(
-			self::ACTIVITY_ID	=> $activityId,
-			self::COLLECTION	=> $collection,
-			self::MAX_RESULTS	=> $this->_maXResults,		//optional
-			self::PAGE_TOKEN	=> $this->_pageToken);		//optional
+		$this->_query[self::ACTIVITY_ID]	= $activityId;
+		$this->_query[self::COLLECTION]		= $collection;
 		
-		return $this->_getResponse(sprintf(self::URL_PEOPLE_ACTIVITY, $activityId, $collection), $query);
+		return $this->_getResponse(sprintf(self::URL_PEOPLE_ACTIVITY, $activityId, $collection), $this->_query);
 	}	
 	
 	/* Protected Methods

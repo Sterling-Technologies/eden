@@ -23,14 +23,7 @@ class Eden_Google_Contacts_Batch extends Eden_Google_Base {
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties 
-	-------------------------------*/
-	protected $_userEmail	= 'default';
-	protected $_version		= '3.0';
-	protected $_title		= NULL;
-	protected $_description	= NULL;
-	protected $_info		= NULL;
-	protected $_groupId		= NULL;
-	
+	-------------------------------*/	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -46,77 +39,7 @@ class Eden_Google_Contacts_Batch extends Eden_Google_Base {
 	}
 	
 	/* Public Methods
-	-------------------------------*/
-	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setUserEmail($userEmail) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_userEmail = $userEmail;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set user email
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setGroupId($groupId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_groupId = $groupId;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set group title
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setTitle($title) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_title = $title;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set group description
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setDescription($description) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_description = $description;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set group description
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setInfo($info) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_info = $info;
-		
-		return $this;
-	}
-	
+	-------------------------------*/	
 	/**
 	 * Retrieve all group list
 	 *
@@ -127,10 +50,9 @@ class Eden_Google_Contacts_Batch extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(self::VERSION => self::VERSION_THREE);
+		$this->_query[self::VERSION] = self::VERSION_THREE;
 		
-		return $this->_getResponse(sprintf(self::URL_CONTACTS_GROUPS_LIST, $userEmail), $query);
+		return $this->_getResponse(sprintf(self::URL_CONTACTS_GROUPS_LIST, $userEmail), $this->_query);
 	}
 	
 	/**

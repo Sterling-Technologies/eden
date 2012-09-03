@@ -24,23 +24,6 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_timeZone			= NULL;
-	protected $_calendarId			= NULL;
-	protected $_maxResults			= NULL;
-	protected $_accessRole			= NULL;
-	protected $_colorId				= NULL;
-	protected $_etag				= NULL;
-	protected $_id					= NULL;
-	protected $_kind				= NULL;
-	protected $_location			= NULL;
-	protected $_summary				= NULL;
-	protected $_defaultReminders	= NULL;
-	protected $_description			= NULL;
-	protected $_summaryOverride		= NULL;
-	
-	protected $_selected			= false;
-	protected $_hidden				= false;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -67,21 +50,9 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 		//argument test
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(
-			self::ID				=> $id,
-			self::ACCESS_ROLE		=> $this->_accessRole,			//optional
-			self::COLOR_ID 			=> $this->_colorId,				//optional
-			self::DEFAULT_REMINDERS	=> $this->_defaultReminders,	//optional
-			self::DESCRIPTION		=> $this->_description,			//optional
-			self::HIDDEN			=> $this->_hidden,				//optional
-			self::LOCATION			=> $this->_location,			//optional
-			self::SELECTED			=> $this->_selected,			//optional
-			self::SUMMARY			=> $this->_summary,				//optional
-			self::SUMMARY_OVERRIDE	=> $this->_summaryOverride,		//optional
-			self::TIMEZONE			=> $this->_timeZone);			//optional
+		$this->_query[self::ID] = $id;
 		
-		return $this->_post(self::URL_CALENDAR_LIST, $query);
+		return $this->_post(self::URL_CALENDAR_LIST, $this->_query);
 	}
 	
 	/**
@@ -116,10 +87,8 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	 * @return array
 	 */
 	public function getList() {
-		//populate fields
-		$query = array(self::MAX_RESULTS => $this->_maxResults);
-		
-		return $this->_getResponse(self::URL_CALENDAR_LIST, $query);
+	
+		return $this->_getResponse(self::URL_CALENDAR_LIST, $this->_query);
 	}
 	
 	/**
@@ -132,15 +101,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 		//argument test
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(
-			self::COLOR_ID 			=> $this->_colorId,				//optional
-			self::DEFAULT_REMINDERS	=> $this->_defaultReminders,	//optional
-			self::HIDDEN			=> $this->_hidden,				//optional
-			self::SELECTED			=> $this->_selected,			//optional
-			self::SUMMARY_OVERRIDE	=> $this->_summaryOverride);	//optional
-		
-		return $this->_patch(sprintf(self::URL_CALENDAR_GET, $calendarId), $query);
+		return $this->_patch(sprintf(self::URL_CALENDAR_GET, $calendarId), $this->_query);
 	}
 	
 	/**
@@ -152,21 +113,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	public function setAccessRole($accessRole) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_accessRole = $accessRole;
-		
-		return $this;
-	}
-	
-	/**
-	 * Set calendar id
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setCalendarId($calendarId) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_calendarId = $calendarId;
+		$this->_query[se::ACCESS_ROLE] = $accessRole;
 		
 		return $this;
 	}
@@ -180,7 +127,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	public function setColorId($colorId) {
 		//argument 1 must be a integer
 		Eden_Google_Error::i()->argument(1, 'int');
-		$this->_colorId = $colorId;
+		$this->_query[self::COLOR_ID] = $colorId;
 		
 		return $this;
 	}
@@ -194,7 +141,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	public function setDefaultReminders($defaultReminders) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_defaultReminders = $defaultReminders;
+		$this->_query[self::DEFAULT_REMINDERS] = $defaultReminders;
 		
 		return $this;
 	}
@@ -208,7 +155,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	public function setDescription($description) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_description = $description;
+		$this->_query[self::DESCRIPTION] = $description;
 		
 		return $this;
 	}
@@ -222,7 +169,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	public function setEtag($etag) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_etag = $etag;
+		$this->_query[self::ETAG] = $etag;
 		
 		return $this;
 	}
@@ -233,7 +180,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setHidden() {
-		$this->_hidden = true;
+		$this->_query[self::HIDDEN] = true;
 		
 		return $this;
 	}
@@ -247,7 +194,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	public function setId($id) {
 		//argument 1 must be a string or integer
 		Eden_Google_Error::i()->argument(1, 'string', 'int');
-		$this->_id = $id;
+		$this->_query[self::ID] = $id;
 		
 		return $this;
 	}
@@ -261,7 +208,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	public function setKind($kind) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_kind = $kind;
+		$this->_query[self::KIND] = $kind;
 		
 		return $this;
 	}
@@ -275,7 +222,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	public function setLocation($location) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_location = $location;
+		$this->_query[self::LOCATION] = $location;
 		
 		return $this;
 	}
@@ -289,7 +236,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	public function setMaxResults($maxResults) {
 		//argument 1 must be a integer
 		Eden_Google_Error::i()->argument(1, 'int');
-		$this->_maxResults = $maxResults; 
+		$this->_query[self::MAX_RESULTS] = $maxResults; 
 		
 		return $this;
 	}
@@ -300,7 +247,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setSelected() {
-		$this->_selected = true;
+		$this->_query[self::SELECTED] = true;
 		
 		return $this;
 	}
@@ -314,7 +261,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	public function setSummary($summary) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_summary = $summary;
+		$this->_query[self::SUMMARY] = $summary;
 		
 		return $this;
 	}
@@ -328,7 +275,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	public function setSummaryOverride($summaryOverride) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_summaryOverride = $summaryOverride;
+		$this->_query[self::SUMMARY_OVERRIDE] = $summaryOverride;
 		
 		return $this;
 	}
@@ -342,7 +289,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 	public function setTimeZone($timeZone) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_timeZone = $timeZone;
+		$this->_query[self::TIMEZONE] = $timeZone;
 		
 		return $this;
 	}
@@ -357,15 +304,7 @@ class Eden_Google_Calendar_List extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(
-			self::COLOR_ID 			=> $this->_colorId,				//optional
-			self::DEFAULT_REMINDERS	=> $this->_defaultReminders,	//optional
-			self::HIDDEN			=> $this->_hidden,				//optional
-			self::SELECTED			=> $this->_selected,			//optional
-			self::SUMMARY_OVERRIDE	=> $this->_summaryOverride);	//optional
-		
-		return $this->_put(sprintf(self::URL_CALENDAR_GET, $calendarId), $query);
+		return $this->_put(sprintf(self::URL_CALENDAR_GET, $calendarId), $this->_query);
 	}
 	
 	/* Protected Methods

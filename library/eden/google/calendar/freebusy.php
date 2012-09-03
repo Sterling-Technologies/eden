@@ -23,11 +23,6 @@ class Eden_Google_Calendar_Freebusy extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_timeZone				= NULL;
-	protected $_groupExpansionMax		= NULL;
-	protected $_calendarExpansionMax	= NULL;
-	protected $_items					= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -66,16 +61,10 @@ class Eden_Google_Calendar_Freebusy extends Eden_Google_Base {
 			$endTime = strtotime($endTime);
 		}
 		
-		//populate fields
-		$query = array(
-			self::TIMEMIN				=> $startTime,
-			self::TIMEMAX				=> $endTime,
-			self::TIMEZONE				=> $this->_timeZone,
-			self::GROUP_EXPANSION		=> $this->_groupExpansionMax,
-			self::CALENDAR_EXPANSION	=> $this->_calendarExpansionMax,
-			self::ITEMS					=> $id = array(self::ID => $this->_items));
+		$this->_query[self::TIMEMIN] = $startTime;
+		$this->_query[self::TIMEMAX] = $endTime;
 		
-		return $this->_post(self::URL_CALENDAR_FREEBUSY, $query);
+		return $this->_post(self::URL_CALENDAR_FREEBUSY, $this->_query);
 	}
 	
 	/**
@@ -87,7 +76,7 @@ class Eden_Google_Calendar_Freebusy extends Eden_Google_Base {
 	public function setCalendarExpansionMax($calendarExpansionMax) {
 		//argument 1 must be a integer
 		Eden_Google_Error::i()->argument(1, 'int');
-		$this->_calendarExpansionMax = $calendarExpansionMax;
+		$this->_query[self::CALENDAR_EXPANSION] = $calendarExpansionMax;
 		
 		return $this;
 	}
@@ -101,7 +90,7 @@ class Eden_Google_Calendar_Freebusy extends Eden_Google_Base {
 	public function setGroupExpansionMax($groupExpansionMax) {
 		//argument 1 must be a integer
 		Eden_Google_Error::i()->argument(1, 'int');
-		$this->_groupExpansionMax = $groupExpansionMax;
+		$this->_query[self::GROUP_EXPANSION] = $groupExpansionMax;
 		
 		return $this;
 	}
@@ -115,7 +104,7 @@ class Eden_Google_Calendar_Freebusy extends Eden_Google_Base {
 	public function setItem($item) {
 		//argument 1 must be a string or integer
 		Eden_Google_Error::i()->argument(1, 'string', 'int');
-		$this->_items = $item;
+		$this->_query[self::ITEMS] = array(self::ID => $item);
 		
 		return $this;
 	}

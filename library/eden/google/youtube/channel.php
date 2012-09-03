@@ -25,10 +25,6 @@ class Eden_Google_Youtube_Channel extends Eden_Google_Base {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_startIndex	= NULL;
-	protected $_maxResults	= NULL;
-	protected $_time		= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -54,7 +50,7 @@ class Eden_Google_Youtube_Channel extends Eden_Google_Base {
 	public function setStartIndex($startIndex) {
 		//argument 1 must be a integer
 		Eden_Google_Error::i()->argument(1, 'integer');
-		$this->_startIndex = $startIndex;
+		$this->_query[self::START_INDEX] = $startIndex;
 		
 		return $this;
 	}
@@ -68,7 +64,7 @@ class Eden_Google_Youtube_Channel extends Eden_Google_Base {
 	public function setMaxResults($maxResults) {
 		//argument 1 must be a integer
 		Eden_Google_Error::i()->argument(1, 'integer');
-		$this->_maxResults = $maxResults;
+		$this->_query[self::MAX_RESULTS] = $maxResults;
 		
 		return $this;
 	}
@@ -79,7 +75,7 @@ class Eden_Google_Youtube_Channel extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setToday() {
-		$this->_time = 'today';
+		$this->_query[self::TIME] = 'today';
 		
 		return $this;
 	}
@@ -90,7 +86,7 @@ class Eden_Google_Youtube_Channel extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setThisWeek() {
-		$this->_time = 'this_week';
+		$this->_query[self::TIME] = 'this_week';
 		
 		return $this;
 	}
@@ -101,7 +97,7 @@ class Eden_Google_Youtube_Channel extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setThisMonth() {
-		$this->_time = 'this_month';
+		$this->_query[self::TIME] = 'this_month';
 		
 		return $this;
 	}
@@ -112,7 +108,7 @@ class Eden_Google_Youtube_Channel extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setToAllTime() {
-		$this->_time = 'all_time';
+		$this->_query[self::TIME] = 'all_time';
 		
 		return $this;
 	}
@@ -127,14 +123,10 @@ class Eden_Google_Youtube_Channel extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate parameters
-		$query = array(
-			self::QUERY			=> $queryString,
-			self::START_INDEX	=> $this->_startIndex,	//optional
-			self::MAX_RESULTS	=> $this->_maxResults,	//optional
-			self::VERSION		=> self::VERSION_TWO);	
+		$this->_query[self::QUERY]		= $queryString;
+		$this->_query[self::VERSION]	= self::VERSION_TWO;
 		
-		return $this->_getResponse(self::URL_YOUTUBE_CHANNEL, $query);
+		return $this->_getResponse(self::URL_YOUTUBE_CHANNEL, $this->_query);
 	}
 	
 	/**
@@ -155,13 +147,10 @@ class Eden_Google_Youtube_Channel extends Eden_Google_Base {
 				->addVariable($feeds)
 				->trigger();
 		}
+			
+		$this->_query[self::VERSION] = self::VERSION_TWO;
 		
-		//populate parameters
-		$query = array(
-			self::VERSION	=> self::VERSION_TWO,
-			self::TIME		=> $this->_time);	
-		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_CHANNEL_FEEDS, $feeds), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_CHANNEL_FEEDS, $feeds), $this->_query);
 	}
 	
 	/**
@@ -186,10 +175,9 @@ class Eden_Google_Youtube_Channel extends Eden_Google_Base {
 				->trigger();
 		}
 		
-		//populate parameters
-		$query = array(self::VERSION => self::VERSION_TWO);
+		$this->_query[self::VERSION] = self::VERSION_TWO;
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_REGION, $regionId, $feeds), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_REGION, $regionId, $feeds), $this->_query);
 	}
 	
 	/* Protected Methods

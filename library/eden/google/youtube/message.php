@@ -54,10 +54,9 @@ class Eden_Google_Youtube_Message extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query  = array(self::RESPONSE => self::JSON_FORMAT);
+		$this->_query[self::RESPONSE] = self::JSON_FORMAT;
 		
-		return $this->_getResponse(sprintf(self::URL_YOUTUBE_MESSAGE, $userId), $query);
+		return $this->_getResponse(sprintf(self::URL_YOUTUBE_MESSAGE, $userId), $this->_query);
 	}
 	
 	/**

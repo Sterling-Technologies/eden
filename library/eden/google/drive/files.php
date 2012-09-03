@@ -22,26 +22,12 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	const URL_DRIVE_TRASH	= 'https://www.googleapis.com/drive/v2/files/%s/trash';
 	const URL_DRIVE_UNTRASH	= 'https://www.googleapis.com/drive/v2/files/%s/untrash';
 	const URL_DRIVE_TOUCH	= 'https://www.googleapis.com/drive/v2/files/%s/touch';
+	const URL_UPLOAD		= 'https://www.googleapis.com/upload/drive/v2/files/%s?uploadType=%s';
 	
 	/* Public Properties 
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_convert				= false;
-	protected $_ocr					= false;
-	protected $_pinned				= false;
-	protected $_newRevision			= false;
-	protected $_ocrLanguage			= NULL;
-	protected $_sourceLanguage		= NULL;
-	protected $_targetLanguage		= NULL;
-	protected $_timedTextLanguage	= NULL;
-	protected $_timedTextTrackName	= NULL;
-	protected $_description			= NULL;
-	protected $_lastViewedByMeDate	= NULL;
-	protected $_mimeType			= NULL;
-	protected $_modifiedDate		= NULL;
-	protected $_title				= NULL;
-	
 	/* Private Properties
 	-------------------------------*/
 	/* Magic
@@ -58,6 +44,24 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	
 	/* Public Methods
 	-------------------------------*/
+	/**
+	 * Upload file data
+	 *
+	 * @param string The raw data, use file_get_contents()
+	 * @param string
+	 * @param string Valid values are: media, multipart, resumable
+	 * @return array
+	 */
+	public function upload($data, $id, $uploadType) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string');	//argument 3 must be a string
+		
+		return $this->_put(sprintf(self::URL_UPLOAD, $id, $uploadType), $data);
+	}
+
 	/**
 	 * Creates a copy of the specified file
 	 *
@@ -78,26 +82,8 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	 * @return array
 	 */
 	public function create() {
-		//populate parameters
-		$parameters = array(
-			self::CONVERT			=> $this->_convert,				//optional
-			self::OCR				=> $this->_ocr,					//optional
-			self::OCR_LANGUAGE		=> $this->_ocrLanguage,			//optional
-			self::PINNED			=> $this->_pinned,				//optional
-			self::SOURCE_LANGUAGE	=> $this->_sourceLanguage,		//optional
-			self::TARGET_LANGUAGE	=> $this->_targetLanguage,		//optional
-			self::TEXT_LANGUAGE		=> $this->_timedTextLanguage,	//optional
-			self::TEXT_TRACKNAME	=> $this->_timedTextTrackName);	//optional
 		
-		//populate fields
-		$requestBody = array (
-			self::DESCRIPTION	=> $this->_description,				//optional
-			self::LAST_VIEW		=> $this->_lastViewedByMeDate,		//optional
-			self::MIME_TYPE		=> $this->_mimeType,				//optional
-			self::MODIFIED_DATE	=> $this->_modifiedDate,			//optional
-			self::TITLE			=> $this->_title);					//optional
-		
-		return $this->_post(self::URL_DRIVE_LIST, $query = array_merge($parameters, $requestBody));
+		return $this->_post(self::URL_DRIVE_LIST, $this->_query);
 	}
 	
 	/**
@@ -147,27 +133,7 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 		//argument test
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate parameters
-		$parameters = array(
-			self::CONVERT			=> $this->_convert,				//optional
-			self::NEW_REVISION		=> $this->_newRevision,			//optional
-			self::OCR				=> $this->_ocr,					//optional
-			self::OCR_LANGUAGE		=> $this->_ocrLanguage,			//optional
-			self::PINNED			=> $this->_pinned,				//optional
-			self::SOURCE_LANGUAGE	=> $this->_sourceLanguage,		//optional
-			self::TARGET_LANGUAGE	=> $this->_targetLanguage,		//optional
-			self::TEXT_LANGUAGE		=> $this->_timedTextLanguage,	//optional
-			self::TEXT_TRACKNAME	=> $this->_timedTextTrackName);	//optional
-		
-		//populate fields
-		$requestBody = array (
-			self::DESCRIPTION	=> $this->_description,				//optional
-			self::LAST_VIEW		=> $this->_lastViewedByMeDate,		//optional
-			self::MIME_TYPE		=> $this->_mimeType,				//optional
-			self::MODIFIED_DATE	=> $this->_modifiedDate,			//optional
-			self::TITLE			=> $this->_title);					//optional
-		
-		return $this->_patch(sprintf(self::URL_DRIVE_GET, $fileId), $query = array_merge($parameters, $requestBody));
+		return $this->_patch(sprintf(self::URL_DRIVE_GET, $fileId), $this->_query);
 	}
 	
 	/**
@@ -179,11 +145,39 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	public function setDescription($description) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_description = $description;
+		$this->_query[self::DESCRIPTION] = $description;
 		
 		return $this;
 	}
 	
+	/**
+	 * The MIME type of the file.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setMimeType($mimeType) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_query['mimeType'] = $mimeType;
+		
+		return $this;
+	}
+	
+	
+	/**
+	 * The MIME type of the file.
+	 *
+	 * @param string
+	 * @return this
+	 */
+	public function setData($data) {
+		//argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_query['data'] = $data;
+		
+		return $this;
+	}
 	/**
 	 * Last time this file was viewed by the user 
 	 * (formatted RFC 3339 timestamp).
@@ -199,7 +193,7 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 			$lastViewedByMeDate = strtotime($lastViewedByMeDate);
 		}
 		
-		$this->_lastViewedByMeDate['dateTime'] = date('c', $lastViewedByMeDate);
+		$this->_query[self::LAST_VIEW]['dateTime'] = date('c', $lastViewedByMeDate);
 		
 		return $this;
 	}
@@ -219,7 +213,7 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 			$modifiedDate = strtotime($modifiedDate);
 		}
 		
-		$this->_modifiedDate['dateTime'] = date('c', $modifiedDate);
+		$this->_query[self::MODIFIED_DATE]['dateTime'] = date('c', $modifiedDate);
 		
 		return $this;
 	}
@@ -234,7 +228,7 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	public function setOcrLanguage($ocrLanguage) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_ocrLanguage = $ocrLanguage;
+		$this->_query[self::OCR_LANGUAGE] = $ocrLanguage;
 		
 		return $this;
 	}
@@ -248,7 +242,7 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	public function setSourceLanguage($sourceLanguage) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_sourceLanguage = $sourceLanguage;
+		$this->_query[self::SOURCE_LANGUAGE] = $sourceLanguage;
 		
 		return $this;
 	}
@@ -264,7 +258,7 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	public function setTargetLanguage($targetLanguage) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_targetLanguage = $targetLanguage;
+		$this->_query[self::TARGET_LANGUAGE] = $targetLanguage;
 		
 		return $this;
 	}
@@ -278,7 +272,7 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	public function setTimedTextLanguage($timedTextLanguage) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_timedTextLanguage = $timedTextLanguageE;
+		$this->_query[self::TEXT_LANGUAGE] = $timedTextLanguageE;
 		
 		return $this;
 	}
@@ -292,7 +286,7 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	public function setTimedTextTrackName($timedTextTrackName) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_timedTextTrackName = $timedTextTrackName;
+		$this->_query[self::TEXT_TRACKNAME] = $timedTextTrackName;
 		
 		return $this;
 	}
@@ -307,7 +301,7 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	public function setTitle($title) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_title = $title;
+		$this->_query[self::TITLE] = $title;
 		
 		return $this;
 	}
@@ -319,7 +313,7 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function convert() {
-		$this->_convert = true;
+		$this->_query[self::CONVERT] = true;
 		
 		return $this;
 	}
@@ -331,7 +325,7 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setToNewRevision() {
-		$this->_newRevision = true;
+		$this->_query[self::NEW_REVISION] = true;
 		
 		return $this;
 	}
@@ -342,7 +336,7 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setToOcr() {
-		$this->_ocr = true;
+		$this->_query[self::OCR] = true;
 		
 		return $this;
 	}
@@ -353,7 +347,7 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	 * @return this
 	 */
 	public function setToPinned() {
-		$this->_pinned = true;
+		$this->_query[self::PINNED] = true;
 		
 		return $this;
 	}
@@ -407,27 +401,7 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate parameters
-		$parameters = array(
-			self::CONVERT			=> $this->_convert,				//optional
-			self::NEW_REVISION		=> $this->_newRevision,			//optional
-			self::OCR				=> $this->_ocr,					//optional
-			self::OCR_LANGUAGE		=> $this->_ocrLanguage,			//optional
-			self::PINNED			=> $this->_pinned,				//optional
-			self::SOURCE_LANGUAGE	=> $this->_sourceLanguage,		//optional
-			self::TARGET_LANGUAGE	=> $this->_targetLanguage,		//optional
-			self::TEXT_LANGUAGE		=> $this->_timedTextLanguage,	//optional
-			self::TEXT_TRACKNAME	=> $this->_timedTextTrackName);	//optional
-		
-		//populate fields
-		$requestBody = array (
-			self::DESCRIPTION	=> $this->_description,				//optional
-			self::LAST_VIEW		=> $this->_lastViewedByMeDate,		//optional	
-			self::MIME_TYPE		=> $this->_mimeType,				//optional
-			self::MODIFIED_DATE	=> $this->_modifiedDate,			//optional
-			self::TITLE			=> $this->_title);					//optional
-		
-		return $this->_post(sprintf(self::URL_DRIVE_GET, $fileId), $query = array_merge($parameters, $requestBody));
+		return $this->_post(sprintf(self::URL_DRIVE_GET, $fileId), $this->_query);
 	}
 	
 	/* Protected Methods

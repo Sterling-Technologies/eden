@@ -145,6 +145,7 @@ class Eden_Google_Base extends Eden_Class {
 	protected $_developerId	= NULL;
 	protected $_etag		= NULL;
 	protected $_apiKey		= NULL;
+	protected $_query		= array();
 	
 	/* Private Properties
 	-------------------------------*/
@@ -326,7 +327,7 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['query'] 			= $query;
 		
 		//reset protected variables
-		$this->_reset(); 
+		unset($this->_query); 
 		
 		return $response;
 	}
@@ -359,7 +360,7 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['headers'] 		= $this->_headers;
 		
 		//reset protected variables
-		$this->_reset(); 
+		unset($this->_query); 
 		
 		//check if response is in json format
 		if($this->isJson($response)) {
@@ -405,7 +406,7 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['response']	= $response;
 		
 		//reset protected variables
-		$this->_reset(); 
+		unset($this->_query); 
 		
 		//check if response is in xml format
 		if($this->isXml($response)) {
@@ -457,7 +458,7 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['query'] 			= $query;
 		
 		//reset protected variables
-		$this->_reset(); 
+		unset($this->_query); 
 		
 		return $response;
 	}
@@ -498,7 +499,7 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['query'] 			= $query;
 		
 		//reset protected variables
-		$this->_reset(); 
+		unset($this->_query); 
 		
 		//check if response is in json format
 		if($this->isJson($response)) {
@@ -532,14 +533,25 @@ class Eden_Google_Base extends Eden_Class {
 			$query = $this->formatToXml($query);
 			//add access token to the url
 			$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token;
-		} 
+		}
+		//if query is in string
+		if(is_string($query)) {
+			//use different headers
+			$headers = array();
+			$headers[] = 'Content-Length: '.strlen($query);
+			$headers[] = 'Content-Transfer-Encoding: base64';
+			$this->_headers = $headers;
+			//add access token to the url
+			$url = $url.'&'.self::ACCESS_TOKEN.'='.$this->_token;
+		}
+		
 		//Open a file resource using the php://memory stream
 		$fh = fopen('php://memory', 'rw');
 		// Write the data to the file
 		fwrite($fh, $query);
 		// Move back to the beginning of the file
 		rewind($fh); 
-		
+	
 		//start curl
 		$curl = Eden_Curl::i()
 			->verifyHost(false)
@@ -559,7 +571,7 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['query'] 			= $query;
 		
 		//reset protected variables
-		$this->_reset(); 
+		unset($this->_query); 
 		
 		//check if response is in json format
 		if($this->isJson($response)) {
@@ -602,7 +614,7 @@ class Eden_Google_Base extends Eden_Class {
 		$this->_meta['query'] 			= $query;
 		
 		//reset protected variables
-		$this->_reset(); 
+		unset($this->_query); 
 		
 		//check if response is in xml format
 		if($this->isXml($response)) {
@@ -612,7 +624,7 @@ class Eden_Google_Base extends Eden_Class {
 		//if it is a normal response
 		return $response;
 	}
-	
+
 	/* Private Methods
 	-------------------------------*/
 }

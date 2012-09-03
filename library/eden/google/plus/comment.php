@@ -55,7 +55,7 @@ class Eden_Google_Plus_Comment extends Eden_Google_Base {
 	public function setPageToken($pageToken) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_pageToken = $pageToken;
+		$this->_query[self::PAGE_TOKEN] = $pageToken;
 		
 		return $this;
 	}
@@ -70,7 +70,7 @@ class Eden_Google_Plus_Comment extends Eden_Google_Base {
 	public function setMaxResults($maxResults) {
 		//argument 1 must be a integer
 		Eden_Google_Error::i()->argument(1, 'int');
-		$this->_maxResults = $maxResults;
+		$this->_query[self::MAX_RESULTS] = $maxResults;
 		
 		return $this;
 	}
@@ -82,7 +82,7 @@ class Eden_Google_Plus_Comment extends Eden_Google_Base {
 	 * @return array
 	 */
 	public function descendingOrder() {
-		$this->_sortOrder = 'descending';
+		$this->_query[self::SORT] = 'descending';
 		
 		return $this;
 	}
@@ -97,13 +97,7 @@ class Eden_Google_Plus_Comment extends Eden_Google_Base {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
 		
-		//populate fields
-		$query = array(
-			self::MAX_RESULTS	=> $this->_maxResults,		//optional
-			self::PAGE_TOKEN	=> $this->_pageToken,		//optional
-			self::SORT			=> $this->_sortOrder);		//optional
-		
-		return $this->_getResponse(sprintf(self::URL_COMMENTS_LIST, $activityId), $query);
+		return $this->_getResponse(sprintf(self::URL_COMMENTS_LIST, $activityId), $this->_query);
 	}
 	
 	/**
