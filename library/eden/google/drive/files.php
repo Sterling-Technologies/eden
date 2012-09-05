@@ -22,7 +22,7 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	const URL_DRIVE_TRASH	= 'https://www.googleapis.com/drive/v2/files/%s/trash';
 	const URL_DRIVE_UNTRASH	= 'https://www.googleapis.com/drive/v2/files/%s/untrash';
 	const URL_DRIVE_TOUCH	= 'https://www.googleapis.com/drive/v2/files/%s/touch';
-	const URL_UPLOAD		= 'https://www.googleapis.com/upload/drive/v2/files/%s?uploadType=%s';
+	const URL_UPLOAD		= 'https://www.googleapis.com/upload/drive/v2/files/%s?uploadType=media';
 	
 	/* Public Properties 
 	-------------------------------*/
@@ -45,24 +45,6 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Upload file data
-	 *
-	 * @param string The raw data, use file_get_contents()
-	 * @param string
-	 * @param string Valid values are: media, multipart, resumable
-	 * @return array
-	 */
-	public function upload($data, $id, $uploadType) {
-		//argument test
-		Eden_Google_Error::i()
-			->argument(1, 'string')		//argument 1 must be a string
-			->argument(2, 'string')		//argument 2 must be a string
-			->argument(3, 'string');	//argument 3 must be a string
-		
-		return $this->_put(sprintf(self::URL_UPLOAD, $id, $uploadType), $data);
-	}
-
-	/**
 	 * Creates a copy of the specified file
 	 *
 	 * @param string
@@ -79,11 +61,32 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	 * This method supports media upload. 
 	 * Uploaded files must conform to these constraints: 
 	 *
-	 * @return array
+	 * @param string The title of the this file, must put exact extension name, ex. filename.pdf
+	 * @return array The MIME type of the file. ex. application/pdf, image/jpeg
 	 */
-	public function create() {
+	public function create($title, $mimeType, $data) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string')		//argument 2 must be a string
+			->argument(3, 'string');	//argument 3 must be a string
 		
-		return $this->_post(self::URL_DRIVE_LIST, $this->_query);
+		$this->_query[self::TITLE]		= $title;
+		$this->_query[self::MIME_TYPE]	= $mimeType;
+		
+		//request a file id
+		$fileId =  $this->_post(self::URL_DRIVE_LIST, $this->_query);
+		
+		//if there is no error
+		if(isset($fileId['id']) && !empty($fileId['id'])) {
+			//upload the files
+			return $this->upload($data, $fileId['id']);
+		//else there must be a error
+		} else {
+			//return the error
+			return $fileId;
+		}
+		
 	}
 	
 	/**
@@ -159,25 +162,11 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 	public function setMimeType($mimeType) {
 		//argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_query['mimeType'] = $mimeType;
+		$this->_query[self::MIME_TYPE] = $mimeType;
 		
 		return $this;
 	}
 	
-	
-	/**
-	 * The MIME type of the file.
-	 *
-	 * @param string
-	 * @return this
-	 */
-	public function setData($data) {
-		//argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
-		$this->_query['data'] = $data;
-		
-		return $this;
-	}
 	/**
 	 * Last time this file was viewed by the user 
 	 * (formatted RFC 3339 timestamp).
@@ -402,6 +391,22 @@ class Eden_Google_Drive_Files extends Eden_Google_Base {
 		Eden_Google_Error::i()->argument(1, 'string');
 		
 		return $this->_post(sprintf(self::URL_DRIVE_GET, $fileId), $this->_query);
+	}
+	
+	/**
+	 * Upload file data
+	 *
+	 * @param string ex. $_FILES['INPUT_NAME']['tmp_name']
+	 * @param string File id
+	 * @return array
+	 */
+	public function upload($data, $id) {
+		//argument test
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//argument 1 must be a string
+			->argument(2, 'string');	//argument 2 must be a string
+		
+		return $this->_put(sprintf(self::URL_UPLOAD, $id), $data);
 	}
 	
 	/* Protected Methods

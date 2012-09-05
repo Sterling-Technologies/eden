@@ -536,10 +536,12 @@ class Eden_Google_Base extends Eden_Class {
 		}
 		//if query is in string
 		if(is_string($query)) {
+			//get the raw data using file get content
+			$query = file_get_contents($query);
 			//use different headers
-			$headers = array();
-			$headers[] = 'Content-Length: '.strlen($query);
-			$headers[] = 'Content-Transfer-Encoding: base64';
+			$headers	= array();
+			$headers[] 	= 'Content-Length: '.strlen($query);
+			$headers[] 	= 'Content-Transfer-Encoding: base64';
 			$this->_headers = $headers;
 			//add access token to the url
 			$url = $url.'&'.self::ACCESS_TOKEN.'='.$this->_token;
@@ -587,44 +589,6 @@ class Eden_Google_Base extends Eden_Class {
 		return $response;
 	}
 	
-	protected function _upload($url, $query, $etag = false) {
-		//well format the xml
-		$query = $this->formatToXml($query);
-		//set different headers for xml
-		$this->_headers = $this->setXmlHeaders($this->_developerId, $etag);
-		$this->_headers[] = 'Content-Length:'.strlen($query);
-		$this->_headers[] = 'Host: gdata.youtube.com';
-		//add access token to query 
-		$url = $url.'?'.self::ACCESS_TOKEN.'='.$this->_token;
-		
-		//set curl
-		$curl = Eden_Curl::i()
-			->verifyHost(false)
-			->verifyPeer(false)
-			->setUrl($url)
-			->setPost(true)
-			->setPostFields($query)
-			->setHeaders($this->_headers);
-		//get response form curl
-		$response = $curl->getResponse();		
-		
-		$this->_meta 					= $curl->getMeta();
-		$this->_meta['url'] 			= $url;
-		$this->_meta['headers'] 		= $this->_headers;
-		$this->_meta['query'] 			= $query;
-		
-		//reset protected variables
-		unset($this->_query); 
-		
-		//check if response is in xml format
-		if($this->isXml($response)) {
-			//if it is xml, convert it to array
-			return $response =  simplexml_load_string($response);
-		} 
-		//if it is a normal response
-		return $response;
-	}
-
 	/* Private Methods
 	-------------------------------*/
 }
