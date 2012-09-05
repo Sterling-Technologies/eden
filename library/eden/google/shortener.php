@@ -52,10 +52,6 @@ class Eden_Google_Shortener extends Eden_Google_Base {
 	 * @return array
 	 */
 	public function getList() {
-		//Argument test
-		Eden_Google_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string');	//Argument 2 must be a string
 	
 		return $this->_getResponse(self::GOOGLE_SHORTENER_GET, $this->_query);
 	}
