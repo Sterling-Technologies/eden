@@ -114,7 +114,7 @@ class Eden_Google_Shortener extends Eden_Google_Base {
 	public function setProjection($projection) {
 		//Argument 1 must be a string
 		Eden_Google_Error::i()->argument(1, 'string');		
-		$this->_query['projection' = $projection;
+		$this->_query['projection'] = $projection;
 		
 		return $this;
 	}
