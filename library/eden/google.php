@@ -16,7 +16,7 @@ require_once dirname(__FILE__).'/google/calendar/calendars.php';
 require_once dirname(__FILE__).'/google/calendar/event.php';
 require_once dirname(__FILE__).'/google/calendar/freebusy.php';
 require_once dirname(__FILE__).'/google/calendar/list.php';
-require_once dirname(__FILE__).'/google/calendar/settings.php';
+require_once dirname(__FILE__).'/google/calendar/settings.php'; 
 require_once dirname(__FILE__).'/google/calendar.php';
 require_once dirname(__FILE__).'/google/checkout/form.php';
 require_once dirname(__FILE__).'/google/drive/changes.php';
@@ -205,13 +205,16 @@ class Eden_Google extends Eden_Class {
 	 * Returns google shortener methods
 	 *
 	 * @param *string API key
+	 * @param *string 
 	 * @return Eden_Google_Plus
 	 */
-	public function shortener($key) {
-		//Argument 1 must be a string
-		Eden_Google_Error::i()->argument(1, 'string');
+	public function shortener($key, $token) {
+		//Argument Testing
+		Eden_Google_Error::i()
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string');	//Argument 2 must be a string
 		
-		return Eden_Google_Shortener::i($key);
+		return Eden_Google_Shortener::i($key, $token);
 	}
 	
 	/**
