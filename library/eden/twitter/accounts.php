@@ -25,6 +25,7 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	const URL_UPDATE_PROFILE_COLOR	= 'https://api.twitter.com/1/account/update_profile_colors.json';
 	const URL_ACCOUNT_TOTAL			= 'https://api.twitter.com/1/account/totals.json';
 	const URL_ACCOUNT_SETTING		= 'https://api.twitter.com/1/account/settings.json';
+	const URL_ACCOUNT_UPLOAD		= 'https://api.twitter.com/1/account/update_profile_image.json';
 	
 	/* Public Properties
 	-------------------------------*/
@@ -251,13 +252,10 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	/**
 	 * Set tile
 	 *
-	 * @param string
 	 * @return this
 	 */
-	public function setTile($tile) {
-		//Argument 1 must be a string or null
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		$this->_query['tile'] = $tile;
+	public function setToTile() {
+		$this->_query['tile'] = true;
 		
 		return $this;
 	}
@@ -293,11 +291,16 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 	 * This method can also be used to enable or disable the profile 
 	 * background image
 	 *
+	 * @param string
 	 * @return array
 	 */
-	public function updateBackgroundImage() {
+	public function updateBackgroundImage($image) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
 		
-		return $this->_post(self::URL_UPDATE_BACKGROUND, $this->_query);
+		$this->_query['image'] = $image;
+		
+		return $this->_upload(self::URL_UPDATE_BACKGROUND, $this->_query);
 	}
 	 
 	/**
@@ -326,7 +329,22 @@ class Eden_Twitter_Accounts extends Eden_Twitter_Base {
 		
 		return $this->_post(self::URL_UPDATE_PROFILE, $this->_query);
 	}
-	 
+	
+	/**
+	 * Updates the authenticating user's profile image.
+	 *
+	 * @param string
+	 * @return array
+	 */
+	public function updateProfileImage($image) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
+	
+		$this->_query['image'] = $image;
+		
+		return $this->_upload(self::URL_ACCOUNT_UPLOAD, $this->_query);
+	}
+	
 	/* Protected Methods
 	-------------------------------*/
 	/* Private Methods
