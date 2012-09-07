@@ -20,7 +20,7 @@ class Eden_Twitter_Trends extends Eden_Twitter_Base {
 	const URL_GET_LIST			= 'https://api.twitter.com/1/trends/%s.json';
 	const URL_GET_DETAIL		= 'https://api.twitter.com/1/trends/available.json';
 	const URL_GET_DAILY_TRENDS 	= 'https://api.twitter.com/1/trends/daily.json';
-	const URL_GET_WEEKLY_TRENS 	= 'http://api.twitter.com/version/trends/weekly.json';
+	const URL_GET_WEEKLY_TRENDS = 'https://api.twitter.com/1/trends/weekly.json';
 	
 	/* Public Properties
 	-------------------------------*/
