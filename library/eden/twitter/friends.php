@@ -110,12 +110,12 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	 * Returns an array of numeric IDs for every 
 	 * user following the specified user. 
 	 *
-	 * @param string|int
+	 * @param string|int|null
 	 * @return array
 	 */
-	public function getFollowers($id) {
+	public function getFollowers($id = NULL) {
 		//Argument 1 must be a string or integer
-		Eden_Twitter_Error::i()->argument(1, 'int', 'string');					
+		Eden_Twitter_Error::i()->argument(1, 'int', 'string', 'null');					
 
 		//if it is integer
 		if(is_int($id)) {
@@ -137,9 +137,9 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	 * @param string|int
 	 * @return array
 	 */
-	public function getFollowing($id) {
+	public function getFollowing($id = NULL) {
 		//Argument 1 must be a string or integer
-		Eden_Twitter_Error::i()->argument(1, 'int', 'string');					
+		Eden_Twitter_Error::i()->argument(1, 'int', 'string', 'null');					
 
 		//if it is integer
 		if(is_int($id)) {
