@@ -18,7 +18,7 @@ class Eden_Twitter_Users extends Eden_Twitter_Base {
 	/* Constants
 	-------------------------------*/
 	const URL_LOOK_UP		= 'https://api.twitter.com/1/users/lookup.json';
-	const URL_PROFILE_IMAGE	= 'https://api.twitter.com/1/users/profile_image.json';
+	const URL_PROFILE_IMAGE	= 'https://api.twitter.com/1/users/profile_image';
 	const URL_SEARCH		= 'https://api.twitter.com/1/users/search.json';
 	const URL_SHOW			= 'https://api.twitter.com/1/users/show.json';
 	const URL_CONTRIBUTEES	= 'https://api.twitter.com/1/users/contributees.json';
