@@ -318,6 +318,20 @@ class Eden_Foursquare_Venue extends Eden_Foursquare_Base {
 	}
 	
 	/**
+	 * A search term to be applied against venue names.
+	 * 
+	 * @param integer|integer 
+	 * @return this
+	 */
+	public function setQuery($venueName) {
+		//argument 1 must be a string or integer
+		Eden_Foursquare_Error::i()->argument(1, 'string', 'int');	
+		$this->_query['query'] = $venueName;
+		
+		return $this;
+	}
+	
+	/**
 	 * Allows users to add a new venue. 
 	 * 
 	 * @param string
@@ -368,7 +382,7 @@ class Eden_Foursquare_Venue extends Eden_Foursquare_Base {
 	 * @return array
 	 */
 	public function search($near = NULL, $latitude = NULL, $longtitude = NULL) {
-		//argument test
+		//argument test 
 		Eden_Foursquare_Error::i()
 			->argument(1, 'string', 'null')						//argument 1 must be a string or null
 			->argument(2, 'string', 'int', 'float', 'null')		//argument 2 must be a string, integer, float or null
