@@ -17,10 +17,10 @@
 class Eden_Twitter_Saved extends Eden_Twitter_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_SAVED_SEARCHES	= 'https://api.twitter.com/1/saved_searches.json';
-	const URL_GET_DETAIL		= 'https://api.twitter.com/1/saved_searches/show/%d.json';
-	const URL_CREATE_SEARCH		= 'https://api.twitter.com/1/saved_searches/create.json';
-	const URL_REMOVE			= 'https://api.twitter.com/1/saved_searches/destroy/%d.json';
+	const URL_SAVED_SEARCHES	= 'https://api.twitter.com/1.1/saved_searches/list.json';
+	const URL_GET_DETAIL		= 'https://api.twitter.com/1.1/saved_searches/show/%d.json';
+	const URL_CREATE_SEARCH		= 'https://api.twitter.com/1.1/saved_searches/create.json';
+	const URL_REMOVE			= 'https://api.twitter.com/1.1/saved_searches/destroy/%d.json';
 	
 	/* Public Properties
 	-------------------------------*/

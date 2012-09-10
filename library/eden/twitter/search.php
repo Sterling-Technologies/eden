@@ -17,7 +17,7 @@
 class Eden_Twitter_Search extends Eden_Twitter_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_SEARCH	= 'http://search.twitter.com/search.json';
+	const URL_SEARCH_TWEETS	= 'https://api.twitter.com/1.1/search/tweets.json'; 
 
 	/* Public Properties
 	-------------------------------*/
@@ -34,16 +34,16 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns tweets that match a specified query
+	 * Returns a collection of relevant Tweets matching a specified query.
 	 *
-	 * @param string|integer
+	 * @param string The tweets you want to search
 	 * @return array
 	 */
-	public function search($search) {
-		//Argument 1 must be a string or integer
-		Eden_Twitter_Error::i()->argument(1, 'string', 'integer');
+	public function search($query) {
+		//Argument 1 must be a string
+		Eden_Twitter_Error::i()->argument(1, 'string');
 		
-		$this->_query['q'] = $search;
+		$this->_query['q'] = $query;
 		
 		return $this->_getResponse(self::URL_SEARCH, $this->_query);
 	}

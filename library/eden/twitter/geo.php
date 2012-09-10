@@ -17,11 +17,11 @@
 class Eden_Twitter_Geo extends Eden_Twitter_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_GET_PLACE				= 'https://api.twitter.com/1/geo/id/%s.json';
-	const URL_GET_GEOCODE			= 'https://api.twitter.com/1/geo/reverse_geocode.json';
-	const URL_SEARCH				= 'https://api.twitter.com/1/geo/search.json';
-	const URL_GET_SIMILAR_PLACES	= 'https://api.twitter.com/1/geo/similar_places.json';
-	const URL_CREATE_PLACE			= 'https://api.twitter.com/1/geo/place.json';
+	const URL_GET_PLACE				= 'https://api.twitter.com/1.1/geo/id/%s.json';
+	const URL_GET_GEOCODE			= 'https://api.twitter.com/1.1/geo/reverse_geocode.json';
+	const URL_SEARCH				= 'https://api.twitter.com/1.1/geo/search.json';
+	const URL_GET_SIMILAR_PLACES	= 'https://api.twitter.com/1.1/geo/similar_places.json';
+	const URL_CREATE_PLACE			= 'https://api.twitter.com/1.1/geo/place.json';
 	
 	/* Public Properties
 	-------------------------------*/

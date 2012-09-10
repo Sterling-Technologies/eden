@@ -17,10 +17,9 @@
 class Eden_Twitter_Trends extends Eden_Twitter_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_GET_LIST			= 'https://api.twitter.com/1/trends/%s.json';
-	const URL_GET_DETAIL		= 'https://api.twitter.com/1/trends/available.json';
-	const URL_GET_DAILY_TRENDS 	= 'https://api.twitter.com/1/trends/daily.json';
-	const URL_GET_WEEKLY_TRENDS = 'https://api.twitter.com/1/trends/weekly.json';
+	const URL_TRENDING_PLACE		= 'https://api.twitter.com/1.1/trends/place.json';
+	const URL_TRENDING_AVAILABLE	= 'https://api.twitter.com/1.1/trends/available.json';
+	const URL_TRENDING_CLOSEST		= 'https://api.twitter.com/1.1/trends/closest.json';
 	
 	/* Public Properties
 	-------------------------------*/
@@ -37,14 +36,40 @@ class Eden_Twitter_Trends extends Eden_Twitter_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Returns the locations that Twitter has 
-	 * trending topic information
+	 * Returns the top 10 trending topics for a specific WOEID, if trending 
+	 * information is available for it.
+	 *
+	 * @param string|integer The Yahoo! Where On Earth ID of the location to return 
+	 * trending information for. Global information is available by using 1 as the WOEID.
+	 * @return array
+	 */
+	public function getPlaceTrending($id) {
+		//Argument 1 must be a string or integer
+		Eden_Twitter_Error::i()->argument(1, 'string', 'int');
+		
+		$this->_query['id'] = $id;
+		
+		return $this->_getResponse(self::URL_TRENDING_PLACE, $this->_query);
+	}
+	
+	/**
+	 * Returns the locations that Twitter has trending topic information for.
+	 *
+	 * @return array
+	 */
+	public function getAvailableTrending() {
+		
+		return $this->_getResponse(self::URL_TRENDING_AVAILABLE);
+	}
+	
+	/**
+	 * Returns the locations that Twitter has trending topic information for, closest to a specified location.
 	 *
 	 * @param float|null
 	 * @param float|null
 	 * @return array
 	 */
-	public function getDetail($lat = NULL, $long = NULL) {
+	public function getClosestTrending($lat = NULL, $long = NULL) {
 		//Argument Test
 		Eden_Twitter_Error::i()
 			->argument(1, 'float', 'null')	//Argument 1 must be a float or null
@@ -62,87 +87,7 @@ class Eden_Twitter_Trends extends Eden_Twitter_Base {
 			$this->_query['long'] = $long;
 		}
 		
-		return $this->_getResponse(self::URL_GET_DETAIL, $this->_query);
-	}
-	
-	/**
-	 * Returns the top 10 trending topics for a specific
-	 * WOEID, if trending information is available for it.
-	 *
-	 * @param integer
-	 * @param string|null
-	 * @return array
-	 */
-	public function getList($id, $exclude = NULL) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int')				//Argument 1 must be an integer
-			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
-		
-		if(!is_null($exclude)) {
-			//lets put it in query
-			$this->_query['exclude'] = $exclude;
-		}
-		
-		return $this->_getResponse(sprintf(self::URL_GET_LIST, $id), $this->_query);
-	}
-	
-	/**
-	 * Returns the top 20 trending topics
-	 * for each hour in a given day.
-	 *
-	 * @param sting|null
-	 * @param string|null
-	 * @return array
-	 */
-	public function getDailyTrends($date = NULL, $exclude = NULL) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string', 'null')		//Argument 1 must be a string or null
-			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
-		
-		//if it is not empty
-		if(!is_null($date)) {
-			//lets put it in query
-			$this->_query['date'] = date('Y-m-d', strtotime($date));
-		}
-		
-		//if it is not empty
-		if(!is_null($exclude)) {
-			//lets put it in query
-			$this->_query['exclude'] = $exclude;
-		}
-		
-		return $this->_getResponse(self::URL_GET_DAILY_TRENDS, $this->_query);
-	}
-	
-	/**
-	 * Returns the top 30 trending topics 
-	 * for each day in a given week.
-	 *
-	 * @param sting|null
-	 * @param string|null
-	 * @return array
-	 */
-	public function getWeeklyTrends($date = NULL, $exclude = NULL) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string', 'null')		//Argument 1 must be a string or null
-			->argument(2, 'string', 'null');	//Argument 2 must be a string or null
-		
-		//if it is not empty
-		if(!is_null($date)) {
-			//lets put it in query
-			$this->_query['date'] = date('Y-m-d', strtotime($date));
-		}
-		
-		//if it is not empty
-		if(!is_null($exclude)) {
-			//lets put it in query
-			$this->_query['exclude'] = $exclude;
-		}
-		
-		return $this->_getResponse(self::URL_GET_WEEKLY_TRENDS, $this->_query);
+		return $this->_getResponse(self::URL_TRENDING_CLOSEST, $this->_query);
 	}
 	
 	/* Protected Methods

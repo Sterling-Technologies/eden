@@ -17,7 +17,7 @@
 class Eden_Twitter_Spam extends Eden_Twitter_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_REPORT_SPAM	= 'http://api.twitter.com/1/report_spam.json';
+	const URL_REPORT_SPAM	= 'https://api.twitter.com/1.1/users/report_spam.json';
 	
 	/* Public Properties
 	-------------------------------*/

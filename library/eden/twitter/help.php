@@ -17,9 +17,13 @@
 class Eden_Twitter_Help extends Eden_Twitter_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_TEST			= 'https://api.twitter.com/1/help/test.json';
-	const URL_CONFIGURATION	= 'https://api.twitter.com/1/help/configuration.json';
-	const URL_LANGUAGES		= 'https://api.twitter.com/1/help/languages.json';
+	const URL_CONFIGURATION	= 'https://api.twitter.com/1.1/help/configuration.json';
+	const URL_LANGUAGES		= 'https://api.twitter.com/1.1/help/languages.json';
+	const URL_PRIVACY		= 'https://api.twitter.com/1.1/help/privacy.json';
+	const URL_TOS			= 'https://api.twitter.com/1.1/help/tos.json';
+	const URL_RATE_LIMIT	= 'https://api.twitter.com/1.1/application/rate_limit_status.json';
+
+
 	
 	/* Public Properties
 	-------------------------------*/
@@ -43,28 +47,49 @@ class Eden_Twitter_Help extends Eden_Twitter_Base {
 	 *
 	 * @return array
 	 */
-	public function setConfiguration() {
+	public function getConfiguration() {
 		return $this->_getResponse(self::URL_CONFIGURATION);
 	}
 	
 	/**
-	 * Returns the list of languages supported by 
-	 * Twitter along with their ISO 639-1 code.
+	 * Returns the Twitter Terms of Service in the requested format. 
+	 * These are not the same as the Developer Rules of the Road.
 	 *
 	 * @return array
 	 */
-	public function setLanguages() {
+	public function getLanguages() {
 		return $this->_getResponse(self::URL_LANGUAGES);
 	}
 	
 	/**
-	 * Returns the string "ok" in the requested
-	 * format with a 200 OK HTTP status code.
+	 * Returns Twitter's Privacy Policy.
 	 *
-	 * @return string
+	 * @return array
 	 */
-	public function setTest() {
-		return $this->_getResponse(self::URL_TEST);
+	public function getPrivacy() {
+		return $this->_getResponse(self::URL_PRIVACY);
+	}
+	
+	/**
+	 * Returns Twitter's Privacy Policy.
+	 *
+	 * @return array
+	 */
+	public function getTermsAndCondition() {
+		return $this->_getResponse(self::URL_TOS);
+	}
+	/**
+	 * Returns the current rate limits for methods belonging to the specified resource families.
+	 *
+	 * @return array
+	 */
+	public function getRateLimitStatus($resources = NULL) {
+		//Argument 1 must be a string or null
+		Eden_Twitter_Error::i()->argument(1, 'string', 'null');
+		
+		$this->_query['resources'] = $resources;
+		
+		return $this->_getResponse(self::URL_RATE_LIMIT, $this->_query);
 	}
 	
 	/* Protected Methods

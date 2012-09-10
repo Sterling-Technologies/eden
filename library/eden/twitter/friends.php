@@ -17,17 +17,15 @@
 class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_FOLLOWERS			= 'https://api.twitter.com/1/followers/ids.json';
-	const URL_FRIENDS			= 'https://api.twitter.com/1/friends/ids.json';
-	const URL_FRIENDS_EXIST		= 'https://api.twitter.com/1/friendships/exists.json';
-	const URL_INCOMING_FRIENDS	= 'https://api.twitter.com/1/friendships/incoming.json';
-	const URL_OUTGOING_FRIENDS	= 'https://api.twitter.com/1/friendships/outgoing.json';
-	const URL_SHOW_FRIENDS		= 'https://api.twitter.com/1/friendships/show.json';
-	const URL_FOLLOW_FRIENDS	= 'https://api.twitter.com/1/friendships/create.json';
-	const URL_UNFOLLOW_FRIENDS	= 'https://api.twitter.com/1/friendships/destroy.json';
-	const URL_LOOKUP_FRIENDS	= 'https://api.twitter.com/1/friendships/lookup.json';
-	const URL_UPDATE			= 'https://api.twitter.com/1/friendships/update.json';
-	const URL_NO_RETWEETS_IDS	= 'https://api.twitter.com/1/friendships/no_retweet_ids.json';
+	const URL_FRIENDS			= 'https://api.twitter.com/1.1/friends/ids.json';
+	const URL_FOLLOWERS			= 'https://api.twitter.com/1.1/followers/ids.json';
+	const URL_LOOKUP_FRIENDS	= 'https://api.twitter.com/1.1/friendships/lookup.json';
+	const URL_INCOMING_FRIENDS	= 'https://api.twitter.com/1.1/friendships/incoming.json';
+	const URL_OUTGOING_FRIENDS	= 'https://api.twitter.com/1.1/friendships/outgoing.json';
+	const URL_FOLLOW_FRIENDS	= 'https://api.twitter.com/1.1/friendships/create.json';
+	const URL_UNFOLLOW_FRIENDS	= 'https://api.twitter.com/1.1/friendships/destroy.json';
+	const URL_UPDATE			= 'https://api.twitter.com/1.1/friendships/update.json';
+	const URL_SHOW_FRIENDS		= 'https://api.twitter.com/1.1/friendships/show.json';
 
 	/* Public Properties
 	-------------------------------*/
@@ -44,39 +42,51 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 	/* Public Methods
 	-------------------------------*/
 	/**
-	 * Test for the existence of friendship between two users.
+	 * Returns an array of numeric IDs for
+	 * every user the specified user is following. 
 	 *
-	 * @param int|string user ID or screen name
-	 * @param int|string user ID or screen name
-	 * @return boolean	
+	 * @param string|int
+	 * @return array
 	 */
-	public function areFriends($userA, $userB) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string', 'int')	//Argument 1 must be an integer, string
-			->argument(2, 'string', 'int');	//Argument 2 must be an integer, string
-		
+	public function getFollowing($id = NULL) {
+		//Argument 1 must be a string or integer
+		Eden_Twitter_Error::i()->argument(1, 'int', 'string', 'null');					
+
 		//if it is integer
-		if(is_int($userA)) {
+		if(is_int($id)) {
 			//lets put it in query
-			$this->_query['user_id_a'] = $userA;
-		//if it is string
-		} else {
+			$this->_query['user_id'] = $id;
+		//else it is string
+		} else {	
 			//lets put it in query
-			$this->_query['screen_name_a'] = $userA;
+			$this->_query['string_name'] = $id;
 		}
 		
+		return $this->_getResponse(self::URL_FRIENDS, $this->_query);
+	}
+	
+	/**
+	 * Returns an array of numeric IDs for every 
+	 * user following the specified user. 
+	 *
+	 * @param string|int|null
+	 * @return array
+	 */
+	public function getFollowers($id = NULL) {
+		//Argument 1 must be a string or integer
+		Eden_Twitter_Error::i()->argument(1, 'int', 'string', 'null');					
+
 		//if it is integer
-		if(is_int($userB)) {
+		if(is_int($id)) {
 			//lets put it in query
-			$this->_query['user_id_b'] = $userB;
-		//if it is string
-		} else {
+			$this->_query['user_id'] = $id;
+		//else it is string
+		} else {	
 			//lets put it in query
-			$this->_query['screen_name_b'] = $userB;
+			$this->_query['string_name'] = $id;
 		}
 		
-		return $this->_getResponse(self::URL_FRIENDS_EXIST, $this->_query);
+		return $this->_getResponse(self::URL_FOLLOWERS, $this->_query);
 	}
 	
 	/**
@@ -106,53 +116,9 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 		return $this->_post(self::URL_FOLLOW_FRIENDS, $this->_query);
 	}
 	
-	/**
-	 * Returns an array of numeric IDs for every 
-	 * user following the specified user. 
-	 *
-	 * @param string|int|null
-	 * @return array
-	 */
-	public function getFollowers($id = NULL) {
-		//Argument 1 must be a string or integer
-		Eden_Twitter_Error::i()->argument(1, 'int', 'string', 'null');					
-
-		//if it is integer
-		if(is_int($id)) {
-			//lets put it in query
-			$this->_query['user_id'] = $id;
-		//else it is string
-		} else {	
-			//lets put it in query
-			$this->_query['string_name'] = $id;
-		}
-		
-		return $this->_getResponse(self::URL_FOLLOWERS, $this->_query);
-	}
 	
-	/**
-	 * Returns an array of numeric IDs for
-	 * every user the specified user is following. 
-	 *
-	 * @param string|int
-	 * @return array
-	 */
-	public function getFollowing($id = NULL) {
-		//Argument 1 must be a string or integer
-		Eden_Twitter_Error::i()->argument(1, 'int', 'string', 'null');					
-
-		//if it is integer
-		if(is_int($id)) {
-			//lets put it in query
-			$this->_query['user_id'] = $id;
-		//else it is string
-		} else {	
-			//lets put it in query
-			$this->_query['string_name'] = $id;
-		}
-		
-		return $this->_getResponse(self::URL_FRIENDS, $this->_query);
-	}
+	
+	
 	
 	/**
 	 * Returns an array of numeric IDs for every protected user 
@@ -246,26 +212,6 @@ class Eden_Twitter_Friends extends Eden_Twitter_Base {
 		}
 		
 		return $this->_getResponse(self::URL_LOOKUP_FRIENDS, $this->_query);
-	}
-	
-	/**
-	 * Returns an array of user_ids that the 
-	 * currently authenticated user does not 
-	 * want to see retweets from.
-	 * 
-	 * @param bool
-	 * @return array
-	 */
-	public function getUsersNoRetweets($stringify = false) {
-		//Argument 1 must be an boolean
-		Eden_Twitter_Error::i()->argument(1, 'bool');						
-		
-		if($stringify) {
-			//lets put it in query
-			$this->_query['stringify_ids'] =  1;
-		}
-		
-		return $this->_getResponse(self::URL_NO_RETWEETS_IDS, $this->_query);
 	}
 	 
 	/**

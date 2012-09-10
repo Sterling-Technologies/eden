@@ -17,9 +17,9 @@
 class Eden_Twitter_Favorites extends Eden_Twitter_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_GET_FAVORITES		= 'https://api.twitter.com/1/favorites.json';
-	const URL_FAVORITE_STATUS	= 'https://api.twitter.com/1/favorites/create/%s.json';
-	const URL_UNFAVORITE_STATUS	= 'https://api.twitter.com/1/favorites/destroy/%s.json';
+	const URL_GET_FAVORITES		= 'https://api.twitter.com/1.1/favorites/list.json';
+	const URL_FAVORITE_STATUS	= 'https://api.twitter.com/1.1/favorites/create.json';
+	const URL_UNFAVORITE_STATUS	= 'https://api.twitter.com/1.1/favorites/destroy.json';
 
 	/* Public Properties
 	-------------------------------*/
@@ -39,14 +39,16 @@ class Eden_Twitter_Favorites extends Eden_Twitter_Base {
 	 * Favorites the status specified in the ID parameter as
 	 * the authenticating user.
 	 *
-	 * @param int the tweet ID
+	 * @param int The numerical ID of the desired status.
 	 * @return array
 	 */
 	public function addFavorites($id) {
 		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');	
-
-		return $this->_post(sprintf(self::URL_FAVORITE_STATUS, $id), $this->_query);
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_query['id'] = $id;
+		
+		return $this->_post(self::URL_FAVORITE_STATUS, $this->_query);
 	}
 	
 	/**
@@ -64,14 +66,16 @@ class Eden_Twitter_Favorites extends Eden_Twitter_Base {
 	 * Un-favorites the status specified in the ID 
 	 * parameter as the authenticating user. 
 	 *
-	 * @param int the tweet ID
+	 * @param int The numerical ID of the desired status.
 	 * @return array
 	 */
 	public function remove($id) {
 		//Argument 1 must be na integer
-		Eden_Twitter_Error::i()->argument(1, 'int');						
-
-		return $this->_post(sprintf(self::URL_UNFAVORITE_STATUS, $id));
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		
+		$this->_query['id'] = $id;
+		
+		return $this->_post(self::URL_UNFAVORITE_STATUS, $this->_query);
 	}
 	
 	/**

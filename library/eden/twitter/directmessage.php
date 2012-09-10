@@ -18,11 +18,11 @@
 class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_DIRECT_MESSAGE	= 'https://api.twitter.com/1/direct_messages.json';
-	const URL_SENT_MESSAGE		= 'https://api.twitter.com/1/direct_messages/sent.json';
-	const URL_REMOVE_MESSAGE	= 'https://api.twitter.com/1/direct_messages/destroy/%d.json';
-	const URL_NEW_MESSAGE		= 'https://api.twitter.com/1/direct_messages/new.json';
-	const URL_SHOW_MESSAGE		= 'https://api.twitter.com/1/direct_messages/show/%d.json';
+	const URL_DIRECT_MESSAGE	= 'https://api.twitter.com/1.1/direct_messages.json';
+	const URL_SENT_MESSAGE		= 'https://api.twitter.com/1.1/direct_messages/sent.json';
+	const URL_SHOW_MESSAGE		= 'https://api.twitter.com/1.1/direct_messages/show.json';
+	const URL_REMOVE_MESSAGE	= 'https://api.twitter.com/1.1/direct_messages/destroy.json';
+	const URL_NEW_MESSAGE		= 'https://api.twitter.com/1.1/direct_messages/new.json';
 
 	/* Public Properties
 	-------------------------------*/
@@ -38,20 +38,6 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	
 	/* Public Methods
 	-------------------------------*/ 
-	/**
-	 * Returns a single direct message, 
-	 * specified by an id parameter.
-	 *
-	 * @param int message ID
-	 * @return array
-	 */
-	public function getDetail($id) {
-		//Argument 1 must be an integer
-		Eden_Twitter_Error::i()->argument(1, 'int');				
-			
-		return $this->_getResponse(sprintf(self::URL_SHOW_MESSAGE,$id));
-	}
-	
 	/**
 	 * Returns the 20 most recent direct messages 
 	 * sent to the authenticating user.
@@ -75,18 +61,21 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 	}
 	
 	/**
-	 * Each tweet will include a node called "entities". This node offers a variety 
-	 * of metadata about the tweet in a discreet structure, including: user_mentions, 
-	 * urls, and hashtags. 
+	 * Returns a single direct message, 
+	 * specified by an id parameter.
 	 *
-	 * @return this
+	 * @param int message ID
+	 * @return array
 	 */
-	public function includeEntities() {
-		$this->_query['include_entities'] = true;
+	public function getDetail($messageId) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');				
 		
-		return $this;
+		$this->_query['id'] = $messageId;
+		
+		return $this->_getResponse(self::URL_SHOW_MESSAGE, $this->_query);
 	}
-	 
+	
 	/**
 	 * Destroys the direct message specified in the required  
 	 * ID parameter. The authenticating user must be the 
@@ -129,6 +118,19 @@ class Eden_Twitter_Directmessage extends Eden_Twitter_Base {
 		$this->_query['text'] = $text;
 		
 		return $this->_post(self::URL_NEW_MESSAGE, $this->_query);
+	}
+	
+	/**
+	 * Each tweet will include a node called "entities". This node offers a variety 
+	 * of metadata about the tweet in a discreet structure, including: user_mentions, 
+	 * urls, and hashtags. 
+	 *
+	 * @return this
+	 */
+	public function includeEntities() {
+		$this->_query['include_entities'] = true;
+		
+		return $this;
 	}
 	
 	/**

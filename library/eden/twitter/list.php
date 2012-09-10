@@ -18,24 +18,23 @@
 class Eden_Twitter_List extends Eden_Twitter_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_ALL_LIST			= 'https://api.twitter.com/1/lists/all.json';
-	const URL_GET_STATUS		= 'https://api.twitter.com/1/lists/statuses.json';
-	const URL_REMOVE			= 'https://api.twitter.com/1/lists/destroy.json';
-	const URL_MEMBERSHIP		= 'https://api.twitter.com/1/lists/memberships.json';
-	const URL_SUBSCRIBER		= 'https://api.twitter.com/1/lists/subscribers.json';
-	const URL_CREATE_SUBCRIBER	= 'https://api.twitter.com/1/lists/subscribers/create.json';
-	const URL_SHOW_SUBSCRIBER	= 'https://api.twitter.com/1/lists/subscribers/show.json';
-	const URL_REMOVE_SUBCRIBER	= 'https://api.twitter.com/1/lists/subscribers/destroy.json';
-	const URL_CREATE_ALL		= 'https://api.twitter.com/1/lists/members/create_all.json';
-	const URL_GET_MEMBER		= 'https://api.twitter.com/1/lists/members/show.json';
-	const URL_GET_DETAIL		= 'https://api.twitter.com/1/lists/members.json';
-	const URL_CREATE_MEMBER		= 'https://api.twitter.com/1/lists/members/create.json';
-	const URL_REMOVE_MEMBER		= 'https://api.twitter.com/1/lists/members/destroy';
-	const URL_UPDATE			= 'https://api.twitter.com/lists/update.json';
-	const URL_CREATE_USER		= 'https://api.twitter.com/1/lists/create.json';
-	const URL_GET_LISTS			= 'https://api.twitter.com/1/lists.json';
-	const URL_SHOW				= 'https://api.twitter.com/1/lists/show.json';
-	const URL_GET_SUBSCRITION	= 'https://api.twitter.com/1/lists/subscriptions.json';
+	const URL_ALL_LIST			= 'https://api.twitter.com/1.1/lists/list.json';
+	const URL_GET_STATUS		= 'https://api.twitter.com/1.1/lists/statuses.json';
+	const URL_REMOVE_MEMBER		= 'https://api.twitter.com/1.1/lists/members/destroy.json';
+	const URL_MEMBERSHIP		= 'https://api.twitter.com/1.1/lists/memberships.json';
+	const URL_SUBSCRIBER		= 'https://api.twitter.com/1.1/lists/subscribers.json';
+	const URL_CREATE_SUBCRIBER	= 'https://api.twitter.com/1.1/lists/subscribers/create.json';
+	const URL_SHOW_SUBSCRIBER	= 'https://api.twitter.com/1.1/lists/subscribers/show.json';
+	const URL_REMOVE_SUBCRIBER	= 'https://api.twitter.com/1.1/lists/subscribers/destroy.json';
+	const URL_CREATE_ALL		= 'https://api.twitter.com/1.1/lists/members/create_all.json';
+	const URL_GET_MEMBER		= 'https://api.twitter.com/1.1/lists/members/show.json';
+	const URL_GET_DETAIL		= 'https://api.twitter.com/1.1/lists/members.json';
+	const URL_CREATE_MEMBER		= 'https://api.twitter.com/1.1/lists/members/create.json';
+	const URL_REMOVE			= 'https://api.twitter.com/1.1/lists/destroy.json';
+	const URL_UPDATE			= 'https://api.twitter.com/1.1/lists/update.json';
+	const URL_CREATE_USER		= 'https://api.twitter.com/1.1/lists/create.json';
+	const URL_SHOW				= 'https://api.twitter.com/1.1/lists/show.json';
+	const URL_GET_SUBSCRITION	= 'https://api.twitter.com/1.1/lists/subscriptions.json';
 
 	/* Public Properties
 	-------------------------------*/
@@ -229,29 +228,6 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 		
 		return $this->_getResponse(self::URL_ALL_LIST, $this->_query);
 	} 
-	
-	/**
-	 * Returns the lists of the specified (or authenticated) 
-	 * user. Private lists will be included if the 
-	 * authenticated user is the same as the user whose
-	 * lists are being returned.
-	 *
-	 * @param int
-	 * @param string
-	 * @return array
-	 */
-	public function getLists($id, $name) {
-		//Argument Test
-		Eden_Twitter_Error::i()
-			->argument(1, 'int')		//Argument 1 must be an integer
-			->argument(2, 'string');	//Argument 2 must be a string
-			
-		//populate fields	
-		$this->_query['user_id'] 		= $id; 
-		$this->_query['screen_name']	= $name;
-		
-		return $this->_getResponse(self::URL_GET_LISTS, $this->_query);
-	}
 	
 	/**
 	 * Returns the specified list. Private lists will only 

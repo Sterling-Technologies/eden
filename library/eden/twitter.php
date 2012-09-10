@@ -11,20 +11,16 @@ require_once dirname(__FILE__).'/oauth.php';
 require_once dirname(__FILE__).'/twitter/error.php';
 require_once dirname(__FILE__).'/twitter/base.php';
 require_once dirname(__FILE__).'/twitter/oauth.php';
-require_once dirname(__FILE__).'/twitter/accounts.php';
-require_once dirname(__FILE__).'/twitter/block.php';
 require_once dirname(__FILE__).'/twitter/directmessage.php';
 require_once dirname(__FILE__).'/twitter/favorites.php';
 require_once dirname(__FILE__).'/twitter/friends.php';
 require_once dirname(__FILE__).'/twitter/geo.php';
 require_once dirname(__FILE__).'/twitter/help.php';
-require_once dirname(__FILE__).'/twitter/legal.php';
 require_once dirname(__FILE__).'/twitter/list.php';
-require_once dirname(__FILE__).'/twitter/localtrends.php';
-require_once dirname(__FILE__).'/twitter/notification.php';
 require_once dirname(__FILE__).'/twitter/saved.php';
 require_once dirname(__FILE__).'/twitter/search.php';
 require_once dirname(__FILE__).'/twitter/spam.php';
+require_once dirname(__FILE__).'/twitter/streaming.php';
 require_once dirname(__FILE__).'/twitter/suggestions.php';
 require_once dirname(__FILE__).'/twitter/timeline.php';
 require_once dirname(__FILE__).'/twitter/trends.php';
@@ -61,27 +57,7 @@ class Eden_Twitter extends Eden_Class {
 	/* Magic
 	-------------------------------*/
 	/* Public Methods
-	-------------------------------*/	
-	/**
-	 * Returns twitter account method
-	 *
-	 * @param *string 
-	 * @param *string 
-	 * @param *string 
-	 * @param *string 
-	 * @return Eden_Twitter_Accounts
-	 */
-	public function account($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
-		//Argument test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string')		//Argument 2 must be a string
-			->argument(3, 'string')		//Argument 3 must be a string
-			->argument(4, 'string');	//Argument 4 must be a string
-		
-		return Eden_Twitter_Accounts::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
-	}
-	
+	-------------------------------*/
 	/**
 	 * Returns twitter oauth method
 	 *
@@ -97,27 +73,7 @@ class Eden_Twitter extends Eden_Class {
 		
 		return Eden_Twitter_Oauth::i($key, $secret);
 	}
-	
-	/**
-	 * Returns twitter block method
-	 *
-	 * @param *string 
-	 * @param *string 
-	 * @param *string 
-	 * @param *string 
-	 * @return Eden_Twitter_Block
-	 */
-	public function block($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
-		//Argument test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string')		//Argument 2 must be a string
-			->argument(3, 'string')		//Argument 3 must be a string
-			->argument(4, 'string');	//Argument 4 must be a string
-		
-		return Eden_Twitter_Block::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
-	}
-	
+
 	/**
 	 * Returns twitter direct message method
 	 *
@@ -219,26 +175,6 @@ class Eden_Twitter extends Eden_Class {
 	}
 	
 	/**
-	 * Returns twitter legal method
-	 *
-	 * @param *string 
-	 * @param *string 
-	 * @param *string 
-	 * @param *string 
-	 * @return Eden_Twitter_Legal
-	 */
-	public function legal($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
-		//Argument test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string')		//Argument 2 must be a string
-			->argument(3, 'string')		//Argument 3 must be a string
-			->argument(4, 'string');	//Argument 4 must be a string
-		
-		return Eden_Twitter_Legal::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
-	}
-	
-	/**
 	 * Returns twitter list method
 	 *
 	 * @param *string 
@@ -256,46 +192,6 @@ class Eden_Twitter extends Eden_Class {
 			->argument(4, 'string');	//Argument 4 must be a string
 		
 		return Eden_Twitter_List::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
-	}
-	
-	/**
-	 * Returns twitter localTrends method
-	 *
-	 * @param *string 
-	 * @param *string 
-	 * @param *string 
-	 * @param *string 
-	 * @return Eden_Twitter_LocalTrends
-	 */
-	public function localTrends($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
-		//Argument test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string')		//Argument 2 must be a string
-			->argument(3, 'string')		//Argument 3 must be a string
-			->argument(4, 'string');	//Argument 4 must be a string
-		
-		return Eden_Twitter_LocalTrends::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
-	}
-	
-	/**
-	 * Returns twitter notification method
-	 *
-	 * @param *string 
-	 * @param *string 
-	 * @param *string 
-	 * @param *string 
-	 * @return Eden_Twitter_Notification
-	 */
-	public function notification($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
-		//Argument test
-		Eden_Twitter_Error::i()
-			->argument(1, 'string')		//Argument 1 must be a string
-			->argument(2, 'string')		//Argument 2 must be a string
-			->argument(3, 'string')		//Argument 3 must be a string
-			->argument(4, 'string');	//Argument 4 must be a string
-		
-		return Eden_Twitter_Notification::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
@@ -356,6 +252,26 @@ class Eden_Twitter extends Eden_Class {
 			->argument(4, 'string');	//Argument 4 must be a string
 		
 		return Eden_Twitter_Spam::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
+	}
+	
+	/**
+	 * Returns twitter spam method
+	 *
+	 * @param *string 
+	 * @param *string 
+	 * @param *string 
+	 * @param *string 
+	 * @return Eden_Twitter_Spam
+	 */
+	public function streaming($consumerKey, $consumerSecret, $accessToken, $accessSecret) {
+		//Argument test
+		Eden_Twitter_Error::i()
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string')		//Argument 2 must be a string
+			->argument(3, 'string')		//Argument 3 must be a string
+			->argument(4, 'string');	//Argument 4 must be a string
+		
+		return Eden_Twitter_Streaming::i($consumerKey, $consumerSecret, $accessToken, $accessSecret);
 	}
 	
 	/**
