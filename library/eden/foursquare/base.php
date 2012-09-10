@@ -33,6 +33,7 @@ class Eden_Foursquare_Base extends Eden_Class {
 	protected $_maxResult	= NULL;
 	protected $_headers		= array(self::FORM_HEADER, self::CONTENT_TYPE);
 	protected $_query		= array();
+	protected $_meta		= array();
 	
 	/* Private Properties
 	-------------------------------*/
@@ -118,14 +119,21 @@ class Eden_Foursquare_Base extends Eden_Class {
 		$url .= '?'.http_build_query($query);
 		//reset variables
 		unset($this->_query);
-	
 		//set curl
-		return $this->Eden_Curl()
+		$curl =  Eden_Curl::i()
 			->setUrl($url)
 			->verifyHost(false)
 			->verifyPeer(false)
-			->setTimeout(60)
-			->getJsonResponse();
+			->setTimeout(60);
+			
+		//get the response
+		$response = $curl->getJsonResponse();
+		
+		$this->_meta 					= $curl->getMeta();
+		$this->_meta['url'] 			= $url;
+		$this->_meta['query'] 			= $query;
+		
+		return $response;
 	}
 	
 	protected function _post($url, array $query = array()) {

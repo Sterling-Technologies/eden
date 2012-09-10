@@ -362,22 +362,22 @@ class Eden_Foursquare_Venue extends Eden_Foursquare_Base {
 	 * Returns a list of venues near the current location, 
 	 * optionally matching the search term. 
 	 * 
-	 * @param string A string naming a place in the world
-	 * @param string|integer|float
-	 * @param string|integer|float
+	 * @param string|null Required unless longtitude and latitude is provided
+	 * @param string|integer|float|null Required unless near is provided
+	 * @param string|integer|float|null Required unless near is provided
 	 * @return array
 	 */
-	public function search($near, $latitude, $longtitude) {
+	public function search($near = NULL, $latitude = NULL, $longtitude = NULL) {
 		//argument test
 		Eden_Foursquare_Error::i()
-			->argument(1, 'string')						//argument 1 must be a string
-			->argument(2, 'string', 'int', 'float')		//argument 2 must be a string or integer or float
-			->argument(3, 'string', 'int', 'float');	//argument 3 must be a string or integer or float
+			->argument(1, 'string', 'null')						//argument 1 must be a string or null
+			->argument(2, 'string', 'int', 'float', 'null')		//argument 2 must be a string, integer, float or null
+			->argument(3, 'string', 'int', 'float', 'null');	//argument 3 must be a string, integer, float or null
 		
-		$this->_query['near'] 	= $near;
+		$this->_query['near'] 	= $near;	
 		$this->_query['ll']		= $latitude.','.$longtitude;
 		
-		return $this->_post(self::URL_VENUE_ADD, $this->_query);
+		return $this->_getResponse(self::URL_VENUE_SEARCH, $this->_query);
 	}
 	 
 	/**
@@ -412,7 +412,7 @@ class Eden_Foursquare_Venue extends Eden_Foursquare_Base {
 			->argument(1, 'string', 'int', 'float')		//argument 1 must be a string or integer or float
 			->argument(2, 'string', 'int', 'float');	//argument 2 must be a string or integer or float
 		
-		$this->_query['startAt'] = $latitude.','.$longtitude;
+		$this->_query['ll'] = $latitude.','.$longtitude;
 		
 		return $this->_getResponse(self::URL_VENUE_TRENDING, $this->_query);
 	}
