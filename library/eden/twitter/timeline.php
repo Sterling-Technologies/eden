@@ -45,7 +45,7 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 */
 	public function getMentionTimeline() {
 	
-		return $this->_query(self::URL_TIMELINES_MENTION, $this->_query);
+		return $this->_getResponse(self::URL_TIMELINES_MENTION, $this->_query);
 	}
 	
 	/**
@@ -69,7 +69,7 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 			$this->_query['screen_name'] = $id;
 		}
 		
-		return $this->_query(self::URL_TIMELINES_MENTION, $this->_query);
+		return $this->_getResponse(self::URL_TIMELINES_USER, $this->_query);
 	}
 	
 	/**
@@ -80,7 +80,7 @@ class Eden_Twitter_Timeline extends Eden_Twitter_Base {
 	 */
 	public function getYourTimeLine() {
 	
-		return $this->_query(self::URL_TIMELINES_MENTION, $this->_query);
+		return $this->_getResponse(self::URL_TIMELINES_MENTION, $this->_query);
 	}
 	
 	/**
