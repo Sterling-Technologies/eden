@@ -169,7 +169,7 @@ class Eden_Mail_Smtp extends Eden_Class {
         
 		if (!$this->_socket || strlen($errstr) > 0 || $errno > 0) {
 			//throw exception
-			Eden_Mail_Error::get()
+			Eden_Mail_Error::i()
 				->setMessage(Eden_Mail_Error::SERVER_ERROR)
 				->addVariable($host.':'.$this->_port)
 				->trigger();
@@ -180,7 +180,7 @@ class Eden_Mail_Smtp extends Eden_Class {
 		if(!$this->_call('EHLO '.$_SERVER['HTTP_HOST'], 250) && !$this->_call('HELO '.$_SERVER['HTTP_HOST'], 250)) {
 			$this->disconnect();
             //throw exception
-			Eden_Mail_Error::get()
+			Eden_Mail_Error::i()
 				->setMessage(Eden_Mail_Error::SERVER_ERROR)
 				->addVariable($host.':'.$this->_port)
 				->trigger();
@@ -190,7 +190,7 @@ class Eden_Mail_Smtp extends Eden_Class {
 			if(!stream_socket_enable_crypto($this->_socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
 				$this->disconnect();
 				//throw exception
-				Eden_Mail_Error::get()
+				Eden_Mail_Error::i()
 				->setMessage(Eden_Mail_Error::TLS_ERROR)
 				->addVariable($host.':'.$this->_port)
 				->trigger();
@@ -199,7 +199,7 @@ class Eden_Mail_Smtp extends Eden_Class {
 			if(!$this->_call('EHLO '.$_SERVER['HTTP_HOST'], 250) && !$this->_call('HELO '.$_SERVER['HTTP_HOST'], 250)) {
 				$this->disconnect();
 				//throw exception
-				Eden_Mail_Error::get()
+				Eden_Mail_Error::i()
 				->setMessage(Eden_Mail_Error::SERVER_ERROR)
 				->addVariable($host.':'.$this->_port)
 				->trigger();
@@ -424,7 +424,7 @@ class Eden_Mail_Smtp extends Eden_Class {
 	protected function _addAttachmentBody(array $body) {
 		foreach($this->_attachments as $attachment) {
 			list($name, $data, $mime) = $attachment;
-			$mime 	= $mime ? $mime : Eden_File::get()->getMimeType($name);
+			$mime 	= $mime ? $mime : Eden_File::i()->getMimeType($name);
 			$data 	= base64_encode($data);
 			$count 	= ceil(strlen($data) / 998);
 			

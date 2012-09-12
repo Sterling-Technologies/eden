@@ -61,7 +61,7 @@ class Eden_Mail_Imap extends Eden_Class {
 		if (is_null($port)) {
             $port = $ssl ? 993 : 143;
         }
-
+		
 		$this->_host 		= $host;
 		$this->_username 	= $user;
 		$this->_password 	= $pass;

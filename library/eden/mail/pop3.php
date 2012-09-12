@@ -94,7 +94,7 @@ class Eden_Mail_Pop3 extends Eden_Class {
         
 		if (!$this->_socket) {
 			//throw exception
-			Eden_Mail_Error::get()->setMessage(Eden_Mail_Error::SERVER_ERROR)
+			Eden_Mail_Error::i()->setMessage(Eden_Mail_Error::SERVER_ERROR)
 				->addVariable($host.':'.$this->_port)
 				->trigger();
         }
@@ -114,7 +114,7 @@ class Eden_Mail_Pop3 extends Eden_Class {
             if (!stream_socket_enable_crypto($this->_socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
 				$this->disconnect();
             	//throw exception
-				Eden_Mail_Error::get()->setMessage(Eden_Mail_Exception::TLS_ERROR)
+				Eden_Mail_Error::i()->setMessage(Eden_Mail_Exception::TLS_ERROR)
 					->addVariable($host.':'.$this->_port)
 					->trigger();
             }
