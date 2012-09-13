@@ -21,18 +21,21 @@ class Eden_Amazon_S3 extends Eden_Class {
 	const ACL_PUBLIC_READ 			= 'public-read';
 	const ACL_PUBLIC_READ_WRITE 	= 'public-read-write';
 	const ACL_AUTHENTICATED_READ 	= 'authenticated-read';
+	const GET		= 'GET';
+	const PUT		= 'PUT';
+	const DELETE	= 'DELETE';
+	const HEAD		= 'HEAD';
 	
 	/* Public Properties
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_ssl 			= false;
-	protected $_host			= 's3.amazonaws.com';
-	protected $_user			= NULL;
-	protected $_pass			= NULL;
-	
 	protected $_meta			= array();
+	protected $_host			= 's3.amazonaws.com';
+	protected $_accessKey		= NULL;
+	protected $_accessSecret	= NULL;
 	protected $_response		= NULL;
+	protected $_ssl 			= NULL;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -42,11 +45,18 @@ class Eden_Amazon_S3 extends Eden_Class {
 		return self::_getMultiple(__CLASS__);
 	}
 	
-	public function __construct($user, $pass, $host = 's3.amazonaws.com', $ssl = false) {
-		$this->_host 	= $host;
-		$this->_user 	= $user;
-		$this->_pass 	= $pass;
-		$this->_ssl 	= $ssl;
+	public function __construct($key, $secret, $host = 's3.amazonaws.com', $ssl = true) {
+		//argument test
+		Eden_Amazon_Error::i()
+			->argument(1, 'string')		//Argument 1 must be string
+			->argument(2, 'string')		//Argument 2 must be string 
+			->argument(3, 'string')		//Argument 3 must be string 
+			->argument(4, 'bool');		//Argument 4 must be bool
+			
+		$this->_host 			= $host;
+		$this->_accessKey 		= $key;
+		$this->_accessSecret 	= $secret;
+		$this->_ssl 			= $ssl;
 	}
 
 	/* Public Methods
@@ -54,23 +64,22 @@ class Eden_Amazon_S3 extends Eden_Class {
 	/**
 	 * Put a bucket
 	 *
-	 * @param string $bucket Bucket name
- 	 * @param constant $acl ACL flag
-	 * @param string $location Set as "EU" to create buckets hosted in Europe
+	 * @param string Bucket name
+	 * @param string Set as "EU" to create buckets hosted in Europe
 	 * @return boolean
 	 */
-	public function addBucket($bucket, $acl = self::ACL_PRIVATE, $location = false) {
+	public function addBucket($bucket, $location = false) {
 		//argument test
 		Eden_Amazon_Error::i()
-			->argument(1, 'string')				//Argument 1 must be string
-			->argument(2, 'string', 'null')		//Argument 2 must be string or null
-			->argument(3, 'bool');				//Argument 3 must be bool
+			->argument(1, 'string')	//Argument 1 must be string
+			->argument(2, 'bool');	//Argument 2 must be bool
 			
-		$data = NULL;
-		$headers = array();
-		$amazon = array('x-amz-acl' => $acl);
+		$data		= NULL;
+		$headers 	= array();
+		$amazon 	= array('x-amz-acl' => self::ACL_PRIVAT);
 		
-		if ($location !== false) {
+		//create xml file
+		if($location !== false) { 
 			$dom 		= new DOMDocument;
 			$config 	= $dom->createElement('CreateBucketConfiguration');
 			$constraint = $dom->createElement('LocationConstraint', strtoupper($location));
@@ -82,97 +91,56 @@ class Eden_Amazon_S3 extends Eden_Class {
 			$headers['Content-Type'] = 'application/xml';
 		}
 		
-		$this->_setResponse('PUT', $bucket, '/', array(), $data, $headers, $amazon);
-		
-		if(!empty($this->_meta['error']) || empty($this->_response)) {
-			return false;
-		}
-		
-		return true;
+		return $this->_setResponse(self::PUT, $bucket, '/', array(), $data, $headers, $amazon);
 	}
 	
 	/**
 	 * Put an object
 	 *
-	 * @param mixed $input Input data
-	 * @param string $bucket Bucket name
-	 * @param string $path Object URI
-	 * @param constant $acl ACL constant
-	 * @param array $metaHeaders Array of x-amz-meta-* headers
-	 * @param array $requestHeaders Array of request headers or content type as a string
-	 * @return boolean
+	 * @param string Bucket name
+	 * @param string Object URI
+	 * @param string 
+	 * @param false 
+	 * @return array
 	 */
-	public function addFile($bucket, $path, $data, $acl = self::ACL_PRIVATE, $file = false) {
+	public function addFile($bucket, $path, $data, $file = false) {
 		//argument test
 		Eden_Amazon_Error::i()
 			->argument(1, 'string')		//Argument 1 must be string
 			->argument(2, 'string')		//Argument 2 must be string
-			->argument(4, 'string')		//Argument 4 must be string
-			->argument(5, 'bool');		//Argument 5 must be boolean
+			->argument(3, 'string')		//Argument 3 must be string
+			->argument(4, 'bool');		//Argument 4 must be boolean
 			
 		$headers = $amazon = array();
-		
-		$headers['Content-Type'] = Eden_File::i()->getMimeType($path);
-		$amazon['x-amz-acl'] = $acl;
+		$amazon['x-amz-acl'] 		= self::ACL_PRIVATE;
+		$headers['Content-Type']	= mime_content_type($path);
 		
 		if(strpos($path, '/') !== 0) {
 			$path = '/'.$path;
 		}
 		
-		//if not file 
-		if(!$file) {
-			//put it into a file
-			//we do this because file data in memory is bad
-			$tmp = tmpfile();
-			fwrite($tmp, $data);
-			$file = $tmp;
-			$size = strlen($data);
-			//release file data from memory
-			$data = NULL;
-		//if is a file
-		} else {
-			$file = fopen($data, 'r');
-			$size = filesize($data);
-		}
-		
-		$data = array($file, $size);
-		
-		$this->_setResponse('PUT', $bucket, $path, array(), $data, $headers, $amazon);
-		
-		//dont forget to close
-		fclose($file);
-		
-		if(!empty($this->_meta['error'])) {
-			return false;
-		}
-		
-		return $size;
+		return $this->_setResponse(self::PUT, $bucket, $path, array(), $data, $headers, $amazon);
 	}
 	
 	/**
 	 * Delete an empty bucket
 	 *
-	 * @param string $bucket Bucket name
-	 * @return boolean
+	 * @param string Bucket name
+	 * @return array
 	 */
 	public function deleteBucket($bucket) {
 		//Argument 1 must be string
 		Eden_Amazon_Error::i()->argument(1, 'string');
-		$this->_setResponse('DELETE', $bucket);
 		
-		if(!empty($this->_meta['error']) || empty($this->_response)) {
-			return false;
-		}
-		
-		return true;
+		return $this->_setResponse(self::DELETE, $bucket);
 	}
 	
 	/**
 	 * Delete an object
 	 *
-	 * @param string $bucket Bucket name
-	 * @param string $uri Object URI
-	 * @return boolean
+	 * @param string Bucket name
+	 * @param string Object URI
+	 * @return array
 	 */
 	public function deleteFile($bucket, $path) {
 		//argument test
@@ -180,20 +148,14 @@ class Eden_Amazon_S3 extends Eden_Class {
 			->argument(1, 'string')		//Argument 1 must be string
 			->argument(2, 'string');	//Argument 2 must be string
 		
-		$this->_setResponse('DELETE', $bucket, $path);
-		
-		if(!empty($this->_meta['error']) || empty($this->_response)) {
-			return false;
-		}
-		
-		return true;
+		return $this->_setResponse(self::DELETE, $bucket, $path);
 	}
 	
 	/**
 	 * Delete an object
 	 *
-	 * @param string $bucket Bucket name
-	 * @param string $uri Object URI
+	 * @param string Bucket name
+	 * @param string Object URI
 	 * @return boolean
 	 */
 	public function deleteFolder($bucket, $path) {
@@ -201,7 +163,8 @@ class Eden_Amazon_S3 extends Eden_Class {
 		Eden_Amazon_Error::i()
 			->argument(1, 'string')		//Argument 1 must be string
 			->argument(2, 'string');	//Argument 2 must be string
-			
+		
+		//get all bucket
 		$list = $this->getBucket($bucket);
 		
 		if(strpos($path, '/') === 0) {
@@ -220,24 +183,23 @@ class Eden_Amazon_S3 extends Eden_Class {
 				//skip it
 				continue;
 			}
-			
+			//delete files
 			$this->deleteFile($bucket, '/'.$object['name']);
 		}
 		
-		return true;
+		return $this->_response;
 	}
 	
 	/**
-	 * Get contents for a bucket
+	 * Get contents for a bucket. If maxKeys is NULL this method will 
+	 * loop through truncated result sets
 	 *
-	 * If maxKeys is NULL this method will loop through truncated result sets
-	 *
-	 * @param string $name Bucket name
-	 * @param string $prefix Prefix
-	 * @param string $marker Marker (last file listed)
-	 * @param string $maxKeys Max keys (maximum number of keys to return)
-	 * @param string $delimiter Delimiter
-	 * @return array | false
+	 * @param string Bucket name
+	 * @param string Prefix
+	 * @param string Marker (last file listed)
+	 * @param string Max keys (maximum number of keys to return)
+	 * @param string Delimiter
+	 * @return array
 	 */
 	public function getBucket($name, $prefix = NULL, $marker = NULL, $maxKeys = NULL, $delimiter = NULL) {
 		//argument test
@@ -270,8 +232,8 @@ class Eden_Amazon_S3 extends Eden_Class {
 			
 			$this->_setResponse('GET', $name, '/', $query);
 			
-			if(!empty($this->_meta['error']) || empty($this->_response)) {
-				break;
+			if($this->_meta['info'] != 200) { 
+				return $this->_response;
 			}
 			
 			
@@ -300,28 +262,18 @@ class Eden_Amazon_S3 extends Eden_Class {
 			}
 		} while(!$maxKeys && $nextMarker);
 		
+		
 		return $bucket;
 	}
 	
 	/**
 	 * Get a list of buckets
 	 *
-	 * @param boolean $detailed Returns detailed bucket list when true
-	 * @return array | false
+	 * @return array
 	 */
 	public function getBuckets() {
-		$this->_setResponse('GET');
 		
-		if(!empty($this->_meta['error']) || empty($this->_response)) {
-			return false;
-		}
-		
-		$buckets = array();
-		foreach ($this->_response->Buckets->Bucket as $bucket) {
-			$buckets[] = (string)$bucket->Name;
-		}
-		
-		return $buckets;
+		return $this->_setResponse(self::GET);
 	}
 	
 	/**
@@ -330,7 +282,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 * @param string $bucket Bucket name
 	 * @param string $uri Object URI
 	 * @param mixed $saveTo Filename or resource to write to
-	 * @return mixed
+	 * @return array
 	 */
 	public function getFile($bucket, $path) {
 		//argument test
@@ -338,22 +290,15 @@ class Eden_Amazon_S3 extends Eden_Class {
 			->argument(1, 'string')		//Argument 1 must be string
 			->argument(2, 'string');	//Argument 2 must be string
 			
-		$this->_setResponse('GET', $bucket, $path);
-		
-		if(!empty($this->_meta['error']) || empty($this->_response)) {
-			return false;
-		}
-		
-		return $this->_response;
+		return $this->_setResponse(self::GET, $bucket, $path);
 	}
 	
 	/**
 	 * Get object information
 	 *
-	 * @param string $bucket Bucket name
-	 * @param string $uri Object URI
-	 * @param boolean $returnInfo Return response information
-	 * @return mixed | false
+	 * @param string Bucket name
+	 * @param string Object URI
+	 * @return array
 	 */
 	public function getFileInfo($bucket, $path) {
 		//argument test
@@ -365,13 +310,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 			$path = '/'.$path;
 		}
 		
-		$this->_setResponse('HEAD', $bucket, $path);
-		
-		if(!empty($this->_meta['error'])) {
-			return false;
-		}
-		
-		return $this->_meta['headers'];
+		return $this->_setResponse(self::HEAD, $bucket, $path);
 	}
 	
 	/**
@@ -379,13 +318,13 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 *
 	 * If maxKeys is NULL this method will loop through truncated result sets
 	 *
-	 * @param string $bucket Bucket name
-	 * @param string $prefix Prefix
-	 * @param string $marker Marker (last file listed)
-	 * @param string $maxKeys Max keys (maximum number of keys to return)
-	 * @param string $delimiter Delimiter
-	 * @param boolean $prefixes Set to true to return CommonPrefixes
-	 * @return array | false
+	 * @param string Bucket name
+	 * @param string Prefix
+	 * @param string Marker (last file listed)
+	 * @param string Max keys (maximum number of keys to return)
+	 * @param string Delimiter
+	 * @param boolean Set to true to return CommonPrefixes
+	 * @return array 
 	 */
 	public function getFiles($bucket, $path = NULL, $prefix = NULL, $marker = NULL, $maxKeys = NULL, $delimiter = NULL) {
 		//argument test
@@ -439,14 +378,14 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 *
 	 * If maxKeys is NULL this method will loop through truncated result sets
 	 *
-	 * @param string $bucket Bucket name
+	 * @param string Bucket name
 	 * @param string path
-	 * @param string $prefix Prefix
-	 * @param string $marker Marker (last file listed)
-	 * @param string $maxKeys Max keys (maximum number of keys to return)
-	 * @param string $delimiter Delimiter
-	 * @param boolean $prefixes Set to true to return CommonPrefixes
-	 * @return array | false
+	 * @param string Prefix
+	 * @param string Marker (last file listed)
+	 * @param string Max keys (maximum number of keys to return)
+	 * @param string Delimiter
+	 * @param boolean Set to true to return CommonPrefixes
+	 * @return array 
 	 */
 	public function getFolders($bucket, $path = NULL, $prefix = NULL, $marker = NULL, $maxKeys = NULL, $delimiter = NULL) {
 		//argument test
@@ -533,6 +472,12 @@ class Eden_Amazon_S3 extends Eden_Class {
 		return $size;
 	}
 	
+	
+	/**
+	 * Returns the meta of the last call
+	 *
+	 * @return array
+	 */
 	public function getMeta($key = NULL) {
 		if(isset($this->_meta[$key])) {
 			return $this->_meta[$key];
@@ -544,9 +489,9 @@ class Eden_Amazon_S3 extends Eden_Class {
 	/**
 	 * Get object or bucket Access Control Policy
 	 *
-	 * @param string $bucket Bucket name
-	 * @param string $uri Object URI
-	 * @return mixed | false
+	 * @param string Bucket name
+	 * @param string Object URI
+	 * @return array
 	 */
 	public function getPermissions($bucket, $path = '/') {
 		//argument test
@@ -555,10 +500,10 @@ class Eden_Amazon_S3 extends Eden_Class {
 			->argument(2, 'string');	//Argument 2 must be string
 		
 		$query['acl'] = NULL;
-		$this->_setResponse('GET', $bucket, $path);
+		$response = $this->_setResponse('GET', $bucket, $path);
 		
-		if(!empty($this->_meta['error']) || empty($this->_response)) {
-			return false;
+		if($this->_meta['info'] != 200) { 
+			return $response;
 		}
 
 		$permission = array();
@@ -605,9 +550,9 @@ class Eden_Amazon_S3 extends Eden_Class {
 	/**
 	 * Set object or bucket Access Control Policy
 	 *
-	 * @param string $bucket Bucket name
-	 * @param string $uri Object URI
-	 * @param array $acp Access Control Policy Data (same as the data returned from getAccessControlPolicy)
+	 * @param string Bucket name
+	 * @param string Object URI
+	 * @param array Access Control Policy Data (same as the data returned from getAccessControlPolicy)
 	 * @return boolean
 	 */
 	public function setPermissions($bucket, $path = '/', array $acp = array()) {
@@ -622,8 +567,8 @@ class Eden_Amazon_S3 extends Eden_Class {
 		$list = $dom->createElement('AccessControlList');
 
 		// It seems the owner has to be passed along too
-		$owner = $dom->createElement('Owner');
-		$owner->appendChild($dom->createElement('ID', $acp['owner']['id']));
+		$owner = $dom->createElement('Owner'); 
+		$owner->appendChild($dom->createElement('ID', $acp['owner']['id'])); 
 		$owner->appendChild($dom->createElement('DisplayName', $acp['owner']['name']));
 		$policy->appendChild($owner);
 
@@ -656,13 +601,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 		$query 	= array('acl' => NULL);
 		$header = array('Content-Type' => 'application/xml');
 
-		$this->_setResponse('PUT', $bucket, $path, $query, $data, $headers);
-		
-		if(!empty($this->_meta['error']) || empty($this->_response)) {
-			return false;
-		}
-		
-		return true;
+		return $this->_setResponse('PUT', $bucket, $path, $query, $data, $headers);
 	}
 	
 	/* Protected Methods
@@ -699,16 +638,16 @@ class Eden_Amazon_S3 extends Eden_Class {
 	
 	protected function _getSignature($string) {
 		if(extension_loaded('hash')) {
-			$hash = base64_encode(hash_hmac('sha1', $string, $this->_pass, true));
+			$hash = base64_encode(hash_hmac('sha1', $string, $this->_accessSecret, true));
 		} else {
-			$pad1 = str_pad($this->_pass, 64, chr(0x00)) ^ str_repeat(chr(0x36), 64);
-			$pad2 = str_pad($this->_pass, 64, chr(0x00)) ^ str_repeat(chr(0x5c), 64);
+			$pad1 = str_pad($this->_accessSecret, 64, chr(0x00)) ^ str_repeat(chr(0x36), 64);
+			$pad2 = str_pad($this->_accessSecret, 64, chr(0x00)) ^ str_repeat(chr(0x5c), 64);
 			$pack1	= pack('H*', sha1($pad1 . $string));
 			$pack2 	= pack('H*', sha1($pad2 . $pack1));
 			$hash = base64_encode($pack2);
 		}
 		
-		return 'AWS '.$this->_user.':'.$hash;	
+		return 'AWS '.$this->_accessKey.':'.$hash;	
 	}
 
 	protected function _getUrl($host, $path, $query = NULL) {
@@ -764,11 +703,7 @@ class Eden_Amazon_S3 extends Eden_Class {
 
 	protected function _setResponse($action, $bucket = NULL, $path = '/', array $query = array(), 
 		$data = NULL, array $headers = array(), array $amazon = array()) {
-		
-		//reset meta and response
-		$this->_meta = array();
-		$this->_response = NULL;
-		
+
 		//get host - bucket1.s3.amazonaws.com
 		$host 	= $this->_getHost($bucket);
 		//get url - http://bucket1.s3.amazonaws.com/some/path
@@ -821,18 +756,18 @@ class Eden_Amazon_S3 extends Eden_Class {
 		
 		$curlHeaders[] = 'Authorization: ' . $this->_getSignature($signature);
 		
-		//setup curl
+		//setup curl 
 		$curl = Eden_Curl::i()
 			->setUserAgent('S3/php')
 			->setUrl($url)
 			->setHeaders($curlHeaders)
 			->setHeader(false)
 			->setWriteFunction(array(&$this, '_responseWriteCallback'))
-			->setHeaderFunction(array(&$this, '_responseHeaderCallback'))
-			->when($this->_ssl)
+			//->setHeaderFunction(array(&$this, '_responseHeaderCallback'))
+			//->when($this->_ssl)
 			->verifyHost(true)
-			->verifyPeer(true)
-			->endWhen();
+			->verifyPeer(true);
+			//->endWhen();
 
 		// Request types
 		switch ($action) {
@@ -840,9 +775,17 @@ class Eden_Amazon_S3 extends Eden_Class {
 				break;
 			case 'PUT': 
 			case 'POST': // POST only used for CloudFront
+			
+			//Open a file resource using the php://memory stream
+			$fh = fopen('php://memory', 'rw');
+			// Write the data to the file
+			fwrite($fh, $data);
+			// Move back to the beginning of the file
+			rewind($fh); 
+		
 				$curl->setPut(true)
-					->setInFile($data[0])
-					->setInFileSize($data[1]);
+					->setInFile($fh)
+					->setInFileSize(strlen($data));
 				break;
 			case 'HEAD':
 				$curl->setCustomRequest('HEAD')->setNobody(true);
@@ -851,48 +794,52 @@ class Eden_Amazon_S3 extends Eden_Class {
 				$curl->setCustomRequest('DELETE');
 				break;
 		}
-		
+		//get curl response
 		$response 	= $curl->getResponse();
-		$meta 		= $curl->getMeta();
 		
-		// Execute, grab errors
-		if ($response) {
-			$this->_meta['code'] = $meta['info'];
-			$this->_meta['error'] = array();
+		//if there is no errot in curl
+		if(!empty($response)) {		
+			//check if response format is in xml
+			if($this->_isXml($response)) { 
+				//if it is xml, well format in to object
+				$this->_response = simplexml_load_string($response);
+			} 
+		//else, there must be a curl error
 		} else {
-			$this->_meta['error'] = array(
-				'code' 		=> $meta['error_code'],
-				'message' 	=> $meta['error_message'],
-				'path' 		=> $path);
+			//return curl error
+			$this->_response = $curl->getMeta(); 
 		}
 		
-		// Parse body into XML
-		if(empty($this->_meta['error']) 
-			&& isset($this->_meta['headers']['type'])
-			&& $this->_meta['headers']['type'] == 'application/xml'
-			&& strlen($this->_response) > 0) {
-			
-			$this->_response = simplexml_load_string($this->_response);
-			
-			if(!in_array($this->_meta['code'], array(200, 204))
-				&& isset($this->_response->Code, $this->_response->Message)) {
-				
-				$this->_meta['error'] = array(
-					'code' 		=> $this->_response->Code,
-					'message' 	=> $this->_response->Message,
-					'path' 		=> $path);
-				
-				if(isset($this->_response->Resource)) {
-					$this->_meta['error']['path'] = $this->_response->Resource;
-				}
-				
-				$this->_response = NULL;
-			}
-		}
-		
-		return $this;
+		//save curl response to meta
+		$this->_meta 					= $curl->getMeta();
+		$this->_meta['url'] 			= $url;
+		$this->_meta['headers'] 		= $curlHeaders;
+		$this->_meta['query'] 			= $data;
+		$this->_meta['path']			= $path;
+		$this->_meta['bucket']			= $bucket;
+		$this->_meta['response'] 		= $this->_response;
+		//print_r($this->_meta);
+		return $this->_response;
 	}
-
+	
+	protected function _isXml($xml) {
+	
+		if(is_array($xml) || is_null($xml)) {
+			return false;
+		}
+		
+		libxml_use_internal_errors( true );
+		$doc = new DOMDocument('1.0', 'utf-8');
+		$doc->loadXML($xml);
+		$errors = libxml_get_errors();
+		//if it is a valid xml format
+		if(empty($errors)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	/* Private Methods
 	-------------------------------*/
 }
