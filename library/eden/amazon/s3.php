@@ -100,20 +100,26 @@ class Eden_Amazon_S3 extends Eden_Class {
 	 * @param string Bucket name
 	 * @param string Object URI
 	 * @param string 
-	 * @param false 
+	 * @param string 
+	 * @param array 
 	 * @return array
 	 */
-	public function addFile($bucket, $path, $data, $file = false) {
+	public function addFile($bucket, $path, $data, $permission = self::ACL_PRIVATE, $metaData = array()) {
 		//argument test
 		Eden_Amazon_Error::i()
 			->argument(1, 'string')		//Argument 1 must be string
 			->argument(2, 'string')		//Argument 2 must be string
 			->argument(3, 'string')		//Argument 3 must be string
-			->argument(4, 'bool');		//Argument 4 must be boolean
+			->argument(4, 'string')		//Argument 4 must be string
+			->argument(5, 'array');		//Argument 5 must be array
 			
 		$headers = $amazon = array();
-		$amazon['x-amz-acl'] 		= self::ACL_PRIVATE;
-		$headers['Content-Type']	= mime_content_type($path);
+		$amazon['x-amz-acl'] = $permission;
+		
+		
+		foreach($metaData as $key => $value) {
+        	$headers[$key] = $value;
+    	}
 		
 		if(strpos($path, '/') !== 0) {
 			$path = '/'.$path;
