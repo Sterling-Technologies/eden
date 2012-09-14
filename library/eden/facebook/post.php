@@ -112,12 +112,26 @@ class Eden_Facebook_Post extends Eden_Class {
 	 * @return this
 	 */
 	public function setLink($url) {
-		//Argument 1 must be a string
+		//Argument 1 must be an url
 		Eden_Facebook_Error::i()->argument(1, 'url');
 		
 		$this->_post['link'] = $url;
 		return $this;
 	}
+
+    /**
+     * sets the name to your post
+     *
+     * @param string
+     * @return this
+     */
+    public function setName($name) {
+        //Argument 1 must be a string
+        Eden_Facebook_Error::i()->argument(1, 'name');
+
+        $this->_post['name'] = $name;
+        return $this;
+    }
 	
 	/**
 	 * sets the picture to your post
