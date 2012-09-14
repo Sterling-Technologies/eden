@@ -127,7 +127,7 @@ class Eden_Facebook_Post extends Eden_Class {
      */
     public function setName($name) {
         //Argument 1 must be a string
-        Eden_Facebook_Error::i()->argument(1, 'name');
+        Eden_Facebook_Error::i()->argument(1, 'string');
 
         $this->_post['name'] = $name;
         return $this;
