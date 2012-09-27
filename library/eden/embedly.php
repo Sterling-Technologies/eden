@@ -38,7 +38,7 @@ class Eden_Embedly extends Eden_Class {
 	 *
 	 * @param *string 
 	 * @param *string 
-	 * @return Eden_Instagram_Auth
+	 * @return Eden_Embedly_Oembed
 	 */
 	public function oembed($key) {
 		//Argument test

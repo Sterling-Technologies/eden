@@ -11,7 +11,7 @@
  * Instagram auth
  *
  * @package    Eden
- * @category   Instagram
+ * @category   Embedly / oEmbed
  * @author     Nikko Bautista (nikko@nikkobautista.com)
  */
 class Eden_Embedly_Oembed extends Eden_Class {
