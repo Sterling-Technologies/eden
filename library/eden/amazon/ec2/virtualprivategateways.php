@@ -14,7 +14,7 @@
  * @category   amazon
  * @author     Christian Symon M. Buenavista sbuenavista@openovate.com
  */ 
-class Eden_Amazon_Ec2_VirtualPrivateGateway extends Eden_Amazon_Ec2_Base {
+class Eden_Amazon_Ec2_VirtualPrivateGateways extends Eden_Amazon_Ec2_Base {
 	/* Constants
 	-------------------------------*/
 	/* Public Properties
