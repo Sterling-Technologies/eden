@@ -60,7 +60,7 @@ class Eden_Amazon_Ec2_Subnets extends Eden_Amazon_Ec2_Base {
 	 */
 	public function deleteSubnet($subnetId) {	
 		//argument 1 must be a string
-		Eden_Amazon_Error::i()->argument(1, 'string')	
+		Eden_Amazon_Error::i()->argument(1, 'string');	
 		
 		$this->_query['Action'] 	= 'DeleteSubnet';
 		$this->_query['SubnetId'] 	= $subnetId;
@@ -90,7 +90,7 @@ class Eden_Amazon_Ec2_Subnets extends Eden_Amazon_Ec2_Base {
 	 */
 	public function setTimeZone($timeZone) {	
 		//argument 1 must be a string
-		Eden_Amazon_Error::i()->argument(1, 'string')		
+		Eden_Amazon_Error::i()->argument(1, 'string');		
 
 		$this->_query['AvailabilityZone'] 	= $timeZone;	
 		
