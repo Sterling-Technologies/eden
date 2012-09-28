@@ -77,7 +77,7 @@ class Eden_Amazon extends Eden_Class {
 	 */
 	public function ec2($accessKey, $accessSecret) {
 		//argument test
-		Eden_Asiapay_Error::i()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string
 		
@@ -93,7 +93,7 @@ class Eden_Amazon extends Eden_Class {
 	 */
 	public function ecs($privateKey, $publicKey) {
 		//argument test
-		Eden_Asiapay_Error::i()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string
 		
@@ -109,7 +109,7 @@ class Eden_Amazon extends Eden_Class {
 	 */
 	public function s3($accessKey, $accessSecret) {
 		//argument test
-		Eden_Asiapay_Error::i()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string
 		
@@ -125,7 +125,7 @@ class Eden_Amazon extends Eden_Class {
 	 */
 	public function ses($privateKey, $publicKey) {
 		//argument test
-		Eden_Asiapay_Error::i()
+		Eden_Amazon_Error::i()
 			->argument(1, 'string')		//Argument 1 must be a string
 			->argument(2, 'string');	//Argument 2 must be a string
 		
