@@ -39,6 +39,7 @@ require_once dirname(__FILE__).'/amazon/ec2/windows.php';
 require_once dirname(__FILE__).'/amazon/ecs.php';
 require_once dirname(__FILE__).'/amazon/s3.php';
 require_once dirname(__FILE__).'/amazon/ses.php';
+require_once dirname(__FILE__).'/amazon/sns.php'; 
 
 /**
  * Amazon API factory. This is a factory class with 
@@ -130,6 +131,22 @@ class Eden_Amazon extends Eden_Class {
 			->argument(2, 'string');	//Argument 2 must be a string
 		
 		return Eden_Amazon_Ses::i($privateKey, $publicKey);
+	}
+	
+	/**
+	 * Returns Amazon sns
+	 *
+	 * @param *string
+	 * @param *string
+	 * @return Eden_Amazon_Sns
+	 */
+	public function sns($accessKey, $accessSecret) {
+		//argument test
+		Eden_Amazon_Error::i()
+			->argument(1, 'string')		//Argument 1 must be a string
+			->argument(2, 'string');	//Argument 2 must be a string
+		
+		return Eden_Amazon_Sns::i($accessKey, $accessSecret);
 	}
 	
 	/* Protected Methods
