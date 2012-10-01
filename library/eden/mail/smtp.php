@@ -707,7 +707,7 @@ class Eden_Mail_Smtp extends Eden_Class {
 		return true;	
 	}
 	
-	private function _quotedPrintableEncode($input, $line_max = 75) { 
+	private function _quotedPrintableEncode($input, $line_max = 250) { 
 		$hex = array('0','1','2','3','4','5','6','7', 
 							  '8','9','A','B','C','D','E','F'); 
 		$lines = preg_split("/(?:\r\n|\r|\n)/", $input); 
