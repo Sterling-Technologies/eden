@@ -14,7 +14,7 @@
  * @category   Instagram
  * @author     Nikko Bautista (nikko@nikkobautista.com)
  */
-class Eden_Instagram_Subscriptions extends Eden_Class {
+class Eden_Instagram_Subscriptions extends Eden_Instagram {
 	/* Constants
 	-------------------------------*/
 	const API_URL			= 'https://api.instagram.com/v1/subscriptions';
@@ -55,29 +55,20 @@ class Eden_Instagram_Subscriptions extends Eden_Class {
 			->argument(2, 'string')
 			->argument(3, 'string');
 
-		$url 		= self::API_URL;
-		$verify_token = sha1($this->_client_id.$object.$callback_url);
-		$post = array(
+		$results = $this->_post(self::API_URL, array(
 			'client_id' => $this->_client_id,
 			'client_secret' => $this->_client_secret,
 			'object' => $object,
 			'aspect' => $aspect,
-			'verify_token' => $verify_token,
+			'verify_token' => self::_getVerifyToken($this->_client_id, $object, $callback_url),
 			'callback_url' => $callback_url
-		);
+		));
+		return $results;
+	}
 
-		//send it off
-		$results = Eden_Curl::i()
-			->setUrl($url)
-			->setConnectTimeout(10)
-			->setFollowLocation(true)
-			->setTimeout(60)
-			->verifyPeer(false)
-			->setPost(true)
-			->setPostFields(http_build_query($post))
-			->getResponse();
-		
-		return $verify_token;
+	public static function _getVerifyToken($client_id, $object, $callback_url, $salt = '')
+	{
+		return sha1($client_id.$object.$callback_url.$salt);
 	}
 
 	/* Protected Methods
