@@ -151,7 +151,7 @@ class Eden_Instagram extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Instagram_Locations
 	 */
-	public function tags($access_token) {
+	public function locations($access_token) {
 		//Argument test
 		Eden_Instagram_Error::i()
 			->argument(1, 'string');		//Argument 1 must be a string
@@ -165,7 +165,7 @@ class Eden_Instagram extends Eden_Class {
 	 * @param *string 
 	 * @return Eden_Instagram_Geographies
 	 */
-	public function tags($client_id) {
+	public function geographies($client_id) {
 		//Argument test
 		Eden_Instagram_Error::i()
 			->argument(1, 'string');		//Argument 1 must be a string
