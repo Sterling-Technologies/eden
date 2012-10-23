@@ -17,7 +17,7 @@
 class Eden_Twitter_Search extends Eden_Twitter_Base {
 	/* Constants
 	-------------------------------*/
-	const URL_SEARCH_TWEETS	= 'https://api.twitter.com/1.1/search/tweets.json'; 
+	const URL_SEARCH	= 'https://api.twitter.com/1.1/search/tweets.json'; 
 
 	/* Public Properties
 	-------------------------------*/
