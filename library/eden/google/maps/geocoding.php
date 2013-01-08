@@ -131,7 +131,11 @@ class Eden_Google_Maps_Geocoding extends Eden_Google_Base {
 		if($sensor){
 			$this->setSensor($sensor);
 		}
-			
+		
+		if(!isset($this->_query['sensor'])){
+			throw Eden_Google_Error::i("Cannot make google maps api request without sensor parameter");
+		}
+		
 		return $this->_getResponse(self::URL_MAP_GEOCODING, $this->_query);
 	}
 	/* Protected Methods
