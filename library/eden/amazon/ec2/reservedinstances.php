@@ -40,7 +40,7 @@ class Eden_Amazon_Ec2_ReservedInstances extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DescribeReservedInstances';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -52,7 +52,7 @@ class Eden_Amazon_Ec2_ReservedInstances extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DescribeReservedInstancesOfferings';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -68,7 +68,7 @@ class Eden_Amazon_Ec2_ReservedInstances extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action'] 						= 'PurchaseReservedInstancesOffering';
 		$this->_query['ReservedInstancesOfferingId'] 	= $reservedInstancesOfferingId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**

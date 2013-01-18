@@ -51,7 +51,7 @@ class Eden_Amazon_Ec2_NetworkInterface extends Eden_Amazon_Ec2_Base {
 		$this->_query['InstanceId'] 		= $instanceId;
 		$this->_query['DeviceIndex'] 		= $deviceIndex;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -67,7 +67,7 @@ class Eden_Amazon_Ec2_NetworkInterface extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action']			= 'DetachNetworkInterface';
 		$this->_query['AttachmentId'] 	= $attachmentId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -83,7 +83,7 @@ class Eden_Amazon_Ec2_NetworkInterface extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action']		= 'CreateNetworkInterface';
 		$this->_query['SubnetId'] 	= $subnetId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -99,7 +99,7 @@ class Eden_Amazon_Ec2_NetworkInterface extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action']				= 'DeleteNetworkInterface';
 		$this->_query['NetworkInterfaceId'] = $networkInterfaceId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -115,7 +115,7 @@ class Eden_Amazon_Ec2_NetworkInterface extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action']				= 'DescribeNetworkInterfaces';
 		$this->_query['NetworkInterfaceId'] = $networkInterfaceId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -136,7 +136,7 @@ class Eden_Amazon_Ec2_NetworkInterface extends Eden_Amazon_Ec2_Base {
 		$this->_query['NetworkInterfaceId'] = $networkInterfaceId;
 		$this->_query['Attribute'] 			= $attribute;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -157,7 +157,7 @@ class Eden_Amazon_Ec2_NetworkInterface extends Eden_Amazon_Ec2_Base {
 		$this->_query['NetworkInterfaceId'] = $networkInterfaceId;
 		$this->_query['Attribute'] 			= $attribute;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -227,7 +227,7 @@ class Eden_Amazon_Ec2_NetworkInterface extends Eden_Amazon_Ec2_Base {
 	/**
 	 * The number of secondary private IP addresses to assign to a network interface. 
 	 * When you specify a number of secondary IP addresses, AWS automatically assigns 
-	 * these IP addresses within the subnet’s range.
+	 * these IP addresses within the subnetï¿½s range.
 	 *
 	 * @param integer
 	 * @return array
