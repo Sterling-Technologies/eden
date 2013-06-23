@@ -494,7 +494,7 @@ class Eden_Foursquare_Venue extends Eden_Foursquare_Base {
 		
 		$this->_query['group'] = $group;		
 		
-		return $this->_getResponse(sprintf(self::URL_VENUE_PHOTO, $venueId), $this->_query);
+		return $this->_getResponse(sprintf(self::URL_VENUE_PHOTOS, $venueId), $this->_query);
 	}
 	
 	/**
