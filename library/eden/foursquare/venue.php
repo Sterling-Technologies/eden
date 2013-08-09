@@ -353,6 +353,18 @@ class Eden_Foursquare_Venue extends Eden_Foursquare_Base {
 	}
 	
 	/**
+	 * Returns details of venue.
+	 *
+	 * @param string The venue id for which venue are being requested.
+	 * @return array
+	 */
+	public function getVenue($venueId) {
+		//argument test
+		Eden_Foursquare_Error::i()->argument(1, 'string');
+		return $this->_getResponse(sprintf(self::URL_VENUE, $venueId));
+	}
+	
+	/**
 	 * Returns a hierarchical list of categories applied to venues.
 	 * 
 	 * @return array
