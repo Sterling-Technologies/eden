@@ -379,17 +379,22 @@ class Eden_Foursquare_Venue extends Eden_Foursquare_Base {
 	 * @param string|null Required unless longtitude and latitude is provided
 	 * @param string|integer|float|null Required unless near is provided
 	 * @param string|integer|float|null Required unless near is provided
+	 * @param array|null List of categories id
 	 * @return array
 	 */
-	public function search($near = NULL, $latitude = NULL, $longtitude = NULL) {
+	public function search($near = NULL, $latitude = NULL, $longtitude = NULL, $categories = NULL) {
 		//argument test 
 		Eden_Foursquare_Error::i()
 			->argument(1, 'string', 'null')						//argument 1 must be a string or null
 			->argument(2, 'string', 'int', 'float', 'null')		//argument 2 must be a string, integer, float or null
-			->argument(3, 'string', 'int', 'float', 'null');	//argument 3 must be a string, integer, float or null
+			->argument(3, 'string', 'int', 'float', 'null')		//argument 3 must be a string, integer, float or null
+			->argument(4, 'array', 'null');						//argument 3 must be an array or null
 		
 		$this->_query['near'] 	= $near;	
 		$this->_query['ll']		= $latitude.','.$longtitude;
+		if(is_array($categories)) {
+			$this->_query['categoryId'] = implode(',', $categories);
+		}
 		
 		return $this->_getResponse(self::URL_VENUE_SEARCH, $this->_query);
 	}
