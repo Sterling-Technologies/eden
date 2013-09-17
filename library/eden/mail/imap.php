@@ -356,7 +356,7 @@ class Eden_Mail_Imap extends Eden_Class {
 	 * @return this
 	 */
 	public function remove($uid) {
-		Eden_Mail_Error::i()->argument(1, 'int', 'string');
+		Eden_Mail_Error::i()->argument(1, 'int', 'string', 'array');
 		
 		if(!$this->_socket) {
 			$this->connect();
