@@ -47,7 +47,7 @@ class Eden_Amazon_Ec2_KeyPairs extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action']		= 'CreateKeyPair';
 		$this->_query['KeyName']	= $keyName;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -64,7 +64,7 @@ class Eden_Amazon_Ec2_KeyPairs extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action']		= 'DeleteKeyPair';
 		$this->_query['KeyName']	= $keyName;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -76,7 +76,7 @@ class Eden_Amazon_Ec2_KeyPairs extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action']	= 'DescribeKeyPairs';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -98,7 +98,7 @@ class Eden_Amazon_Ec2_KeyPairs extends Eden_Amazon_Ec2_Base {
 		$this->_query['KeyName']			= $keyName;
 		$this->_query['PublicKeyMaterial']	= base64_encode($publicKeyMaterial);
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**

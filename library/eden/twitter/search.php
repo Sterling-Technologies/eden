@@ -170,18 +170,18 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	 * @param int 
 	 * @return this
 	 */
-	public function setRpp($rpp) {
+	public function setCount($count) {
 		//Argument 1 must be a string
-		Eden_Twitter_Error::i()->argument(1, 'string');
-		
+		Eden_Twitter_Error::i()->argument(1, 'int');
+
 		//if it is greater than 100
-		if($rpp > 100) {
+		if($count > 100) {
 			//set it to 100
-			$rpp = 100;
+			$count = 100;
 		}
-		
-		$this->_query['rpp'] = $rpp;
-		
+
+		$this->_query['count'] = $count;
+
 		return $this;
 	}
 	

@@ -48,7 +48,7 @@ class Eden_Amazon_Ec2_Instances extends Eden_Amazon_Ec2_Base {
 		$this->_query['InstanceId'] = $instanceId;
 		$this->_query['Attribute'] 	= $attribute;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -60,7 +60,7 @@ class Eden_Amazon_Ec2_Instances extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DescribeInstances';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -72,7 +72,7 @@ class Eden_Amazon_Ec2_Instances extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DescribeInstanceStatus';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -87,7 +87,7 @@ class Eden_Amazon_Ec2_Instances extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'RebootInstances';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -106,7 +106,7 @@ class Eden_Amazon_Ec2_Instances extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action'] = 'ReportInstanceStatus';
 		$this->_query['Status'] = $status;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -128,7 +128,7 @@ class Eden_Amazon_Ec2_Instances extends Eden_Amazon_Ec2_Base {
 		$this->_query['InstanceId'] = $instanceId;
 		$this->_query['Attribute'] 	= $attribute;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -153,7 +153,7 @@ class Eden_Amazon_Ec2_Instances extends Eden_Amazon_Ec2_Base {
 		$this->_query['MinCount'] 	= $minCount;
 		$this->_query['MaxCount'] 	= $maxCount;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -165,9 +165,44 @@ class Eden_Amazon_Ec2_Instances extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'StartInstances';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
+	/**
+	 * Stops an Amazon EBS-backed AMI that you've previously started.
+	 *
+	 * @return array
+	 */
+	public function stopInstances() {
+	
+		$this->_query['Action'] = 'StopInstances';
+	
+		return $this->_getResponse(self::getRegion(), $this->_query);
+	}
+	
+	/**
+	 * Terminates an Amazon EBS-backed AMI
+	 *
+	 * @return array
+	 */
+	public function terminateInstances() {
+	
+		$this->_query['Action'] = 'TerminateInstances';
+	
+		return $this->_getResponse(self::getRegion(), $this->_query);
+	}
+	
+	public function createTags($key, $value){
+		Eden_Amazon_Error::i()->argument(1, 'string');
+		Eden_Amazon_Error::i()->argument(2, 'string');
+		$this->_query['ResourceId_'] = $this->_query['InstanceId_'];
+		unset($this->_query['InstanceId_']);
+		$this->_query['Action'] = 'CreateTags';
+		$this->_query['Tag.1.Key'] = $key;
+		$this->_query['Tag.1.Value'] = $value;
+		
+		return $this->_getResponse(self::getRegion(), $this->_query);
+	}
 	/**
 	 * One or more instance IDs.
 	 *

@@ -54,7 +54,7 @@ class Eden_Amazon_Ec2_Devpay extends Eden_Amazon_Ec2_Base {
 			'ProductCode' 	=> $productCode,
 			'InstanceId'	=> $instanceId);
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $query);		
+		return $this->_getResponse(self::getRegion(), $query);		
 	}
 	
 	/* Protected Methods

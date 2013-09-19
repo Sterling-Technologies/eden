@@ -50,7 +50,7 @@ class Eden_Amazon_Ec2_Dhcp extends Eden_Amazon_Ec2_Base {
 		$this->_query['DhcpOptionsId']	= $dhcpOptionsId;
 		$this->_query['VpcId']			= $vpcId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	
 	}
 	
@@ -66,7 +66,7 @@ class Eden_Amazon_Ec2_Dhcp extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'CreateDhcpOptions';
 
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	
 	}
 	
@@ -86,7 +86,7 @@ class Eden_Amazon_Ec2_Dhcp extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action'] 		= 'DeleteDhcpOptions';
 		$this->_query['DhcpOptionsId']	= $dhcpOptionsId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**

@@ -33,12 +33,12 @@ require_once dirname(__FILE__).'/amazon/ec2/tags.php';
 require_once dirname(__FILE__).'/amazon/ec2/virtualprivategateways.php';
 require_once dirname(__FILE__).'/amazon/ec2/vmexport.php';
 require_once dirname(__FILE__).'/amazon/ec2/vmimport.php';
-require_once dirname(__FILE__).'/amazon/ec2/vnpconnections.php';
+require_once dirname(__FILE__).'/amazon/ec2/vpnconnections.php';
 require_once dirname(__FILE__).'/amazon/ec2/vpc.php';
 require_once dirname(__FILE__).'/amazon/ec2/windows.php';
 require_once dirname(__FILE__).'/amazon/ecs.php';
 require_once dirname(__FILE__).'/amazon/s3.php';
-require_once dirname(__FILE__).'/amazon/ses.php';
+#require_once dirname(__FILE__).'/amazon/ses.php';
 require_once dirname(__FILE__).'/amazon/sns.php'; 
 
 /**

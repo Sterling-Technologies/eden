@@ -37,7 +37,7 @@ class Eden_Google_Maps_Geocoding extends Eden_Google_Base {
 	 * The bounding box of the viewport within which to bias geocode results more prominently.
 	 *
 	 * @param string
-	 * @return this
+	 * @return Eden_Google_Maps_Geocoding
 	 */
 	public function setBounds($bounds) {
 		//argument 1 must be a string 	
@@ -48,10 +48,26 @@ class Eden_Google_Maps_Geocoding extends Eden_Google_Base {
 	}
 	
 	/**
+	 * Specify the Latitude & Longitude of the location to geocode
+	 * 
+	 * @param float Latitude
+	 * @param float Longitude
+	 * @return Eden_Google_Maps_Geocoding
+	 */
+	public function setLatLng($lat,$lng){
+		// arguments 1 & 2 must be floats
+		Eden_Google_Error::i()
+			->argument(1, 'float')
+			->argument(2, 'float');
+		$this->_query['latlng'] = "{$lat},{$lng}";
+		return $this;
+	}
+	
+	/**
 	 * The language in which to return results. 
 	 *
 	 * @param string
-	 * @return this
+	 * @return Eden_Google_Maps_Geocoding
 	 */
 	public function setLanguage($language) {
 		//argument 1 must be a string 	
@@ -65,7 +81,7 @@ class Eden_Google_Maps_Geocoding extends Eden_Google_Base {
 	 * The region code
 	 *
 	 * @param string
-	 * @return this
+	 * @return Eden_Google_Maps_Geocoding
 	 */
 	public function setRegion($region) {
 		//argument 1 must be a string 	
@@ -76,21 +92,50 @@ class Eden_Google_Maps_Geocoding extends Eden_Google_Base {
 	}
 	
 	/**
+	 * Set the address to geocode
+	 * 
+	 * @param string $address
+	 * @return Eden_Google_Maps_Geocoding
+	 */
+	public function setAddress($address){
+		// argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_query['address'] = $address;
+		return $this;
+	}
+	
+	/**
+	 * Set the state of the sensor flag
+	 * 
+	 * @param string $sensor 'true'|'false'
+	 * @return Eden_Google_Maps_Geocoding
+	 */
+	public function setSensor($sensor = 'false'){
+		// argument 1 must be a string
+		Eden_Google_Error::i()->argument(1, 'string');
+		$this->_query['sensor']	= $sensor;
+		return $this;
+	}
+	
+	/**
 	 * Returns geocode information
 	 *
 	 * @param string
 	 * @param string
 	 * @return array
 	 */
-	public function getResponse($address, $sensor = 'false') {
-		//argument test
-		Eden_Google_Error::i()
-			->argument(1, 'string')		//argument 1 must be a string
-			->argument(2, 'string');	//argument 2 must be a string
-			
-		$this->_query['address']	= $address;		
-		$this->_query['sensor']		= $sensor;
-			
+	public function getResponse($address = null, $sensor = null) {
+		if($address){
+			$this->setAddress($address);
+		}
+		if($sensor){
+			$this->setSensor($sensor);
+		}
+		
+		if(!isset($this->_query['sensor'])){
+			throw Eden_Google_Error::i("Cannot make google maps api request without sensor parameter");
+		}
+		
 		return $this->_getResponse(self::URL_MAP_GEOCODING, $this->_query);
 	}
 	/* Protected Methods

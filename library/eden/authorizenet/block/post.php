@@ -45,17 +45,17 @@ class Eden_Authorizenet_Block_Post extends Eden_Block {
 	protected $_state			= NULL;
 	protected $_zip				= NULL;
 	protected $_country			= NULL;
-	protected $_cardNumberLabel	= self::CARD_NUMBER,
-	protected $_expirationLabel	= self::EXPIRATION,
-	protected $_cvvLabel		= self::CVV,
-	protected $_firstNameLabel	= self::FIRST_NAME,
-	protected $_lastNameLabel	= self::LAST_NAME,
-	protected $_addressLabel	= self::ADDRESS,
-	protected $_cityLabel		= self::CITY,
-	protected $_stateLabel		= self::STATE,
-	protected $_zipLabel		= self::ZIP,
-	protected $_countryLabel	= self::COUNTRY,
-	protected $_submitButton	= self::SUBMIT,
+	protected $_cardNumberLabel	= self::CARD_NUMBER;
+	protected $_expirationLabel	= self::EXPIRATION;
+	protected $_cvvLabel		= self::CVV;,
+	protected $_firstNameLabel	= self::FIRST_NAME;
+	protected $_lastNameLabel	= self::LAST_NAME;
+	protected $_addressLabel	= self::ADDRESS;
+	protected $_cityLabel		= self::CITY;
+	protected $_stateLabel		= self::STATE;
+	protected $_zipLabel		= self::ZIP;
+	protected $_countryLabel	= self::COUNTRY;
+	protected $_submitButton	= self::SUBMIT;
 	
 	/* Private Properties
 	-------------------------------*/

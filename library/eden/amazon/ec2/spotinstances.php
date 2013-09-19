@@ -43,7 +43,7 @@ class Eden_Amazon_Ec2_SpotInstances extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'CancelSpotInstanceRequests';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -60,7 +60,7 @@ class Eden_Amazon_Ec2_SpotInstances extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action'] = 'CreateSpotDatafeedSubscription';
 		$this->_query['Bucket'] = $bucket;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -72,7 +72,7 @@ class Eden_Amazon_Ec2_SpotInstances extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DeleteSpotDatafeedSubscription';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -87,7 +87,7 @@ class Eden_Amazon_Ec2_SpotInstances extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DescribeSpotInstanceRequests';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -102,7 +102,7 @@ class Eden_Amazon_Ec2_SpotInstances extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DescribeSpotPriceHistory';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
