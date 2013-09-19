@@ -44,7 +44,7 @@ class Eden_Amazon_Ec2_NetworkAcl extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action'] = 'CreateNetworkAcl';
 		$this->_query['VpcId'] 	= $vpcId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -73,7 +73,7 @@ class Eden_Amazon_Ec2_NetworkAcl extends Eden_Amazon_Ec2_Base {
 		$this->_query['RuleAction'] 	= $ruleAction;
 		$this->_query['CidrBlock'] 		= $cidrBlock;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -90,7 +90,7 @@ class Eden_Amazon_Ec2_NetworkAcl extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action']		 	= 'DeleteNetworkAcl';
 		$this->_query['NetworkAclId'] 	= $networkAclId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -110,7 +110,7 @@ class Eden_Amazon_Ec2_NetworkAcl extends Eden_Amazon_Ec2_Base {
 		$this->_query['NetworkAclId'] 	= $networkAclId;
 		$this->_query['RuleNumber'] 	= $ruleNumber;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	} 	
 	
 	/**
@@ -122,7 +122,7 @@ class Eden_Amazon_Ec2_NetworkAcl extends Eden_Amazon_Ec2_Base {
 	
 		$this->_query['Action'] = 'DescribeNetworkAcls';
 	
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -143,7 +143,7 @@ class Eden_Amazon_Ec2_NetworkAcl extends Eden_Amazon_Ec2_Base {
 		$this->_query['NetworkAclId'] 	= $networkAclId;
 		$this->_query['AssociationId'] 	= $associationId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	} 
 	
 	/**
@@ -172,7 +172,7 @@ class Eden_Amazon_Ec2_NetworkAcl extends Eden_Amazon_Ec2_Base {
 		$this->_query['RuleAction'] 	= $ruleAction;
 		$this->_query['CidrBlock'] 		= $cidrBlock;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -188,7 +188,7 @@ class Eden_Amazon_Ec2_NetworkAcl extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Egress'] = $egress;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -204,7 +204,7 @@ class Eden_Amazon_Ec2_NetworkAcl extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Icmp.Code'] = $code;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -219,7 +219,7 @@ class Eden_Amazon_Ec2_NetworkAcl extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Icmp.Type'] = $code;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -235,7 +235,7 @@ class Eden_Amazon_Ec2_NetworkAcl extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['PortRange.From'] = $firstPort;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -251,7 +251,7 @@ class Eden_Amazon_Ec2_NetworkAcl extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['PortRange.To'] = $lastPort;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 
 	/**

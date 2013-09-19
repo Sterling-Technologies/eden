@@ -49,7 +49,7 @@ class Eden_Amazon_Ec2_RouteTables extends Eden_Amazon_Ec2_Base {
 		$this->_query['RouteTableId'] 	= $routeTableId;
 		$this->_query['SubnetId'] 		= $subnetId;	
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -70,7 +70,7 @@ class Eden_Amazon_Ec2_RouteTables extends Eden_Amazon_Ec2_Base {
 		$this->_query['RouteTableId'] 			= $routeTableId;
 		$this->_query['DestinationCidrBlock'] 	= $destinationCidrBlock;	
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -87,7 +87,7 @@ class Eden_Amazon_Ec2_RouteTables extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action']	= 'CreateRouteTable';
 		$this->_query['VpcId'] 	= $vpcId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -107,7 +107,7 @@ class Eden_Amazon_Ec2_RouteTables extends Eden_Amazon_Ec2_Base {
 		$this->_query['RouteTableId'] 			= $routeTableId;
 		$this->_query['DestinationCidrBlock'] 	= $destinationCidrBlock;	
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -124,7 +124,7 @@ class Eden_Amazon_Ec2_RouteTables extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action']			= 'DeleteRouteTable';
 		$this->_query['RouteTableId'] 	= $routeTableId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -136,7 +136,7 @@ class Eden_Amazon_Ec2_RouteTables extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action']	= 'DescribeRouteTables';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -153,7 +153,7 @@ class Eden_Amazon_Ec2_RouteTables extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action']			= 'DisassociateRouteTable';
 		$this->_query['AssociationId'] 	= $associationId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	
@@ -176,7 +176,7 @@ class Eden_Amazon_Ec2_RouteTables extends Eden_Amazon_Ec2_Base {
 		$this->_query['RouteTableId'] 			= $routeTableId;
 		$this->_query['DestinationCidrBlock'] 	= $destinationCidrBlock;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -197,7 +197,7 @@ class Eden_Amazon_Ec2_RouteTables extends Eden_Amazon_Ec2_Base {
 		$this->_query['RouteTableId'] 	= $routeTableId;
 		$this->_query['AssociationId'] 	= $associationId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**

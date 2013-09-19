@@ -48,7 +48,7 @@ class Eden_Amazon_Ec2_VirtualPrivateGateways extends Eden_Amazon_Ec2_Base {
 		$this->_query['VpnGatewayId'] 	= $vpnGatewayId;
 		$this->_query['VpcId'] 			= $vpcId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -65,7 +65,7 @@ class Eden_Amazon_Ec2_VirtualPrivateGateways extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action'] = 'CreateVpnGateway';
 		$this->_query['Type'] 	= $type;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -85,7 +85,7 @@ class Eden_Amazon_Ec2_VirtualPrivateGateways extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action'] = 'DeleteVpnGateway';
 		$this->_query['VpnGatewayId'] 	= $vpnGatewayId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -97,7 +97,7 @@ class Eden_Amazon_Ec2_VirtualPrivateGateways extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DescribeVpnGateways';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -117,7 +117,7 @@ class Eden_Amazon_Ec2_VirtualPrivateGateways extends Eden_Amazon_Ec2_Base {
 		$this->_query['VpnGatewayId'] 	= $vpnGatewayId;
 		$this->_query['VpcId'] 			= $vpcId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**

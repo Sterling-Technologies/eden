@@ -49,7 +49,7 @@ class Eden_Amazon_Ec2_PlacementGroups extends Eden_Amazon_Ec2_Base {
 		$this->_query['GroupName']	= $groupName;
 		$this->_query['Strategy'] 	= $strategy;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -66,7 +66,7 @@ class Eden_Amazon_Ec2_PlacementGroups extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action'] 	= 'DeletePlacementGroup';
 		$this->_query['GroupName']	= $groupName;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -78,7 +78,7 @@ class Eden_Amazon_Ec2_PlacementGroups extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DescribePlacementGroups';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**

@@ -1,4 +1,3 @@
-
 <?php //-->
 /*
  * This file is part of the Eden package.
@@ -49,7 +48,7 @@ class Eden_Amazon_Ec2_Ami extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action'] = 'RegisterImage';
 		$this->_query['Name']	= $name;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	
 	}
 	
@@ -72,7 +71,7 @@ class Eden_Amazon_Ec2_Ami extends Eden_Amazon_Ec2_Base {
 		$this->_query['Name']		= $imageName;
 		$this->_query['InstanceId'] = $instanceId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);		
+		return $this->_getResponse(self::getRegion(), $this->_query);		
 	}
 	
 	/**
@@ -88,7 +87,7 @@ class Eden_Amazon_Ec2_Ami extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action']		= 'DeregisterImage';
 		$this->_query['ImageId'] 	= $ImageId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);		
+		return $this->_getResponse(self::getRegion(), $this->_query);		
 	}
 	
 	/**
@@ -118,7 +117,7 @@ class Eden_Amazon_Ec2_Ami extends Eden_Amazon_Ec2_Base {
 		$this->_query['ImageId']	= $imageId;
 		$this->_query['Attribute']	= $attribute;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);		
+		return $this->_getResponse(self::getRegion(), $this->_query);		
 	}
 	
 	/**
@@ -133,7 +132,7 @@ class Eden_Amazon_Ec2_Ami extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DescribeImages';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);		
+		return $this->_getResponse(self::getRegion(), $this->_query);		
 	}
 	
 	/**
@@ -149,7 +148,7 @@ class Eden_Amazon_Ec2_Ami extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action']		= 'ModifyImageAttribute';
 		$this->_query['ImageId'] 	= $imageId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);		
+		return $this->_getResponse(self::getRegion(), $this->_query);		
 	}
 	
 	/**

@@ -46,7 +46,7 @@ class Eden_Amazon_Ec2_VmExport extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action'] 		= 'CancelExportTask';
 		$this->_query['ExportTaskId'] 	= $exportTaskId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -70,7 +70,7 @@ class Eden_Amazon_Ec2_VmExport extends Eden_Amazon_Ec2_Base {
 		$this->_query['TargetEnvironment']		= $targetEnvironment;
 		$this->_query['ExportToS3.S3Bucket'] 	= $s3Bucket;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -83,7 +83,7 @@ class Eden_Amazon_Ec2_VmExport extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DescribeExportTasks';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -134,7 +134,7 @@ class Eden_Amazon_Ec2_VmExport extends Eden_Amazon_Ec2_Base {
 	
 	/**
 	 * The image is written to a single object in the Amazon S3 bucket at the 
-	 * S3 key s3prefix + exportTaskId + ‘.’ +diskImageFormat.
+	 * S3 key s3prefix + exportTaskId + ï¿½.ï¿½ +diskImageFormat.
 	 *
 	 * @param string
 	 * @return array

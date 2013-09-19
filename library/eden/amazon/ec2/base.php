@@ -17,8 +17,16 @@
 class Eden_Amazon_Ec2_Base extends Eden_Class {
 	/* Constants
 	-------------------------------*/
-	const AMAZON_EC2_URL	= 'https://ec2.amazonaws.com/';
-	const AMAZON_EC2_HOST	= 'ec2.amazonaws.com';
+	const AMAZON_EC2_URL					= 'https://ec2.amazonaws.com/';
+	const AMAZON_EC2_HOST					= 'ec2.amazonaws.com';
+	const AMAZON_EC2_HOST_US_VIRGINIA 		= 'ec2.us-east-1.amazonaws.com';
+	const AMAZON_EC2_HOST_US_OREGON 		= 'ec2.us-west-2.amazonaws.com';
+	const AMAZON_EC2_HOST_US_CALIFORNIA 	= 'ec2.us-west-1.amazonaws.com';
+	const AMAZON_EC2_HOST_EU_IRELAND 		= 'ec2.eu-west-1.amazonaws.com';
+	const AMAZON_EC2_HOST_ASIA_SIGNAPORE 	= 'ec2.ap-southeast-1.amazonaws.com';
+	const AMAZON_EC2_HOST_ASIA_SYDNEY 		= 'ec2.ap-southeast-2.amazonaws.com';
+	const AMAZON_EC2_HOST_ASIA_TOKYO 		= 'ec2.ap-northeast-1.amazonaws.com';
+	const AMAZON_EC2_HOST_SA_SAOPAULO 		= 'ec2.sa-east-1.amazonaws.com';
 
 	const VERSION_DATE 		= '2012-07-20';
 	const VERSION			= 'Version';
@@ -32,8 +40,9 @@ class Eden_Amazon_Ec2_Base extends Eden_Class {
 	-------------------------------*/
 	/* Protected Properties
 	-------------------------------*/
-	protected $_meta 		= NULL;
-	protected $_versionDate = self::VERSION_DATE;
+	protected $_meta 				= NULL;
+	protected $_versionDate 		= self::VERSION_DATE;
+	static protected $_selected_ec2_host 	= self::AMAZON_EC2_HOST;
 	
 	/* Private Properties
 	-------------------------------*/
@@ -55,6 +64,47 @@ class Eden_Amazon_Ec2_Base extends Eden_Class {
 	
 	/* Public Methods
 	-------------------------------*/
+	
+	/**
+	 * Change the EC2 region
+	 * @param string $region 
+	 */
+	public function setRegion($region){
+		switch($region){
+			case 'virginia':
+				self::$_selected_ec2_host = self::AMAZON_EC2_HOST_US_VIRGINIA;
+				break;
+			case 'oregon':
+				self::$_selected_ec2_host = self::AMAZON_EC2_HOST_US_OREGON;
+				break;
+			case 'california':
+				self::$_selected_ec2_host = self::AMAZON_EC2_HOST_US_CALIFORNIA;
+				break;
+			case 'ireland':
+				self::$_selected_ec2_host = self::AMAZON_EC2_HOST_EU_IRELAND;
+				break;
+			case 'signapore':
+				self::$_selected_ec2_host = self::AMAZON_EC2_HOST_ASIA_SIGNAPORE;
+				break;
+			case 'sydney':
+				self::$_selected_ec2_host = self::AMAZON_EC2_HOST_ASIA_SYDNEY;
+				break;
+			case 'tokyo':
+				self::$_selected_ec2_host = self::AMAZON_EC2_HOST_ASIA_TOKYO;
+				break;
+			case 'sao paulo':
+				self::$_selected_ec2_host = self::AMAZON_EC2_HOST_SA_SAOPAULO;
+				break;
+			default:
+				throw new Exception("Sadly, {$region} is not an available region");
+									
+		}
+		return $this;
+	}
+	
+	public function getRegion(){
+		return self::$_selected_ec2_host;
+	}
 	/**
 	 * The name of a filter. 
 	 *
@@ -198,30 +248,42 @@ class Eden_Amazon_Ec2_Base extends Eden_Class {
 	protected function _getResponse($host, $rawQuery) { 
 		//prevent sending null values
 		$rawQuery = $this->_accessKey($rawQuery); 
+		
 		//sort the raw query
 		ksort($rawQuery);
+		
 		//format array query
 		$query = $this->_formatQuery($rawQuery); 
+		
 		// Build out the variables
 		$domain = "https://$host/";
+		
 		//set parameters for generating request
 		$query[self::ACCESS_KEY] 		= $this->_accessKey; 
 		$query[self::TIMESTAMP] 		= date('c');
 		$query[self::VERSION] 			= $this->_versionDate;
 		$query[self::SIGNATURE_METHOD]	= 'HmacSHA256';
 		$query[self::SIGNATURE_VERSION] = 2; 
+		
 		//create a request signature for security access
 		$query[self::SIGNATURE] 		= $this->_generateSignature($host, $query);
+		
 		//build a http query
 		$url = $domain.'?'.http_build_query($query); 
+		
 		//set curl
 		$curl =  Eden_Curl::i()
 			->setUrl($url)
 			->verifyHost(false)
 			->verifyPeer(false)
 			->setTimeout(60);
+		
 		//get response from curl
 		$response = $curl->getResponse();
+		
+		/*echo $url."\n";
+		var_dump($response);
+		echo "\n\n\n";*/
 		
 		//if result is in xml format 
 		if($this->isXml($response)){

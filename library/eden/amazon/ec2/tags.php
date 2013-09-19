@@ -40,7 +40,7 @@ class Eden_Amazon_Ec2_Tags extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'CreateTags';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -55,7 +55,7 @@ class Eden_Amazon_Ec2_Tags extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DeleteTags';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -67,7 +67,7 @@ class Eden_Amazon_Ec2_Tags extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DescribeTags';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**

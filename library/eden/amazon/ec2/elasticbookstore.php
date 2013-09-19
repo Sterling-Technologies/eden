@@ -52,7 +52,7 @@ class Eden_Amazon_Ec2_ElasticBookStore extends Eden_Amazon_Ec2_Base {
 		$this->_query['InstanceId']	= $instanceId;
 		$this->_query['Device']		= $device;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	
 	}
 	
@@ -75,7 +75,7 @@ class Eden_Amazon_Ec2_ElasticBookStore extends Eden_Amazon_Ec2_Base {
 		$this->_query['VolumeId']		= $volumeId;
 		$this->_query['Description']	= $description;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	
 	}
 	
@@ -95,7 +95,7 @@ class Eden_Amazon_Ec2_ElasticBookStore extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action'] 			= 'CreateVolume';
 		$this->_query['AvailabilityZone']	= $availabilityZone;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	
 	}
 	
@@ -112,7 +112,7 @@ class Eden_Amazon_Ec2_ElasticBookStore extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action'] 	= 'DeleteSnapshot';
 		$this->_query['SnapshotId']	= $snapshotId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -129,7 +129,7 @@ class Eden_Amazon_Ec2_ElasticBookStore extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action'] 	= 'DeleteSnapshot';
 		$this->_query['VolumeId']	= $volumeId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -150,7 +150,7 @@ class Eden_Amazon_Ec2_ElasticBookStore extends Eden_Amazon_Ec2_Base {
 		$this->_query['SnapshotId']	= $snapshotId;
 		$this->_query['Attribute']	= $attribute;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -166,7 +166,7 @@ class Eden_Amazon_Ec2_ElasticBookStore extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DescribeSnapshots';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -178,7 +178,7 @@ class Eden_Amazon_Ec2_ElasticBookStore extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DescribeVolumes';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -198,7 +198,7 @@ class Eden_Amazon_Ec2_ElasticBookStore extends Eden_Amazon_Ec2_Base {
 		$this->_query['VolumeId'] 	= $volumeId;
 		$this->_query['Attribute'] 	= $attribute;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -210,7 +210,7 @@ class Eden_Amazon_Ec2_ElasticBookStore extends Eden_Amazon_Ec2_Base {
 		
 		$this->_query['Action'] = 'DescribeVolumeStatus';
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -226,7 +226,7 @@ class Eden_Amazon_Ec2_ElasticBookStore extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action']		= 'DetachVolume';
 		$this->_query['VolumeId']	= $volumeId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -243,7 +243,7 @@ class Eden_Amazon_Ec2_ElasticBookStore extends Eden_Amazon_Ec2_Base {
 		$this->_query['Action']		= 'EnableVolumeIO';
 		$this->_query['VolumeId']	= $volumeId;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -271,7 +271,7 @@ class Eden_Amazon_Ec2_ElasticBookStore extends Eden_Amazon_Ec2_Base {
 		$this->_query['Image.ImportManifestUrl']	= $url;
 		$this->_query['Volume.Size']				= $volumeSize;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -291,7 +291,7 @@ class Eden_Amazon_Ec2_ElasticBookStore extends Eden_Amazon_Ec2_Base {
 		$this->_query['VolumeId']			= $imageFormat;
 		$this->_query['AutoEnableIO.Value']	= $autoEnableIO;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
@@ -312,7 +312,7 @@ class Eden_Amazon_Ec2_ElasticBookStore extends Eden_Amazon_Ec2_Base {
 		$this->_query['SnapshotId']	= $snapshotId;
 		$this->_query['Attribute']	= $attribute;
 		
-		return $this->_getResponse(self::AMAZON_EC2_HOST, $this->_query);
+		return $this->_getResponse(self::getRegion(), $this->_query);
 	}
 	
 	/**
