@@ -116,7 +116,7 @@ class Eden_ZenDesk_Groups extends Eden_ZenDesk_Base {
 		$this->_query['group']['name'] = $name;
 		
 		return $this;
-	}1
+	}
 	
 	/* Protected Methods
 	-------------------------------*/
