@@ -45,7 +45,11 @@ require_once dirname(__FILE__).'/google/maps/elevation.php';
 require_once dirname(__FILE__).'/google/maps/geocoding.php';
 require_once dirname(__FILE__).'/google/maps/image.php';
 require_once dirname(__FILE__).'/google/maps.php';
+require_once dirname(__FILE__)."/google/latitude/history.php";
+require_once dirname(__FILE__)."/google/latitude/location.php";
+require_once dirname(__FILE__)."/google/latitude.php";
 require_once dirname(__FILE__).'/google/shortener.php';
+require_once dirname(__FILE__)."/google/userinfo.php";
 require_once dirname(__FILE__).'/google/youtube/activity.php';
 require_once dirname(__FILE__).'/google/youtube/channel.php';
 require_once dirname(__FILE__).'/google/youtube/comment.php';
@@ -231,6 +235,24 @@ class Eden_Google extends Eden_Class {
 			->argument(2, 'string');	//Argument 2 must be a string
 		
 		return Eden_Google_Youtube::i($token, $developerId);
+	}
+	
+	/**
+	 * Returns google latitude methods
+	 *
+	 * @return Eden_Google_Latitude
+	 */
+	public function latitude($api_key, $token) {
+		return Eden_Google_Latitude::i($api_key, $token);
+	}
+	
+	/**
+	 * Returns google userinfo methods
+	 *
+	 * @return Eden_Google_Userinfo
+	 */
+	public function userinfo($token) {
+		return Eden_Google_Userinfo::i($token);
 	}
 	/* Protected Methods
 	-------------------------------*/
