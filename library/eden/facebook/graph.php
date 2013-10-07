@@ -180,7 +180,7 @@ class Eden_Facebook_Graph extends Eden_Class {
 		}
 		
 		//if coords
-		if($latitude && $longitute) {
+		if($latitude && $longitude) {
 			//add it
 			$post['coordinates'] = json_encode(array(
 				'latitude' 	=> $latitude,
