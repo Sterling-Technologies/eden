@@ -1000,7 +1000,7 @@ class Eden_Mail_Imap extends Eden_Class {
 	private function _getList($array) {
 		$list = array();
         foreach ($array as $key => $value) {
-            $list[] = !is_array($value) ? $value : $this->_getList($v);
+            $list[] = !is_array($value) ? $value : $this->_getList($value);
         }
         return '(' . implode(' ', $list) . ')';
 	}

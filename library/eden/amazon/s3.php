@@ -603,9 +603,9 @@ class Eden_Amazon_S3 extends Eden_Class {
 		$policy->appendChild($list);
 		$dom->appendChild($policy);
 		
-		$data 	= $dom->saveXML();
-		$query 	= array('acl' => NULL);
-		$header = array('Content-Type' => 'application/xml');
+		$data 	 = $dom->saveXML();
+		$query 	 = array('acl' => NULL);
+		$headers = array('Content-Type' => 'application/xml');
 
 		return $this->_setResponse('PUT', $bucket, $path, $query, $data, $headers);
 	}

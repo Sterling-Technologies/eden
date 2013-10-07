@@ -249,7 +249,7 @@ class Eden_Mysql extends Eden_Sql_Database {
 				$increment = strtolower($field['Extra']) == 'auto_increment' ? true : false;
 				
 				//lets now add a field to our schema class
-				$q->addField($field['Field'], array(
+				$query->addField($field['Field'], array(
 					'type' 				=> $type, 
 					'length' 			=> $length,
 					'attribute' 		=> $attribute, 

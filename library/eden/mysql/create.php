@@ -170,7 +170,7 @@ class Eden_Mysql_Create extends Eden_Sql_Query {
 		return sprintf(
 			'CREATE TABLE %s (%s%s%s%s)',
 			$table, $fields, $primary,
-			$unique, $keys);
+			$uniques, $keys);
 	}
 	
 	/**
