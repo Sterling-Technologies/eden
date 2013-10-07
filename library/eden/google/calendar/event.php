@@ -194,7 +194,7 @@ class Eden_Google_Calendar_Event extends Eden_Google_Base {
 			->argument(2, 'string')		//argument 2 must be a string
 			->argument(3, 'string');	//argument 3 must be a string
 			
-		$this->_query[self::DESTINATION] = $description;
+		$this->_query[self::DESTINATION] = $destination;
 		
 		return $this->_customPost(sprintf(self::URL_CALENDAR_MOVE, $calendarId, $eventId), $this->_query);
 	}
