@@ -65,7 +65,7 @@ class Eden_Google_Contacts_Groups extends Eden_Google_Base {
 	 * @param string
 	 * @return array
 	 */
-	public function getSpecific($groudId, $userEmail = self::DEFAULT_VALUE) {
+	public function getSpecific($groupId, $userEmail = self::DEFAULT_VALUE) {
 		//argument test
 		Eden_Google_Error::i()
 			->argument(1, 'string')		//argument 1 must be a string
