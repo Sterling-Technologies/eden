@@ -463,7 +463,7 @@ class Eden_Google_Base extends Eden_Class {
 		return $response;
 	}
 	
-	protected function _post($url, $query, $etag = false) {
+	protected function _post($url, $query = '', $etag = false) {
 		//if query is in array
 		if(is_array($query)) {
 			//prevent sending fields with no value
