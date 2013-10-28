@@ -468,13 +468,13 @@ class Eden_Twitter_List extends Eden_Twitter_Base {
 		}
 		
 		//if it is integer
-		if(is_int($user_id)) {
+		if(is_int($userId)) {
 			//lets put it in our query
-			$this->_query['user_id'] = $user_id;
+			$this->_query['user_id'] = $userId;
 		//else it is string
 		} else {
 			//lets put it in our query
-			$this->_query['screen_name'] = $user_id;
+			$this->_query['screen_name'] = $userId;
 		}		
 		
 		
