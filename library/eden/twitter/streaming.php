@@ -107,7 +107,7 @@ class Eden_Twitter_Streaming extends Eden_Twitter_Base {
 	/**
 	 * By default @replies are only sent if the current user follows both the sender 
 	 * and receiver of the reply. For example, consider the case where Alice follows Bob, 
-	 * but Alice doesn’t follow Carol. By default, if Bob @replies Carol, Alice does not 
+	 * but Alice doesnï¿½t follow Carol. By default, if Bob @replies Carol, Alice does not 
 	 * see the Tweet. This mimics twitter.com and api.twitter.com behavior.
 	 *
 	 * @param integer 
@@ -189,7 +189,7 @@ class Eden_Twitter_Streaming extends Eden_Twitter_Base {
 		Eden_Twitter_Error::i()->argument(1, 'string', 'array');
 		
 		//if it is array
-		if(is_array($track)) {
+		if(is_array($locations)) {
 			$this->_query['locations'] = implode(',', $locations);	
 		//else it is string
 		} else {
