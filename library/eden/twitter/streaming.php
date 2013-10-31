@@ -95,7 +95,7 @@ class Eden_Twitter_Streaming extends Eden_Twitter_Base {
 	 * Include messages from accounts the user follows
 	 *
 	 * @param integer 
-	 * @return this
+	 * @return $this
 	 */
 	public function streamWithFollowings() {
 		
@@ -107,11 +107,11 @@ class Eden_Twitter_Streaming extends Eden_Twitter_Base {
 	/**
 	 * By default @replies are only sent if the current user follows both the sender 
 	 * and receiver of the reply. For example, consider the case where Alice follows Bob, 
-	 * but Alice doesn’t follow Carol. By default, if Bob @replies Carol, Alice does not 
+	 * but Alice doesnï¿½t follow Carol. By default, if Bob @replies Carol, Alice does not 
 	 * see the Tweet. This mimics twitter.com and api.twitter.com behavior.
 	 *
 	 * @param integer 
-	 * @return this
+	 * @return $this
 	 */
 	public function steamWithReplies() {
 		
@@ -125,7 +125,7 @@ class Eden_Twitter_Streaming extends Eden_Twitter_Base {
 	 * from 1 to 150000 or from -1 to -150000
 	 *
 	 * @param integer 
-	 * @return this
+	 * @return $this
 	 */
 	public function setCount($count) {
 		//Argument 1 must be a integer
@@ -140,7 +140,7 @@ class Eden_Twitter_Streaming extends Eden_Twitter_Base {
 	 * Indicating the users to return statuses for in the stream
 	 *
 	 * @param string|array 
-	 * @return this
+	 * @return $this
 	 */
 	public function setFollow($follow) {
 		//Argument 1 must be a string
@@ -161,7 +161,7 @@ class Eden_Twitter_Streaming extends Eden_Twitter_Base {
 	 * Keywords to track. Phrases of keywords are specified by a comma-separated list. 
 	 *
 	 * @param string|array 
-	 * @return this
+	 * @return $this
 	 */
 	public function setTrack($track) {
 		//Argument 1 must be a string
@@ -182,7 +182,7 @@ class Eden_Twitter_Streaming extends Eden_Twitter_Base {
 	 * Keywords to track. Phrases of keywords are specified by a comma-separated list. 
 	 *
 	 * @param string|array 
-	 * @return this
+	 * @return $this
 	 */
 	public function setLocation($locations) {
 		//Argument 1 must be a string
@@ -202,7 +202,7 @@ class Eden_Twitter_Streaming extends Eden_Twitter_Base {
 	/**
 	 * Specifies whether messages should be length-delimited
 	 *
-	 * @return this
+	 * @return $this
 	 */
 	public function setDelimited() {
 		$this->_query['delimited'] = 'length';
@@ -213,7 +213,7 @@ class Eden_Twitter_Streaming extends Eden_Twitter_Base {
 	/**
 	 * Specifies whether stall warnings should be delivered
 	 *
-	 * @return this
+	 * @return $this
 	 */
 	public function setStallWarning() {
 		$this->_query['stall_warnings'] = true;
