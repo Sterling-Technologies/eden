@@ -132,6 +132,20 @@ class Eden_Twitter_Search extends Eden_Twitter_Base {
 	}
 	
 	/**
+	 * The count set the number of tweets to return per page, up to a maximum of 100 [Defaults to 15]
+	 *
+	 * @param integer
+	 * @return this
+	 */
+	public function setCount($count) {
+		//Argument 1 must be an integer
+		Eden_Twitter_Error::i()->argument(1, 'int');
+		$this->_query['count'] = $count;
+
+		return $this;
+	}
+	
+	/**
 	 * Set mixed result
 	 *
 	 * @return this
